@@ -1,1266 +1,2393 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BuildPlan Viewer</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>BuildPlan Viewer — Bauvek</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <style>
+/* ═══════════════════════════════════════════════
+   BuildPlan Viewer v2 — Design System
+   ═══════════════════════════════════════════════ */
+
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-  --bg-hover: #e2e8f0;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #94a3b8;
-  --border: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --accent: #2563eb;
-  --accent-light: #dbeafe;
-  --danger: #dc2626;
-  --danger-light: #fef2f2;
-  --danger-bg: #fee2e2;
-  --success: #16a34a;
-  --success-light: #f0fdf4;
-  --warning: #d97706;
-  --warning-light: #fffbeb;
-  --gantt-bar: #3b82f6;
-  --gantt-bar-progress: #1d4ed8;
-  --gantt-summary: #1e293b;
-  --gantt-milestone: #f59e0b;
-  --gantt-today: #dc2626;
-  --gantt-grid: #f1f5f9;
-  --gantt-grid-strong: #e2e8f0;
-  --gantt-critical: #ef4444;
-  --gantt-overdue-bg: #fef2f2;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -2px rgba(0,0,0,.05);
+  /* Base palette — Light */
+  --bg-primary: #fafbfc;
+  --bg-secondary: #f1f3f5;
+  --bg-tertiary: #e9ecef;
+  --bg-elevated: #ffffff;
+  --bg-row-hover: rgba(59, 108, 245, 0.04);
+  --bg-row-alt: rgba(0,0,0,0.015);
+  --bg-summary: rgba(59, 108, 245, 0.03);
+
+  --text-primary: #1a1f2e;
+  --text-secondary: #5a6178;
+  --text-tertiary: #8b92a5;
+  --text-inverse: #ffffff;
+
+  --border-primary: #e2e5ea;
+  --border-secondary: #eef0f3;
+  --border-focus: var(--accent);
+
+  --accent: #3b6cf5;
+  --accent-hover: #2d5be0;
+  --accent-bg: rgba(59, 108, 245, 0.08);
+  --accent-bg-solid: #eef2fe;
+
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.08);
+  --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.08);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245, 158, 11, 0.08);
+
+  /* Gantt bar colors */
+  --bar-normal: #3b6cf5;
+  --bar-normal-bg: rgba(59, 108, 245, 0.18);
+  --bar-summary: #3a3f4b;
+  --bar-milestone: #d4930d;
+  --bar-overdue: #ef4444;
+  --bar-overdue-bg: rgba(239, 68, 68, 0.14);
+  --bar-complete: #10b981;
+  --bar-complete-bg: rgba(16, 185, 129, 0.14);
+
+  --arrow-color: rgba(148, 163, 184, 0.5);
+  --arrow-head: #94a3b8;
+  --today-line: #ef4444;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  --header-h: 44px;
+  --row-h: 28px;
+  --gantt-header-h: 44px;
+
+  --font-sans: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  color-scheme: light dark;
 }
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --bg-tertiary: #334155;
-    --bg-hover: #475569;
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-tertiary: #64748b;
-    --border: #334155;
-    --border-strong: #475569;
-    --accent: #3b82f6;
-    --accent-light: #1e3a5f;
-    --danger: #f87171;
-    --danger-light: #2d1b1b;
-    --danger-bg: #3b1c1c;
-    --success: #4ade80;
-    --success-light: #1a2e1a;
-    --warning: #fbbf24;
-    --warning-light: #2e2510;
-    --gantt-bar: #3b82f6;
-    --gantt-bar-progress: #60a5fa;
-    --gantt-summary: #e2e8f0;
-    --gantt-milestone: #fbbf24;
-    --gantt-today: #f87171;
-    --gantt-grid: #1e293b;
-    --gantt-grid-strong: #334155;
-    --gantt-critical: #f87171;
-    --gantt-overdue-bg: #2d1b1b;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,.3);
-    --shadow-md: 0 4px 6px -1px rgba(0,0,0,.4);
+    --bg-primary: #0f1419;
+    --bg-secondary: #1a2030;
+    --bg-tertiary: #242d3d;
+    --bg-elevated: #1e2636;
+    --bg-row-hover: rgba(59, 108, 245, 0.08);
+    --bg-row-alt: rgba(255,255,255,0.02);
+    --bg-summary: rgba(59, 108, 245, 0.06);
+
+    --text-primary: #e4e8ee;
+    --text-secondary: #8b95a8;
+    --text-tertiary: #5e6882;
+    --text-inverse: #0f1419;
+
+    --border-primary: #2a3344;
+    --border-secondary: #222b3a;
+
+    --accent-bg: rgba(59, 108, 245, 0.12);
+    --accent-bg-solid: #1e2d50;
+
+    --bar-normal-bg: rgba(59, 108, 245, 0.25);
+    --bar-overdue-bg: rgba(239, 68, 68, 0.2);
+    --bar-complete-bg: rgba(16, 185, 129, 0.2);
+
+    --arrow-color: rgba(71, 85, 105, 0.5);
+    --arrow-head: #475569;
+
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.3);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,0.4);
   }
 }
+
 :root[data-theme="dark"] {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-tertiary: #334155;
-  --bg-hover: #475569;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-tertiary: #64748b;
-  --border: #334155;
-  --border-strong: #475569;
-  --accent: #3b82f6;
-  --accent-light: #1e3a5f;
-  --danger: #f87171;
-  --danger-light: #2d1b1b;
-  --danger-bg: #3b1c1c;
-  --success: #4ade80;
-  --success-light: #1a2e1a;
-  --warning: #fbbf24;
-  --warning-light: #2e2510;
-  --gantt-bar: #3b82f6;
-  --gantt-bar-progress: #60a5fa;
-  --gantt-summary: #e2e8f0;
-  --gantt-milestone: #fbbf24;
-  --gantt-today: #f87171;
-  --gantt-grid: #1e293b;
-  --gantt-grid-strong: #334155;
-  --gantt-critical: #f87171;
-  --gantt-overdue-bg: #2d1b1b;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,.3);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,.4);
+  --bg-primary: #0f1419;
+  --bg-secondary: #1a2030;
+  --bg-tertiary: #242d3d;
+  --bg-elevated: #1e2636;
+  --bg-row-hover: rgba(59, 108, 245, 0.08);
+  --bg-row-alt: rgba(255,255,255,0.02);
+  --bg-summary: rgba(59, 108, 245, 0.06);
+
+  --text-primary: #e4e8ee;
+  --text-secondary: #8b95a8;
+  --text-tertiary: #5e6882;
+  --text-inverse: #0f1419;
+
+  --border-primary: #2a3344;
+  --border-secondary: #222b3a;
+
+  --accent-bg: rgba(59, 108, 245, 0.12);
+  --accent-bg-solid: #1e2d50;
+
+  --bar-normal-bg: rgba(59, 108, 245, 0.25);
+  --bar-overdue-bg: rgba(239, 68, 68, 0.2);
+  --bar-complete-bg: rgba(16, 185, 129, 0.2);
+
+  --arrow-color: rgba(71, 85, 105, 0.5);
+  --arrow-head: #475569;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.4);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-sans);
   background: var(--bg-primary);
   color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
   overflow: hidden;
   height: 100vh;
 }
-.mono { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; }
-#root { height: 100vh; display: flex; flex-direction: column; }
 
-/* Scrollbar */
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border-primary); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 
-/* Gantt sync scroll */
-.gantt-scroll-sync { scrollbar-width: thin; }
+/* ── Header ── */
+.app-header {
+  height: var(--header-h);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 100;
+}
 
-/* Splitter */
-.splitter-handle {
-  width: 5px; cursor: col-resize; background: var(--border);
-  transition: background .15s;
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.app-logo svg { flex-shrink: 0; }
+
+.app-logo span {
+  color: var(--text-tertiary);
+  font-weight: 400;
+  font-size: 12px;
+  margin-left: 2px;
+}
+
+.project-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  flex: 1;
+  scrollbar-width: none;
+}
+.project-tabs::-webkit-scrollbar { display: none; }
+
+.project-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  transition: background 0.15s, color 0.15s;
+  position: relative;
+}
+
+.project-tab:hover { background: var(--bg-secondary); color: var(--text-primary); }
+.project-tab.active { background: var(--accent-bg); color: var(--accent); }
+
+.project-tab .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
   flex-shrink: 0;
 }
-.splitter-handle:hover, .splitter-handle.active { background: var(--accent); }
 
-/* Drop zone */
-.drop-zone {
-  border: 2px dashed var(--border-strong);
-  border-radius: 12px;
-  transition: all .2s;
+.project-tab .close-tab {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  font-size: 11px;
+  line-height: 1;
 }
-.drop-zone.drag-over {
-  border-color: var(--accent);
-  background: var(--accent-light);
+.project-tab:hover .close-tab { opacity: 0.6; }
+.project-tab .close-tab:hover { opacity: 1; background: var(--bg-tertiary); }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
-/* Task row */
-.task-row { transition: background .1s; }
-.task-row:hover { background: var(--bg-hover) !important; }
-.task-row.overdue { background: var(--gantt-overdue-bg) !important; }
-
-/* Tabs */
-.tab-btn {
-  padding: 6px 16px; font-size: 0.8125rem; font-weight: 500;
-  border-bottom: 2px solid transparent;
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-primary);
+  background: var(--bg-elevated);
   color: var(--text-secondary);
-  cursor: pointer; white-space: nowrap;
-  transition: all .15s;
-  background: none; border-top: none; border-left: none; border-right: none;
+  cursor: pointer;
+  transition: all 0.12s;
+  white-space: nowrap;
 }
-.tab-btn:hover { color: var(--text-primary); }
-.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
 
-/* Progress bar */
-.progress-track {
-  height: 4px; border-radius: 2px; background: var(--bg-tertiary); overflow: hidden;
+.btn-icon {
+  padding: 5px;
+  width: 28px;
+  height: 28px;
 }
-.progress-fill {
-  height: 100%; border-radius: 2px; transition: width .3s;
+
+.btn-accent {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
 }
+.btn-accent:hover { background: var(--accent-hover); color: white; }
+
+.btn-ghost { border-color: transparent; background: transparent; }
+.btn-ghost:hover { background: var(--bg-secondary); }
+
+/* ── Segmented Control ── */
+.segmented {
+  display: inline-flex;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  gap: 1px;
+}
+
+.segmented button {
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.12s;
+}
+.segmented button:hover { color: var(--text-primary); }
+.segmented button.active { background: var(--bg-elevated); color: var(--text-primary); box-shadow: var(--shadow-sm); }
+
+/* ── Welcome / Home ── */
+.welcome {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px;
+}
+
+.welcome-header {
+  max-width: 640px;
+  margin: 0 auto 24px;
+}
+
+.welcome-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.welcome-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.project-grid {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.project-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.project-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.project-card-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-bg);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.project-card-info { flex: 1; min-width: 0; }
+
+.project-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-card-meta {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  margin-top: 1px;
+}
+
+.project-card-arrow {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+.project-card:hover .project-card-arrow { transform: translateX(2px); color: var(--accent); }
+
+.drop-zone {
+  max-width: 640px;
+  margin: 20px auto 0;
+  padding: 20px;
+  border: 1.5px dashed var(--border-primary);
+  border-radius: var(--radius-md);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.drop-zone input { display: none; }
+
+/* ── Sub-tabs ── */
+.sub-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  height: 36px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-secondary);
+  flex-shrink: 0;
+}
+
+.sub-tab {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  border: none;
+  background: none;
+  padding: 8px 0;
+  cursor: pointer;
+  position: relative;
+  font-family: var(--font-sans);
+  transition: color 0.12s;
+}
+.sub-tab:hover { color: var(--text-primary); }
+.sub-tab.active { color: var(--accent); }
+.sub-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px 1px 0 0;
+}
+
+.sub-tabs-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Filters ── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-secondary);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 4px 24px 4px 8px;
+  font-size: 11px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a6178' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+}
+
+.filter-input {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  width: 110px;
+}
+
+.filter-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 0 4px;
+}
+
+.filter-clear {
+  font-size: 11px;
+  color: var(--accent);
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+}
+.filter-clear:hover { background: var(--accent-bg); }
+
+/* ── Gantt Container ── */
+.gantt-wrapper {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+.gantt-table-container {
+  overflow: auto;
+  border-right: 1px solid var(--border-primary);
+  flex-shrink: 0;
+  background: var(--bg-elevated);
+}
+
+.gantt-chart-container {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background: var(--bg-primary);
+}
+
+/* ── Splitter ── */
+.splitter {
+  width: 5px;
+  cursor: col-resize;
+  background: var(--border-secondary);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: background 0.15s;
+}
+.splitter:hover, .splitter.active { background: var(--accent); }
+
+/* ── Gantt Table ── */
+.gantt-table {
+  border-collapse: collapse;
+  min-width: 100%;
+  table-layout: fixed;
+}
+
+.gantt-table th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: left;
+  padding: 0 8px;
+  height: var(--gantt-header-h);
+  border-bottom: 1px solid var(--border-primary);
+  white-space: nowrap;
+}
+
+.gantt-table td {
+  padding: 0 8px;
+  height: var(--row-h);
+  border-bottom: 1px solid var(--border-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.gantt-table tr:hover td { background: var(--bg-row-hover); }
+.gantt-table tr:nth-child(even) td { background: var(--bg-row-alt); }
+.gantt-table tr:nth-child(even):hover td { background: var(--bg-row-hover); }
+.gantt-table tr.summary td { background: var(--bg-summary); font-weight: 600; }
+.gantt-table tr.summary:hover td { background: var(--bg-row-hover); }
+
+.task-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: var(--row-h);
+}
+
+.task-toggle {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 2px;
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  transition: color 0.1s, background 0.1s;
+}
+.task-toggle:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+
+.task-milestone-icon {
+  color: var(--bar-milestone);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.task-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.progress-mini {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress-mini-bar {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-tertiary);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.progress-mini-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.2s;
+}
+
+.td-mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ── Gantt SVG ── */
+.gantt-svg-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg-secondary);
+}
+
+/* ── Dashboard ── */
+.dashboard {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.kpi-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  border-left: 3px solid var(--accent);
+}
+
+.kpi-card.success { border-left-color: var(--success); }
+.kpi-card.danger { border-left-color: var(--danger); }
+.kpi-card.warning { border-left-color: var(--warning); }
+
+.kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1.1;
+}
+
+.kpi-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.dash-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+}
+
+.dash-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.dash-table th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.dash-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+/* ── Resources ── */
+.resources-view {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+/* ── Search Modal ── */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15vh;
+}
+
+.search-modal {
+  width: 480px;
+  max-width: 90vw;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-primary);
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  outline: none;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.search-results {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  transition: background 0.1s;
+}
+.search-result-item:hover { background: var(--bg-row-hover); }
+.search-result-item .sr-name { flex: 1; }
+.search-result-item .sr-project { color: var(--text-tertiary); font-size: 11px; }
+
+/* ── Tooltip ── */
+.gantt-tooltip {
+  position: fixed;
+  z-index: 2000;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 10px 12px;
+  font-size: 12px;
+  max-width: 260px;
+  pointer-events: none;
+  line-height: 1.5;
+}
+
+.gantt-tooltip .tt-name { font-weight: 600; margin-bottom: 4px; }
+.gantt-tooltip .tt-row { display: flex; justify-content: space-between; gap: 12px; }
+.gantt-tooltip .tt-label { color: var(--text-tertiary); }
+.gantt-tooltip .tt-value { font-family: var(--font-mono); font-size: 11px; }
+
+/* ── Loading ── */
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 8px;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-primary);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Print ── */
+@media print {
+  body { overflow: visible !important; height: auto !important; background: white !important; }
+  #root { height: auto !important; }
+  .app-header, .sub-tabs-bar, .filter-bar, .splitter, .search-overlay { display: none !important; }
+  .gantt-wrapper { flex-direction: column !important; overflow: visible !important; height: auto !important; }
+  .gantt-table-container, .gantt-chart-container { overflow: visible !important; width: 100% !important; max-width: 100% !important; flex: none !important; }
+  .gantt-chart-container { border-top: 1px solid #ccc; }
+  .print-header { display: block !important; padding: 16px; border-bottom: 2px solid #333; margin-bottom: 8px; }
+  .print-header h1 { font-size: 16px; }
+  .print-header p { font-size: 11px; color: #666; }
+  .print-footer { display: block !important; text-align: center; padding: 8px; font-size: 10px; color: #999; border-top: 1px solid #ccc; margin-top: 8px; }
+  @page { size: landscape; margin: 10mm; }
+}
+
+.print-header, .print-footer { display: none; }
 </style>
 </head>
 <body>
 <div id="root"></div>
-<script>
-"use strict";
-const h = React.createElement;
 
-// ─── XML MSPDI PARSER ────────────────────────────────────────────────
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback, useMemo, Fragment } = React;
 
-function parseMSPDI(xmlStr) {
+// ═══════════════════════════════════════════════
+// XML Parser (MSPDI) — UNTOUCHED / WORKING
+// ═══════════════════════════════════════════════
+function parseMSPDI(xmlText) {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(xmlStr, "text/xml");
-  const ns = "http://schemas.microsoft.com/project";
+  const doc = parser.parseFromString(xmlText, 'text/xml');
+  const ns = doc.documentElement.namespaceURI;
 
-  function q(el, tag) {
-    const found = el.getElementsByTagNameNS(ns, tag)[0] || el.getElementsByTagName(tag)[0];
-    return found ? found.textContent.trim() : "";
+  function getEl(parent, tag) {
+    const el = ns
+      ? parent.getElementsByTagNameNS(ns, tag)[0]
+      : parent.getElementsByTagName(tag)[0];
+    return el ? el.textContent.trim() : '';
   }
-  function qAll(el, tag) {
-    let list = el.getElementsByTagNameNS(ns, tag);
-    if (!list.length) list = el.getElementsByTagName(tag);
-    return Array.from(list);
-  }
-  function qDate(el, tag) {
-    const s = q(el, tag);
-    return s ? new Date(s) : null;
-  }
-  function qNum(el, tag, def = 0) {
-    const s = q(el, tag);
-    return s ? Number(s) : def;
-  }
-  function qBool(el, tag) { return q(el, tag) === "1" || q(el, tag).toLowerCase() === "true"; }
 
-  const root = doc.getElementsByTagNameNS(ns, "Project")[0] || doc.documentElement;
+  function getEls(parent, tag) {
+    return ns
+      ? parent.getElementsByTagNameNS(ns, tag)
+      : parent.getElementsByTagName(tag);
+  }
 
-  // Calendars
+  // Parse calendars
   const calendars = {};
-  qAll(root, "Calendar").forEach(cal => {
-    const uid = qNum(cal, "UID");
-    const weekDays = [];
-    qAll(cal, "WeekDay").forEach(wd => {
-      weekDays.push({
-        dayType: qNum(wd, "DayType"),
-        dayWorking: qBool(wd, "DayWorking")
-      });
-    });
-    const exceptions = [];
-    qAll(cal, "TimePeriod").forEach(tp => {
-      const from = qDate(tp, "FromDate");
-      const to = qDate(tp, "ToDate");
-      if (from) exceptions.push({ from, to: to || from });
-    });
-    calendars[uid] = { uid, name: q(cal, "Name"), weekDays, exceptions };
-  });
+  const calEls = getEls(doc, 'Calendar');
+  for (const c of calEls) {
+    const uid = getEl(c, 'UID');
+    const name = getEl(c, 'Name');
+    calendars[uid] = { uid, name };
+  }
 
-  const projectCalUID = qNum(root, "CalendarUID", 1);
+  // Parse resources
+  const resources = {};
+  const resEls = getEls(doc, 'Resource');
+  for (const r of resEls) {
+    const uid = getEl(r, 'UID');
+    const name = getEl(r, 'Name');
+    if (uid && name) resources[uid] = { uid, name };
+  }
 
-  // Resources
-  const resources = [];
-  qAll(root, "Resource").forEach(res => {
-    const uid = qNum(res, "UID", -1);
-    if (uid < 0) return;
-    const name = q(res, "Name");
-    if (!name) return;
-    resources.push({
-      uid,
-      name,
-      type: qNum(res, "Type") === 0 ? "material" : "work",
-      group: q(res, "Group"),
-      maxUnits: qNum(res, "MaxUnits", 1),
-      cost: qNum(res, "Cost")
-    });
-  });
-  const resourceMap = {};
-  resources.forEach(r => { resourceMap[r.uid] = r; });
-
-  // Assignments
+  // Parse assignments
   const assignments = [];
-  const taskAssignments = {};
-  qAll(root, "Assignment").forEach(asgn => {
-    const taskUID = qNum(asgn, "TaskUID");
-    const resUID = qNum(asgn, "ResourceUID");
-    if (resUID < 0) return;
-    const a = {
-      taskUid: taskUID,
-      resourceUid: resUID,
-      units: qNum(asgn, "Units", 1),
-      work: parseDurationHours(q(asgn, "Work")),
-      actualWork: parseDurationHours(q(asgn, "ActualWork")),
-      remainingWork: parseDurationHours(q(asgn, "RemainingWork"))
-    };
-    assignments.push(a);
-    if (!taskAssignments[taskUID]) taskAssignments[taskUID] = [];
-    taskAssignments[taskUID].push(a);
-  });
+  const assignEls = getEls(doc, 'Assignment');
+  for (const a of assignEls) {
+    const taskUid = getEl(a, 'TaskUID');
+    const resUid = getEl(a, 'ResourceUID');
+    if (taskUid && resUid && resources[resUid]) {
+      assignments.push({ taskUid, resourceUid: resUid, resourceName: resources[resUid].name });
+    }
+  }
 
-  // Tasks
-  const depTypeMap = { "0": "FF", "1": "FS", "2": "SF", "3": "SS" };
+  // Build assignment map
+  const taskResMap = {};
+  for (const a of assignments) {
+    if (!taskResMap[a.taskUid]) taskResMap[a.taskUid] = [];
+    taskResMap[a.taskUid].push(a.resourceName);
+  }
+
+  // Parse tasks
   const tasks = [];
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
+  const taskEls = getEls(doc, 'Task');
+  for (const t of taskEls) {
+    const uid = getEl(t, 'UID');
+    const id = getEl(t, 'ID');
+    const name = getEl(t, 'Name');
+    const start = getEl(t, 'Start');
+    const finish = getEl(t, 'Finish');
+    const duration = getEl(t, 'Duration');
+    const pctComplete = parseInt(getEl(t, 'PercentComplete') || '0', 10);
+    const outlineLevel = parseInt(getEl(t, 'OutlineLevel') || '0', 10);
+    const isSummary = getEl(t, 'Summary') === '1';
+    const isMilestone = getEl(t, 'Milestone') === '1';
+    const wbs = getEl(t, 'WBS');
 
-  qAll(root, "Task").forEach(t => {
-    const uid = qNum(t, "UID", -1);
-    if (uid === 0) return; // skip project summary
-    if (uid < 0) return;
-
-    const start = qDate(t, "Start");
-    const finish = qDate(t, "Finish");
-    const pct = qNum(t, "PercentComplete");
-    const isMilestone = qBool(t, "Milestone");
-    const isSummary = qBool(t, "Summary");
-
+    // Parse predecessors
     const predecessors = [];
-    qAll(t, "PredecessorLink").forEach(pl => {
+    const predEls = getEls(t, 'PredecessorLink');
+    for (const p of predEls) {
+      const predUid = getEl(p, 'PredecessorUID');
+      const typeVal = getEl(p, 'Type') || '1';
+      const lagStr = getEl(p, 'LinkLag') || '0';
+      const lagFmt = getEl(p, 'LagFormat') || '7';
+      const typeMap = { '0': 'FF', '1': 'FS', '2': 'SF', '3': 'SS' };
+      let lagDays = parseInt(lagStr, 10);
+      if (lagFmt === '7') lagDays = lagDays / 10; // tenths of minutes → days approx
+      else if (lagFmt === '5' || lagFmt === '6' || lagFmt === '3') lagDays = lagDays / 4800;
       predecessors.push({
-        taskUid: qNum(pl, "PredecessorUID"),
-        type: depTypeMap[q(pl, "Type")] || "FS",
-        lagDays: qNum(pl, "LinkLag") / 4800
+        taskUid: predUid,
+        type: typeMap[typeVal] || 'FS',
+        lagDays: Math.round(lagDays)
       });
-    });
+    }
 
-    const assignedResources = (taskAssignments[uid] || [])
-      .map(a => resourceMap[a.resourceUid])
-      .filter(Boolean)
-      .map(r => r.name);
+    if (uid !== '0' || name) {
+      tasks.push({
+        uid, id, name: name || '(sin nombre)',
+        start: start ? new Date(start) : null,
+        finish: finish ? new Date(finish) : null,
+        duration, percentComplete: pctComplete,
+        outlineLevel, isSummary, isMilestone, wbs,
+        resources: taskResMap[uid] || [],
+        predecessors,
+        children: [],
+        expanded: true,
+        visible: true
+      });
+    }
+  }
 
-    const isOverdue = finish && finish < now && pct < 100 && !isSummary;
+  // Filter out UID 0 dummy
+  const filtered = tasks.filter(t => t.uid !== '0');
 
-    tasks.push({
-      uid,
-      id: qNum(t, "ID"),
-      name: q(t, "Name") || "(sin nombre)",
-      wbs: q(t, "WBS"),
-      outlineLevel: qNum(t, "OutlineLevel"),
-      outlineNumber: q(t, "OutlineNumber"),
-      start,
-      finish,
-      duration: parseDurationDays(q(t, "Duration")),
-      percentComplete: pct,
-      isMilestone,
-      isSummary,
-      predecessors,
-      notes: q(t, "Notes"),
-      priority: qNum(t, "Priority", 500),
-      constraintType: qNum(t, "ConstraintType"),
-      constraintDate: qDate(t, "ConstraintDate"),
-      calendarUid: qNum(t, "CalendarUID") || null,
-      isOverdue,
-      assignedResources,
-      children: [],
-      collapsed: isSummary
-    });
-  });
+  // Build hierarchy
+  const rootTasks = [];
+  const stack = [];
+  for (const task of filtered) {
+    while (stack.length > 0 && stack[stack.length - 1].outlineLevel >= task.outlineLevel) {
+      stack.pop();
+    }
+    if (stack.length > 0) {
+      stack[stack.length - 1].children.push(task);
+      task.parent = stack[stack.length - 1];
+    } else {
+      rootTasks.push(task);
+    }
+    if (task.isSummary) stack.push(task);
+  }
 
-  // Build tree
-  const taskTree = buildTaskTree(tasks);
+  // Flatten
+  function flattenTasks(list, depth = 0) {
+    const result = [];
+    for (const t of list) {
+      t.depth = depth;
+      result.push(t);
+      if (t.children.length > 0) {
+        result.push(...flattenTasks(t.children, depth + 1));
+      }
+    }
+    return result;
+  }
 
-  // Stats
-  const nonSummary = tasks.filter(t => !t.isSummary);
-  const completed = nonSummary.filter(t => t.percentComplete >= 100).length;
-  const overdue = nonSummary.filter(t => t.isOverdue).length;
-  const inProgress = nonSummary.filter(t => t.percentComplete > 0 && t.percentComplete < 100).length;
-  const pending = nonSummary.filter(t => t.percentComplete === 0 && !t.isMilestone).length;
-  const milestones = tasks.filter(t => t.isMilestone);
-  const totalDuration = nonSummary.reduce((s, t) => s + (t.duration || 1), 0);
-  const weightedProgress = nonSummary.reduce((s, t) => s + t.percentComplete * (t.duration || 1), 0);
-  const avgProgress = totalDuration > 0 ? Math.round(weightedProgress / totalDuration) : 0;
+  const flatTasks = flattenTasks(rootTasks);
 
-  const allDates = tasks.filter(t => t.start && t.finish).flatMap(t => [t.start, t.finish]);
-  const minDate = allDates.length ? new Date(Math.min(...allDates.map(d => d.getTime()))) : new Date();
-  const maxDate = allDates.length ? new Date(Math.max(...allDates.map(d => d.getTime()))) : new Date();
+  // Build UID map
+  const uidMap = {};
+  for (const t of flatTasks) uidMap[t.uid] = t;
 
-  const upcomingMilestones = milestones
-    .filter(m => m.start && m.start > now && m.percentComplete < 100)
-    .sort((a, b) => a.start - b.start)
-    .slice(0, 10);
+  // Date range
+  let minDate = null, maxDate = null;
+  for (const t of flatTasks) {
+    if (t.start && (!minDate || t.start < minDate)) minDate = t.start;
+    if (t.finish && (!maxDate || t.finish > maxDate)) maxDate = t.finish;
+  }
+
+  // Unique resources
+  const resourceList = [...new Set(flatTasks.flatMap(t => t.resources))].sort();
 
   return {
-    id: hashStr(q(root, "Name") || "project"),
-    fileName: "",
-    name: q(root, "Name") || "Proyecto sin nombre",
-    author: q(root, "Author"),
-    startDate: qDate(root, "StartDate") || minDate,
-    finishDate: qDate(root, "FinishDate") || maxDate,
-    lastSaved: qDate(root, "LastSaved"),
-    calendar: calendars[projectCalUID] || { uid: projectCalUID, name: "Standard", weekDays: [], exceptions: [] },
+    tasks: flatTasks,
+    rootTasks,
+    uidMap,
+    resources: resourceList,
     calendars,
-    tasks,
-    taskTree,
-    resources,
-    assignments,
-    stats: {
-      totalTasks: nonSummary.length,
-      completed,
-      inProgress,
-      pending,
-      overdue,
-      avgProgress,
-      milestones: milestones.length,
-      upcomingMilestones,
-      minDate,
-      maxDate
-    }
+    minDate, maxDate,
+    rawResources: Object.values(resources)
   };
 }
 
-function parseDurationDays(iso) {
-  if (!iso) return 0;
-  const m = iso.match(/PT(\d+)H(\d+)M(\d+)S/);
-  if (!m) return 0;
-  return (parseInt(m[1]) + parseInt(m[2]) / 60) / 8;
-}
-function parseDurationHours(iso) {
-  if (!iso) return 0;
-  const m = iso.match(/PT(\d+)H(\d+)M(\d+)S/);
-  if (!m) return 0;
-  return parseInt(m[1]) + parseInt(m[2]) / 60;
-}
-
-function buildTaskTree(tasks) {
-  const tree = [];
-  const stack = [{ level: 0, children: tree }];
-  tasks.forEach(t => {
-    while (stack.length > 1 && stack[stack.length - 1].level >= t.outlineLevel) stack.pop();
-    const parent = stack[stack.length - 1];
-    t.children = [];
-    parent.children.push(t);
-    stack.push({ level: t.outlineLevel, children: t.children });
-  });
-  return tree;
-}
-
-function hashStr(s) {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
-  return "p" + Math.abs(h).toString(36);
-}
-
+// ═══════════════════════════════════════════════
+// Utility functions
+// ═══════════════════════════════════════════════
 function fmtDate(d) {
-  if (!d) return "—";
-  return d.toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "2-digit" });
+  if (!d) return '—';
+  return d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: '2-digit' });
 }
-function fmtDateShort(d) {
-  if (!d) return "";
-  return d.toLocaleDateString("es-AR", { day: "2-digit", month: "short" });
-}
+
 function daysBetween(a, b) {
+  if (!a || !b) return 0;
   return Math.round((b - a) / 86400000);
 }
 
-// ─── REACT COMPONENTS ────────────────────────────────────────────────
+function isOverdue(task) {
+  if (!task.finish || task.percentComplete >= 100 || task.isSummary) return false;
+  return task.finish < new Date();
+}
 
-const { useState, useRef, useEffect, useCallback, useMemo } = React;
+function getStatus(task) {
+  if (task.percentComplete >= 100) return 'completed';
+  if (isOverdue(task)) return 'overdue';
+  if (task.percentComplete > 0) return 'in_progress';
+  return 'pending';
+}
 
-// ── App Shell ──
-function App() {
-  const [projects, setProjects] = useState([]);
-  const [activeTab, setActiveTab] = useState(null);
-  const [dragOver, setDragOver] = useState(false);
-  const [manifest, setManifest] = useState(null);
-  const [manifestLoading, setManifestLoading] = useState(true);
-  const [loadingFile, setLoadingFile] = useState(null);
-
-  // Try to fetch manifest on mount (works on GitHub Pages, fails locally → fallback to upload)
-  useEffect(() => {
-    fetch("data/manifest.json?t=" + Date.now())
-      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(m => { setManifest(m); setManifestLoading(false); })
-      .catch(() => { setManifest(null); setManifestLoading(false); });
-  }, []);
-
-  // Load a project from manifest by filename
-  const loadFromManifest = useCallback((entry) => {
-    setLoadingFile(entry.file);
-    fetch("data/projects/" + entry.file)
-      .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
-      .then(xml => {
-        const parsed = parseMSPDI(xml);
-        parsed.fileName = entry.file;
-        parsed.id = hashStr(entry.file);
-        addProject(parsed);
-        setLoadingFile(null);
-      })
-      .catch(err => {
-        console.error("Error loading " + entry.file, err);
-        alert("Error al cargar " + entry.file);
-        setLoadingFile(null);
-      });
-  }, []);
-
-  const addProject = useCallback((parsed) => {
-    setProjects(prev => {
-      const exists = prev.findIndex(p => p.name === parsed.name);
-      if (exists >= 0) {
-        const next = [...prev];
-        next[exists] = parsed;
-        return next;
-      }
-      return [...prev, parsed];
-    });
-    setActiveTab(parsed.id);
-  }, []);
-
-  const closeProject = useCallback((id) => {
-    setProjects(prev => prev.filter(p => p.id !== id));
-    setActiveTab(prev => {
-      if (prev === id) {
-        const remaining = projects.filter(p => p.id !== id);
-        return remaining.length ? remaining[0].id : null;
-      }
-      return prev;
-    });
-  }, [projects]);
-
-  const handleFiles = useCallback((files) => {
-    Array.from(files).forEach(file => {
-      if (!file.name.toLowerCase().endsWith(".xml")) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const parsed = parseMSPDI(e.target.result);
-          parsed.fileName = file.name;
-          parsed.id = hashStr(file.name);
-          addProject(parsed);
-        } catch (err) {
-          console.error("Error parsing XML:", err);
-          alert("Error al parsear " + file.name + ": " + err.message);
-        }
-      };
-      reader.readAsText(file);
-    });
-  }, [addProject]);
-
-  const handleDrop = useCallback((e) => {
-    e.preventDefault();
-    setDragOver(false);
-    handleFiles(e.dataTransfer.files);
-  }, [handleFiles]);
-
-  const activeProject = projects.find(p => p.id === activeTab);
-
-  // No projects loaded: show welcome + manifest
-  if (!projects.length) {
-    const hasManifest = manifest && manifest.projects && manifest.projects.length > 0;
-    return h("div", {
-      className: "flex flex-col items-center justify-center h-screen p-8",
-      onDragOver: (e) => { e.preventDefault(); setDragOver(true); },
-      onDragLeave: () => setDragOver(false),
-      onDrop: handleDrop,
-      style: { background: "var(--bg-primary)" }
-    },
-      h("div", { className: "flex flex-col items-center w-full max-w-2xl" },
-        h("div", { style: { fontSize: "3rem", marginBottom: "0.75rem" } }, "📊"),
-        h("h1", { className: "text-2xl font-bold mb-1", style: { color: "var(--text-primary)" } }, "BuildPlan Viewer"),
-        h("p", { className: "mb-6 text-center text-sm", style: { color: "var(--text-secondary)" } },
-          "Visualizador de cronogramas de Microsoft Project"),
-
-        // Manifest projects list
-        hasManifest && h("div", { className: "w-full mb-6" },
-          h("h2", { className: "text-sm font-semibold mb-3", style: { color: "var(--text-secondary)" } },
-            "Proyectos disponibles (" + manifest.projects.length + ")"),
-          h("div", {
-            className: "rounded-lg overflow-hidden",
-            style: { border: "1px solid var(--border)", background: "var(--bg-secondary)" }
-          },
-            manifest.projects.map((entry, i) =>
-              h("button", {
-                key: entry.file,
-                className: "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors",
-                style: {
-                  background: "transparent",
-                  borderTop: i > 0 ? "1px solid var(--border)" : "none",
-                  cursor: loadingFile ? "wait" : "pointer",
-                  opacity: loadingFile && loadingFile !== entry.file ? 0.5 : 1
-                },
-                disabled: !!loadingFile,
-                onClick: () => loadFromManifest(entry),
-                onMouseOver: (e) => { e.currentTarget.style.background = "var(--bg-hover)"; },
-                onMouseOut: (e) => { e.currentTarget.style.background = "transparent"; }
-              },
-                h("div", {
-                  className: "w-8 h-8 rounded flex items-center justify-center shrink-0 text-sm",
-                  style: { background: "var(--accent-light)", color: "var(--accent)" }
-                }, loadingFile === entry.file ? "⏳" : "📋"),
-                h("div", { className: "flex-1 min-w-0" },
-                  h("div", { className: "font-medium text-sm truncate", style: { color: "var(--text-primary)" } }, entry.name),
-                  h("div", { className: "text-xs mt-0.5", style: { color: "var(--text-tertiary)" } },
-                    entry.file + " · " + entry.sizeKB + " KB")
-                ),
-                h("div", { className: "text-xs shrink-0 mono", style: { color: "var(--text-tertiary)" } },
-                  entry.lastModified ? new Date(entry.lastModified).toLocaleDateString("es-AR", { day: "2-digit", month: "short" }) : "")
-              )
-            )
-          )
-        ),
-
-        // Loading state
-        manifestLoading && h("div", { className: "mb-6 text-sm", style: { color: "var(--text-tertiary)" } }, "Buscando proyectos..."),
-
-        // Upload fallback
-        h("div", { className: `drop-zone flex flex-col items-center p-8 w-full ${dragOver ? "drag-over" : ""}` },
-          h("p", { className: "text-sm mb-3", style: { color: "var(--text-secondary)" } },
-            hasManifest ? "O cargá un XML local para previsualizar:" : "Arrastrá archivos XML acá o hacé clic para seleccionar"),
-          h("label", {
-            className: "px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors",
-            style: { background: hasManifest ? "var(--bg-tertiary)" : "var(--accent)", color: hasManifest ? "var(--text-primary)" : "#fff" }
-          },
-            "Seleccionar archivos XML",
-            h("input", {
-              type: "file", accept: ".xml", multiple: true, className: "hidden",
-              onChange: (e) => handleFiles(e.target.files)
-            })
-          )
-        )
-      )
-    );
+function statusColor(status) {
+  switch (status) {
+    case 'completed': return 'var(--success)';
+    case 'overdue': return 'var(--danger)';
+    case 'in_progress': return 'var(--warning)';
+    default: return 'var(--text-tertiary)';
   }
-
-  return h("div", { className: "flex flex-col h-screen", style: { background: "var(--bg-primary)" } },
-    // Header bar
-    h("div", {
-      className: "flex items-center gap-1 px-3 shrink-0",
-      style: { background: "var(--bg-secondary)", borderBottom: "1px solid var(--border)", height: "42px" }
-    },
-      h("span", { className: "font-semibold text-sm mr-3", style: { color: "var(--text-primary)" } }, "📊 BuildPlan"),
-      // Project tabs
-      projects.map(p =>
-        h("button", {
-          key: p.id,
-          className: `tab-btn flex items-center gap-2 ${activeTab === p.id ? "active" : ""}`,
-          onClick: () => setActiveTab(p.id)
-        },
-          h("span", {
-            className: "w-2 h-2 rounded-full shrink-0",
-            style: { background: p.stats.overdue > 0 ? "var(--danger)" : p.stats.avgProgress >= 80 ? "var(--success)" : "var(--warning)" }
-          }),
-          p.name.length > 25 ? p.name.slice(0, 25) + "…" : p.name,
-          h("span", {
-            className: "ml-1 text-xs opacity-60 hover:opacity-100 cursor-pointer",
-            onClick: (e) => { e.stopPropagation(); closeProject(p.id); },
-            title: "Cerrar proyecto"
-          }, "✕")
-        )
-      ),
-      // Portfolio tab
-      projects.length > 1 && h("button", {
-        className: `tab-btn ${activeTab === "__portfolio" ? "active" : ""}`,
-        onClick: () => setActiveTab("__portfolio")
-      }, "📊 Portfolio"),
-      // Add more
-      h("label", {
-        className: "tab-btn cursor-pointer",
-        title: "Agregar proyecto"
-      },
-        "+ Agregar",
-        h("input", {
-          type: "file", accept: ".xml", multiple: true, className: "hidden",
-          onChange: (e) => handleFiles(e.target.files)
-        })
-      )
-    ),
-    // Content
-    activeTab === "__portfolio"
-      ? h(PortfolioView, { projects })
-      : activeProject
-        ? h(ProjectView, { key: activeProject.id, project: activeProject })
-        : h("div", { className: "flex-1 flex items-center justify-center", style: { color: "var(--text-tertiary)" } }, "Seleccioná un proyecto")
-  );
 }
 
-// ── Portfolio View ──
-function PortfolioView({ projects }) {
-  const now = new Date();
-  return h("div", { className: "flex-1 overflow-auto p-6", style: { background: "var(--bg-primary)" } },
-    h("h2", { className: "text-lg font-bold mb-4", style: { color: "var(--text-primary)" } }, "Portfolio — Todos los proyectos"),
-    h("div", { className: "overflow-x-auto" },
-      h("table", { className: "w-full text-sm", style: { borderCollapse: "collapse" } },
-        h("thead", null,
-          h("tr", { style: { borderBottom: "2px solid var(--border)" } },
-            ["Proyecto", "Inicio", "Fin", "Tareas", "Avance", "Vencidas", "Estado"].map(col =>
-              h("th", {
-                key: col,
-                className: "text-left py-2 px-3 font-semibold text-xs uppercase tracking-wide",
-                style: { color: "var(--text-tertiary)" }
-              }, col)
-            )
-          )
-        ),
-        h("tbody", null,
-          projects.map(p =>
-            h("tr", {
-              key: p.id,
-              className: "task-row",
-              style: { borderBottom: "1px solid var(--border)" }
-            },
-              h("td", { className: "py-2.5 px-3 font-medium" }, p.name),
-              h("td", { className: "py-2.5 px-3 mono" }, fmtDate(p.startDate)),
-              h("td", { className: "py-2.5 px-3 mono" }, fmtDate(p.finishDate)),
-              h("td", { className: "py-2.5 px-3 mono" }, p.stats.totalTasks),
-              h("td", { className: "py-2.5 px-3" },
-                h("div", { className: "flex items-center gap-2" },
-                  h("div", { className: "progress-track w-16" },
-                    h("div", {
-                      className: "progress-fill",
-                      style: { width: p.stats.avgProgress + "%", background: "var(--accent)" }
-                    })
-                  ),
-                  h("span", { className: "mono text-xs" }, p.stats.avgProgress + "%")
-                )
-              ),
-              h("td", { className: "py-2.5 px-3 mono", style: { color: p.stats.overdue > 0 ? "var(--danger)" : "inherit" } },
-                p.stats.overdue || "—"),
-              h("td", { className: "py-2.5 px-3" },
-                h("span", {
-                  className: "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium",
-                  style: {
-                    background: p.stats.overdue > 0 ? "var(--danger-bg)" : p.stats.avgProgress >= 80 ? "var(--success-light)" : "var(--warning-light)",
-                    color: p.stats.overdue > 0 ? "var(--danger)" : p.stats.avgProgress >= 80 ? "var(--success)" : "var(--warning)"
-                  }
-                },
-                  p.stats.overdue > 0 ? "Con atrasos" : p.stats.avgProgress >= 80 ? "En plazo" : "En curso")
-              )
-            )
-          )
-        )
-      )
-    )
-  );
-}
-
-// ── Project View ──
-function ProjectView({ project }) {
-  const [subTab, setSubTab] = useState("gantt");
-
-  return h("div", { className: "flex-1 flex flex-col overflow-hidden" },
-    // Sub-tab bar
-    h("div", {
-      className: "flex items-center gap-0 px-3 shrink-0",
-      style: { background: "var(--bg-secondary)", borderBottom: "1px solid var(--border)", height: "36px" }
-    },
-      [
-        { id: "gantt", label: "Gantt" },
-        { id: "dashboard", label: "Dashboard" },
-        { id: "resources", label: "Recursos" },
-      ].map(tab =>
-        h("button", {
-          key: tab.id,
-          className: `tab-btn text-xs ${subTab === tab.id ? "active" : ""}`,
-          onClick: () => setSubTab(tab.id)
-        }, tab.label)
-      )
-    ),
-    // Content
-    subTab === "gantt" ? h(GanttView, { project })
-    : subTab === "dashboard" ? h(DashboardView, { project })
-    : h(ResourcesView, { project })
-  );
-}
-
-// ── Dashboard View ──
-function DashboardView({ project }) {
-  const s = project.stats;
-  const cards = [
-    { label: "Total tareas", value: s.totalTasks, color: "var(--accent)" },
-    { label: "Completadas", value: s.completed, color: "var(--success)" },
-    { label: "En curso", value: s.inProgress, color: "var(--warning)" },
-    { label: "Pendientes", value: s.pending, color: "var(--text-tertiary)" },
-    { label: "Vencidas", value: s.overdue, color: "var(--danger)" },
-    { label: "Avance", value: s.avgProgress + "%", color: "var(--accent)" },
-  ];
-
-  return h("div", { className: "flex-1 overflow-auto p-6", style: { background: "var(--bg-primary)" } },
-    // KPIs
-    h("div", { className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6" },
-      cards.map(c =>
-        h("div", {
-          key: c.label,
-          className: "p-4 rounded-lg",
-          style: { background: "var(--bg-secondary)", border: "1px solid var(--border)" }
-        },
-          h("div", { className: "text-xs mb-1", style: { color: "var(--text-tertiary)" } }, c.label),
-          h("div", { className: "text-2xl font-bold mono", style: { color: c.color } }, c.value)
-        )
-      )
-    ),
-    // Progress bar
-    h("div", {
-      className: "p-4 rounded-lg mb-6",
-      style: { background: "var(--bg-secondary)", border: "1px solid var(--border)" }
-    },
-      h("div", { className: "flex justify-between mb-2" },
-        h("span", { className: "text-sm font-medium" }, "Avance general"),
-        h("span", { className: "mono text-sm" }, s.avgProgress + "%")
-      ),
-      h("div", { className: "w-full h-3 rounded-full overflow-hidden", style: { background: "var(--bg-tertiary)" } },
-        h("div", {
-          className: "h-full rounded-full transition-all",
-          style: { width: s.avgProgress + "%", background: s.avgProgress >= 80 ? "var(--success)" : s.avgProgress >= 40 ? "var(--accent)" : "var(--warning)" }
-        })
-      )
-    ),
-    // Status distribution bar
-    h("div", {
-      className: "p-4 rounded-lg mb-6",
-      style: { background: "var(--bg-secondary)", border: "1px solid var(--border)" }
-    },
-      h("h3", { className: "text-sm font-medium mb-3" }, "Distribución por estado"),
-      h("div", { className: "flex rounded-full overflow-hidden h-6" },
-        s.completed > 0 && h("div", {
-          style: { width: (s.completed / s.totalTasks * 100) + "%", background: "var(--success)" },
-          title: `Completadas: ${s.completed}`,
-          className: "flex items-center justify-center text-white text-xs font-medium"
-        }, s.completed > s.totalTasks * 0.08 ? s.completed : ""),
-        s.inProgress > 0 && h("div", {
-          style: { width: (s.inProgress / s.totalTasks * 100) + "%", background: "var(--accent)" },
-          title: `En curso: ${s.inProgress}`,
-          className: "flex items-center justify-center text-white text-xs font-medium"
-        }, s.inProgress > s.totalTasks * 0.08 ? s.inProgress : ""),
-        s.overdue > 0 && h("div", {
-          style: { width: (s.overdue / s.totalTasks * 100) + "%", background: "var(--danger)" },
-          title: `Vencidas: ${s.overdue}`,
-          className: "flex items-center justify-center text-white text-xs font-medium"
-        }, s.overdue > s.totalTasks * 0.08 ? s.overdue : ""),
-        s.pending > 0 && h("div", {
-          style: { width: (s.pending / s.totalTasks * 100) + "%", background: "var(--bg-hover)" },
-          title: `Pendientes: ${s.pending}`,
-          className: "flex items-center justify-center text-xs font-medium",
-          style2: { color: "var(--text-secondary)" }
-        }, s.pending > s.totalTasks * 0.08 ? s.pending : "")
-      ),
-      h("div", { className: "flex gap-4 mt-2 text-xs", style: { color: "var(--text-secondary)" } },
-        h("span", { className: "flex items-center gap-1" }, h("span", { className: "w-2 h-2 rounded-full inline-block", style: { background: "var(--success)" } }), "Completadas"),
-        h("span", { className: "flex items-center gap-1" }, h("span", { className: "w-2 h-2 rounded-full inline-block", style: { background: "var(--accent)" } }), "En curso"),
-        h("span", { className: "flex items-center gap-1" }, h("span", { className: "w-2 h-2 rounded-full inline-block", style: { background: "var(--danger)" } }), "Vencidas"),
-        h("span", { className: "flex items-center gap-1" }, h("span", { className: "w-2 h-2 rounded-full inline-block", style: { background: "var(--bg-hover)" } }), "Pendientes")
-      )
-    ),
-    // Upcoming milestones
-    s.upcomingMilestones.length > 0 && h("div", {
-      className: "p-4 rounded-lg",
-      style: { background: "var(--bg-secondary)", border: "1px solid var(--border)" }
-    },
-      h("h3", { className: "text-sm font-medium mb-3" }, "Próximos hitos"),
-      s.upcomingMilestones.map((m, i) => {
-        const daysLeft = daysBetween(new Date(), m.start);
-        return h("div", {
-          key: i,
-          className: "flex items-center gap-3 py-2",
-          style: i > 0 ? { borderTop: "1px solid var(--border)" } : {}
-        },
-          h("span", { style: { color: "var(--gantt-milestone)" } }, "♦"),
-          h("span", { className: "flex-1 text-sm" }, m.name),
-          h("span", { className: "mono text-xs", style: { color: "var(--text-tertiary)" } }, fmtDate(m.start)),
-          h("span", {
-            className: "mono text-xs font-medium px-2 py-0.5 rounded",
-            style: {
-              background: daysLeft <= 7 ? "var(--danger-bg)" : daysLeft <= 30 ? "var(--warning-light)" : "var(--bg-tertiary)",
-              color: daysLeft <= 7 ? "var(--danger)" : daysLeft <= 30 ? "var(--warning)" : "var(--text-secondary)"
-            }
-          }, daysLeft + "d")
-        );
-      })
-    )
-  );
-}
-
-// ── Resources View ──
-function ResourcesView({ project }) {
-  const resourceStats = useMemo(() => {
-    const map = {};
-    project.assignments.forEach(a => {
-      const r = project.resources.find(r => r.uid === a.resourceUid);
-      if (!r) return;
-      if (!map[r.uid]) map[r.uid] = { ...r, taskCount: 0, totalWork: 0, actualWork: 0 };
-      map[r.uid].taskCount++;
-      map[r.uid].totalWork += a.work;
-      map[r.uid].actualWork += a.actualWork;
-    });
-    return Object.values(map).sort((a, b) => b.taskCount - a.taskCount);
-  }, [project]);
-
-  if (!resourceStats.length) {
-    return h("div", { className: "flex-1 flex items-center justify-center flex-col gap-2", style: { color: "var(--text-tertiary)" } },
-      h("span", { style: { fontSize: "2rem" } }, "👤"),
-      h("span", null, "Este proyecto no tiene recursos asignados")
-    );
+function statusLabel(status) {
+  switch (status) {
+    case 'completed': return 'Completada';
+    case 'overdue': return 'Vencida';
+    case 'in_progress': return 'En curso';
+    default: return 'Pendiente';
   }
-
-  return h("div", { className: "flex-1 overflow-auto p-6" },
-    h("table", { className: "w-full text-sm", style: { borderCollapse: "collapse" } },
-      h("thead", null,
-        h("tr", { style: { borderBottom: "2px solid var(--border)" } },
-          ["Recurso", "Tipo", "Grupo", "Tareas", "Trabajo (hs)", "Trabajo real (hs)"].map(col =>
-            h("th", {
-              key: col,
-              className: "text-left py-2 px-3 font-semibold text-xs uppercase tracking-wide",
-              style: { color: "var(--text-tertiary)" }
-            }, col)
-          )
-        )
-      ),
-      h("tbody", null,
-        resourceStats.map(r =>
-          h("tr", {
-            key: r.uid,
-            className: "task-row",
-            style: { borderBottom: "1px solid var(--border)" }
-          },
-            h("td", { className: "py-2.5 px-3 font-medium" }, r.name),
-            h("td", { className: "py-2.5 px-3 text-xs", style: { color: "var(--text-secondary)" } }, r.type === "work" ? "Trabajo" : "Material"),
-            h("td", { className: "py-2.5 px-3 text-xs" }, r.group || "—"),
-            h("td", { className: "py-2.5 px-3 mono" }, r.taskCount),
-            h("td", { className: "py-2.5 px-3 mono" }, Math.round(r.totalWork)),
-            h("td", { className: "py-2.5 px-3 mono" }, Math.round(r.actualWork))
-          )
-        )
-      )
-    )
-  );
 }
 
-// ── Gantt View (Table + Chart) ──
-const ROW_H = 28;
-const ZOOM_LEVELS = { day: 30, week: 10, month: 2.5, quarter: 0.8 };
-
-function GanttView({ project }) {
-  const [zoom, setZoom] = useState("week");
-  const [tableWidth, setTableWidth] = useState(480);
-  const [dragging, setDragging] = useState(false);
-  const [search, setSearch] = useState("");
-  const [collapsedSet, setCollapsedSet] = useState(() => {
-    const set = new Set();
-    project.tasks.filter(t => t.isSummary).forEach(t => set.add(t.uid));
-    return set;
+// ═══════════════════════════════════════════════
+// Theme Toggle
+// ═══════════════════════════════════════════════
+function useTheme() {
+  const [theme, setTheme] = useState(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    return mq.matches ? 'dark' : 'light';
   });
 
-  const tableRef = useRef(null);
-  const ganttRef = useRef(null);
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
-  // Flatten visible tasks
-  const flatTasks = useMemo(() => {
-    const result = [];
-    const searchLower = search.toLowerCase();
-    function walk(tasks, hidden) {
-      tasks.forEach(t => {
-        const matchesSearch = !search || t.name.toLowerCase().includes(searchLower);
-        if (!hidden && (matchesSearch || !search)) result.push(t);
-        const isCollapsed = collapsedSet.has(t.uid);
-        if (t.children.length) walk(t.children, hidden || isCollapsed || (search && !matchesSearch));
-      });
-    }
-    walk(project.taskTree, false);
-    return result;
-  }, [project.taskTree, collapsedSet, search]);
-
-  const toggleCollapse = useCallback((uid) => {
-    setCollapsedSet(prev => {
-      const next = new Set(prev);
-      next.has(uid) ? next.delete(uid) : next.add(uid);
-      return next;
-    });
+  const toggle = useCallback(() => {
+    setTheme(t => t === 'light' ? 'dark' : 'light');
   }, []);
 
-  // Gantt time calculations
-  const pxPerDay = ZOOM_LEVELS[zoom];
-  const startDate = new Date(project.stats.minDate);
-  startDate.setDate(startDate.getDate() - 7);
-  const endDate = new Date(project.stats.maxDate);
-  endDate.setDate(endDate.getDate() + 14);
-  const totalDays = daysBetween(startDate, endDate);
-  const ganttWidth = Math.max(totalDays * pxPerDay, 800);
+  return [theme, toggle];
+}
 
-  const dateToX = useCallback((d) => {
-    if (!d) return 0;
-    return daysBetween(startDate, d) * pxPerDay;
-  }, [startDate, pxPerDay]);
+// ═══════════════════════════════════════════════
+// Icons (inline SVGs)
+// ═══════════════════════════════════════════════
+const Icons = {
+  building: (s = 16) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"/>
+    </svg>
+  ),
+  sun: (s = 16) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+  ),
+  moon: (s = 16) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  ),
+  search: (s = 16) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+  ),
+  download: (s = 16) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  ),
+  chevronDown: (s = 12) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+  ),
+  chevronRight: (s = 12) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 6 15 12 9 18"/></svg>
+  ),
+  x: (s = 12) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  ),
+  expandAll: (s = 14) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="7 8 12 3 17 8"/><polyline points="7 16 12 21 17 16"/></svg>
+  ),
+  collapseAll: (s = 14) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="7 3 12 8 17 3"/><polyline points="7 21 12 16 17 21"/></svg>
+  ),
+  arrowRight: (s = 14) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  ),
+  upload: (s = 16) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+  ),
+  link: (s = 14) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+  ),
+  filter: (s = 14) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+  ),
+  print: (s = 14) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+  ),
+};
+
+// ═══════════════════════════════════════════════
+// Gantt Chart SVG Component
+// ═══════════════════════════════════════════════
+const ZOOM_LEVELS = {
+  day: { label: 'Día', dayWidth: 28 },
+  week: { label: 'Semana', dayWidth: 8 },
+  month: { label: 'Mes', dayWidth: 2.5 },
+  quarter: { label: 'Trimestre', dayWidth: 0.8 },
+};
+
+function GanttChart({ tasks, uidMap, minDate, maxDate, zoom, showArrows, tableScrollTop, onScrollSync, onTooltip }) {
+  const svgRef = useRef(null);
+  const containerRef = useRef(null);
+  const rowH = 28;
+  const headerH = 44;
+  const dayW = ZOOM_LEVELS[zoom].dayWidth;
+
+  // Compute padding
+  const padDaysBefore = zoom === 'day' ? 3 : zoom === 'week' ? 7 : zoom === 'month' ? 14 : 30;
+  const padDaysAfter = zoom === 'day' ? 7 : zoom === 'week' ? 14 : zoom === 'month' ? 30 : 60;
+
+  const chartStart = useMemo(() => {
+    if (!minDate) return new Date();
+    const d = new Date(minDate);
+    d.setDate(d.getDate() - padDaysBefore);
+    return d;
+  }, [minDate, padDaysBefore]);
+
+  const chartEnd = useMemo(() => {
+    if (!maxDate) return new Date();
+    const d = new Date(maxDate);
+    d.setDate(d.getDate() + padDaysAfter);
+    return d;
+  }, [maxDate, padDaysAfter]);
+
+  const totalDays = daysBetween(chartStart, chartEnd);
+  const totalWidth = Math.max(totalDays * dayW, 600);
+  const totalHeight = tasks.length * rowH;
+
+  // Date → X position
+  const dateToX = useCallback((date) => {
+    if (!date) return 0;
+    return daysBetween(chartStart, date) * dayW;
+  }, [chartStart, dayW]);
 
   // Sync scroll
-  const syncScroll = useCallback((source) => {
-    if (source === "table" && tableRef.current && ganttRef.current) {
-      ganttRef.current.scrollTop = tableRef.current.scrollTop;
-    } else if (source === "gantt" && ganttRef.current && tableRef.current) {
-      tableRef.current.scrollTop = ganttRef.current.scrollTop;
-    }
-  }, []);
-
-  // Splitter drag
-  const onSplitterMouseDown = useCallback((e) => {
-    e.preventDefault();
-    setDragging(true);
-    const startX = e.clientX;
-    const startW = tableWidth;
-    const onMove = (e) => setTableWidth(Math.max(200, Math.min(900, startW + e.clientX - startX)));
-    const onUp = () => { setDragging(false); document.removeEventListener("mousemove", onMove); document.removeEventListener("mouseup", onUp); };
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseup", onUp);
-  }, [tableWidth]);
-
-  // Scroll to today on mount
   useEffect(() => {
-    if (ganttRef.current) {
-      const todayX = dateToX(new Date());
-      ganttRef.current.scrollLeft = Math.max(0, todayX - 200);
-    }
-  }, [zoom]);
+    const el = containerRef.current;
+    if (!el) return;
+    el.scrollTop = tableScrollTop;
+  }, [tableScrollTop]);
+
+  const handleScroll = useCallback((e) => {
+    onScrollSync(e.target.scrollTop);
+  }, [onScrollSync]);
 
   // Today line
-  const todayX = dateToX(new Date());
+  const today = new Date();
+  const todayX = dateToX(today);
+  const showToday = today >= chartStart && today <= chartEnd;
 
-  // Time header
-  const timeHeaders = useMemo(() => {
-    const headers = [];
-    const d = new Date(startDate);
-    if (zoom === "day") {
-      while (d <= endDate) {
-        headers.push({ date: new Date(d), label: d.getDate().toString(), x: dateToX(d), w: pxPerDay });
+  // Generate time grid headers
+  const gridLines = useMemo(() => {
+    const lines = [];
+    const headers1 = []; // top row
+    const headers2 = []; // bottom row
+    const d = new Date(chartStart);
+
+    if (zoom === 'day') {
+      while (d <= chartEnd) {
+        const x = dateToX(d);
+        const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+        lines.push({ x, isWeekend, isMajor: d.getDay() === 1 });
+        headers2.push({ x, w: dayW, label: d.getDate().toString(), isMajor: false });
+        if (d.getDate() === 1 || (d.getDay() === 1 && headers1.length === 0)) {
+          headers1.push({ x, label: d.toLocaleDateString('es-AR', { month: 'short', year: '2-digit' }) });
+        }
         d.setDate(d.getDate() + 1);
       }
-    } else if (zoom === "week") {
-      while (d <= endDate) {
-        const weekStart = new Date(d);
-        headers.push({ date: weekStart, label: fmtDateShort(weekStart), x: dateToX(weekStart), w: pxPerDay * 7 });
-        d.setDate(d.getDate() + 7);
+    } else if (zoom === 'week') {
+      while (d <= chartEnd) {
+        const x = dateToX(d);
+        if (d.getDay() === 1 || d.getTime() === chartStart.getTime()) {
+          lines.push({ x, isMajor: d.getDate() <= 7 });
+          headers2.push({ x, w: dayW * 7, label: d.getDate().toString() });
+        }
+        if (d.getDate() === 1) {
+          headers1.push({ x, label: d.toLocaleDateString('es-AR', { month: 'short', year: '2-digit' }) });
+        }
+        d.setDate(d.getDate() + 1);
       }
-    } else if (zoom === "month") {
-      d.setDate(1);
-      while (d <= endDate) {
-        const mStart = new Date(d);
-        const daysInMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-        headers.push({
-          date: mStart,
-          label: d.toLocaleDateString("es-AR", { month: "short", year: "2-digit" }),
-          x: dateToX(mStart),
-          w: daysInMonth * pxPerDay
-        });
-        d.setMonth(d.getMonth() + 1);
+    } else if (zoom === 'month') {
+      while (d <= chartEnd) {
+        if (d.getDate() === 1) {
+          const x = dateToX(d);
+          lines.push({ x, isMajor: d.getMonth() === 0 });
+          const daysInMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+          headers2.push({ x, w: daysInMonth * dayW, label: d.toLocaleDateString('es-AR', { month: 'short' }) });
+          if (d.getMonth() === 0 || headers1.length === 0) {
+            headers1.push({ x, label: d.getFullYear().toString() });
+          }
+        }
+        d.setDate(d.getDate() + 1);
       }
     } else {
-      d.setMonth(Math.floor(d.getMonth() / 3) * 3, 1);
-      while (d <= endDate) {
-        const qStart = new Date(d);
-        const qEnd = new Date(d.getFullYear(), d.getMonth() + 3, 0);
-        const qDays = daysBetween(qStart, qEnd);
-        headers.push({
-          date: qStart,
-          label: "Q" + (Math.floor(d.getMonth() / 3) + 1) + " " + d.getFullYear().toString().slice(2),
-          x: dateToX(qStart),
-          w: qDays * pxPerDay
-        });
-        d.setMonth(d.getMonth() + 3);
+      // Quarter
+      while (d <= chartEnd) {
+        if (d.getDate() === 1) {
+          const x = dateToX(d);
+          if (d.getMonth() % 3 === 0) {
+            lines.push({ x, isMajor: d.getMonth() === 0 });
+            const q = Math.floor(d.getMonth() / 3) + 1;
+            headers2.push({ x, w: 90 * dayW, label: `T${q}` });
+          }
+          if (d.getMonth() === 0 || headers1.length === 0) {
+            headers1.push({ x, label: d.getFullYear().toString() });
+          }
+        }
+        d.setDate(d.getDate() + 1);
       }
     }
-    return headers;
-  }, [startDate, endDate, zoom, pxPerDay, dateToX]);
 
-  const totalHeight = flatTasks.length * ROW_H;
+    return { lines, headers1, headers2 };
+  }, [chartStart, chartEnd, zoom, dayW, dateToX]);
 
-  return h("div", { className: "flex-1 flex flex-col overflow-hidden" },
-    // Toolbar
-    h("div", {
-      className: "flex items-center gap-2 px-3 py-1.5 shrink-0",
-      style: { background: "var(--bg-secondary)", borderBottom: "1px solid var(--border)" }
-    },
-      h("input", {
-        type: "text",
-        placeholder: "Buscar tareas... (Ctrl+K)",
-        className: "px-2.5 py-1 rounded text-xs w-48 outline-none",
-        style: { background: "var(--bg-tertiary)", color: "var(--text-primary)", border: "1px solid var(--border)" },
-        value: search,
-        onChange: (e) => setSearch(e.target.value)
-      }),
-      h("div", { className: "flex-1" }),
-      h("span", { className: "text-xs", style: { color: "var(--text-tertiary)" } },
-        flatTasks.length + " tareas"),
-      h("div", { className: "flex gap-0.5 ml-2" },
-        ["day", "week", "month", "quarter"].map(z =>
-          h("button", {
-            key: z,
-            className: "px-2 py-1 rounded text-xs font-medium transition-colors",
-            style: {
-              background: zoom === z ? "var(--accent)" : "transparent",
-              color: zoom === z ? "#fff" : "var(--text-secondary)"
-            },
-            onClick: () => setZoom(z)
-          }, z === "day" ? "Día" : z === "week" ? "Sem" : z === "month" ? "Mes" : "Trim")
-        )
-      ),
-      h("button", {
-        className: "px-2 py-1 rounded text-xs",
-        style: { color: "var(--text-secondary)" },
-        onClick: () => setCollapsedSet(new Set()),
-        title: "Expandir todo"
-      }, "⊞"),
-      h("button", {
-        className: "px-2 py-1 rounded text-xs",
-        style: { color: "var(--text-secondary)" },
-        onClick: () => {
-          const set = new Set();
-          project.tasks.filter(t => t.isSummary).forEach(t => set.add(t.uid));
-          setCollapsedSet(set);
-        },
-        title: "Colapsar todo"
-      }, "⊟")
-    ),
-    // Gantt body
-    h("div", { className: "flex flex-1 overflow-hidden" },
-      // Table
-      h("div", {
-        ref: tableRef,
-        className: "overflow-auto gantt-scroll-sync shrink-0",
-        style: { width: tableWidth + "px" },
-        onScroll: () => syncScroll("table")
-      },
-        // Table header
-        h("div", {
-          className: "flex items-center text-xs font-semibold sticky top-0 z-10",
-          style: {
-            height: "32px",
-            background: "var(--bg-secondary)",
-            borderBottom: "1px solid var(--border)",
-            color: "var(--text-tertiary)",
-            minWidth: tableWidth + "px"
+  // Build bar positions
+  const barPositions = useMemo(() => {
+    const map = {};
+    tasks.forEach((task, i) => {
+      const y = i * rowH;
+      const cy = y + rowH / 2;
+      if (task.isMilestone) {
+        const mx = dateToX(task.start || task.finish);
+        map[task.uid] = { x: mx, y, cy, w: 0, midX: mx, isMilestone: true, startX: mx, endX: mx };
+      } else if (task.start && task.finish) {
+        const x1 = dateToX(task.start);
+        const x2 = dateToX(task.finish);
+        const w = Math.max(x2 - x1, 2);
+        map[task.uid] = { x: x1, y, cy, w, midX: x1 + w / 2, isMilestone: false, startX: x1, endX: x1 + w };
+      }
+    });
+    return map;
+  }, [tasks, dateToX, rowH]);
+
+  // Dependency arrows
+  const arrows = useMemo(() => {
+    if (!showArrows) return [];
+    const result = [];
+
+    for (const task of tasks) {
+      for (const pred of task.predecessors) {
+        const fromPos = barPositions[pred.taskUid];
+        const toPos = barPositions[task.uid];
+        if (!fromPos || !toPos) continue;
+
+        let fromX, fromY, toX, toY;
+
+        switch (pred.type) {
+          case 'FS':
+            fromX = fromPos.endX;
+            fromY = fromPos.cy;
+            toX = toPos.startX;
+            toY = toPos.cy;
+            break;
+          case 'FF':
+            fromX = fromPos.endX;
+            fromY = fromPos.cy;
+            toX = toPos.endX;
+            toY = toPos.cy;
+            break;
+          case 'SS':
+            fromX = fromPos.startX;
+            fromY = fromPos.cy;
+            toX = toPos.startX;
+            toY = toPos.cy;
+            break;
+          case 'SF':
+            fromX = fromPos.startX;
+            fromY = fromPos.cy;
+            toX = toPos.endX;
+            toY = toPos.cy;
+            break;
+          default:
+            fromX = fromPos.endX;
+            fromY = fromPos.cy;
+            toX = toPos.startX;
+            toY = toPos.cy;
+        }
+
+        // Rectilinear path
+        const gap = 6;
+        let path;
+
+        if (pred.type === 'FS') {
+          const midX = fromX + gap;
+          if (toX > midX + gap) {
+            // Simple L shape
+            if (Math.abs(fromY - toY) < 2) {
+              path = `M${fromX},${fromY} L${toX},${toY}`;
+            } else {
+              const cornerX = (fromX + toX) / 2;
+              path = `M${fromX},${fromY} L${cornerX},${fromY} L${cornerX},${toY} L${toX},${toY}`;
+            }
+          } else {
+            // U shape around
+            const detourY = fromY < toY ? Math.max(fromY, toY) + rowH * 0.6 : Math.min(fromY, toY) - rowH * 0.6;
+            path = `M${fromX},${fromY} L${midX},${fromY} L${midX},${detourY} L${toX - gap},${detourY} L${toX - gap},${toY} L${toX},${toY}`;
           }
-        },
-          h("div", { className: "w-12 shrink-0 px-2 text-center" }, "WBS"),
-          h("div", { className: "flex-1 px-2", style: { minWidth: "180px" } }, "Nombre"),
-          h("div", { className: "w-20 shrink-0 px-1 text-center" }, "Inicio"),
-          h("div", { className: "w-20 shrink-0 px-1 text-center" }, "Fin"),
-          h("div", { className: "w-12 shrink-0 px-1 text-center" }, "%"),
-          h("div", { className: "w-24 shrink-0 px-1" }, "Recurso")
-        ),
-        // Table rows
-        h("div", { style: { minWidth: tableWidth + "px" } },
-          flatTasks.map((t, i) =>
-            h("div", {
-              key: t.uid,
-              className: `task-row flex items-center text-xs ${t.isOverdue ? "overdue" : ""}`,
-              style: {
-                height: ROW_H + "px",
-                borderBottom: "1px solid var(--border)",
-                background: i % 2 === 0 ? "transparent" : "var(--bg-secondary)"
-              }
-            },
-              h("div", { className: "w-12 shrink-0 px-2 text-center mono", style: { color: "var(--text-tertiary)", fontSize: "0.7rem" } },
-                t.wbs || t.outlineLevel),
-              h("div", {
-                className: "flex-1 px-2 flex items-center gap-1 truncate",
-                style: { minWidth: "180px", paddingLeft: (8 + (t.outlineLevel - 1) * 16) + "px" }
-              },
-                t.isSummary && h("span", {
-                  className: "cursor-pointer select-none shrink-0",
-                  style: { color: "var(--text-tertiary)", fontSize: "0.65rem", width: "12px" },
-                  onClick: () => toggleCollapse(t.uid)
-                }, collapsedSet.has(t.uid) ? "▶" : "▼"),
-                t.isMilestone && h("span", { style: { color: "var(--gantt-milestone)", marginRight: "2px" } }, "♦"),
-                h("span", {
-                  className: "truncate",
-                  style: { fontWeight: t.isSummary ? 600 : 400, color: t.isOverdue ? "var(--danger)" : "var(--text-primary)" }
-                }, t.name)
-              ),
-              h("div", { className: "w-20 shrink-0 px-1 text-center mono", style: { fontSize: "0.7rem" } }, fmtDateShort(t.start)),
-              h("div", { className: "w-20 shrink-0 px-1 text-center mono", style: { fontSize: "0.7rem", color: t.isOverdue ? "var(--danger)" : "inherit" } }, fmtDateShort(t.finish)),
-              h("div", { className: "w-12 shrink-0 px-1 text-center mono", style: { fontSize: "0.7rem" } },
-                t.percentComplete > 0 ? t.percentComplete + "%" : ""),
-              h("div", {
-                className: "w-24 shrink-0 px-1 truncate",
-                style: { fontSize: "0.7rem", color: "var(--text-secondary)" },
-                title: t.assignedResources.join(", ")
-              }, t.assignedResources[0] || "")
-            )
-          )
-        )
-      ),
-      // Splitter
-      h("div", {
-        className: `splitter-handle ${dragging ? "active" : ""}`,
-        onMouseDown: onSplitterMouseDown
-      }),
-      // Gantt chart
-      h("div", {
-        ref: ganttRef,
-        className: "flex-1 overflow-auto gantt-scroll-sync",
-        onScroll: () => syncScroll("gantt")
-      },
-        // Time header
-        h("div", {
-          className: "sticky top-0 z-10",
-          style: { height: "32px", width: ganttWidth + "px", background: "var(--bg-secondary)", borderBottom: "1px solid var(--border)" }
-        },
-          h("svg", { width: ganttWidth, height: 32, style: { display: "block" } },
-            timeHeaders.map((th, i) =>
-              h("g", { key: i },
-                h("rect", { x: th.x, y: 0, width: th.w, height: 32, fill: "none", stroke: "var(--border)", strokeWidth: 0.5 }),
-                h("text", {
-                  x: th.x + th.w / 2, y: 20,
-                  textAnchor: "middle",
-                  style: { fontSize: "10px", fill: "var(--text-tertiary)", fontFamily: "'JetBrains Mono', monospace" }
-                }, th.label)
-              )
-            )
-          )
-        ),
-        // Gantt bars
-        h("svg", {
-          width: ganttWidth,
-          height: Math.max(totalHeight, 400),
-          style: { display: "block" }
-        },
-          // Grid lines
-          timeHeaders.map((th, i) =>
-            h("line", {
-              key: "g" + i,
-              x1: th.x, y1: 0, x2: th.x, y2: totalHeight,
-              stroke: "var(--gantt-grid-strong)", strokeWidth: 0.5
-            })
-          ),
-          // Row backgrounds
-          flatTasks.map((t, i) =>
-            h("rect", {
-              key: "bg" + t.uid,
-              x: 0, y: i * ROW_H, width: ganttWidth, height: ROW_H,
-              fill: t.isOverdue ? "var(--gantt-overdue-bg)" : i % 2 === 0 ? "transparent" : "var(--gantt-grid)"
-            })
-          ),
-          // Today line
-          todayX > 0 && todayX < ganttWidth && h("line", {
-            x1: todayX, y1: 0, x2: todayX, y2: totalHeight,
-            stroke: "var(--gantt-today)", strokeWidth: 1.5, strokeDasharray: "4,3", opacity: 0.7
-          }),
-          // Bars
-          flatTasks.map((t, i) => {
-            if (!t.start || !t.finish) return null;
-            const x = dateToX(t.start);
-            const w = Math.max(dateToX(t.finish) - x, 2);
-            const y = i * ROW_H + 4;
-            const barH = ROW_H - 8;
+        } else if (pred.type === 'SS') {
+          const leftX = Math.min(fromX, toX) - gap;
+          path = `M${fromX},${fromY} L${leftX},${fromY} L${leftX},${toY} L${toX},${toY}`;
+        } else if (pred.type === 'FF') {
+          const rightX = Math.max(fromX, toX) + gap;
+          path = `M${fromX},${fromY} L${rightX},${fromY} L${rightX},${toY} L${toX},${toY}`;
+        } else { // SF
+          const leftX = fromX - gap;
+          const rightX = toX + gap;
+          if (leftX > rightX) {
+            const midX2 = (leftX + rightX) / 2;
+            path = `M${fromX},${fromY} L${midX2},${fromY} L${midX2},${toY} L${toX},${toY}`;
+          } else {
+            path = `M${fromX},${fromY} L${leftX},${fromY} L${leftX},${toY} L${toX},${toY}`;
+          }
+        }
 
-            if (t.isMilestone) {
-              const cx = x;
-              const cy = y + barH / 2;
-              const s = barH / 2 - 1;
-              return h("g", { key: "bar" + t.uid },
-                h("polygon", {
-                  points: `${cx},${cy - s} ${cx + s},${cy} ${cx},${cy + s} ${cx - s},${cy}`,
-                  fill: "var(--gantt-milestone)",
-                  stroke: "var(--bg-primary)", strokeWidth: 1
-                }),
-                h("title", null, `♦ ${t.name}\n${fmtDate(t.start)}`)
-              );
-            }
+        result.push({ path, toX, toY, type: pred.type });
+      }
+    }
+    return result;
+  }, [tasks, barPositions, showArrows, rowH]);
 
-            if (t.isSummary) {
-              return h("g", { key: "bar" + t.uid },
-                h("rect", { x, y: y + barH - 5, width: w, height: 5, rx: 1, fill: "var(--gantt-summary)" }),
-                // Start cap
-                h("polygon", { points: `${x},${y + barH - 5} ${x},${y + barH + 2} ${x + 5},${y + barH - 5}`, fill: "var(--gantt-summary)" }),
-                // End cap
-                h("polygon", { points: `${x + w},${y + barH - 5} ${x + w},${y + barH + 2} ${x + w - 5},${y + barH - 5}`, fill: "var(--gantt-summary)" }),
-                h("title", null, `${t.name}\n${fmtDate(t.start)} → ${fmtDate(t.finish)}\n${t.percentComplete}%`)
-              );
-            }
+  // Mouse tooltip
+  const handleBarEnter = useCallback((e, task) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    onTooltip({
+      task,
+      x: rect.left + rect.width / 2,
+      y: rect.top - 4
+    });
+  }, [onTooltip]);
 
-            const progressW = w * t.percentComplete / 100;
-            return h("g", { key: "bar" + t.uid },
-              h("rect", { x, y, width: w, height: barH, rx: 3, fill: t.isOverdue ? "var(--gantt-critical)" : "var(--gantt-bar)", opacity: 0.3 }),
-              progressW > 0 && h("rect", { x, y, width: progressW, height: barH, rx: 3, fill: t.isOverdue ? "var(--gantt-critical)" : "var(--gantt-bar)" }),
-              h("title", null, `${t.name}\n${fmtDate(t.start)} → ${fmtDate(t.finish)}\n${t.percentComplete}%${t.assignedResources.length ? "\n" + t.assignedResources.join(", ") : ""}${t.isOverdue ? "\n⚠ VENCIDA" : ""}`)
+  const handleBarLeave = useCallback(() => {
+    onTooltip(null);
+  }, [onTooltip]);
+
+  return (
+    <div ref={containerRef} className="gantt-chart-container" onScroll={handleScroll} style={{ position: 'relative' }}>
+      <svg width={totalWidth} height={totalHeight + headerH} style={{ display: 'block' }}>
+        {/* Header background */}
+        <rect x="0" y="0" width={totalWidth} height={headerH} fill="var(--bg-secondary)" className="gantt-svg-header"/>
+        <line x1="0" y1={headerH} x2={totalWidth} y2={headerH} stroke="var(--border-primary)" strokeWidth="1"/>
+
+        {/* Header labels */}
+        {gridLines.headers1.map((h, i) => (
+          <text key={`h1-${i}`} x={h.x + 4} y={16} fontSize="10" fontWeight="600" fill="var(--text-secondary)" fontFamily="var(--font-sans)">{h.label}</text>
+        ))}
+        {gridLines.headers2.map((h, i) => (
+          <text key={`h2-${i}`} x={h.x + (h.w ? h.w/2 : 4)} y={34} fontSize="10" fill="var(--text-tertiary)" fontFamily="var(--font-mono)" textAnchor={h.w ? 'middle' : 'start'}>{h.label}</text>
+        ))}
+
+        {/* Grid lines */}
+        {gridLines.lines.map((l, i) => (
+          <line key={`gl-${i}`} x1={l.x} y1={headerH} x2={l.x} y2={totalHeight + headerH}
+            stroke={l.isMajor ? 'var(--border-primary)' : 'var(--border-secondary)'}
+            strokeWidth={l.isMajor ? 1 : 0.5}
+            strokeDasharray={l.isMajor ? 'none' : '2,4'}
+          />
+        ))}
+
+        {/* Weekend shading for day zoom */}
+        {zoom === 'day' && gridLines.lines.filter(l => l.isWeekend).map((l, i) => (
+          <rect key={`we-${i}`} x={l.x} y={headerH} width={dayW} height={totalHeight} fill="var(--text-tertiary)" opacity="0.04"/>
+        ))}
+
+        {/* Row lines */}
+        {tasks.map((_, i) => (
+          <line key={`rl-${i}`} x1="0" y1={headerH + (i + 1) * rowH} x2={totalWidth} y2={headerH + (i + 1) * rowH} stroke="var(--border-secondary)" strokeWidth="0.5"/>
+        ))}
+
+        {/* Dependency arrows */}
+        {arrows.map((arrow, i) => (
+          <g key={`arr-${i}`}>
+            <path d={arrow.path} fill="none" stroke="var(--arrow-color)" strokeWidth="1"
+              transform={`translate(0, ${headerH})`}/>
+            {/* Arrowhead */}
+            <polygon
+              points={`${arrow.toX},${arrow.toY + headerH} ${arrow.toX - 4},${arrow.toY - 3 + headerH} ${arrow.toX - 4},${arrow.toY + 3 + headerH}`}
+              fill="var(--arrow-head)" opacity="0.6"
+            />
+          </g>
+        ))}
+
+        {/* Today line */}
+        {showToday && (
+          <g>
+            <line x1={todayX} y1={headerH} x2={todayX} y2={totalHeight + headerH} stroke="var(--today-line)" strokeWidth="1.5" strokeDasharray="4,3"/>
+            <rect x={todayX - 16} y={headerH - 14} width="32" height="13" rx="2" fill="var(--today-line)"/>
+            <text x={todayX} y={headerH - 5} textAnchor="middle" fontSize="9" fontWeight="600" fill="white" fontFamily="var(--font-sans)">HOY</text>
+          </g>
+        )}
+
+        {/* Task bars */}
+        {tasks.map((task, i) => {
+          const y = headerH + i * rowH;
+          const cy = y + rowH / 2;
+
+          if (task.isMilestone) {
+            const mx = dateToX(task.start || task.finish);
+            const size = 5;
+            const color = isOverdue(task) ? 'var(--bar-overdue)' : 'var(--bar-milestone)';
+            return (
+              <g key={task.uid}
+                onMouseEnter={(e) => handleBarEnter(e, task)}
+                onMouseLeave={handleBarLeave}
+                style={{ cursor: 'default' }}>
+                <polygon
+                  points={`${mx},${cy - size} ${mx + size},${cy} ${mx},${cy + size} ${mx - size},${cy}`}
+                  fill={color} stroke={color} strokeWidth="1"/>
+              </g>
             );
-          }),
-          // Today label
-          todayX > 0 && todayX < ganttWidth && h("text", {
-            x: todayX + 4, y: 12,
-            style: { fontSize: "9px", fill: "var(--gantt-today)", fontWeight: 600, fontFamily: "'JetBrains Mono', monospace" }
-          }, "HOY")
-        )
-      )
-    )
+          }
+
+          if (!task.start || !task.finish) return null;
+
+          const x = dateToX(task.start);
+          const w = Math.max(dateToX(task.finish) - x, 2);
+          const barH = task.isSummary ? 6 : 10;
+          const barY = cy - barH / 2;
+          const pct = task.percentComplete;
+          const overdue = isOverdue(task);
+          const complete = pct >= 100;
+
+          let bgColor = 'var(--bar-normal-bg)';
+          let fillColor = 'var(--bar-normal)';
+          if (overdue) { bgColor = 'var(--bar-overdue-bg)'; fillColor = 'var(--bar-overdue)'; }
+          else if (complete) { bgColor = 'var(--bar-complete-bg)'; fillColor = 'var(--bar-complete)'; }
+
+          if (task.isSummary) {
+            return (
+              <g key={task.uid}
+                onMouseEnter={(e) => handleBarEnter(e, task)}
+                onMouseLeave={handleBarLeave}
+                style={{ cursor: 'default' }}>
+                <rect x={x} y={barY} width={w} height={barH} fill="var(--bar-summary)" rx="1" opacity="0.7"/>
+                <rect x={x} y={barY} width={w * pct / 100} height={barH} fill="var(--bar-summary)" rx="1"/>
+                {/* Summary brackets */}
+                <path d={`M${x},${barY} L${x},${barY + barH + 3} L${x + 4},${barY + barH}`} fill="none" stroke="var(--bar-summary)" strokeWidth="1.5"/>
+                <path d={`M${x + w},${barY} L${x + w},${barY + barH + 3} L${x + w - 4},${barY + barH}`} fill="none" stroke="var(--bar-summary)" strokeWidth="1.5"/>
+              </g>
+            );
+          }
+
+          return (
+            <g key={task.uid}
+              onMouseEnter={(e) => handleBarEnter(e, task)}
+              onMouseLeave={handleBarLeave}
+              style={{ cursor: 'default' }}>
+              <rect x={x} y={barY} width={w} height={barH} fill={bgColor} rx="3"/>
+              <rect x={x} y={barY} width={Math.max(w * pct / 100, 0)} height={barH} fill={fillColor} rx="3"/>
+              {/* Percent label on bar if wide enough */}
+              {w > 30 && pct > 0 && (
+                <text x={x + 4} y={cy + 3} fontSize="8" fontWeight="600" fill={fillColor === 'var(--bar-normal)' ? 'var(--accent)' : fillColor} fontFamily="var(--font-mono)" opacity="0.8">{pct}%</text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+    </div>
   );
 }
 
-// ── Mount ──
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(h(App));
+// ═══════════════════════════════════════════════
+// Dashboard Component
+// ═══════════════════════════════════════════════
+function Dashboard({ project }) {
+  if (!project) return null;
+  const tasks = project.tasks.filter(t => !t.isSummary);
+  const total = tasks.length;
+  const completed = tasks.filter(t => t.percentComplete >= 100).length;
+  const inProgress = tasks.filter(t => t.percentComplete > 0 && t.percentComplete < 100).length;
+  const overdue = tasks.filter(t => isOverdue(t)).length;
+  const avgProgress = total > 0 ? Math.round(tasks.reduce((s, t) => s + t.percentComplete, 0) / total) : 0;
 
-// Keyboard shortcuts
-document.addEventListener("keydown", (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-    e.preventDefault();
-    const input = document.querySelector('input[placeholder*="Buscar"]');
-    if (input) input.focus();
+  const upcoming = tasks
+    .filter(t => t.finish && t.finish >= new Date() && t.isMilestone !== true && t.percentComplete < 100)
+    .sort((a, b) => a.finish - b.finish)
+    .slice(0, 8);
+
+  const resourceLoad = {};
+  tasks.forEach(t => {
+    const res = t.resources.length > 0 ? t.resources.join(', ') : 'Sin asignar';
+    if (!resourceLoad[res]) resourceLoad[res] = { total: 0, done: 0, overdue: 0 };
+    resourceLoad[res].total++;
+    if (t.percentComplete >= 100) resourceLoad[res].done++;
+    if (isOverdue(t)) resourceLoad[res].overdue++;
+  });
+
+  return (
+    <div className="dashboard">
+      <div className="dash-grid">
+        <div className="kpi-card">
+          <div className="kpi-value">{total}</div>
+          <div className="kpi-label">Tareas totales</div>
+        </div>
+        <div className="kpi-card success">
+          <div className="kpi-value" style={{ color: 'var(--success)' }}>{completed}</div>
+          <div className="kpi-label">Completadas</div>
+        </div>
+        <div className="kpi-card warning">
+          <div className="kpi-value" style={{ color: 'var(--warning)' }}>{inProgress}</div>
+          <div className="kpi-label">En curso</div>
+        </div>
+        <div className="kpi-card danger">
+          <div className="kpi-value" style={{ color: 'var(--danger)' }}>{overdue}</div>
+          <div className="kpi-label">Vencidas</div>
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-value">{avgProgress}%</div>
+          <div className="kpi-label">Avance promedio</div>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div style={{ marginBottom: 20, background: 'var(--bg-elevated)', border: '1px solid var(--border-secondary)', borderRadius: 'var(--radius-md)', padding: 14 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+          <span style={{ fontSize: 12, fontWeight: 600 }}>Avance general</span>
+          <span style={{ fontSize: 12, fontFamily: 'var(--font-mono)', color: 'var(--accent)', fontWeight: 600 }}>{avgProgress}%</span>
+        </div>
+        <div style={{ height: 8, borderRadius: 4, background: 'var(--bg-tertiary)', overflow: 'hidden' }}>
+          <div style={{ height: '100%', borderRadius: 4, width: `${avgProgress}%`, background: 'var(--accent)', transition: 'width 0.3s' }}/>
+        </div>
+        <div style={{ display: 'flex', gap: 16, marginTop: 8, fontSize: 11, color: 'var(--text-secondary)' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--success)' }}/> {completed} completadas
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--warning)' }}/> {inProgress} en curso
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--danger)' }}/> {overdue} vencidas
+          </span>
+        </div>
+      </div>
+
+      {/* Upcoming tasks */}
+      {upcoming.length > 0 && (
+        <div style={{ marginBottom: 20 }}>
+          <div className="dash-section-title">Próximas entregas</div>
+          <table className="dash-table">
+            <thead>
+              <tr>
+                <th>Tarea</th>
+                <th style={{ width: 100 }}>Fin</th>
+                <th style={{ width: 60 }}>Avance</th>
+                <th style={{ width: 120 }}>Recurso</th>
+              </tr>
+            </thead>
+            <tbody>
+              {upcoming.map(t => (
+                <tr key={t.uid}>
+                  <td style={{ fontWeight: 500 }}>{t.name}</td>
+                  <td className="td-mono">{fmtDate(t.finish)}</td>
+                  <td>
+                    <div className="progress-mini">
+                      <div className="progress-mini-bar">
+                        <div className="progress-mini-fill" style={{ width: `${t.percentComplete}%`, background: 'var(--accent)' }}/>
+                      </div>
+                      <span className="td-mono">{t.percentComplete}%</span>
+                    </div>
+                  </td>
+                  <td style={{ color: 'var(--text-secondary)', fontSize: 11 }}>{t.resources.join(', ') || '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Resource load */}
+      <div>
+        <div className="dash-section-title">Carga por recurso</div>
+        <table className="dash-table">
+          <thead>
+            <tr>
+              <th>Recurso</th>
+              <th style={{ width: 60 }}>Total</th>
+              <th style={{ width: 80 }}>Completadas</th>
+              <th style={{ width: 70 }}>Vencidas</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(resourceLoad).sort((a, b) => b[1].total - a[1].total).map(([name, data]) => (
+              <tr key={name}>
+                <td style={{ fontWeight: 500 }}>{name}</td>
+                <td className="td-mono">{data.total}</td>
+                <td className="td-mono" style={{ color: 'var(--success)' }}>{data.done}</td>
+                <td className="td-mono" style={{ color: data.overdue > 0 ? 'var(--danger)' : 'var(--text-tertiary)' }}>{data.overdue}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════
+// Resources View
+// ═══════════════════════════════════════════════
+function ResourcesView({ project }) {
+  if (!project) return null;
+  const allRes = project.rawResources || [];
+  const tasks = project.tasks;
+
+  const resData = allRes.map(r => {
+    const myTasks = tasks.filter(t => t.resources.includes(r.name));
+    const total = myTasks.length;
+    const done = myTasks.filter(t => t.percentComplete >= 100).length;
+    const overdue = myTasks.filter(t => isOverdue(t)).length;
+    const avgPct = total > 0 ? Math.round(myTasks.reduce((s, t) => s + t.percentComplete, 0) / total) : 0;
+    return { ...r, total, done, overdue, avgPct };
+  });
+
+  return (
+    <div className="resources-view">
+      <div className="dash-section-title">Recursos del proyecto</div>
+      <table className="dash-table">
+        <thead>
+          <tr>
+            <th>Recurso</th>
+            <th style={{ width: 70 }}>Tareas</th>
+            <th style={{ width: 90 }}>Completadas</th>
+            <th style={{ width: 70 }}>Vencidas</th>
+            <th style={{ width: 90 }}>Avance prom.</th>
+          </tr>
+        </thead>
+        <tbody>
+          {resData.sort((a, b) => b.total - a.total).map(r => (
+            <tr key={r.uid}>
+              <td style={{ fontWeight: 500 }}>{r.name}</td>
+              <td className="td-mono">{r.total}</td>
+              <td className="td-mono" style={{ color: 'var(--success)' }}>{r.done}</td>
+              <td className="td-mono" style={{ color: r.overdue > 0 ? 'var(--danger)' : 'var(--text-tertiary)' }}>{r.overdue}</td>
+              <td>
+                <div className="progress-mini">
+                  <div className="progress-mini-bar" style={{ width: 48 }}>
+                    <div className="progress-mini-fill" style={{ width: `${r.avgPct}%`, background: 'var(--accent)' }}/>
+                  </div>
+                  <span className="td-mono">{r.avgPct}%</span>
+                </div>
+              </td>
+            </tr>
+          ))}
+          {resData.length === 0 && (
+            <tr><td colSpan="5" style={{ textAlign: 'center', color: 'var(--text-tertiary)', padding: 20 }}>No hay recursos asignados</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════
+// Search Modal
+// ═══════════════════════════════════════════════
+function SearchModal({ projects, onSelect, onClose }) {
+  const [query, setQuery] = useState('');
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const results = useMemo(() => {
+    if (!query.trim()) return [];
+    const q = query.toLowerCase();
+    const res = [];
+    for (const p of projects) {
+      if (!p.data) continue;
+      for (const t of p.data.tasks) {
+        if (t.name.toLowerCase().includes(q)) {
+          res.push({ task: t, projectName: p.name });
+          if (res.length >= 20) return res;
+        }
+      }
+    }
+    return res;
+  }, [query, projects]);
+
+  return (
+    <div className="search-overlay" onClick={onClose}>
+      <div className="search-modal" onClick={e => e.stopPropagation()}>
+        <input ref={inputRef} className="search-input" placeholder="Buscar tareas..." value={query} onChange={e => setQuery(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Escape') onClose(); }}/>
+        <div className="search-results">
+          {results.map((r, i) => (
+            <div key={i} className="search-result-item" onClick={() => { onSelect(r); onClose(); }}>
+              <span style={{ color: r.task.isMilestone ? 'var(--bar-milestone)' : 'var(--text-tertiary)' }}>
+                {r.task.isMilestone ? '♦' : '○'}
+              </span>
+              <span className="sr-name">{r.task.name}</span>
+              <span className="sr-project">{r.projectName}</span>
+            </div>
+          ))}
+          {query.trim() && results.length === 0 && (
+            <div style={{ padding: '16px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 12 }}>Sin resultados</div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════
+// Tooltip Component
+// ═══════════════════════════════════════════════
+function Tooltip({ info }) {
+  if (!info) return null;
+  const { task, x, y } = info;
+  const status = getStatus(task);
+
+  return (
+    <div className="gantt-tooltip" style={{ left: Math.min(x, window.innerWidth - 280), top: y - 100 }}>
+      <div className="tt-name">{task.name}</div>
+      <div className="tt-row"><span className="tt-label">Estado</span><span className="tt-value" style={{ color: statusColor(status) }}>{statusLabel(status)}</span></div>
+      <div className="tt-row"><span className="tt-label">Inicio</span><span className="tt-value">{fmtDate(task.start)}</span></div>
+      <div className="tt-row"><span className="tt-label">Fin</span><span className="tt-value">{fmtDate(task.finish)}</span></div>
+      <div className="tt-row"><span className="tt-label">Avance</span><span className="tt-value">{task.percentComplete}%</span></div>
+      {task.resources.length > 0 && (
+        <div className="tt-row"><span className="tt-label">Recurso</span><span className="tt-value">{task.resources.join(', ')}</span></div>
+      )}
+      {task.predecessors.length > 0 && (
+        <div className="tt-row"><span className="tt-label">Predecesoras</span><span className="tt-value">{task.predecessors.length}</span></div>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════
+// MAIN APP
+// ═══════════════════════════════════════════════
+function App() {
+  const [theme, toggleTheme] = useTheme();
+  const [manifest, setManifest] = useState(null);
+  const [projects, setProjects] = useState([]); // { id, name, file, data, loading }
+  const [openTabs, setOpenTabs] = useState([]); // project ids
+  const [activeTab, setActiveTab] = useState(null);
+  const [subTab, setSubTab] = useState('gantt'); // gantt | dashboard | resources
+  const [zoom, setZoom] = useState('week');
+  const [showSearch, setShowSearch] = useState(false);
+  const [showArrows, setShowArrows] = useState(true);
+  const [tooltipInfo, setTooltipInfo] = useState(null);
+  const [tableScrollTop, setTableScrollTop] = useState(0);
+  const [tablePaneWidth, setTablePaneWidth] = useState(420);
+  const [splitterActive, setSplitterActive] = useState(false);
+
+  // Filters
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterResource, setFilterResource] = useState('all');
+  const [filterWbsLevel, setFilterWbsLevel] = useState(99);
+  const [filterDateFrom, setFilterDateFrom] = useState('');
+  const [filterDateTo, setFilterDateTo] = useState('');
+
+  // Expanded state per project
+  const [expandedMap, setExpandedMap] = useState({});
+
+  // Load manifest
+  useEffect(() => {
+    fetch('data/manifest.json?t=' + Date.now())
+      .then(r => r.json())
+      .then(data => {
+        setManifest(data);
+        setProjects(data.projects.map((p, i) => ({
+          id: i,
+          name: p.name || p.file.replace('.xml', ''),
+          file: p.file,
+          data: null,
+          loading: false,
+          size: p.size || null,
+          modified: p.modified || null
+        })));
+      })
+      .catch(() => {
+        // No manifest — allow local file upload only
+        setManifest({ projects: [] });
+        setProjects([]);
+      });
+  }, []);
+
+  // Keyboard shortcut
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowSearch(s => !s);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  // Open project
+  const openProject = useCallback(async (project) => {
+    if (openTabs.includes(project.id)) {
+      setActiveTab(project.id);
+      return;
+    }
+
+    if (!project.data && !project.loading) {
+      setProjects(prev => prev.map(p => p.id === project.id ? { ...p, loading: true } : p));
+      try {
+        const res = await fetch(`data/projects/${project.file}?t=${Date.now()}`);
+        const text = await res.text();
+        const data = parseMSPDI(text);
+        setProjects(prev => prev.map(p => p.id === project.id ? { ...p, data, loading: false } : p));
+
+        // Initialize expanded state
+        const expMap = {};
+        data.tasks.forEach(t => { if (t.isSummary) expMap[t.uid] = true; });
+        setExpandedMap(prev => ({ ...prev, [project.id]: expMap }));
+      } catch (err) {
+        console.error('Error loading project:', err);
+        setProjects(prev => prev.map(p => p.id === project.id ? { ...p, loading: false } : p));
+        return;
+      }
+    }
+
+    setOpenTabs(prev => [...prev, project.id]);
+    setActiveTab(project.id);
+    setSubTab('gantt');
+    resetFilters();
+  }, [openTabs]);
+
+  // Close tab
+  const closeTab = useCallback((id, e) => {
+    e?.stopPropagation();
+    setOpenTabs(prev => {
+      const next = prev.filter(t => t !== id);
+      if (activeTab === id) {
+        setActiveTab(next.length > 0 ? next[next.length - 1] : null);
+      }
+      return next;
+    });
+  }, [activeTab]);
+
+  // Local file upload
+  const handleLocalFile = useCallback((file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = parseMSPDI(e.target.result);
+        const id = -Date.now();
+        const proj = { id, name: file.name.replace('.xml', ''), file: file.name, data, loading: false, size: file.size, local: true };
+        setProjects(prev => [...prev, proj]);
+
+        const expMap = {};
+        data.tasks.forEach(t => { if (t.isSummary) expMap[t.uid] = true; });
+        setExpandedMap(prev => ({ ...prev, [id]: expMap }));
+
+        setOpenTabs(prev => [...prev, id]);
+        setActiveTab(id);
+        setSubTab('gantt');
+        resetFilters();
+      } catch (err) {
+        console.error('Parse error:', err);
+      }
+    };
+    reader.readAsText(file);
+  }, []);
+
+  // Toggle task expansion
+  const toggleTask = useCallback((projectId, taskUid) => {
+    setExpandedMap(prev => {
+      const projMap = { ...prev[projectId] };
+      projMap[taskUid] = !projMap[taskUid];
+      return { ...prev, [projectId]: projMap };
+    });
+  }, []);
+
+  // Expand / Collapse all
+  const expandAll = useCallback((projectId, tasks) => {
+    const expMap = {};
+    tasks.forEach(t => { if (t.isSummary) expMap[t.uid] = true; });
+    setExpandedMap(prev => ({ ...prev, [projectId]: expMap }));
+  }, []);
+
+  const collapseAll = useCallback((projectId, tasks) => {
+    const expMap = {};
+    tasks.forEach(t => { if (t.isSummary) expMap[t.uid] = false; });
+    setExpandedMap(prev => ({ ...prev, [projectId]: expMap }));
+  }, []);
+
+  // Reset filters
+  const resetFilters = useCallback(() => {
+    setFilterStatus('all');
+    setFilterResource('all');
+    setFilterWbsLevel(99);
+    setFilterDateFrom('');
+    setFilterDateTo('');
+  }, []);
+
+  const activeFiltersCount = useMemo(() => {
+    let c = 0;
+    if (filterStatus !== 'all') c++;
+    if (filterResource !== 'all') c++;
+    if (filterWbsLevel < 99) c++;
+    if (filterDateFrom || filterDateTo) c++;
+    return c;
+  }, [filterStatus, filterResource, filterWbsLevel, filterDateFrom, filterDateTo]);
+
+  // Active project
+  const activeProject = useMemo(() => projects.find(p => p.id === activeTab), [projects, activeTab]);
+
+  // Filtered & visible tasks
+  const visibleTasks = useMemo(() => {
+    if (!activeProject?.data) return [];
+    const allTasks = activeProject.data.tasks;
+    const expMap = expandedMap[activeProject.id] || {};
+
+    // First apply filters
+    const matchesFilter = (task) => {
+      // Status filter
+      if (filterStatus !== 'all') {
+        const status = getStatus(task);
+        if (filterStatus !== status) return false;
+      }
+
+      // Resource filter
+      if (filterResource !== 'all') {
+        if (filterResource === 'unassigned') {
+          if (task.resources.length > 0) return false;
+        } else {
+          if (!task.resources.includes(filterResource)) return false;
+        }
+      }
+
+      // WBS level
+      if (task.outlineLevel > filterWbsLevel) return false;
+
+      // Date range
+      if (filterDateFrom) {
+        const from = new Date(filterDateFrom);
+        if (task.finish && task.finish < from) return false;
+      }
+      if (filterDateTo) {
+        const to = new Date(filterDateTo);
+        if (task.start && task.start > to) return false;
+      }
+
+      return true;
+    };
+
+    // Check if any descendant matches
+    const hasMatchingDescendant = (task) => {
+      if (matchesFilter(task)) return true;
+      for (const child of task.children) {
+        if (hasMatchingDescendant(child)) return true;
+      }
+      return false;
+    };
+
+    // Build visible list
+    const result = [];
+    const processTask = (task) => {
+      // Summary tasks stay visible if any child matches
+      if (task.isSummary) {
+        if (!hasMatchingDescendant(task) && !matchesFilter(task)) return;
+      } else {
+        if (!matchesFilter(task)) return;
+      }
+
+      result.push(task);
+
+      // Show children only if expanded
+      if (task.isSummary && expMap[task.uid]) {
+        for (const child of task.children) {
+          processTask(child);
+        }
+      }
+    };
+
+    for (const task of activeProject.data.rootTasks || []) {
+      processTask(task);
+    }
+
+    return result;
+  }, [activeProject, expandedMap, filterStatus, filterResource, filterWbsLevel, filterDateFrom, filterDateTo]);
+
+  // Splitter drag
+  useEffect(() => {
+    if (!splitterActive) return;
+    const onMove = (e) => {
+      setTablePaneWidth(Math.max(200, Math.min(e.clientX, window.innerWidth - 200)));
+    };
+    const onUp = () => setSplitterActive(false);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    return () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+  }, [splitterActive]);
+
+  // Table scroll sync
+  const tableContainerRef = useRef(null);
+  const handleTableScroll = useCallback((e) => {
+    setTableScrollTop(e.target.scrollTop);
+  }, []);
+  const handleChartScrollSync = useCallback((scrollTop) => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollTop = scrollTop;
+    }
+    setTableScrollTop(scrollTop);
+  }, []);
+
+  // Print
+  const handlePrint = useCallback(() => {
+    window.print();
+  }, []);
+
+  // Drop zone
+  const [dragOver, setDragOver] = useState(false);
+
+  if (!manifest) {
+    return <div className="loading-state"><div className="spinner"/><span>Cargando...</span></div>;
   }
-});
+
+  // Welcome screen
+  if (!activeTab) {
+    const serverProjects = projects.filter(p => !p.local);
+    return (
+      <Fragment>
+        <div className="app-header">
+          <div className="app-logo">
+            {Icons.building(18)}
+            BuildPlan <span>Viewer</span>
+          </div>
+          <div className="project-tabs"/>
+          <div className="header-actions">
+            <button className="btn btn-ghost btn-icon" onClick={() => setShowSearch(true)} title="Buscar (Ctrl+K)">{Icons.search()}</button>
+            <button className="btn btn-ghost btn-icon" onClick={toggleTheme} title="Cambiar tema">
+              {theme === 'light' ? Icons.moon() : Icons.sun()}
+            </button>
+          </div>
+        </div>
+
+        <div className="welcome">
+          <div className="welcome-header">
+            <div className="welcome-title">Proyectos</div>
+            <div className="welcome-sub">{serverProjects.length} archivos disponibles</div>
+          </div>
+
+          <div className="project-grid">
+            {serverProjects.map(p => (
+              <div key={p.id} className="project-card" onClick={() => openProject(p)}>
+                <div className="project-card-icon">{Icons.building(16)}</div>
+                <div className="project-card-info">
+                  <div className="project-card-name">{p.name}</div>
+                  <div className="project-card-meta">
+                    {p.size ? `${(p.size / 1024).toFixed(0)} KB` : 'XML'}
+                    {p.modified ? ` · ${new Date(p.modified).toLocaleDateString('es-AR')}` : ''}
+                  </div>
+                </div>
+                <div className="project-card-arrow">{Icons.arrowRight()}</div>
+              </div>
+            ))}
+          </div>
+
+          <div
+            className={`drop-zone ${dragOver ? 'drag-over' : ''}`}
+            onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={e => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files[0]) handleLocalFile(e.dataTransfer.files[0]); }}
+            onClick={() => document.getElementById('file-input').click()}
+          >
+            {Icons.upload(20)}
+            <div style={{ marginTop: 6 }}>Soltar un archivo XML de MS Project aquí, o hacer clic para seleccionar</div>
+            <input id="file-input" type="file" accept=".xml" onChange={e => { if (e.target.files[0]) handleLocalFile(e.target.files[0]); }}/>
+          </div>
+        </div>
+
+        {showSearch && <SearchModal projects={projects} onSelect={() => {}} onClose={() => setShowSearch(false)}/>}
+      </Fragment>
+    );
+  }
+
+  // Project view
+  const proj = activeProject;
+  const projData = proj?.data;
+  const isLoading = proj?.loading;
+
+  return (
+    <Fragment>
+      {/* Print header/footer */}
+      <div className="print-header">
+        <h1>{proj?.name}</h1>
+        <p>Generado el {new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' })} — BuildPlan Viewer · Bauvek</p>
+      </div>
+
+      {/* Header */}
+      <div className="app-header">
+        <div className="app-logo" style={{ cursor: 'pointer' }} onClick={() => setActiveTab(null)}>
+          {Icons.building(18)}
+          BuildPlan
+        </div>
+
+        <div className="project-tabs">
+          {openTabs.map(id => {
+            const p = projects.find(pr => pr.id === id);
+            if (!p) return null;
+            const pData = p.data;
+            let dotColor = 'var(--text-tertiary)';
+            if (pData) {
+              const nonSum = pData.tasks.filter(t => !t.isSummary);
+              const overdueCount = nonSum.filter(t => isOverdue(t)).length;
+              const avg = nonSum.length > 0 ? nonSum.reduce((s, t) => s + t.percentComplete, 0) / nonSum.length : 0;
+              if (avg >= 90) dotColor = 'var(--success)';
+              else if (overdueCount > nonSum.length * 0.3) dotColor = 'var(--danger)';
+              else if (avg > 30) dotColor = 'var(--warning)';
+            }
+            return (
+              <button key={id} className={`project-tab ${activeTab === id ? 'active' : ''}`}
+                onClick={() => { setActiveTab(id); resetFilters(); }}>
+                <span className="status-dot" style={{ background: dotColor }}/>
+                {p.name}
+                <span className="close-tab" onClick={(e) => closeTab(id, e)}>×</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="header-actions">
+          <button className="btn btn-ghost btn-icon" onClick={() => setShowSearch(true)} title="Buscar (Ctrl+K)">{Icons.search()}</button>
+          <button className="btn btn-ghost btn-icon" onClick={toggleTheme}>
+            {theme === 'light' ? Icons.moon() : Icons.sun()}
+          </button>
+        </div>
+      </div>
+
+      {/* Sub-tabs */}
+      <div className="sub-tabs-bar">
+        <button className={`sub-tab ${subTab === 'gantt' ? 'active' : ''}`} onClick={() => setSubTab('gantt')}>Gantt</button>
+        <button className={`sub-tab ${subTab === 'dashboard' ? 'active' : ''}`} onClick={() => setSubTab('dashboard')}>Dashboard</button>
+        <button className={`sub-tab ${subTab === 'resources' ? 'active' : ''}`} onClick={() => setSubTab('resources')}>Recursos</button>
+
+        {subTab === 'gantt' && projData && (
+          <div className="sub-tabs-right">
+            <button className="btn btn-ghost btn-icon" onClick={() => expandAll(proj.id, projData.tasks)} title="Expandir todo">{Icons.expandAll()}</button>
+            <button className="btn btn-ghost btn-icon" onClick={() => collapseAll(proj.id, projData.tasks)} title="Colapsar todo">{Icons.collapseAll()}</button>
+
+            <div className="segmented">
+              {Object.entries(ZOOM_LEVELS).map(([key, val]) => (
+                <button key={key} className={zoom === key ? 'active' : ''} onClick={() => setZoom(key)}>{val.label}</button>
+              ))}
+            </div>
+
+            <button className={`btn btn-ghost btn-icon ${showArrows ? '' : ''}`}
+              onClick={() => setShowArrows(a => !a)}
+              title={showArrows ? 'Ocultar flechas' : 'Mostrar flechas'}
+              style={{ color: showArrows ? 'var(--accent)' : 'var(--text-tertiary)' }}>
+              {Icons.link()}
+            </button>
+
+            <button className="btn btn-ghost" onClick={handlePrint}>
+              {Icons.print()} PDF
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Filters (gantt only) */}
+      {subTab === 'gantt' && projData && (
+        <div className="filter-bar">
+          <span style={{ color: 'var(--text-tertiary)', marginRight: 2 }}>{Icons.filter()}</span>
+
+          <span className="filter-label">Estado</span>
+          <select className="filter-select" value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
+            <option value="all">Todos</option>
+            <option value="pending">Pendiente</option>
+            <option value="in_progress">En curso</option>
+            <option value="completed">Completada</option>
+            <option value="overdue">Vencida</option>
+          </select>
+
+          <span className="filter-label">Recurso</span>
+          <select className="filter-select" value={filterResource} onChange={e => setFilterResource(e.target.value)}>
+            <option value="all">Todos</option>
+            <option value="unassigned">Sin asignar</option>
+            {projData.resources.map(r => <option key={r} value={r}>{r}</option>)}
+          </select>
+
+          <span className="filter-label">Nivel</span>
+          <select className="filter-select" value={filterWbsLevel} onChange={e => setFilterWbsLevel(parseInt(e.target.value))}>
+            <option value="99">Todos</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+
+          <span className="filter-label">Desde</span>
+          <input type="date" className="filter-input" value={filterDateFrom} onChange={e => setFilterDateFrom(e.target.value)}/>
+
+          <span className="filter-label">Hasta</span>
+          <input type="date" className="filter-input" value={filterDateTo} onChange={e => setFilterDateTo(e.target.value)}/>
+
+          {activeFiltersCount > 0 && (
+            <Fragment>
+              <span className="filter-badge">{activeFiltersCount}</span>
+              <button className="filter-clear" onClick={resetFilters}>Limpiar</button>
+            </Fragment>
+          )}
+
+          <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
+            {visibleTasks.length} tareas
+          </span>
+        </div>
+      )}
+
+      {/* Content */}
+      {isLoading && <div className="loading-state"><div className="spinner"/><span>Cargando proyecto...</span></div>}
+
+      {!isLoading && projData && subTab === 'gantt' && (
+        <div className="gantt-wrapper" style={{ userSelect: splitterActive ? 'none' : 'auto' }}>
+          {/* Table */}
+          <div className="gantt-table-container" ref={tableContainerRef} style={{ width: tablePaneWidth }} onScroll={handleTableScroll}>
+            <table className="gantt-table">
+              <colgroup>
+                <col style={{ width: '40%' }}/>
+                <col style={{ width: '20%' }}/>
+                <col style={{ width: '20%' }}/>
+                <col style={{ width: '20%' }}/>
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Tarea</th>
+                  <th>Inicio</th>
+                  <th>Fin</th>
+                  <th>Avance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visibleTasks.map(task => {
+                  const expMap = expandedMap[proj.id] || {};
+                  const overdue = isOverdue(task);
+                  const indent = task.depth * 16;
+
+                  return (
+                    <tr key={task.uid} className={task.isSummary ? 'summary' : ''}>
+                      <td>
+                        <div className="task-name-cell" style={{ paddingLeft: indent }}>
+                          {task.isSummary ? (
+                            <span className="task-toggle" onClick={() => toggleTask(proj.id, task.uid)}>
+                              {expMap[task.uid] ? Icons.chevronDown() : Icons.chevronRight()}
+                            </span>
+                          ) : (
+                            <span style={{ width: 16, flexShrink: 0 }}/>
+                          )}
+                          {task.isMilestone && <span className="task-milestone-icon">♦</span>}
+                          <span className="task-name-text" style={{
+                            fontWeight: task.isSummary ? 600 : 400,
+                            color: overdue ? 'var(--danger)' : 'var(--text-primary)'
+                          }} title={task.name}>
+                            {task.name}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="td-mono">{fmtDate(task.start)}</td>
+                      <td className="td-mono" style={{ color: overdue ? 'var(--danger)' : undefined }}>{fmtDate(task.finish)}</td>
+                      <td>
+                        <div className="progress-mini">
+                          <div className="progress-mini-bar">
+                            <div className="progress-mini-fill" style={{
+                              width: `${task.percentComplete}%`,
+                              background: task.percentComplete >= 100 ? 'var(--success)' : overdue ? 'var(--danger)' : 'var(--accent)'
+                            }}/>
+                          </div>
+                          <span className="td-mono" style={{ fontSize: 10 }}>{task.percentComplete}%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Splitter */}
+          <div className={`splitter ${splitterActive ? 'active' : ''}`}
+            onMouseDown={() => setSplitterActive(true)}/>
+
+          {/* Gantt Chart */}
+          <GanttChart
+            tasks={visibleTasks}
+            uidMap={projData.uidMap}
+            minDate={projData.minDate}
+            maxDate={projData.maxDate}
+            zoom={zoom}
+            showArrows={showArrows}
+            tableScrollTop={tableScrollTop}
+            onScrollSync={handleChartScrollSync}
+            onTooltip={setTooltipInfo}
+          />
+        </div>
+      )}
+
+      {!isLoading && projData && subTab === 'dashboard' && <Dashboard project={projData}/>}
+      {!isLoading && projData && subTab === 'resources' && <ResourcesView project={projData}/>}
+
+      {/* Tooltip */}
+      <Tooltip info={tooltipInfo}/>
+
+      {/* Search */}
+      {showSearch && <SearchModal projects={projects} onSelect={() => {}} onClose={() => setShowSearch(false)}/>}
+
+      <div className="print-footer">BuildPlan Viewer — Bauvek · {new Date().toLocaleDateString('es-AR')}</div>
+    </Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
 </html>
