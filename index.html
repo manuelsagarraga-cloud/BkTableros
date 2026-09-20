@@ -175,7 +175,7 @@ body {
 "use strict";
 const h = React.createElement;
 
-// âââ XML MSPDI PARSER ââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── XML MSPDI PARSER ────────────────────────────────────────────────
 
 function parseMSPDI(xmlStr) {
   const parser = new DOMParser();
@@ -408,7 +408,7 @@ function hashStr(s) {
 }
 
 function fmtDate(d) {
-  if (!d) return "â";
+  if (!d) return "—";
   return d.toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "2-digit" });
 }
 function fmtDateShort(d) {
@@ -419,11 +419,11 @@ function daysBetween(a, b) {
   return Math.round((b - a) / 86400000);
 }
 
-// âââ REACT COMPONENTS ââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── REACT COMPONENTS ────────────────────────────────────────────────
 
 const { useState, useRef, useEffect, useCallback, useMemo } = React;
 
-// ââ App Shell ââ
+// ── App Shell ──
 function App() {
   const [projects, setProjects] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
@@ -432,9 +432,9 @@ function App() {
   const [manifestLoading, setManifestLoading] = useState(true);
   const [loadingFile, setLoadingFile] = useState(null);
 
-  // Try to fetch manifest on mount (works on GitHub Pages, fails locally â fallback to upload)
+  // Try to fetch manifest on mount (works on GitHub Pages, fails locally → fallback to upload)
   useEffect(() => {
-    fetch("data/manifest.json")
+    fetch("data/manifest.json?t=" + Date.now())
       .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(m => { setManifest(m); setManifestLoading(false); })
       .catch(() => { setManifest(null); setManifestLoading(false); });
@@ -521,7 +521,7 @@ function App() {
       style: { background: "var(--bg-primary)" }
     },
       h("div", { className: "flex flex-col items-center w-full max-w-2xl" },
-        h("div", { style: { fontSize: "3rem", marginBottom: "0.75rem" } }, "ð"),
+        h("div", { style: { fontSize: "3rem", marginBottom: "0.75rem" } }, "📊"),
         h("h1", { className: "text-2xl font-bold mb-1", style: { color: "var(--text-primary)" } }, "BuildPlan Viewer"),
         h("p", { className: "mb-6 text-center text-sm", style: { color: "var(--text-secondary)" } },
           "Visualizador de cronogramas de Microsoft Project"),
@@ -552,11 +552,11 @@ function App() {
                 h("div", {
                   className: "w-8 h-8 rounded flex items-center justify-center shrink-0 text-sm",
                   style: { background: "var(--accent-light)", color: "var(--accent)" }
-                }, loadingFile === entry.file ? "â³" : "ð"),
+                }, loadingFile === entry.file ? "⏳" : "📋"),
                 h("div", { className: "flex-1 min-w-0" },
                   h("div", { className: "font-medium text-sm truncate", style: { color: "var(--text-primary)" } }, entry.name),
                   h("div", { className: "text-xs mt-0.5", style: { color: "var(--text-tertiary)" } },
-                    entry.file + " Â· " + entry.sizeKB + " KB")
+                    entry.file + " · " + entry.sizeKB + " KB")
                 ),
                 h("div", { className: "text-xs shrink-0 mono", style: { color: "var(--text-tertiary)" } },
                   entry.lastModified ? new Date(entry.lastModified).toLocaleDateString("es-AR", { day: "2-digit", month: "short" }) : "")
@@ -571,7 +571,7 @@ function App() {
         // Upload fallback
         h("div", { className: `drop-zone flex flex-col items-center p-8 w-full ${dragOver ? "drag-over" : ""}` },
           h("p", { className: "text-sm mb-3", style: { color: "var(--text-secondary)" } },
-            hasManifest ? "O cargÃ¡ un XML local para previsualizar:" : "ArrastrÃ¡ archivos XML acÃ¡ o hacÃ© clic para seleccionar"),
+            hasManifest ? "O cargá un XML local para previsualizar:" : "Arrastrá archivos XML acá o hacé clic para seleccionar"),
           h("label", {
             className: "px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors",
             style: { background: hasManifest ? "var(--bg-tertiary)" : "var(--accent)", color: hasManifest ? "var(--text-primary)" : "#fff" }
@@ -593,7 +593,7 @@ function App() {
       className: "flex items-center gap-1 px-3 shrink-0",
       style: { background: "var(--bg-secondary)", borderBottom: "1px solid var(--border)", height: "42px" }
     },
-      h("span", { className: "font-semibold text-sm mr-3", style: { color: "var(--text-primary)" } }, "ð BuildPlan"),
+      h("span", { className: "font-semibold text-sm mr-3", style: { color: "var(--text-primary)" } }, "📊 BuildPlan"),
       // Project tabs
       projects.map(p =>
         h("button", {
@@ -605,19 +605,19 @@ function App() {
             className: "w-2 h-2 rounded-full shrink-0",
             style: { background: p.stats.overdue > 0 ? "var(--danger)" : p.stats.avgProgress >= 80 ? "var(--success)" : "var(--warning)" }
           }),
-          p.name.length > 25 ? p.name.slice(0, 25) + "â¦" : p.name,
+          p.name.length > 25 ? p.name.slice(0, 25) + "…" : p.name,
           h("span", {
             className: "ml-1 text-xs opacity-60 hover:opacity-100 cursor-pointer",
             onClick: (e) => { e.stopPropagation(); closeProject(p.id); },
             title: "Cerrar proyecto"
-          }, "â")
+          }, "✕")
         )
       ),
       // Portfolio tab
       projects.length > 1 && h("button", {
         className: `tab-btn ${activeTab === "__portfolio" ? "active" : ""}`,
         onClick: () => setActiveTab("__portfolio")
-      }, "ð Portfolio"),
+      }, "📊 Portfolio"),
       // Add more
       h("label", {
         className: "tab-btn cursor-pointer",
@@ -635,15 +635,15 @@ function App() {
       ? h(PortfolioView, { projects })
       : activeProject
         ? h(ProjectView, { key: activeProject.id, project: activeProject })
-        : h("div", { className: "flex-1 flex items-center justify-center", style: { color: "var(--text-tertiary)" } }, "SeleccionÃ¡ un proyecto")
+        : h("div", { className: "flex-1 flex items-center justify-center", style: { color: "var(--text-tertiary)" } }, "Seleccioná un proyecto")
   );
 }
 
-// ââ Portfolio View ââ
+// ── Portfolio View ──
 function PortfolioView({ projects }) {
   const now = new Date();
   return h("div", { className: "flex-1 overflow-auto p-6", style: { background: "var(--bg-primary)" } },
-    h("h2", { className: "text-lg font-bold mb-4", style: { color: "var(--text-primary)" } }, "Portfolio â Todos los proyectos"),
+    h("h2", { className: "text-lg font-bold mb-4", style: { color: "var(--text-primary)" } }, "Portfolio — Todos los proyectos"),
     h("div", { className: "overflow-x-auto" },
       h("table", { className: "w-full text-sm", style: { borderCollapse: "collapse" } },
         h("thead", null,
@@ -680,7 +680,7 @@ function PortfolioView({ projects }) {
                 )
               ),
               h("td", { className: "py-2.5 px-3 mono", style: { color: p.stats.overdue > 0 ? "var(--danger)" : "inherit" } },
-                p.stats.overdue || "â"),
+                p.stats.overdue || "—"),
               h("td", { className: "py-2.5 px-3" },
                 h("span", {
                   className: "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium",
@@ -699,7 +699,7 @@ function PortfolioView({ projects }) {
   );
 }
 
-// ââ Project View ââ
+// ── Project View ──
 function ProjectView({ project }) {
   const [subTab, setSubTab] = useState("gantt");
 
@@ -728,7 +728,7 @@ function ProjectView({ project }) {
   );
 }
 
-// ââ Dashboard View ââ
+// ── Dashboard View ──
 function DashboardView({ project }) {
   const s = project.stats;
   const cards = [
@@ -775,7 +775,7 @@ function DashboardView({ project }) {
       className: "p-4 rounded-lg mb-6",
       style: { background: "var(--bg-secondary)", border: "1px solid var(--border)" }
     },
-      h("h3", { className: "text-sm font-medium mb-3" }, "DistribuciÃ³n por estado"),
+      h("h3", { className: "text-sm font-medium mb-3" }, "Distribución por estado"),
       h("div", { className: "flex rounded-full overflow-hidden h-6" },
         s.completed > 0 && h("div", {
           style: { width: (s.completed / s.totalTasks * 100) + "%", background: "var(--success)" },
@@ -811,7 +811,7 @@ function DashboardView({ project }) {
       className: "p-4 rounded-lg",
       style: { background: "var(--bg-secondary)", border: "1px solid var(--border)" }
     },
-      h("h3", { className: "text-sm font-medium mb-3" }, "PrÃ³ximos hitos"),
+      h("h3", { className: "text-sm font-medium mb-3" }, "Próximos hitos"),
       s.upcomingMilestones.map((m, i) => {
         const daysLeft = daysBetween(new Date(), m.start);
         return h("div", {
@@ -819,7 +819,7 @@ function DashboardView({ project }) {
           className: "flex items-center gap-3 py-2",
           style: i > 0 ? { borderTop: "1px solid var(--border)" } : {}
         },
-          h("span", { style: { color: "var(--gantt-milestone)" } }, "â¦"),
+          h("span", { style: { color: "var(--gantt-milestone)" } }, "♦"),
           h("span", { className: "flex-1 text-sm" }, m.name),
           h("span", { className: "mono text-xs", style: { color: "var(--text-tertiary)" } }, fmtDate(m.start)),
           h("span", {
@@ -835,7 +835,7 @@ function DashboardView({ project }) {
   );
 }
 
-// ââ Resources View ââ
+// ── Resources View ──
 function ResourcesView({ project }) {
   const resourceStats = useMemo(() => {
     const map = {};
@@ -852,7 +852,7 @@ function ResourcesView({ project }) {
 
   if (!resourceStats.length) {
     return h("div", { className: "flex-1 flex items-center justify-center flex-col gap-2", style: { color: "var(--text-tertiary)" } },
-      h("span", { style: { fontSize: "2rem" } }, "ð¤"),
+      h("span", { style: { fontSize: "2rem" } }, "👤"),
       h("span", null, "Este proyecto no tiene recursos asignados")
     );
   }
@@ -879,7 +879,7 @@ function ResourcesView({ project }) {
           },
             h("td", { className: "py-2.5 px-3 font-medium" }, r.name),
             h("td", { className: "py-2.5 px-3 text-xs", style: { color: "var(--text-secondary)" } }, r.type === "work" ? "Trabajo" : "Material"),
-            h("td", { className: "py-2.5 px-3 text-xs" }, r.group || "â"),
+            h("td", { className: "py-2.5 px-3 text-xs" }, r.group || "—"),
             h("td", { className: "py-2.5 px-3 mono" }, r.taskCount),
             h("td", { className: "py-2.5 px-3 mono" }, Math.round(r.totalWork)),
             h("td", { className: "py-2.5 px-3 mono" }, Math.round(r.actualWork))
@@ -890,7 +890,7 @@ function ResourcesView({ project }) {
   );
 }
 
-// ââ Gantt View (Table + Chart) ââ
+// ── Gantt View (Table + Chart) ──
 const ROW_H = 28;
 const ZOOM_LEVELS = { day: 30, week: 10, month: 2.5, quarter: 0.8 };
 
@@ -1053,7 +1053,7 @@ function GanttView({ project }) {
               color: zoom === z ? "#fff" : "var(--text-secondary)"
             },
             onClick: () => setZoom(z)
-          }, z === "day" ? "DÃ­a" : z === "week" ? "Sem" : z === "month" ? "Mes" : "Trim")
+          }, z === "day" ? "Día" : z === "week" ? "Sem" : z === "month" ? "Mes" : "Trim")
         )
       ),
       h("button", {
@@ -1061,7 +1061,7 @@ function GanttView({ project }) {
         style: { color: "var(--text-secondary)" },
         onClick: () => setCollapsedSet(new Set()),
         title: "Expandir todo"
-      }, "â"),
+      }, "⊞"),
       h("button", {
         className: "px-2 py-1 rounded text-xs",
         style: { color: "var(--text-secondary)" },
@@ -1071,7 +1071,7 @@ function GanttView({ project }) {
           setCollapsedSet(set);
         },
         title: "Colapsar todo"
-      }, "â")
+      }, "⊟")
     ),
     // Gantt body
     h("div", { className: "flex flex-1 overflow-hidden" },
@@ -1122,8 +1122,8 @@ function GanttView({ project }) {
                   className: "cursor-pointer select-none shrink-0",
                   style: { color: "var(--text-tertiary)", fontSize: "0.65rem", width: "12px" },
                   onClick: () => toggleCollapse(t.uid)
-                }, collapsedSet.has(t.uid) ? "â¶" : "â¼"),
-                t.isMilestone && h("span", { style: { color: "var(--gantt-milestone)", marginRight: "2px" } }, "â¦"),
+                }, collapsedSet.has(t.uid) ? "▶" : "▼"),
+                t.isMilestone && h("span", { style: { color: "var(--gantt-milestone)", marginRight: "2px" } }, "♦"),
                 h("span", {
                   className: "truncate",
                   style: { fontWeight: t.isSummary ? 600 : 400, color: t.isOverdue ? "var(--danger)" : "var(--text-primary)" }
@@ -1216,7 +1216,7 @@ function GanttView({ project }) {
                   fill: "var(--gantt-milestone)",
                   stroke: "var(--bg-primary)", strokeWidth: 1
                 }),
-                h("title", null, `â¦ ${t.name}\n${fmtDate(t.start)}`)
+                h("title", null, `♦ ${t.name}\n${fmtDate(t.start)}`)
               );
             }
 
@@ -1227,7 +1227,7 @@ function GanttView({ project }) {
                 h("polygon", { points: `${x},${y + barH - 5} ${x},${y + barH + 2} ${x + 5},${y + barH - 5}`, fill: "var(--gantt-summary)" }),
                 // End cap
                 h("polygon", { points: `${x + w},${y + barH - 5} ${x + w},${y + barH + 2} ${x + w - 5},${y + barH - 5}`, fill: "var(--gantt-summary)" }),
-                h("title", null, `${t.name}\n${fmtDate(t.start)} â ${fmtDate(t.finish)}\n${t.percentComplete}%`)
+                h("title", null, `${t.name}\n${fmtDate(t.start)} → ${fmtDate(t.finish)}\n${t.percentComplete}%`)
               );
             }
 
@@ -1235,7 +1235,7 @@ function GanttView({ project }) {
             return h("g", { key: "bar" + t.uid },
               h("rect", { x, y, width: w, height: barH, rx: 3, fill: t.isOverdue ? "var(--gantt-critical)" : "var(--gantt-bar)", opacity: 0.3 }),
               progressW > 0 && h("rect", { x, y, width: progressW, height: barH, rx: 3, fill: t.isOverdue ? "var(--gantt-critical)" : "var(--gantt-bar)" }),
-              h("title", null, `${t.name}\n${fmtDate(t.start)} â ${fmtDate(t.finish)}\n${t.percentComplete}%${t.assignedResources.length ? "\n" + t.assignedResources.join(", ") : ""}${t.isOverdue ? "\nâ  VENCIDA" : ""}`)
+              h("title", null, `${t.name}\n${fmtDate(t.start)} → ${fmtDate(t.finish)}\n${t.percentComplete}%${t.assignedResources.length ? "\n" + t.assignedResources.join(", ") : ""}${t.isOverdue ? "\n⚠ VENCIDA" : ""}`)
             );
           }),
           // Today label
@@ -1249,7 +1249,7 @@ function GanttView({ project }) {
   );
 }
 
-// ââ Mount ââ
+// ── Mount ──
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(h(App));
 
