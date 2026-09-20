@@ -206,7 +206,7 @@ function parseMSPDI(xmlStr) {
   // Calendars
   const calendars = {};
   qAll(root, "Calendar").forEach(cal => {
-    const uid = qNum(cal, "CalendarUID");
+    const uid = qNum(cal, "UID");
     const weekDays = [];
     qAll(cal, "WeekDay").forEach(wd => {
       weekDays.push({
@@ -228,7 +228,7 @@ function parseMSPDI(xmlStr) {
   // Resources
   const resources = [];
   qAll(root, "Resource").forEach(res => {
-    const uid = qNum(res, "ResourceUID", -1);
+    const uid = qNum(res, "UID", -1);
     if (uid < 0) return;
     const name = q(res, "Name");
     if (!name) return;
@@ -271,7 +271,7 @@ function parseMSPDI(xmlStr) {
   now.setHours(0, 0, 0, 0);
 
   qAll(root, "Task").forEach(t => {
-    const uid = qNum(t, "TaskUID", -1);
+    const uid = qNum(t, "UID", -1);
     if (uid === 0) return; // skip project summary
     if (uid < 0) return;
 
