@@ -6,44 +6,44 @@
 <title>BuildPlan Viewer — Bauvek</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <style>
 :root{
   --bg-0:#fafbfc;--bg-1:#f1f3f5;--bg-2:#e9ecef;--bg-el:#fff;
-  --bg-hover:rgba(59,108,245,.04);--bg-alt:rgba(0,0,0,.015);--bg-sum:rgba(59,108,245,.03);
+  --bg-hover:rgba(158,1,1,.04);--bg-alt:rgba(0,0,0,.015);--bg-sum:rgba(158,1,1,.03);
   --c0:#1a1f2e;--c1:#5a6178;--c2:#8b92a5;
   --b0:#e2e5ea;--b1:#eef0f3;
-  --ac:#3b6cf5;--ac2:#2d5be0;--ac-bg:rgba(59,108,245,.08);
+  --ac:#9E0101;--ac2:#E40000;--ac-bg:rgba(158,1,1,.07);
   --ok:#10b981;--err:#ef4444;--warn:#f59e0b;
-  --bar:#3b6cf5;--bar-bg:rgba(59,108,245,.18);--bar-sum:#3a3f4b;
+  --bar:#9E0101;--bar-bg:rgba(158,1,1,.15);--bar-sum:#3a3f4b;
   --bar-ms:#d4930d;--bar-ov:#ef4444;--bar-ov-bg:rgba(239,68,68,.14);
   --bar-ok:#10b981;--bar-ok-bg:rgba(16,185,129,.14);--bar-bl:#9ca3af;
   --arr:rgba(148,163,184,.45);--arr-h:#94a3b8;--today:#ef4444;
   --sh-s:0 1px 2px rgba(0,0,0,.04);--sh-m:0 2px 8px rgba(0,0,0,.06);--sh-l:0 4px 16px rgba(0,0,0,.08);
   --r-s:4px;--r-m:6px;--r-l:8px;--hdr:44px;--row:28px;--ghdr:44px;
-  --ff:'Inter',-apple-system,sans-serif;--fm:'JetBrains Mono',monospace;
+  --ff:'Lato','Inter',-apple-system,sans-serif;--fm:'JetBrains Mono',monospace;
   color-scheme:light dark
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg-0:#0f1419;--bg-1:#1a2030;--bg-2:#242d3d;--bg-el:#1e2636;
-  --bg-hover:rgba(59,108,245,.08);--bg-alt:rgba(255,255,255,.02);--bg-sum:rgba(59,108,245,.06);
+  --bg-hover:rgba(158,1,1,.06);--bg-alt:rgba(255,255,255,.02);--bg-sum:rgba(158,1,1,.05);
   --c0:#e4e8ee;--c1:#8b95a8;--c2:#5e6882;
   --b0:#2a3344;--b1:#222b3a;
-  --ac-bg:rgba(59,108,245,.12);
-  --bar-bg:rgba(59,108,245,.25);--bar-ov-bg:rgba(239,68,68,.2);--bar-ok-bg:rgba(16,185,129,.2);--bar-bl:#555d6e;
+  --ac-bg:rgba(158,1,1,.1);
+  --bar-bg:rgba(158,1,1,.2);--bar-ov-bg:rgba(239,68,68,.2);--bar-ok-bg:rgba(16,185,129,.2);--bar-bl:#555d6e;
   --arr:rgba(71,85,105,.5);--arr-h:#475569;
   --sh-s:0 1px 2px rgba(0,0,0,.2);--sh-m:0 2px 8px rgba(0,0,0,.3);--sh-l:0 4px 16px rgba(0,0,0,.4)
 }}
 :root[data-theme="dark"]{
   --bg-0:#0f1419;--bg-1:#1a2030;--bg-2:#242d3d;--bg-el:#1e2636;
-  --bg-hover:rgba(59,108,245,.08);--bg-alt:rgba(255,255,255,.02);--bg-sum:rgba(59,108,245,.06);
+  --bg-hover:rgba(158,1,1,.06);--bg-alt:rgba(255,255,255,.02);--bg-sum:rgba(158,1,1,.05);
   --c0:#e4e8ee;--c1:#8b95a8;--c2:#5e6882;
   --b0:#2a3344;--b1:#222b3a;
-  --ac-bg:rgba(59,108,245,.12);
-  --bar-bg:rgba(59,108,245,.25);--bar-ov-bg:rgba(239,68,68,.2);--bar-ok-bg:rgba(16,185,129,.2);--bar-bl:#555d6e;
+  --ac-bg:rgba(158,1,1,.1);
+  --bar-bg:rgba(158,1,1,.2);--bar-ov-bg:rgba(239,68,68,.2);--bar-ok-bg:rgba(16,185,129,.2);--bar-bl:#555d6e;
   --arr:rgba(71,85,105,.5);--arr-h:#475569;
   --sh-s:0 1px 2px rgba(0,0,0,.2);--sh-m:0 2px 8px rgba(0,0,0,.3);--sh-l:0 4px 16px rgba(0,0,0,.4)
 }
