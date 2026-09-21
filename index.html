@@ -11,113 +11,34 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <style>
-:root {
-  --bg-primary: #fafbfc;
-  --bg-secondary: #f1f3f5;
-  --bg-tertiary: #e9ecef;
-  --bg-elevated: #ffffff;
-  --bg-row-hover: rgba(59,108,245,0.04);
-  --bg-row-alt: rgba(0,0,0,0.015);
-  --bg-summary: rgba(59,108,245,0.03);
-  --text-primary: #1a1f2e;
-  --text-secondary: #5a6178;
-  --text-tertiary: #8b92a5;
-  --text-inverse: #fff;
-  --border-primary: #e2e5ea;
-  --border-secondary: #eef0f3;
-  --accent: #3b6cf5;
-  --accent-hover: #2d5be0;
-  --accent-bg: rgba(59,108,245,0.08);
-  --accent-bg-solid: #eef2fe;
-  --success: #10b981;
-  --success-bg: rgba(16,185,129,0.08);
-  --danger: #ef4444;
-  --danger-bg: rgba(239,68,68,0.08);
-  --warning: #f59e0b;
-  --warning-bg: rgba(245,158,11,0.08);
-  --bar-normal: #3b6cf5;
-  --bar-normal-bg: rgba(59,108,245,0.18);
-  --bar-summary: #3a3f4b;
-  --bar-milestone: #d4930d;
-  --bar-overdue: #ef4444;
-  --bar-overdue-bg: rgba(239,68,68,0.14);
-  --bar-complete: #10b981;
-  --bar-complete-bg: rgba(16,185,129,0.14);
-  --bar-baseline: #9ca3af;
-  --arrow-color: rgba(148,163,184,0.45);
-  --arrow-head: #94a3b8;
-  --today-line: #ef4444;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
-  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --header-h: 44px;
-  --row-h: 28px;
-  --gantt-header-h: 44px;
-  --font-sans: 'Inter',-apple-system,sans-serif;
-  --font-mono: 'JetBrains Mono',monospace;
-  color-scheme: light dark;
-}
-@media(prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg-primary:#0f1419;--bg-secondary:#1a2030;--bg-tertiary:#242d3d;--bg-elevated:#1e2636;
-    --bg-row-hover:rgba(59,108,245,0.08);--bg-row-alt:rgba(255,255,255,0.02);--bg-summary:rgba(59,108,245,0.06);
-    --text-primary:#e4e8ee;--text-secondary:#8b95a8;--text-tertiary:#5e6882;--text-inverse:#0f1419;
-    --border-primary:#2a3344;--border-secondary:#222b3a;
-    --accent-bg:rgba(59,108,245,0.12);--accent-bg-solid:#1e2d50;
-    --bar-normal-bg:rgba(59,108,245,0.25);--bar-overdue-bg:rgba(239,68,68,0.2);--bar-complete-bg:rgba(16,185,129,0.2);
-    --bar-baseline:#555d6e;
-    --arrow-color:rgba(71,85,105,0.5);--arrow-head:#475569;
-    --shadow-sm:0 1px 2px rgba(0,0,0,0.2);--shadow-md:0 2px 8px rgba(0,0,0,0.3);--shadow-lg:0 4px 16px rgba(0,0,0,0.4);
-  }
-}
-:root[data-theme="dark"]{
-  --bg-primary:#0f1419;--bg-secondary:#1a2030;--bg-tertiary:#242d3d;--bg-elevated:#1e2636;
-  --bg-row-hover:rgba(59,108,245,0.08);--bg-row-alt:rgba(255,255,255,0.02);--bg-summary:rgba(59,108,245,0.06);
-  --text-primary:#e4e8ee;--text-secondary:#8b95a8;--text-tertiary:#5e6882;--text-inverse:#0f1419;
-  --border-primary:#2a3344;--border-secondary:#222b3a;
-  --accent-bg:rgba(59,108,245,0.12);--accent-bg-solid:#1e2d50;
-  --bar-normal-bg:rgba(59,108,245,0.25);--bar-overdue-bg:rgba(239,68,68,0.2);--bar-complete-bg:rgba(16,185,129,0.2);
-  --bar-baseline:#555d6e;
-  --arrow-color:rgba(71,85,105,0.5);--arrow-head:#475569;
-  --shadow-sm:0 1px 2px rgba(0,0,0,0.2);--shadow-md:0 2px 8px rgba(0,0,0,0.3);--shadow-lg:0 4px 16px rgba(0,0,0,0.4);
-}
+:root{--bg-primary:#fafbfc;--bg-secondary:#f1f3f5;--bg-tertiary:#e9ecef;--bg-elevated:#fff;--bg-row-hover:rgba(59,108,245,.04);--bg-row-alt:rgba(0,0,0,.015);--bg-summary:rgba(59,108,245,.03);--text-primary:#1a1f2e;--text-secondary:#5a6178;--text-tertiary:#8b92a5;--border-primary:#e2e5ea;--border-secondary:#eef0f3;--accent:#3b6cf5;--accent-hover:#2d5be0;--accent-bg:rgba(59,108,245,.08);--success:#10b981;--danger:#ef4444;--warning:#f59e0b;--bar-normal:#3b6cf5;--bar-normal-bg:rgba(59,108,245,.18);--bar-summary:#3a3f4b;--bar-milestone:#d4930d;--bar-overdue:#ef4444;--bar-overdue-bg:rgba(239,68,68,.14);--bar-complete:#10b981;--bar-complete-bg:rgba(16,185,129,.14);--bar-baseline:#9ca3af;--arrow-color:rgba(148,163,184,.45);--arrow-head:#94a3b8;--today-line:#ef4444;--shadow-sm:0 1px 2px rgba(0,0,0,.04);--shadow-md:0 2px 8px rgba(0,0,0,.06);--shadow-lg:0 4px 16px rgba(0,0,0,.08);--radius-sm:4px;--radius-md:6px;--radius-lg:8px;--header-h:44px;--row-h:28px;--gantt-header-h:44px;--font-sans:'Inter',-apple-system,sans-serif;--font-mono:'JetBrains Mono',monospace;color-scheme:light dark}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-primary:#0f1419;--bg-secondary:#1a2030;--bg-tertiary:#242d3d;--bg-elevated:#1e2636;--bg-row-hover:rgba(59,108,245,.08);--bg-row-alt:rgba(255,255,255,.02);--bg-summary:rgba(59,108,245,.06);--text-primary:#e4e8ee;--text-secondary:#8b95a8;--text-tertiary:#5e6882;--border-primary:#2a3344;--border-secondary:#222b3a;--accent-bg:rgba(59,108,245,.12);--bar-normal-bg:rgba(59,108,245,.25);--bar-overdue-bg:rgba(239,68,68,.2);--bar-complete-bg:rgba(16,185,129,.2);--bar-baseline:#555d6e;--arrow-color:rgba(71,85,105,.5);--arrow-head:#475569;--shadow-sm:0 1px 2px rgba(0,0,0,.2);--shadow-md:0 2px 8px rgba(0,0,0,.3);--shadow-lg:0 4px 16px rgba(0,0,0,.4)}}
+:root[data-theme="dark"]{--bg-primary:#0f1419;--bg-secondary:#1a2030;--bg-tertiary:#242d3d;--bg-elevated:#1e2636;--bg-row-hover:rgba(59,108,245,.08);--bg-row-alt:rgba(255,255,255,.02);--bg-summary:rgba(59,108,245,.06);--text-primary:#e4e8ee;--text-secondary:#8b95a8;--text-tertiary:#5e6882;--border-primary:#2a3344;--border-secondary:#222b3a;--accent-bg:rgba(59,108,245,.12);--bar-normal-bg:rgba(59,108,245,.25);--bar-overdue-bg:rgba(239,68,68,.2);--bar-complete-bg:rgba(16,185,129,.2);--bar-baseline:#555d6e;--arrow-color:rgba(71,85,105,.5);--arrow-head:#475569;--shadow-sm:0 1px 2px rgba(0,0,0,.2);--shadow-md:0 2px 8px rgba(0,0,0,.3);--shadow-lg:0 4px 16px rgba(0,0,0,.4)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{font-family:var(--font-sans);background:var(--bg-primary);color:var(--text-primary);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden;height:100vh}
 #root{height:100vh;display:flex;flex-direction:column}
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border-primary);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(--text-tertiary)}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border-primary);border-radius:3px}
 
 .app-header{height:var(--header-h);background:var(--bg-elevated);border-bottom:1px solid var(--border-primary);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;z-index:100}
-.app-logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;color:var(--text-primary);white-space:nowrap;cursor:pointer}
-.app-logo svg{flex-shrink:0}
+.app-logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap}
 .app-logo span{color:var(--text-tertiary);font-weight:400;font-size:12px;margin-left:2px}
-.project-tabs{display:flex;align-items:center;gap:2px;overflow-x:auto;flex:1;scrollbar-width:none}
-.project-tabs::-webkit-scrollbar{display:none}
+.project-tabs{display:flex;align-items:center;gap:2px;overflow-x:auto;flex:1;scrollbar-width:none}.project-tabs::-webkit-scrollbar{display:none}
 .project-tab{display:flex;align-items:center;gap:6px;padding:6px 12px;font-size:12px;font-weight:500;color:var(--text-secondary);border-radius:var(--radius-sm);cursor:pointer;white-space:nowrap;border:none;background:none;transition:background .15s,color .15s;font-family:var(--font-sans)}
 .project-tab:hover{background:var(--bg-secondary);color:var(--text-primary)}
 .project-tab.active{background:var(--accent-bg);color:var(--accent)}
-.project-tab .status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.project-tab .close-tab{width:14px;height:14px;display:flex;align-items:center;justify-content:center;border-radius:2px;opacity:0;transition:opacity .15s;font-size:11px;line-height:1}
-.project-tab:hover .close-tab{opacity:.6}
-.project-tab .close-tab:hover{opacity:1;background:var(--bg-tertiary)}
+.project-tab .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.project-tab .close-btn{width:14px;height:14px;display:flex;align-items:center;justify-content:center;border-radius:2px;opacity:0;font-size:11px}
+.project-tab:hover .close-btn{opacity:.6}.project-tab .close-btn:hover{opacity:1;background:var(--bg-tertiary)}
 .header-actions{display:flex;align-items:center;gap:4px;flex-shrink:0}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:5px 10px;font-size:12px;font-weight:500;font-family:var(--font-sans);border-radius:var(--radius-sm);border:1px solid var(--border-primary);background:var(--bg-elevated);color:var(--text-secondary);cursor:pointer;transition:all .12s;white-space:nowrap}
 .btn:hover{background:var(--bg-secondary);color:var(--text-primary)}
 .btn-icon{padding:5px;width:28px;height:28px}
-.btn-ghost{border-color:transparent;background:transparent}
-.btn-ghost:hover{background:var(--bg-secondary)}
-
+.btn-ghost{border-color:transparent;background:transparent}.btn-ghost:hover{background:var(--bg-secondary)}
 .segmented{display:inline-flex;background:var(--bg-secondary);border-radius:var(--radius-sm);padding:2px;gap:1px}
 .segmented button{padding:3px 10px;font-size:11px;font-weight:500;font-family:var(--font-sans);border:none;background:transparent;color:var(--text-secondary);cursor:pointer;border-radius:3px;transition:all .12s}
-.segmented button:hover{color:var(--text-primary)}
-.segmented button.active{background:var(--bg-elevated);color:var(--text-primary);box-shadow:var(--shadow-sm)}
+.segmented button:hover{color:var(--text-primary)}.segmented button.active{background:var(--bg-elevated);color:var(--text-primary);box-shadow:var(--shadow-sm)}
 
 .welcome{flex:1;overflow-y:auto;padding:32px}
 .welcome-header{max-width:640px;margin:0 auto 24px}
@@ -126,9 +47,9 @@ body{font-family:var(--font-sans);background:var(--bg-primary);color:var(--text-
 .project-grid{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:6px}
 .project-card{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg-elevated);border:1px solid var(--border-secondary);border-radius:var(--radius-md);cursor:pointer;transition:border-color .15s,box-shadow .15s}
 .project-card:hover{border-color:var(--accent);box-shadow:var(--shadow-sm)}
-.project-card-icon{width:34px;height:34px;border-radius:var(--radius-sm);background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.project-card-icon{width:34px;height:34px;border-radius:var(--radius-sm);background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .project-card-info{flex:1;min-width:0}
-.project-card-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.project-card-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .project-card-meta{font-size:11px;color:var(--text-tertiary);font-family:var(--font-mono);margin-top:1px}
 .project-card-arrow{color:var(--text-tertiary);flex-shrink:0;transition:transform .15s}
 .project-card:hover .project-card-arrow{transform:translateX(2px);color:var(--accent)}
@@ -138,8 +59,7 @@ body{font-family:var(--font-sans);background:var(--bg-primary);color:var(--text-
 
 .sub-tabs-bar{display:flex;align-items:center;gap:12px;padding:0 16px;height:36px;background:var(--bg-elevated);border-bottom:1px solid var(--border-secondary);flex-shrink:0}
 .sub-tab{font-size:12px;font-weight:500;color:var(--text-tertiary);border:none;background:none;padding:8px 0;cursor:pointer;position:relative;font-family:var(--font-sans);transition:color .12s}
-.sub-tab:hover{color:var(--text-primary)}
-.sub-tab.active{color:var(--accent)}
+.sub-tab:hover{color:var(--text-primary)}.sub-tab.active{color:var(--accent)}
 .sub-tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--accent);border-radius:1px 1px 0 0}
 .sub-tabs-right{margin-left:auto;display:flex;align-items:center;gap:4px}
 
@@ -148,28 +68,21 @@ body{font-family:var(--font-sans);background:var(--bg-primary);color:var(--text-
 .filter-input{padding:4px 8px;font-size:11px;font-family:var(--font-mono);border:1px solid var(--border-primary);border-radius:var(--radius-sm);background:var(--bg-elevated);color:var(--text-primary);width:110px}
 .filter-label{font-size:11px;color:var(--text-tertiary);font-weight:500}
 .filter-badge{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;border-radius:8px;background:var(--accent);color:white;font-size:10px;font-weight:600;padding:0 4px}
-.filter-clear{font-size:11px;color:var(--accent);border:none;background:none;cursor:pointer;font-family:var(--font-sans);font-weight:500;padding:4px 6px;border-radius:var(--radius-sm)}
-.filter-clear:hover{background:var(--accent-bg)}
+.filter-clear{font-size:11px;color:var(--accent);border:none;background:none;cursor:pointer;font-family:var(--font-sans);font-weight:500;padding:4px 6px;border-radius:var(--radius-sm)}.filter-clear:hover{background:var(--accent-bg)}
 
-.gantt-wrapper{flex:1;display:flex;overflow:hidden;position:relative}
-.gantt-table-container{overflow-y:auto;overflow-x:auto;border-right:1px solid var(--border-primary);flex-shrink:0;background:var(--bg-elevated)}
-.gantt-chart-container{flex:1;overflow:auto;position:relative;background:var(--bg-primary)}
-.splitter{width:5px;cursor:col-resize;background:var(--border-secondary);flex-shrink:0;position:relative;z-index:10;transition:background .15s}
-.splitter:hover,.splitter.active{background:var(--accent)}
+.gantt-wrapper{flex:1;display:flex;overflow:hidden}
+.gantt-table-container{overflow:auto;border-right:1px solid var(--border-primary);flex-shrink:0;background:var(--bg-elevated)}
+.gantt-chart-container{flex:1;overflow:auto;background:var(--bg-primary)}
+.splitter{width:5px;cursor:col-resize;background:var(--border-secondary);flex-shrink:0;z-index:10;transition:background .15s}.splitter:hover,.splitter.active{background:var(--accent)}
 
 .gantt-table{border-collapse:collapse;min-width:100%;table-layout:fixed}
 .gantt-table th{position:sticky;top:0;z-index:5;background:var(--bg-secondary);font-size:11px;font-weight:600;color:var(--text-secondary);text-align:left;padding:0 6px;height:var(--gantt-header-h);border-bottom:1px solid var(--border-primary);white-space:nowrap}
 .gantt-table td{padding:0 6px;height:var(--row-h);border-bottom:1px solid var(--border-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;vertical-align:middle}
 .gantt-table tr:hover td{background:var(--bg-row-hover)}
-.gantt-table tr:nth-child(even) td{background:var(--bg-row-alt)}
-.gantt-table tr:nth-child(even):hover td{background:var(--bg-row-hover)}
-.gantt-table tr.summary td{background:var(--bg-summary);font-weight:600}
-.gantt-table tr.summary:hover td{background:var(--bg-row-hover)}
+.gantt-table tr:nth-child(even) td{background:var(--bg-row-alt)}.gantt-table tr:nth-child(even):hover td{background:var(--bg-row-hover)}
+.gantt-table tr.summary td{background:var(--bg-summary);font-weight:600}.gantt-table tr.summary:hover td{background:var(--bg-row-hover)}
 .task-name-cell{display:flex;align-items:center;gap:3px;height:var(--row-h)}
-.task-toggle{width:16px;height:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:2px;flex-shrink:0;color:var(--text-tertiary);transition:color .1s,background .1s;border:none;background:none;padding:0}
-.task-toggle:hover{color:var(--text-primary);background:var(--bg-tertiary)}
-.task-milestone-icon{color:var(--bar-milestone);font-size:10px;flex-shrink:0}
-.task-name-text{overflow:hidden;text-overflow:ellipsis}
+.task-toggle{width:16px;height:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:2px;flex-shrink:0;color:var(--text-tertiary);border:none;background:none;padding:0}.task-toggle:hover{color:var(--text-primary);background:var(--bg-tertiary)}
 .progress-mini{display:flex;align-items:center;gap:4px}
 .progress-mini-bar{width:32px;height:4px;border-radius:2px;background:var(--bg-tertiary);overflow:hidden;flex-shrink:0}
 .progress-mini-fill{height:100%;border-radius:2px}
@@ -178,46 +91,47 @@ body{font-family:var(--font-sans);background:var(--bg-primary);color:var(--text-
 .dashboard{flex:1;overflow-y:auto;padding:20px 24px}
 .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px}
 .kpi-card{background:var(--bg-elevated);border:1px solid var(--border-secondary);border-radius:var(--radius-md);padding:14px;border-left:3px solid var(--accent)}
-.kpi-card.success{border-left-color:var(--success)}
-.kpi-card.danger{border-left-color:var(--danger)}
-.kpi-card.warning{border-left-color:var(--warning)}
+.kpi-card.success{border-left-color:var(--success)}.kpi-card.danger{border-left-color:var(--danger)}.kpi-card.warning{border-left-color:var(--warning)}
 .kpi-value{font-size:22px;font-weight:700;font-family:var(--font-mono);line-height:1.1}
 .kpi-label{font-size:11px;color:var(--text-secondary);margin-top:4px;font-weight:500}
 .dash-section-title{font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text-secondary)}
-.dash-table{width:100%;border-collapse:collapse;font-size:12px;background:var(--bg-elevated);border:1px solid var(--border-secondary);border-radius:var(--radius-md);overflow:hidden}
+.dash-table{width:100%;border-collapse:collapse;font-size:12px;background:var(--bg-elevated);border:1px solid var(--border-secondary);border-radius:var(--radius-md);overflow:hidden;margin-bottom:16px}
 .dash-table th{background:var(--bg-secondary);font-weight:600;font-size:11px;color:var(--text-secondary);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border-primary)}
 .dash-table td{padding:6px 10px;border-bottom:1px solid var(--border-secondary)}
-.resources-view{flex:1;overflow-y:auto;padding:20px 24px}
+.dash-table tr:hover td{background:var(--bg-row-hover)}
+.dash-table tr.selected td{background:var(--accent-bg)}
 
-.search-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding-top:15vh}
-.search-modal{width:480px;max-width:90vw;background:var(--bg-elevated);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden;border:1px solid var(--border-primary)}
-.search-input{width:100%;padding:12px 16px;font-size:14px;font-family:var(--font-sans);border:none;background:transparent;color:var(--text-primary);outline:none;border-bottom:1px solid var(--border-secondary)}
-.search-results{max-height:300px;overflow-y:auto}
-.search-result-item{padding:8px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:12px;transition:background .1s}
-.search-result-item:hover{background:var(--bg-row-hover)}
+.contractor-card{background:var(--bg-elevated);border:1px solid var(--border-secondary);border-radius:var(--radius-md);padding:14px;cursor:pointer;transition:border-color .15s}
+.contractor-card:hover,.contractor-card.active{border-color:var(--accent)}
+.contractor-card.active{background:var(--accent-bg)}
+.contractor-card h4{font-size:13px;font-weight:600;margin-bottom:6px}
+.contractor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:16px}
+.contractor-stat{display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin:2px 0}
+.contractor-stat .val{font-family:var(--font-mono);font-weight:500}
 
 .gantt-tooltip{position:fixed;z-index:2000;background:var(--bg-elevated);border:1px solid var(--border-primary);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);padding:10px 12px;font-size:12px;max-width:280px;pointer-events:none;line-height:1.6}
 .gantt-tooltip .tt-name{font-weight:600;margin-bottom:4px}
 .gantt-tooltip .tt-row{display:flex;justify-content:space-between;gap:12px}
-.gantt-tooltip .tt-label{color:var(--text-tertiary)}
-.gantt-tooltip .tt-value{font-family:var(--font-mono);font-size:11px}
+.gantt-tooltip .tt-label{color:var(--text-tertiary)}.gantt-tooltip .tt-value{font-family:var(--font-mono);font-size:11px}
 
 .loading-state{display:flex;align-items:center;justify-content:center;flex:1;gap:8px;color:var(--text-tertiary);font-size:13px}
 .spinner{width:18px;height:18px;border:2px solid var(--border-primary);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+.error-banner{padding:8px 16px;background:rgba(239,68,68,.08);color:var(--danger);font-size:12px;border-bottom:1px solid var(--danger)}
 
-.error-banner{padding:8px 16px;background:var(--danger-bg);color:var(--danger);font-size:12px;border-bottom:1px solid var(--danger);display:flex;align-items:center;gap:8px}
+.search-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding-top:15vh}
+.search-modal{width:480px;max-width:90vw;background:var(--bg-elevated);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden;border:1px solid var(--border-primary)}
+.search-input{width:100%;padding:12px 16px;font-size:14px;font-family:var(--font-sans);border:none;background:transparent;color:var(--text-primary);outline:none;border-bottom:1px solid var(--border-secondary)}
+.search-results{max-height:300px;overflow-y:auto}
+.search-result-item{padding:8px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:12px}.search-result-item:hover{background:var(--bg-row-hover)}
 
 @media print{
   body{overflow:visible!important;height:auto!important;background:white!important}
   #root{height:auto!important}
   .app-header,.sub-tabs-bar,.filter-bar,.splitter,.search-overlay{display:none!important}
   .gantt-wrapper{flex-direction:column!important;overflow:visible!important;height:auto!important}
-  .gantt-table-container,.gantt-chart-container{overflow:visible!important;width:100%!important;max-width:100%!important;flex:none!important}
-  .gantt-chart-container{border-top:1px solid #ccc}
+  .gantt-table-container,.gantt-chart-container{overflow:visible!important;width:100%!important;flex:none!important}
   .print-header{display:block!important;padding:16px;border-bottom:2px solid #333;margin-bottom:8px}
-  .print-header h1{font-size:16px}
-  .print-header p{font-size:11px;color:#666}
   .print-footer{display:block!important;text-align:center;padding:8px;font-size:10px;color:#999;border-top:1px solid #ccc;margin-top:8px}
   @page{size:landscape;margin:10mm}
 }
@@ -229,27 +143,51 @@ body{font-family:var(--font-sans);background:var(--bg-primary);color:var(--text-
 <script type="text/babel">
 const {useState,useEffect,useRef,useCallback,useMemo,Fragment}=React;
 
-/* ═══════════════════════════════════════════
-   PARSER MSPDI — con baselines y custom fields
-   ═══════════════════════════════════════════ */
+/* ═══════ Enterprise field mapping (from XML analysis) ═══════ */
+const ENT_FIELD_MAP={
+  'b408001':{name:'Salud',type:'guid'},
+  'b408007':{name:'Tableros',type:'guid'},
+  'b408008':{name:'Nivel',type:'guid'},
+  'b40800a':{name:'Rubro',type:'guid'},
+  'b40800c':{name:'N° Item',type:'text'},
+  'b40800e':{name:'Contratista',type:'text'},
+  'b608000':{name:'Depto. Proyectos',type:'guid'},
+  'b608003':{name:'Zona',type:'guid'},
+  'b608004':{name:'Estado Emprendimiento',type:'guid'},
+  'b60800b':{name:'Jefe Obra',type:'guid'},
+};
+
+/* Also build reverse map: FieldID decimal → hex tag */
+const FIELD_ID_TO_HEX={};
+for(const[hex,info] of Object.entries(ENT_FIELD_MAP)){
+  FIELD_ID_TO_HEX[parseInt(hex,16)]=hex;
+}
+
+/* ═══════ PARSER MSPDI ═══════ */
 function parseMSPDI(xmlText){
   const parser=new DOMParser();
   const doc=parser.parseFromString(xmlText,'text/xml');
   const ns=doc.documentElement.namespaceURI;
-
-  function getEl(parent,tag){
-    const el=ns?parent.getElementsByTagNameNS(ns,tag)[0]:parent.getElementsByTagName(tag)[0];
+  const N=ns?ns:'';
+  function qn(tag){return ns?`{${ns}}${tag}`:tag}
+  function getEl(p,tag){
+    const el=ns?p.getElementsByTagNameNS(ns,tag)[0]:p.getElementsByTagName(tag)[0];
     return el?el.textContent.trim():'';
   }
-  function getEls(parent,tag){
-    return ns?parent.getElementsByTagNameNS(ns,tag):parent.getElementsByTagName(tag);
+  function getEls(p,tag){return ns?p.getElementsByTagNameNS(ns,tag):p.getElementsByTagName(tag)}
+
+  /* ExtendedAttribute definitions */
+  const eaDefs={};
+  for(const ea of getEls(doc,'ExtendedAttribute')){
+    const fid=getEl(ea,'FieldID'),fname=getEl(ea,'FieldName'),alias=getEl(ea,'Alias');
+    if(fid) eaDefs[fid]={fieldName:fname,alias:alias||fname};
   }
 
-  /* Calendars */
-  const calendars={};
-  for(const c of getEls(doc,'Calendar')){
-    const uid=getEl(c,'UID'),name=getEl(c,'Name');
-    calendars[uid]={uid,name};
+  /* Build lookup: FieldID → hex enterprise tag name */
+  const fidToHex={};
+  for(const fid of Object.keys(eaDefs)){
+    const hex=parseInt(fid).toString(16);
+    fidToHex[fid]=hex;
   }
 
   /* Resources */
@@ -269,33 +207,21 @@ function parseMSPDI(xmlText){
     }
   }
 
-  /* Extended attribute definitions (custom fields) */
-  const extAttrDefs={};
-  for(const ea of getEls(doc,'ExtendedAttribute')){
-    // Top-level definitions
-    const fieldID=getEl(ea,'FieldID');
-    const fieldName=getEl(ea,'FieldName');
-    const alias=getEl(ea,'Alias');
-    if(fieldID){
-      extAttrDefs[fieldID]={fieldName,alias:alias||fieldName};
-    }
-  }
-
   /* Tasks */
   const tasks=[];
   for(const t of getEls(doc,'Task')){
     const uid=getEl(t,'UID');
-    const id=getEl(t,'ID');
-    const name=getEl(t,'Name');
+    if(uid==='0') continue;
+    const name=getEl(t,'Name')||'(sin nombre)';
     const start=getEl(t,'Start');
     const finish=getEl(t,'Finish');
-    const duration=getEl(t,'Duration');
-    const pctComplete=parseInt(getEl(t,'PercentComplete')||'0',10);
-    const outlineLevel=parseInt(getEl(t,'OutlineLevel')||'0',10);
+    const pct=parseInt(getEl(t,'PercentComplete')||'0',10);
+    const outLvl=parseInt(getEl(t,'OutlineLevel')||'0',10);
     const isSummary=getEl(t,'Summary')==='1';
     const isMilestone=getEl(t,'Milestone')==='1';
     const wbs=getEl(t,'WBS');
-    const notes=getEl(t,'Notes');
+    const duration=getEl(t,'Duration');
+    const critical=getEl(t,'Critical')==='1';
 
     /* Predecessors */
     const predecessors=[];
@@ -311,74 +237,69 @@ function parseMSPDI(xmlText){
       predecessors.push({taskUid:predUid,type:typeMap[typeVal]||'FS',lagDays:Math.round(lagDays)});
     }
 
-    /* Baselines — parse Baseline elements within the Task */
+    /* Baselines */
     const baselines=[];
     for(const b of getEls(t,'Baseline')){
-      const bNum=getEl(b,'Number');
-      const bStart=getEl(b,'Start');
-      const bFinish=getEl(b,'Finish');
-      const bDuration=getEl(b,'Duration');
-      if(bStart||bFinish){
-        baselines.push({
-          number:parseInt(bNum||'0',10),
-          start:bStart?new Date(bStart):null,
-          finish:bFinish?new Date(bFinish):null,
-          duration:bDuration
-        });
+      const bNum=getEl(b,'Number'),bStart=getEl(b,'Start'),bFinish=getEl(b,'Finish');
+      if(bStart||bFinish) baselines.push({number:parseInt(bNum||'0',10),start:bStart?new Date(bStart):null,finish:bFinish?new Date(bFinish):null});
+    }
+
+    /* Enterprise custom fields — read hex-named elements */
+    const enterprise={};
+    for(const[hexTag,info] of Object.entries(ENT_FIELD_MAP)){
+      // Try to find the element directly
+      const el=ns?t.getElementsByTagNameNS(ns,hexTag)[0]:t.getElementsByTagName(hexTag)[0];
+      if(el&&el.textContent){
+        const val=el.textContent.trim();
+        if(val&&val!=='None'){
+          enterprise[info.name]={value:val,isGuid:info.type==='guid'};
+        }
       }
     }
 
-    /* Extended attributes on this task (custom fields: Text1-30, etc) */
-    const customFields={};
-    // Inside <Task>, ExtendedAttribute children carry task-level values
-    const taskExtAttrs=getEls(t,'ExtendedAttribute');
-    for(const ea of taskExtAttrs){
-      const fid=getEl(ea,'FieldID');
-      const val=getEl(ea,'Value');
+    /* Standard ExtendedAttribute values (for non-enterprise exports) */
+    for(const ea of getEls(t,'ExtendedAttribute')){
+      const fid=getEl(ea,'FieldID'),val=getEl(ea,'Value');
       if(fid&&val){
-        const def=extAttrDefs[fid];
+        const def=eaDefs[fid];
         const label=def?(def.alias||def.fieldName):`Field${fid}`;
-        customFields[label]=val;
+        enterprise[label]={value:val,isGuid:false};
       }
     }
 
-    if(uid!=='0'||name){
-      tasks.push({
-        uid,id,name:name||'(sin nombre)',
-        start:start?new Date(start):null,
-        finish:finish?new Date(finish):null,
-        duration,percentComplete:pctComplete,
-        outlineLevel,isSummary,isMilestone,wbs,notes,
-        resources:taskResMap[uid]||[],
-        predecessors,baselines,customFields,
-        children:[],expanded:true,visible:true
-      });
+    /* Parse duration to readable format */
+    let durationDays=0;
+    if(duration){
+      const m=duration.match(/PT(\d+)H/);
+      if(m) durationDays=Math.round(parseInt(m[1])/8); // 8h workday
     }
+
+    tasks.push({
+      uid,name,
+      start:start?new Date(start):null,
+      finish:finish?new Date(finish):null,
+      duration,durationDays,
+      percentComplete:pct,outlineLevel:outLvl,
+      isSummary,isMilestone,wbs,critical,
+      resources:taskResMap[uid]||[],
+      predecessors,baselines,enterprise,
+      children:[],expanded:true
+    });
   }
 
-  const filtered=tasks.filter(t=>t.uid!=='0');
-
-  /* Build hierarchy */
+  /* Hierarchy */
   const rootTasks=[];
   const stack=[];
-  for(const task of filtered){
+  for(const task of tasks){
     while(stack.length>0&&stack[stack.length-1].outlineLevel>=task.outlineLevel) stack.pop();
-    if(stack.length>0){
-      stack[stack.length-1].children.push(task);
-      task.parent=stack[stack.length-1];
-    } else {
-      rootTasks.push(task);
-    }
+    if(stack.length>0){stack[stack.length-1].children.push(task);task.parent=stack[stack.length-1]}
+    else rootTasks.push(task);
     if(task.isSummary) stack.push(task);
   }
 
   function flattenTasks(list,depth=0){
     const result=[];
-    for(const t of list){
-      t.depth=depth;
-      result.push(t);
-      if(t.children.length>0) result.push(...flattenTasks(t.children,depth+1));
-    }
+    for(const t of list){t.depth=depth;result.push(t);if(t.children.length>0) result.push(...flattenTasks(t.children,depth+1))}
     return result;
   }
   const flatTasks=flattenTasks(rootTasks);
@@ -389,7 +310,6 @@ function parseMSPDI(xmlText){
   for(const t of flatTasks){
     if(t.start&&(!minDate||t.start<minDate)) minDate=t.start;
     if(t.finish&&(!maxDate||t.finish>maxDate)) maxDate=t.finish;
-    // Also consider baselines for range
     for(const b of t.baselines){
       if(b.start&&(!minDate||b.start<minDate)) minDate=b.start;
       if(b.finish&&(!maxDate||b.finish>maxDate)) maxDate=b.finish;
@@ -397,51 +317,41 @@ function parseMSPDI(xmlText){
   }
 
   const resourceList=[...new Set(flatTasks.flatMap(t=>t.resources))].sort();
-
-  /* Detect custom field columns that are actually used */
-  const customFieldNames=new Set();
-  for(const t of flatTasks){
-    for(const k of Object.keys(t.customFields)) customFieldNames.add(k);
-  }
-
-  /* Detect if any task has baselines */
   const hasBaselines=flatTasks.some(t=>t.baselines.length>0);
 
-  return {
+  /* Collect enterprise fields that have text data */
+  const entFieldsWithData=new Set();
+  for(const t of flatTasks){
+    for(const[k,v] of Object.entries(t.enterprise)){
+      if(!v.isGuid) entFieldsWithData.add(k);
+    }
+  }
+
+  /* Collect unique contractors */
+  const contractors=new Set();
+  for(const t of flatTasks){
+    const c=t.enterprise['Contratista'];
+    if(c&&!c.isGuid&&c.value) contractors.add(c.value);
+  }
+
+  return{
     tasks:flatTasks,rootTasks,uidMap,
     resources:resourceList,
     rawResources:Object.values(resources),
-    calendars,minDate,maxDate,
-    customFieldNames:[...customFieldNames],
-    hasBaselines
+    minDate,maxDate,hasBaselines,
+    entFieldsWithData:[...entFieldsWithData],
+    contractors:[...contractors].sort()
   };
 }
 
 /* ═══════ Utilities ═══════ */
-function fmtDate(d){
-  if(!d) return '—';
-  return d.toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'2-digit'});
-}
-function daysBetween(a,b){
-  if(!a||!b) return 0;
-  return Math.round((b-a)/86400000);
-}
-function isOverdue(task){
-  if(!task.finish||task.percentComplete>=100||task.isSummary) return false;
-  return task.finish<new Date();
-}
-function getStatus(task){
-  if(task.percentComplete>=100) return 'completed';
-  if(isOverdue(task)) return 'overdue';
-  if(task.percentComplete>0) return 'in_progress';
-  return 'pending';
-}
-function statusColor(s){
-  switch(s){case 'completed':return 'var(--success)';case 'overdue':return 'var(--danger)';case 'in_progress':return 'var(--warning)';default:return 'var(--text-tertiary)';}
-}
-function statusLabel(s){
-  switch(s){case 'completed':return 'Completada';case 'overdue':return 'Vencida';case 'in_progress':return 'En curso';default:return 'Pendiente';}
-}
+function fmtDate(d){if(!d) return '—';return d.toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'2-digit'})}
+function daysBetween(a,b){if(!a||!b) return 0;return Math.round((b-a)/86400000)}
+function isOverdue(t){if(!t.finish||t.percentComplete>=100||t.isSummary) return false;return t.finish<new Date()}
+function getStatus(t){if(t.percentComplete>=100) return 'completed';if(isOverdue(t)) return 'overdue';if(t.percentComplete>0) return 'in_progress';return 'pending'}
+function statusColor(s){switch(s){case 'completed':return 'var(--success)';case 'overdue':return 'var(--danger)';case 'in_progress':return 'var(--warning)';default:return 'var(--text-tertiary)'}}
+function statusLabel(s){switch(s){case 'completed':return 'Completada';case 'overdue':return 'Vencida';case 'in_progress':return 'En curso';default:return 'Pendiente'}}
+function fmtDuration(d){if(!d) return '—';const m=d.match(/PT(\d+)H/);if(!m) return d;const h=parseInt(m[1]);const days=Math.round(h/8);return days===1?'1 día':`${days} días`}
 
 /* ═══════ Theme ═══════ */
 function useTheme(){
@@ -452,7 +362,7 @@ function useTheme(){
 
 /* ═══════ Icons ═══════ */
 const I={
-  building:(s=16)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"/></svg>,
+  building:(s=16)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"/></svg>,
   sun:(s=16)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>,
   moon:(s=16)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
   search:(s=16)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>,
@@ -466,192 +376,50 @@ const I={
   filter:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
   print:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>,
   baseline:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 20h16"/><path d="M4 16h16" strokeDasharray="4 2"/><rect x="6" y="8" width="12" height="4" rx="1"/></svg>,
+  users:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
 };
 
-/* ═══════ Zoom levels ═══════ */
-const ZOOM={
-  day:{label:'Día',dayW:28},
-  week:{label:'Semana',dayW:8},
-  month:{label:'Mes',dayW:2.5},
-  quarter:{label:'Trim.',dayW:0.8},
-};
+/* ═══════ Zoom ═══════ */
+const ZOOM={day:{label:'Día',dayW:28},week:{label:'Semana',dayW:8},month:{label:'Mes',dayW:2.5},quarter:{label:'Trim.',dayW:.8}};
 
-/* ═══════════════════════════════════════════
-   GANTT CHART SVG
-   ═══════════════════════════════════════════ */
-function GanttChart({tasks,uidMap,minDate,maxDate,zoom,showArrows,showBaseline,scrollTopRef,onTooltip}){
+/* ═══════ GANTT SVG ═══════ */
+function GanttChart({tasks,minDate,maxDate,zoom,showArrows,showBaseline,scrollTopRef,onTooltip}){
   const containerRef=useRef(null);
   const isScrollingRef=useRef(false);
-  const rowH=28, headerH=44;
+  const rowH=28,headerH=44;
   const dayW=ZOOM[zoom].dayW;
-  const padB=zoom==='day'?3:zoom==='week'?7:zoom==='month'?14:30;
-  const padA=zoom==='day'?7:zoom==='week'?14:zoom==='month'?30:60;
+  const padB=zoom==='day'?3:zoom==='week'?7:14;
+  const padA=zoom==='day'?7:zoom==='week'?14:30;
 
-  const chartStart=useMemo(()=>{
-    if(!minDate) return new Date();
-    const d=new Date(minDate);d.setDate(d.getDate()-padB);return d;
-  },[minDate,padB]);
-  const chartEnd=useMemo(()=>{
-    if(!maxDate) return new Date();
-    const d=new Date(maxDate);d.setDate(d.getDate()+padA);return d;
-  },[maxDate,padA]);
-
+  const chartStart=useMemo(()=>{const d=new Date(minDate||new Date());d.setDate(d.getDate()-padB);return d},[minDate,padB]);
+  const chartEnd=useMemo(()=>{const d=new Date(maxDate||new Date());d.setDate(d.getDate()+padA);return d},[maxDate,padA]);
   const totalDays=daysBetween(chartStart,chartEnd);
   const totalW=Math.max(totalDays*dayW,600);
   const totalH=tasks.length*rowH;
+  const dateToX=useCallback(date=>{if(!date)return 0;return daysBetween(chartStart,date)*dayW},[chartStart,dayW]);
 
-  const dateToX=useCallback(date=>{
-    if(!date) return 0;
-    return daysBetween(chartStart,date)*dayW;
-  },[chartStart,dayW]);
+  const handleScroll=useCallback(e=>{if(isScrollingRef.current)return;scrollTopRef.current={value:e.target.scrollTop,source:'chart'}},[scrollTopRef]);
+  useEffect(()=>{let raf;const sync=()=>{const el=containerRef.current;if(el&&scrollTopRef.current?.source==='table'){isScrollingRef.current=true;el.scrollTop=scrollTopRef.current.value;scrollTopRef.current.source=null;requestAnimationFrame(()=>{isScrollingRef.current=false})};raf=requestAnimationFrame(sync)};raf=requestAnimationFrame(sync);return()=>cancelAnimationFrame(raf)},[scrollTopRef]);
 
-  /* Scroll sync — read from ref, write back to ref */
-  const handleScroll=useCallback(e=>{
-    if(isScrollingRef.current) return;
-    scrollTopRef.current={value:e.target.scrollTop,source:'chart'};
-  },[scrollTopRef]);
-
-  /* Sync from table */
-  useEffect(()=>{
-    let raf;
-    const sync=()=>{
-      const el=containerRef.current;
-      if(el&&scrollTopRef.current&&scrollTopRef.current.source==='table'){
-        isScrollingRef.current=true;
-        el.scrollTop=scrollTopRef.current.value;
-        scrollTopRef.current.source=null;
-        requestAnimationFrame(()=>{isScrollingRef.current=false});
-      }
-      raf=requestAnimationFrame(sync);
-    };
-    raf=requestAnimationFrame(sync);
-    return()=>cancelAnimationFrame(raf);
-  },[scrollTopRef]);
-
-  const today=new Date();
-  const todayX=dateToX(today);
-  const showToday=today>=chartStart&&today<=chartEnd;
+  const today=new Date();const todayX=dateToX(today);const showToday=today>=chartStart&&today<=chartEnd;
 
   /* Grid */
   const grid=useMemo(()=>{
-    const lines=[],h1=[],h2=[];
-    const d=new Date(chartStart);
-    if(zoom==='day'){
-      while(d<=chartEnd){
-        const x=dateToX(d);
-        lines.push({x,we:d.getDay()===0||d.getDay()===6,maj:d.getDay()===1});
-        h2.push({x,w:dayW,label:d.getDate().toString()});
-        if(d.getDate()===1||(d.getDay()===1&&h1.length===0))
-          h1.push({x,label:d.toLocaleDateString('es-AR',{month:'short',year:'2-digit'})});
-        d.setDate(d.getDate()+1);
-      }
-    }else if(zoom==='week'){
-      let lastMonth=-1;
-      while(d<=chartEnd){
-        const x=dateToX(d);
-        if(d.getDay()===1||d.getTime()===chartStart.getTime()){
-          lines.push({x,maj:d.getDate()<=7});
-          h2.push({x,w:dayW*7,label:d.getDate().toString()});
-        }
-        if(d.getMonth()!==lastMonth){h1.push({x,label:d.toLocaleDateString('es-AR',{month:'short',year:'2-digit'})});lastMonth=d.getMonth();}
-        d.setDate(d.getDate()+1);
-      }
-    }else if(zoom==='month'){
-      let lastYear=-1;
-      while(d<=chartEnd){
-        if(d.getDate()===1){
-          const x=dateToX(d);
-          lines.push({x,maj:d.getMonth()===0});
-          const dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
-          h2.push({x,w:dim*dayW,label:d.toLocaleDateString('es-AR',{month:'short'})});
-          if(d.getFullYear()!==lastYear){h1.push({x,label:d.getFullYear().toString()});lastYear=d.getFullYear();}
-        }
-        d.setDate(d.getDate()+1);
-      }
-    }else{
-      let lastYear=-1;
-      while(d<=chartEnd){
-        if(d.getDate()===1){
-          const x=dateToX(d);
-          if(d.getMonth()%3===0){
-            lines.push({x,maj:d.getMonth()===0});
-            h2.push({x,w:90*dayW,label:`T${Math.floor(d.getMonth()/3)+1}`});
-          }
-          if(d.getFullYear()!==lastYear){h1.push({x,label:d.getFullYear().toString()});lastYear=d.getFullYear();}
-        }
-        d.setDate(d.getDate()+1);
-      }
-    }
+    const lines=[],h1=[],h2=[];const d=new Date(chartStart);
+    if(zoom==='day'){while(d<=chartEnd){const x=dateToX(d);lines.push({x,we:d.getDay()===0||d.getDay()===6,maj:d.getDay()===1});h2.push({x,w:dayW,label:d.getDate().toString()});if(d.getDate()===1||(d.getDay()===1&&h1.length===0))h1.push({x,label:d.toLocaleDateString('es-AR',{month:'short',year:'2-digit'})});d.setDate(d.getDate()+1)}}
+    else if(zoom==='week'){let lm=-1;while(d<=chartEnd){const x=dateToX(d);if(d.getDay()===1||d.getTime()===chartStart.getTime()){lines.push({x,maj:d.getDate()<=7});h2.push({x,w:dayW*7,label:d.getDate().toString()})}if(d.getMonth()!==lm){h1.push({x,label:d.toLocaleDateString('es-AR',{month:'short',year:'2-digit'})});lm=d.getMonth()}d.setDate(d.getDate()+1)}}
+    else if(zoom==='month'){let ly=-1;while(d<=chartEnd){if(d.getDate()===1){const x=dateToX(d);lines.push({x,maj:d.getMonth()===0});const dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();h2.push({x,w:dim*dayW,label:d.toLocaleDateString('es-AR',{month:'short'})});if(d.getFullYear()!==ly){h1.push({x,label:d.getFullYear().toString()});ly=d.getFullYear()}}d.setDate(d.getDate()+1)}}
+    else{let ly=-1;while(d<=chartEnd){if(d.getDate()===1){const x=dateToX(d);if(d.getMonth()%3===0){lines.push({x,maj:d.getMonth()===0});h2.push({x,w:90*dayW,label:`T${Math.floor(d.getMonth()/3)+1}`})}if(d.getFullYear()!==ly){h1.push({x,label:d.getFullYear().toString()});ly=d.getFullYear()}}d.setDate(d.getDate()+1)}}
     return{lines,h1,h2};
   },[chartStart,chartEnd,zoom,dayW,dateToX]);
 
-  /* Bar positions */
-  const barPos=useMemo(()=>{
-    const map={};
-    tasks.forEach((task,i)=>{
-      const y=i*rowH,cy=y+rowH/2;
-      if(task.isMilestone){
-        const mx=dateToX(task.start||task.finish);
-        map[task.uid]={x:mx,y,cy,w:0,startX:mx,endX:mx,ms:true};
-      }else if(task.start&&task.finish){
-        const x1=dateToX(task.start),x2=dateToX(task.finish);
-        const w=Math.max(x2-x1,2);
-        map[task.uid]={x:x1,y,cy,w,startX:x1,endX:x1+w,ms:false};
-      }
-    });
-    return map;
-  },[tasks,dateToX,rowH]);
+  /* Bars */
+  const barPos=useMemo(()=>{const map={};tasks.forEach((task,i)=>{const y=i*rowH,cy=y+rowH/2;if(task.isMilestone){const mx=dateToX(task.start||task.finish);map[task.uid]={x:mx,y,cy,w:0,startX:mx,endX:mx,ms:true}}else if(task.start&&task.finish){const x1=dateToX(task.start),x2=dateToX(task.finish),w=Math.max(x2-x1,2);map[task.uid]={x:x1,y,cy,w,startX:x1,endX:x1+w,ms:false}}});return map},[tasks,dateToX]);
 
   /* Arrows */
-  const arrows=useMemo(()=>{
-    if(!showArrows) return[];
-    const res=[];
-    for(const task of tasks){
-      for(const pred of task.predecessors){
-        const fp=barPos[pred.taskUid],tp=barPos[task.uid];
-        if(!fp||!tp) continue;
-        let fx,fy,tx,ty;
-        switch(pred.type){
-          case 'FS':fx=fp.endX;fy=fp.cy;tx=tp.startX;ty=tp.cy;break;
-          case 'FF':fx=fp.endX;fy=fp.cy;tx=tp.endX;ty=tp.cy;break;
-          case 'SS':fx=fp.startX;fy=fp.cy;tx=tp.startX;ty=tp.cy;break;
-          case 'SF':fx=fp.startX;fy=fp.cy;tx=tp.endX;ty=tp.cy;break;
-          default:fx=fp.endX;fy=fp.cy;tx=tp.startX;ty=tp.cy;
-        }
-        const g=8;
-        let path;
-        if(pred.type==='FS'){
-          if(tx>fx+g){
-            if(Math.abs(fy-ty)<2) path=`M${fx},${fy} L${tx},${ty}`;
-            else{const mx=(fx+tx)/2;path=`M${fx},${fy} L${mx},${fy} L${mx},${ty} L${tx},${ty}`;}
-          }else{
-            const dy=fy<ty?Math.max(fy,ty)+rowH*0.6:Math.min(fy,ty)-rowH*0.6;
-            path=`M${fx},${fy} L${fx+g},${fy} L${fx+g},${dy} L${tx-g},${dy} L${tx-g},${ty} L${tx},${ty}`;
-          }
-        }else if(pred.type==='SS'){
-          const lx=Math.min(fx,tx)-g;
-          path=`M${fx},${fy} L${lx},${fy} L${lx},${ty} L${tx},${ty}`;
-        }else if(pred.type==='FF'){
-          const rx=Math.max(fx,tx)+g;
-          path=`M${fx},${fy} L${rx},${fy} L${rx},${ty} L${tx},${ty}`;
-        }else{
-          const lx=fx-g;
-          path=`M${fx},${fy} L${lx},${fy} L${lx},${ty} L${tx},${ty}`;
-        }
-        // Arrow direction
-        let ax=tx,ay=ty,dir='right';
-        if(pred.type==='FF'||pred.type==='SF') dir=tx>fx?'right':'left'; // points into endX
-        if(pred.type==='SS'||pred.type==='FS') dir=tx>fx?'right':'left';
-        res.push({path,tx,ty,dir});
-      }
-    }
-    return res;
-  },[tasks,barPos,showArrows,rowH]);
+  const arrows=useMemo(()=>{if(!showArrows)return[];const res=[];for(const task of tasks){for(const pred of task.predecessors){const fp=barPos[pred.taskUid],tp=barPos[task.uid];if(!fp||!tp)continue;let fx,fy,tx,ty;switch(pred.type){case 'FS':fx=fp.endX;fy=fp.cy;tx=tp.startX;ty=tp.cy;break;case 'FF':fx=fp.endX;fy=fp.cy;tx=tp.endX;ty=tp.cy;break;case 'SS':fx=fp.startX;fy=fp.cy;tx=tp.startX;ty=tp.cy;break;default:fx=fp.startX;fy=fp.cy;tx=tp.endX;ty=tp.cy}const g=8;let path;if(pred.type==='FS'){if(tx>fx+g){if(Math.abs(fy-ty)<2)path=`M${fx},${fy} L${tx},${ty}`;else{const mx=(fx+tx)/2;path=`M${fx},${fy} L${mx},${fy} L${mx},${ty} L${tx},${ty}`}}else{const dy=fy<ty?Math.max(fy,ty)+rowH*.6:Math.min(fy,ty)-rowH*.6;path=`M${fx},${fy} L${fx+g},${fy} L${fx+g},${dy} L${tx-g},${dy} L${tx-g},${ty} L${tx},${ty}`}}else if(pred.type==='SS'){const lx=Math.min(fx,tx)-g;path=`M${fx},${fy} L${lx},${fy} L${lx},${ty} L${tx},${ty}`}else if(pred.type==='FF'){const rx=Math.max(fx,tx)+g;path=`M${fx},${fy} L${rx},${fy} L${rx},${ty} L${tx},${ty}`}else{const lx=fx-g;path=`M${fx},${fy} L${lx},${fy} L${lx},${ty} L${tx},${ty}`}res.push({path,tx,ty})}}return res},[tasks,barPos,showArrows]);
 
-  const handleBarEnter=useCallback((e,task)=>{
-    const r=e.currentTarget.getBoundingClientRect();
-    onTooltip({task,x:r.left+r.width/2,y:r.top-4});
-  },[onTooltip]);
+  const handleBarEnter=useCallback((e,task)=>{const r=e.currentTarget.getBoundingClientRect();onTooltip({task,x:r.left+r.width/2,y:r.top-4})},[onTooltip]);
   const handleBarLeave=useCallback(()=>onTooltip(null),[onTooltip]);
 
   return(
@@ -659,517 +427,382 @@ function GanttChart({tasks,uidMap,minDate,maxDate,zoom,showArrows,showBaseline,s
       <svg width={totalW} height={totalH+headerH} style={{display:'block'}}>
         <rect x="0" y="0" width={totalW} height={headerH} fill="var(--bg-secondary)"/>
         <line x1="0" y1={headerH} x2={totalW} y2={headerH} stroke="var(--border-primary)"/>
-
         {grid.h1.map((h,i)=><text key={`h1${i}`} x={h.x+4} y={16} fontSize="10" fontWeight="600" fill="var(--text-secondary)" fontFamily="var(--font-sans)">{h.label}</text>)}
         {grid.h2.map((h,i)=><text key={`h2${i}`} x={h.x+(h.w?h.w/2:4)} y={34} fontSize="10" fill="var(--text-tertiary)" fontFamily="var(--font-mono)" textAnchor={h.w?'middle':'start'}>{h.label}</text>)}
-
-        {grid.lines.map((l,i)=><line key={`gl${i}`} x1={l.x} y1={headerH} x2={l.x} y2={totalH+headerH} stroke={l.maj?'var(--border-primary)':'var(--border-secondary)'} strokeWidth={l.maj?1:0.5} strokeDasharray={l.maj?'none':'2,4'}/>)}
-
-        {zoom==='day'&&grid.lines.filter(l=>l.we).map((l,i)=><rect key={`we${i}`} x={l.x} y={headerH} width={dayW} height={totalH} fill="var(--text-tertiary)" opacity="0.04"/>)}
-
-        {tasks.map((_,i)=><line key={`rl${i}`} x1="0" y1={headerH+(i+1)*rowH} x2={totalW} y2={headerH+(i+1)*rowH} stroke="var(--border-secondary)" strokeWidth="0.5"/>)}
-
-        {/* Arrows */}
-        {arrows.map((a,i)=><g key={`a${i}`}>
-          <path d={a.path} fill="none" stroke="var(--arrow-color)" strokeWidth="1" transform={`translate(0,${headerH})`}/>
-          <polygon points={`${a.tx},${a.ty+headerH} ${a.tx-4},${a.ty-3+headerH} ${a.tx-4},${a.ty+3+headerH}`} fill="var(--arrow-head)" opacity="0.5"/>
-        </g>)}
-
-        {/* Today */}
-        {showToday&&<g>
-          <line x1={todayX} y1={headerH} x2={todayX} y2={totalH+headerH} stroke="var(--today-line)" strokeWidth="1.5" strokeDasharray="4,3"/>
-          <rect x={todayX-16} y={headerH-14} width="32" height="13" rx="2" fill="var(--today-line)"/>
-          <text x={todayX} y={headerH-5} textAnchor="middle" fontSize="9" fontWeight="600" fill="white" fontFamily="var(--font-sans)">HOY</text>
-        </g>}
-
-        {/* Bars */}
+        {grid.lines.map((l,i)=><line key={`gl${i}`} x1={l.x} y1={headerH} x2={l.x} y2={totalH+headerH} stroke={l.maj?'var(--border-primary)':'var(--border-secondary)'} strokeWidth={l.maj?1:.5} strokeDasharray={l.maj?'none':'2,4'}/>)}
+        {zoom==='day'&&grid.lines.filter(l=>l.we).map((l,i)=><rect key={`we${i}`} x={l.x} y={headerH} width={dayW} height={totalH} fill="var(--text-tertiary)" opacity=".04"/>)}
+        {tasks.map((_,i)=><line key={`rl${i}`} x1="0" y1={headerH+(i+1)*rowH} x2={totalW} y2={headerH+(i+1)*rowH} stroke="var(--border-secondary)" strokeWidth=".5"/>)}
+        {arrows.map((a,i)=><g key={`a${i}`}><path d={a.path} fill="none" stroke="var(--arrow-color)" strokeWidth="1" transform={`translate(0,${headerH})`}/><polygon points={`${a.tx},${a.ty+headerH} ${a.tx-4},${a.ty-3+headerH} ${a.tx-4},${a.ty+3+headerH}`} fill="var(--arrow-head)" opacity=".5"/></g>)}
+        {showToday&&<g><line x1={todayX} y1={headerH} x2={todayX} y2={totalH+headerH} stroke="var(--today-line)" strokeWidth="1.5" strokeDasharray="4,3"/><rect x={todayX-16} y={headerH-14} width="32" height="13" rx="2" fill="var(--today-line)"/><text x={todayX} y={headerH-5} textAnchor="middle" fontSize="9" fontWeight="600" fill="white" fontFamily="var(--font-sans)">HOY</text></g>}
         {tasks.map((task,i)=>{
           const y=headerH+i*rowH,cy=y+rowH/2;
-
-          /* Baseline ghost bar */
-          let baselineEl=null;
-          if(showBaseline&&task.baselines.length>0){
-            const bl=task.baselines[0];
-            if(bl.start&&bl.finish&&!task.isMilestone){
-              const bx1=dateToX(bl.start),bx2=dateToX(bl.finish);
-              const bw=Math.max(bx2-bx1,2);
-              baselineEl=<rect x={bx1} y={cy+5} width={bw} height={3} fill="var(--bar-baseline)" rx="1.5" opacity="0.5"/>;
-            }
-          }
-
-          if(task.isMilestone){
-            const mx=dateToX(task.start||task.finish);
-            const sz=5;
-            const col=isOverdue(task)?'var(--bar-overdue)':'var(--bar-milestone)';
-            return <g key={task.uid} onMouseEnter={e=>handleBarEnter(e,task)} onMouseLeave={handleBarLeave} style={{cursor:'default'}}>
-              {baselineEl}
-              <polygon points={`${mx},${cy-sz} ${mx+sz},${cy} ${mx},${cy+sz} ${mx-sz},${cy}`} fill={col}/>
-            </g>;
-          }
-
-          if(!task.start||!task.finish) return baselineEl?<g key={task.uid}>{baselineEl}</g>:null;
-          const x=dateToX(task.start),w=Math.max(dateToX(task.finish)-x,2);
-          const barH=task.isSummary?6:10,barY=cy-barH/2;
-          const pct=task.percentComplete;
-          const over=isOverdue(task),done=pct>=100;
-          let bg='var(--bar-normal-bg)',fg='var(--bar-normal)';
-          if(over){bg='var(--bar-overdue-bg)';fg='var(--bar-overdue)';}
-          else if(done){bg='var(--bar-complete-bg)';fg='var(--bar-complete)';}
-
-          if(task.isSummary){
-            return <g key={task.uid} onMouseEnter={e=>handleBarEnter(e,task)} onMouseLeave={handleBarLeave} style={{cursor:'default'}}>
-              {baselineEl}
-              <rect x={x} y={barY} width={w} height={barH} fill="var(--bar-summary)" rx="1" opacity="0.7"/>
-              <rect x={x} y={barY} width={w*pct/100} height={barH} fill="var(--bar-summary)" rx="1"/>
-              <path d={`M${x},${barY} L${x},${barY+barH+3} L${x+4},${barY+barH}`} fill="none" stroke="var(--bar-summary)" strokeWidth="1.5"/>
-              <path d={`M${x+w},${barY} L${x+w},${barY+barH+3} L${x+w-4},${barY+barH}`} fill="none" stroke="var(--bar-summary)" strokeWidth="1.5"/>
-            </g>;
-          }
-
-          return <g key={task.uid} onMouseEnter={e=>handleBarEnter(e,task)} onMouseLeave={handleBarLeave} style={{cursor:'default'}}>
-            {baselineEl}
-            <rect x={x} y={barY} width={w} height={barH} fill={bg} rx="3"/>
-            <rect x={x} y={barY} width={Math.max(w*pct/100,0)} height={barH} fill={fg} rx="3"/>
-            {w>30&&pct>0&&<text x={x+4} y={cy+3} fontSize="8" fontWeight="600" fill={fg} fontFamily="var(--font-mono)" opacity="0.8">{pct}%</text>}
-          </g>;
+          let blEl=null;
+          if(showBaseline&&task.baselines.length>0){const bl=task.baselines[0];if(bl.start&&bl.finish&&!task.isMilestone){const bx1=dateToX(bl.start),bx2=dateToX(bl.finish),bw=Math.max(bx2-bx1,2);blEl=<rect x={bx1} y={cy+5} width={bw} height={3} fill="var(--bar-baseline)" rx="1.5" opacity=".5"/>}}
+          if(task.isMilestone){const mx=dateToX(task.start||task.finish),sz=5,col=isOverdue(task)?'var(--bar-overdue)':'var(--bar-milestone)';return <g key={task.uid} onMouseEnter={e=>handleBarEnter(e,task)} onMouseLeave={handleBarLeave} style={{cursor:'default'}}>{blEl}<polygon points={`${mx},${cy-sz} ${mx+sz},${cy} ${mx},${cy+sz} ${mx-sz},${cy}`} fill={col}/></g>}
+          if(!task.start||!task.finish)return blEl?<g key={task.uid}>{blEl}</g>:null;
+          const x=dateToX(task.start),w=Math.max(dateToX(task.finish)-x,2),barH=task.isSummary?6:10,barY=cy-barH/2,pct=task.percentComplete,over=isOverdue(task),done=pct>=100;
+          let bg='var(--bar-normal-bg)',fg='var(--bar-normal)';if(over){bg='var(--bar-overdue-bg)';fg='var(--bar-overdue)'}else if(done){bg='var(--bar-complete-bg)';fg='var(--bar-complete)'}
+          if(task.isSummary)return <g key={task.uid} onMouseEnter={e=>handleBarEnter(e,task)} onMouseLeave={handleBarLeave} style={{cursor:'default'}}>{blEl}<rect x={x} y={barY} width={w} height={barH} fill="var(--bar-summary)" rx="1" opacity=".7"/><rect x={x} y={barY} width={w*pct/100} height={barH} fill="var(--bar-summary)" rx="1"/><path d={`M${x},${barY} L${x},${barY+barH+3} L${x+4},${barY+barH}`} fill="none" stroke="var(--bar-summary)" strokeWidth="1.5"/><path d={`M${x+w},${barY} L${x+w},${barY+barH+3} L${x+w-4},${barY+barH}`} fill="none" stroke="var(--bar-summary)" strokeWidth="1.5"/></g>;
+          return <g key={task.uid} onMouseEnter={e=>handleBarEnter(e,task)} onMouseLeave={handleBarLeave} style={{cursor:'default'}}>{blEl}<rect x={x} y={barY} width={w} height={barH} fill={bg} rx="3"/><rect x={x} y={barY} width={Math.max(w*pct/100,0)} height={barH} fill={fg} rx="3"/>{w>30&&pct>0&&<text x={x+4} y={cy+3} fontSize="8" fontWeight="600" fill={fg} fontFamily="var(--font-mono)" opacity=".8">{pct}%</text>}</g>;
         })}
       </svg>
     </div>
   );
 }
 
-/* ═══════ Dashboard ═══════ */
-function Dashboard({data}){
-  if(!data) return null;
-  const tasks=data.tasks.filter(t=>!t.isSummary);
-  const total=tasks.length;
-  const completed=tasks.filter(t=>t.percentComplete>=100).length;
-  const inProg=tasks.filter(t=>t.percentComplete>0&&t.percentComplete<100).length;
-  const overdue=tasks.filter(t=>isOverdue(t)).length;
-  const avg=total?Math.round(tasks.reduce((s,t)=>s+t.percentComplete,0)/total):0;
-
-  const upcoming=tasks.filter(t=>t.finish&&t.finish>=new Date()&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish).slice(0,8);
-  const resLoad={};
-  tasks.forEach(t=>{
-    const r=t.resources.length?t.resources.join(', '):'Sin asignar';
-    if(!resLoad[r]) resLoad[r]={total:0,done:0,over:0};
-    resLoad[r].total++;
-    if(t.percentComplete>=100) resLoad[r].done++;
-    if(isOverdue(t)) resLoad[r].over++;
-  });
-
-  return <div className="dashboard">
-    <div className="dash-grid">
-      <div className="kpi-card"><div className="kpi-value">{total}</div><div className="kpi-label">Tareas totales</div></div>
-      <div className="kpi-card success"><div className="kpi-value" style={{color:'var(--success)'}}>{completed}</div><div className="kpi-label">Completadas</div></div>
-      <div className="kpi-card warning"><div className="kpi-value" style={{color:'var(--warning)'}}>{inProg}</div><div className="kpi-label">En curso</div></div>
-      <div className="kpi-card danger"><div className="kpi-value" style={{color:'var(--danger)'}}>{overdue}</div><div className="kpi-label">Vencidas</div></div>
-      <div className="kpi-card"><div className="kpi-value">{avg}%</div><div className="kpi-label">Avance promedio</div></div>
-    </div>
-    <div style={{marginBottom:20,background:'var(--bg-elevated)',border:'1px solid var(--border-secondary)',borderRadius:'var(--radius-md)',padding:14}}>
-      <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
-        <span style={{fontSize:12,fontWeight:600}}>Avance general</span>
-        <span style={{fontSize:12,fontFamily:'var(--font-mono)',color:'var(--accent)',fontWeight:600}}>{avg}%</span>
-      </div>
-      <div style={{height:8,borderRadius:4,background:'var(--bg-tertiary)',overflow:'hidden'}}>
-        <div style={{height:'100%',borderRadius:4,width:`${avg}%`,background:'var(--accent)',transition:'width .3s'}}/>
-      </div>
-    </div>
-    {upcoming.length>0&&<div style={{marginBottom:20}}>
-      <div className="dash-section-title">Próximas entregas</div>
-      <table className="dash-table"><thead><tr><th>Tarea</th><th style={{width:100}}>Fin</th><th style={{width:60}}>%</th><th style={{width:120}}>Recurso</th></tr></thead>
-      <tbody>{upcoming.map(t=><tr key={t.uid}><td style={{fontWeight:500}}>{t.name}</td><td className="td-mono">{fmtDate(t.finish)}</td><td className="td-mono">{t.percentComplete}%</td><td style={{color:'var(--text-secondary)',fontSize:11}}>{t.resources.join(', ')||'—'}</td></tr>)}</tbody></table>
-    </div>}
-    <div>
-      <div className="dash-section-title">Carga por recurso</div>
-      <table className="dash-table"><thead><tr><th>Recurso</th><th style={{width:60}}>Total</th><th style={{width:80}}>Hechas</th><th style={{width:70}}>Vencidas</th></tr></thead>
-      <tbody>{Object.entries(resLoad).sort((a,b)=>b[1].total-a[1].total).map(([n,d])=><tr key={n}><td style={{fontWeight:500}}>{n}</td><td className="td-mono">{d.total}</td><td className="td-mono" style={{color:'var(--success)'}}>{d.done}</td><td className="td-mono" style={{color:d.over?'var(--danger)':'var(--text-tertiary)'}}>{d.over}</td></tr>)}</tbody></table>
-    </div>
-  </div>;
-}
-
-/* ═══════ Resources ═══════ */
-function ResourcesView({data}){
-  if(!data) return null;
-  const allRes=data.rawResources||[];
-  const resData=allRes.map(r=>{
-    const my=data.tasks.filter(t=>t.resources.includes(r.name));
-    const total=my.length,done=my.filter(t=>t.percentComplete>=100).length,over=my.filter(t=>isOverdue(t)).length;
-    const avg=total?Math.round(my.reduce((s,t)=>s+t.percentComplete,0)/total):0;
-    return{...r,total,done,over,avg};
-  });
-  return <div className="resources-view">
-    <div className="dash-section-title">Recursos del proyecto</div>
-    <table className="dash-table"><thead><tr><th>Recurso</th><th style={{width:70}}>Tareas</th><th style={{width:90}}>Hechas</th><th style={{width:70}}>Vencidas</th><th style={{width:80}}>Avance</th></tr></thead>
-    <tbody>{resData.sort((a,b)=>b.total-a.total).map(r=><tr key={r.uid}><td style={{fontWeight:500}}>{r.name}</td><td className="td-mono">{r.total}</td><td className="td-mono" style={{color:'var(--success)'}}>{r.done}</td><td className="td-mono" style={{color:r.over?'var(--danger)':'var(--text-tertiary)'}}>{r.over}</td><td className="td-mono">{r.avg}%</td></tr>)}
-    {resData.length===0&&<tr><td colSpan="5" style={{textAlign:'center',color:'var(--text-tertiary)',padding:20}}>Sin recursos asignados</td></tr>}
-    </tbody></table>
-  </div>;
-}
-
-/* ═══════ Search Modal ═══════ */
-function SearchModal({openProjects,onClose}){
-  const[q,setQ]=useState('');
-  const ref=useRef(null);
-  useEffect(()=>{ref.current?.focus()},[]);
-  const results=useMemo(()=>{
-    if(!q.trim()) return[];
-    const low=q.toLowerCase();
-    const res=[];
-    for(const p of openProjects){
-      if(!p.data) continue;
-      for(const t of p.data.tasks){
-        if(t.name.toLowerCase().includes(low)){
-          res.push({task:t,pName:p.name});
-          if(res.length>=20) return res;
-        }
-      }
-    }
-    return res;
-  },[q,openProjects]);
-  return <div className="search-overlay" onClick={onClose}>
-    <div className="search-modal" onClick={e=>e.stopPropagation()}>
-      <input ref={ref} className="search-input" placeholder="Buscar tareas..." value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>{if(e.key==='Escape') onClose()}}/>
-      <div className="search-results">
-        {results.map((r,i)=><div key={i} className="search-result-item">
-          <span style={{color:r.task.isMilestone?'var(--bar-milestone)':'var(--text-tertiary)'}}>{r.task.isMilestone?'♦':'○'}</span>
-          <span style={{flex:1}}>{r.task.name}</span>
-          <span style={{color:'var(--text-tertiary)',fontSize:11}}>{r.pName}</span>
-        </div>)}
-        {q.trim()&&results.length===0&&<div style={{padding:16,textAlign:'center',color:'var(--text-tertiary)',fontSize:12}}>Sin resultados</div>}
-      </div>
-    </div>
-  </div>;
-}
-
 /* ═══════ Tooltip ═══════ */
 function Tooltip({info}){
-  if(!info) return null;
-  const{task,x,y}=info;
-  const st=getStatus(task);
-  const bl=task.baselines.length>0?task.baselines[0]:null;
-  return <div className="gantt-tooltip" style={{left:Math.min(x,window.innerWidth-300),top:Math.max(y-120,10)}}>
+  if(!info)return null;
+  const{task,x,y}=info;const st=getStatus(task);const bl=task.baselines.length>0?task.baselines[0]:null;
+  const ent=Object.entries(task.enterprise).filter(([k,v])=>!v.isGuid);
+  return <div className="gantt-tooltip" style={{left:Math.min(x,window.innerWidth-300),top:Math.max(y-140,10)}}>
     <div className="tt-name">{task.name}</div>
+    <div className="tt-row"><span className="tt-label">WBS</span><span className="tt-value">{task.wbs||'—'}</span></div>
     <div className="tt-row"><span className="tt-label">Estado</span><span className="tt-value" style={{color:statusColor(st)}}>{statusLabel(st)}</span></div>
     <div className="tt-row"><span className="tt-label">Inicio</span><span className="tt-value">{fmtDate(task.start)}</span></div>
     <div className="tt-row"><span className="tt-label">Fin</span><span className="tt-value">{fmtDate(task.finish)}</span></div>
+    <div className="tt-row"><span className="tt-label">Duración</span><span className="tt-value">{fmtDuration(task.duration)}</span></div>
     <div className="tt-row"><span className="tt-label">Avance</span><span className="tt-value">{task.percentComplete}%</span></div>
+    {task.critical&&<div className="tt-row"><span className="tt-label">Ruta crítica</span><span className="tt-value" style={{color:'var(--danger)'}}>Sí</span></div>}
     {task.resources.length>0&&<div className="tt-row"><span className="tt-label">Recurso</span><span className="tt-value">{task.resources.join(', ')}</span></div>}
+    {ent.map(([k,v])=><div key={k} className="tt-row"><span className="tt-label">{k}</span><span className="tt-value">{v.value}</span></div>)}
     {bl&&<Fragment>
-      <div style={{borderTop:'1px solid var(--border-secondary)',margin:'4px 0',fontSize:10,color:'var(--text-tertiary)',paddingTop:3}}>Línea base</div>
+      <div style={{borderTop:'1px solid var(--border-secondary)',margin:'4px 0',fontSize:10,color:'var(--text-tertiary)',paddingTop:3}}>Línea base {bl.number}</div>
       <div className="tt-row"><span className="tt-label">Inicio LB</span><span className="tt-value">{fmtDate(bl.start)}</span></div>
       <div className="tt-row"><span className="tt-label">Fin LB</span><span className="tt-value">{fmtDate(bl.finish)}</span></div>
       {task.finish&&bl.finish&&<div className="tt-row"><span className="tt-label">Desvío</span><span className="tt-value" style={{color:task.finish>bl.finish?'var(--danger)':'var(--success)'}}>{daysBetween(bl.finish,task.finish)} días</span></div>}
     </Fragment>}
-    {task.predecessors.length>0&&<div className="tt-row"><span className="tt-label">Predecesoras</span><span className="tt-value">{task.predecessors.length}</span></div>}
-    {Object.keys(task.customFields).length>0&&<Fragment>
-      <div style={{borderTop:'1px solid var(--border-secondary)',margin:'4px 0'}}/>
-      {Object.entries(task.customFields).slice(0,4).map(([k,v])=><div key={k} className="tt-row"><span className="tt-label">{k}</span><span className="tt-value">{v}</span></div>)}
+  </div>;
+}
+
+/* ═══════ Portfolio Dashboard (cross-project) ═══════ */
+function PortfolioDashboard({projectList,projectData}){
+  const[selectedContractor,setSelectedContractor]=useState(null);
+
+  /* Aggregate all tasks across loaded projects */
+  const allData=useMemo(()=>{
+    const contractors={};
+    const projectSummaries=[];
+    for(const p of projectList){
+      const data=projectData[p.key];
+      if(!data) continue;
+      const nonSummary=data.tasks.filter(t=>!t.isSummary);
+      projectSummaries.push({name:p.name,key:p.key,total:nonSummary.length,done:nonSummary.filter(t=>t.percentComplete>=100).length,overdue:nonSummary.filter(t=>isOverdue(t)).length,avg:nonSummary.length?Math.round(nonSummary.reduce((s,t)=>s+t.percentComplete,0)/nonSummary.length):0});
+
+      for(const t of nonSummary){
+        const c=t.enterprise['Contratista'];
+        const cName=c&&!c.isGuid?c.value:'Sin contratista';
+        if(!contractors[cName]) contractors[cName]={tasks:[],projects:new Set(),total:0,done:0,overdue:0,inProgress:0};
+        contractors[cName].tasks.push({...t,projectName:p.name,projectKey:p.key});
+        contractors[cName].projects.add(p.name);
+        contractors[cName].total++;
+        if(t.percentComplete>=100) contractors[cName].done++;
+        if(isOverdue(t)) contractors[cName].overdue++;
+        if(t.percentComplete>0&&t.percentComplete<100) contractors[cName].inProgress++;
+      }
+    }
+    return{contractors,projectSummaries};
+  },[projectList,projectData]);
+
+  const contractorList=Object.entries(allData.contractors).sort((a,b)=>b[1].total-a[1].total);
+  const selected=selectedContractor?allData.contractors[selectedContractor]:null;
+
+  /* Group selected contractor's tasks by project */
+  const tasksByProject=useMemo(()=>{
+    if(!selected) return[];
+    const map={};
+    for(const t of selected.tasks){
+      if(!map[t.projectName]) map[t.projectName]=[];
+      map[t.projectName].push(t);
+    }
+    return Object.entries(map);
+  },[selected]);
+
+  const loadedCount=Object.keys(projectData).length;
+
+  return <div className="dashboard">
+    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+      <div className="dash-section-title" style={{margin:0}}>Portfolio — {loadedCount} proyectos cargados</div>
+      {loadedCount===0&&<div style={{color:'var(--text-tertiary)',fontSize:12}}>Abrí proyectos desde la lista para verlos acá</div>}
+    </div>
+
+    {/* Project KPIs */}
+    {allData.projectSummaries.length>0&&<div style={{marginBottom:20}}>
+      <div className="dash-section-title">Proyectos</div>
+      <table className="dash-table"><thead><tr><th>Proyecto</th><th style={{width:60}}>Tareas</th><th style={{width:60}}>Hechas</th><th style={{width:70}}>Vencidas</th><th style={{width:70}}>Avance</th></tr></thead>
+      <tbody>{allData.projectSummaries.map(p=><tr key={p.key}><td style={{fontWeight:500}}>{p.name}</td><td className="td-mono">{p.total}</td><td className="td-mono" style={{color:'var(--success)'}}>{p.done}</td><td className="td-mono" style={{color:p.overdue?'var(--danger)':'var(--text-tertiary)'}}>{p.overdue}</td><td className="td-mono">{p.avg}%</td></tr>)}</tbody></table>
+    </div>}
+
+    {/* Contractor cards */}
+    {contractorList.length>0&&<Fragment>
+      <div className="dash-section-title">Contratistas — clic para ver detalle</div>
+      <div className="contractor-grid">
+        {contractorList.map(([name,data])=>(
+          <div key={name} className={`contractor-card ${selectedContractor===name?'active':''}`} onClick={()=>setSelectedContractor(selectedContractor===name?null:name)}>
+            <h4>{name}</h4>
+            <div className="contractor-stat"><span>Proyectos</span><span className="val">{data.projects.size}</span></div>
+            <div className="contractor-stat"><span>Tareas</span><span className="val">{data.total}</span></div>
+            <div className="contractor-stat"><span>Completadas</span><span className="val" style={{color:'var(--success)'}}>{data.done}</span></div>
+            <div className="contractor-stat"><span>Vencidas</span><span className="val" style={{color:data.overdue?'var(--danger)':'var(--text-tertiary)'}}>{data.overdue}</span></div>
+            <div className="contractor-stat"><span>En curso</span><span className="val" style={{color:data.inProgress?'var(--warning)':'var(--text-tertiary)'}}>{data.inProgress}</span></div>
+            <div style={{marginTop:6}}>
+              <div className="progress-mini"><div className="progress-mini-bar" style={{width:'100%'}}><div className="progress-mini-fill" style={{width:`${data.total?Math.round(data.done/data.total*100):0}%`,background:'var(--accent)'}}/></div><span className="td-mono">{data.total?Math.round(data.done/data.total*100):0}%</span></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Fragment>}
+
+    {/* Selected contractor detail */}
+    {selected&&<Fragment>
+      <div className="dash-section-title">{selectedContractor} — detalle por proyecto</div>
+      {tasksByProject.map(([projName,tasks])=>(
+        <div key={projName} style={{marginBottom:12}}>
+          <div style={{fontSize:12,fontWeight:600,marginBottom:6,color:'var(--accent)'}}>{projName} ({tasks.length} tareas)</div>
+          <table className="dash-table"><thead><tr><th>Tarea</th><th style={{width:90}}>Inicio</th><th style={{width:90}}>Fin</th><th style={{width:50}}>%</th><th style={{width:70}}>Estado</th><th style={{width:80}}>N° Item</th></tr></thead>
+          <tbody>{tasks.sort((a,b)=>(a.start||new Date(0))-(b.start||new Date(0))).map(t=>{
+            const st=getStatus(t);
+            return <tr key={t.uid}><td style={{fontWeight:500}}>{t.name}</td><td className="td-mono">{fmtDate(t.start)}</td><td className="td-mono">{fmtDate(t.finish)}</td><td className="td-mono">{t.percentComplete}%</td><td style={{color:statusColor(st),fontSize:11,fontWeight:500}}>{statusLabel(st)}</td><td className="td-mono">{t.enterprise['N° Item']?.value||'—'}</td></tr>
+          })}</tbody></table>
+        </div>
+      ))}
     </Fragment>}
   </div>;
 }
 
+/* ═══════ Project Dashboard ═══════ */
+function Dashboard({data,projectName}){
+  if(!data)return null;
+  const tasks=data.tasks.filter(t=>!t.isSummary);
+  const total=tasks.length,completed=tasks.filter(t=>t.percentComplete>=100).length;
+  const inProg=tasks.filter(t=>t.percentComplete>0&&t.percentComplete<100).length;
+  const overdue=tasks.filter(t=>isOverdue(t)).length;
+  const avg=total?Math.round(tasks.reduce((s,t)=>s+t.percentComplete,0)/total):0;
 
-/* ═══════════════════════════════════════════
-   MAIN APP — fixed project data isolation
-   ═══════════════════════════════════════════ */
+  /* Contractor breakdown */
+  const contractors={};
+  tasks.forEach(t=>{
+    const c=t.enterprise['Contratista'];
+    const name=c&&!c.isGuid?c.value:'Sin contratista';
+    if(!contractors[name]) contractors[name]={total:0,done:0,overdue:0};
+    contractors[name].total++;
+    if(t.percentComplete>=100) contractors[name].done++;
+    if(isOverdue(t)) contractors[name].overdue++;
+  });
+
+  const upcoming=tasks.filter(t=>t.finish&&t.finish>=new Date()&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish).slice(0,10);
+
+  return <div className="dashboard">
+    <div className="dash-grid">
+      <div className="kpi-card"><div className="kpi-value">{total}</div><div className="kpi-label">Tareas</div></div>
+      <div className="kpi-card success"><div className="kpi-value" style={{color:'var(--success)'}}>{completed}</div><div className="kpi-label">Completadas</div></div>
+      <div className="kpi-card warning"><div className="kpi-value" style={{color:'var(--warning)'}}>{inProg}</div><div className="kpi-label">En curso</div></div>
+      <div className="kpi-card danger"><div className="kpi-value" style={{color:'var(--danger)'}}>{overdue}</div><div className="kpi-label">Vencidas</div></div>
+      <div className="kpi-card"><div className="kpi-value">{avg}%</div><div className="kpi-label">Avance</div></div>
+    </div>
+
+    <div style={{marginBottom:20,background:'var(--bg-elevated)',border:'1px solid var(--border-secondary)',borderRadius:'var(--radius-md)',padding:14}}>
+      <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}><span style={{fontSize:12,fontWeight:600}}>Avance general</span><span style={{fontSize:12,fontFamily:'var(--font-mono)',color:'var(--accent)',fontWeight:600}}>{avg}%</span></div>
+      <div style={{height:8,borderRadius:4,background:'var(--bg-tertiary)',overflow:'hidden'}}><div style={{height:'100%',borderRadius:4,width:`${avg}%`,background:'var(--accent)'}}/></div>
+    </div>
+
+    {Object.keys(contractors).length>1&&<div style={{marginBottom:20}}>
+      <div className="dash-section-title">Carga por contratista</div>
+      <table className="dash-table"><thead><tr><th>Contratista</th><th style={{width:60}}>Total</th><th style={{width:80}}>Hechas</th><th style={{width:70}}>Vencidas</th></tr></thead>
+      <tbody>{Object.entries(contractors).sort((a,b)=>b[1].total-a[1].total).map(([n,d])=><tr key={n}><td style={{fontWeight:500}}>{n}</td><td className="td-mono">{d.total}</td><td className="td-mono" style={{color:'var(--success)'}}>{d.done}</td><td className="td-mono" style={{color:d.overdue?'var(--danger)':'var(--text-tertiary)'}}>{d.overdue}</td></tr>)}</tbody></table>
+    </div>}
+
+    {upcoming.length>0&&<div><div className="dash-section-title">Próximas entregas</div>
+      <table className="dash-table"><thead><tr><th>Tarea</th><th style={{width:90}}>Fin</th><th style={{width:50}}>%</th><th style={{width:100}}>Contratista</th><th style={{width:80}}>Recurso</th></tr></thead>
+      <tbody>{upcoming.map(t=><tr key={t.uid}><td style={{fontWeight:500}}>{t.name}</td><td className="td-mono">{fmtDate(t.finish)}</td><td className="td-mono">{t.percentComplete}%</td><td style={{fontSize:11,color:'var(--text-secondary)'}}>{t.enterprise['Contratista']?.value||'—'}</td><td style={{fontSize:11,color:'var(--text-secondary)'}}>{t.resources.join(', ')||'—'}</td></tr>)}</tbody></table>
+    </div>}
+  </div>;
+}
+
+/* ═══════ MAIN APP ═══════ */
 function App(){
   const[theme,toggleTheme]=useTheme();
-
-  /* Project data store — keyed by unique project key, NOT array index */
-  const[projectList,setProjectList]=useState(null); // manifest list [{key,name,file,size,modified}]
-  const[projectData,setProjectData]=useState({});   // {key: parsedData}
-  const[loadingKeys,setLoadingKeys]=useState({});    // {key: true}
-  const[errorKeys,setErrorKeys]=useState({});        // {key: message}
-  const[openTabs,setOpenTabs]=useState([]);          // [key,...]
-  const[activeTab,setActiveTab]=useState(null);      // key
+  const[projectList,setProjectList]=useState(null);
+  const[projectData,setProjectData]=useState({});
+  const[loadingKeys,setLoadingKeys]=useState({});
+  const[errorKeys,setErrorKeys]=useState({});
+  const[openTabs,setOpenTabs]=useState([]);
+  const[activeTab,setActiveTab]=useState(null);
   const[subTab,setSubTab]=useState('gantt');
   const[zoom,setZoom]=useState('week');
   const[showSearch,setShowSearch]=useState(false);
   const[showArrows,setShowArrows]=useState(true);
   const[showBaseline,setShowBaseline]=useState(true);
   const[tooltipInfo,setTooltipInfo]=useState(null);
-  const[tablePaneWidth,setTablePaneWidth]=useState(480);
+  const[tablePaneWidth,setTablePaneWidth]=useState(560);
   const[splitterActive,setSplitterActive]=useState(false);
   const[filterStatus,setFilterStatus]=useState('all');
   const[filterResource,setFilterResource]=useState('all');
+  const[filterContractor,setFilterContractor]=useState('all');
   const[filterWbsLevel,setFilterWbsLevel]=useState(99);
   const[filterDateFrom,setFilterDateFrom]=useState('');
   const[filterDateTo,setFilterDateTo]=useState('');
   const[expandedMap,setExpandedMap]=useState({});
   const[dragOver,setDragOver]=useState(false);
 
-  /* Scroll sync ref — no state to avoid re-render loops */
   const scrollTopRef=useRef({value:0,source:null});
   const tableContainerRef=useRef(null);
   const isTableScrolling=useRef(false);
 
-  /* Load manifest */
   useEffect(()=>{
-    fetch('data/manifest.json?t='+Date.now())
-      .then(r=>{if(!r.ok) throw new Error(r.status);return r.json()})
-      .then(data=>{
-        const list=(data.projects||data||[]).map((p,i)=>({
-          key:'srv_'+(p.file||p.name||i),
-          name:p.name||p.file?.replace('.xml','')||`Proyecto ${i+1}`,
-          file:p.file||p,
-          size:p.size||null,
-          modified:p.modified||null
-        }));
-        setProjectList(list);
-      })
-      .catch(()=>setProjectList([]));
+    fetch('data/manifest.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(data=>{
+      const list=(data.projects||data||[]).map((p,i)=>({key:'srv_'+(p.file||p.name||i),name:p.name||p.file?.replace('.xml','')||`Proyecto ${i+1}`,file:p.file||p,size:p.size||null,modified:p.modified||null}));
+      setProjectList(list);
+    }).catch(()=>setProjectList([]));
   },[]);
 
-  /* Keyboard */
-  useEffect(()=>{
-    const h=e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();setShowSearch(s=>!s)}};
-    window.addEventListener('keydown',h);
-    return()=>window.removeEventListener('keydown',h);
-  },[]);
+  useEffect(()=>{const h=e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();setShowSearch(s=>!s)}};window.addEventListener('keydown',h);return()=>window.removeEventListener('keydown',h)},[]);
 
-  /* Reset filters */
-  const resetFilters=useCallback(()=>{
-    setFilterStatus('all');setFilterResource('all');setFilterWbsLevel(99);setFilterDateFrom('');setFilterDateTo('');
-  },[]);
+  const resetFilters=useCallback(()=>{setFilterStatus('all');setFilterResource('all');setFilterContractor('all');setFilterWbsLevel(99);setFilterDateFrom('');setFilterDateTo('')},[]);
 
-  /* Open project — keyed by unique key, not index */
   const openProject=useCallback(async(proj)=>{
     const key=proj.key;
-    if(openTabs.includes(key)){
-      setActiveTab(key);
-      return;
-    }
-    // Already loaded?
+    if(openTabs.includes(key)){setActiveTab(key);return}
     if(!projectData[key]&&!loadingKeys[key]){
       setLoadingKeys(prev=>({...prev,[key]:true}));
       setErrorKeys(prev=>{const n={...prev};delete n[key];return n});
       try{
-        const url=typeof proj.file==='string'?`data/projects/${proj.file}?t=${Date.now()}`:null;
-        if(!url) throw new Error('No file path');
-        const res=await fetch(url);
+        const res=await fetch(`data/projects/${proj.file}?t=${Date.now()}`);
         if(!res.ok) throw new Error(`HTTP ${res.status}`);
         const text=await res.text();
         const data=parseMSPDI(text);
         setProjectData(prev=>({...prev,[key]:data}));
-        // Init expanded
-        const expMap={};
-        data.tasks.forEach(t=>{if(t.isSummary) expMap[t.uid]=true});
+        const expMap={};data.tasks.forEach(t=>{if(t.isSummary) expMap[t.uid]=true});
         setExpandedMap(prev=>({...prev,[key]:expMap}));
-      }catch(err){
-        console.error('Error loading',proj.name,err);
-        setErrorKeys(prev=>({...prev,[key]:err.message}));
-      }finally{
-        setLoadingKeys(prev=>{const n={...prev};delete n[key];return n});
-      }
+      }catch(err){setErrorKeys(prev=>({...prev,[key]:err.message}))}
+      finally{setLoadingKeys(prev=>{const n={...prev};delete n[key];return n})}
     }
     setOpenTabs(prev=>prev.includes(key)?prev:[...prev,key]);
-    setActiveTab(key);
-    setSubTab('gantt');
-    resetFilters();
+    setActiveTab(key);setSubTab('gantt');resetFilters();
   },[openTabs,projectData,loadingKeys,resetFilters]);
 
-  /* Close tab */
-  const closeTab=useCallback((key,e)=>{
-    e?.stopPropagation();
-    setOpenTabs(prev=>{
-      const next=prev.filter(k=>k!==key);
-      if(activeTab===key) setActiveTab(next.length?next[next.length-1]:null);
-      return next;
-    });
-  },[activeTab]);
+  const closeTab=useCallback((key,e)=>{e?.stopPropagation();setOpenTabs(prev=>{const next=prev.filter(k=>k!==key);if(activeTab===key) setActiveTab(next.length?next[next.length-1]:null);return next})},[activeTab]);
 
-  /* Local file */
   const handleLocalFile=useCallback(file=>{
     const reader=new FileReader();
-    reader.onload=e=>{
-      try{
-        const data=parseMSPDI(e.target.result);
-        const key='local_'+Date.now()+'_'+file.name;
-        const proj={key,name:file.name.replace('.xml',''),file:file.name,size:file.size,local:true};
-        setProjectList(prev=>[...(prev||[]),proj]);
-        setProjectData(prev=>({...prev,[key]:data}));
-        const expMap={};
-        data.tasks.forEach(t=>{if(t.isSummary) expMap[t.uid]=true});
-        setExpandedMap(prev=>({...prev,[key]:expMap}));
-        setOpenTabs(prev=>[...prev,key]);
-        setActiveTab(key);
-        setSubTab('gantt');
-        resetFilters();
-      }catch(err){console.error('Parse error:',err)}
-    };
+    reader.onload=e=>{try{
+      const data=parseMSPDI(e.target.result);
+      const key='local_'+Date.now();
+      const proj={key,name:file.name.replace('.xml',''),file:file.name,size:file.size,local:true};
+      setProjectList(prev=>[...(prev||[]),proj]);setProjectData(prev=>({...prev,[key]:data}));
+      const expMap={};data.tasks.forEach(t=>{if(t.isSummary) expMap[t.uid]=true});setExpandedMap(prev=>({...prev,[key]:expMap}));
+      setOpenTabs(prev=>[...prev,key]);setActiveTab(key);setSubTab('gantt');resetFilters();
+    }catch(err){console.error('Parse error:',err)}};
     reader.readAsText(file);
   },[resetFilters]);
 
-  /* Toggle / expand / collapse */
-  const toggleTask=useCallback((key,uid)=>{
-    setExpandedMap(prev=>{const m={...prev[key]};m[uid]=!m[uid];return{...prev,[key]:m}});
-  },[]);
-  const expandAll=useCallback((key,tasks)=>{
-    const m={};tasks.forEach(t=>{if(t.isSummary) m[t.uid]=true});
-    setExpandedMap(prev=>({...prev,[key]:m}));
-  },[]);
-  const collapseAll=useCallback((key,tasks)=>{
-    const m={};tasks.forEach(t=>{if(t.isSummary) m[t.uid]=false});
-    setExpandedMap(prev=>({...prev,[key]:m}));
-  },[]);
+  const toggleTask=useCallback((key,uid)=>{setExpandedMap(prev=>{const m={...prev[key]};m[uid]=!m[uid];return{...prev,[key]:m}})},[]);
+  const expandAll=useCallback((key,tasks)=>{const m={};tasks.forEach(t=>{if(t.isSummary) m[t.uid]=true});setExpandedMap(prev=>({...prev,[key]:m}))},[]);
+  const collapseAll=useCallback((key,tasks)=>{const m={};tasks.forEach(t=>{if(t.isSummary) m[t.uid]=false});setExpandedMap(prev=>({...prev,[key]:m}))},[]);
 
-  /* Active filters count */
-  const activeFiltersCount=useMemo(()=>{
-    let c=0;if(filterStatus!=='all')c++;if(filterResource!=='all')c++;if(filterWbsLevel<99)c++;if(filterDateFrom||filterDateTo)c++;return c;
-  },[filterStatus,filterResource,filterWbsLevel,filterDateFrom,filterDateTo]);
+  const activeFiltersCount=useMemo(()=>{let c=0;if(filterStatus!=='all')c++;if(filterResource!=='all')c++;if(filterContractor!=='all')c++;if(filterWbsLevel<99)c++;if(filterDateFrom||filterDateTo)c++;return c},[filterStatus,filterResource,filterContractor,filterWbsLevel,filterDateFrom,filterDateTo]);
 
-  /* Active project info */
   const activeProj=useMemo(()=>(projectList||[]).find(p=>p.key===activeTab),[projectList,activeTab]);
   const activeData=activeTab?projectData[activeTab]:null;
   const isLoading=activeTab?!!loadingKeys[activeTab]:false;
   const error=activeTab?errorKeys[activeTab]:null;
 
-  /* Visible tasks */
   const visibleTasks=useMemo(()=>{
     if(!activeData) return[];
     const expMap=expandedMap[activeTab]||{};
     const matchesFilter=task=>{
       if(filterStatus!=='all'&&getStatus(task)!==filterStatus) return false;
-      if(filterResource!=='all'){
-        if(filterResource==='unassigned'){if(task.resources.length>0)return false}
-        else{if(!task.resources.includes(filterResource))return false}
-      }
+      if(filterResource!=='all'){if(filterResource==='unassigned'){if(task.resources.length>0)return false}else{if(!task.resources.includes(filterResource))return false}}
+      if(filterContractor!=='all'){const c=task.enterprise['Contratista'];const cv=c&&!c.isGuid?c.value:'';if(filterContractor==='none'){if(cv)return false}else{if(cv!==filterContractor)return false}}
       if(task.outlineLevel>filterWbsLevel) return false;
       if(filterDateFrom){const f=new Date(filterDateFrom);if(task.finish&&task.finish<f)return false}
       if(filterDateTo){const t2=new Date(filterDateTo);if(task.start&&task.start>t2)return false}
       return true;
     };
-    const hasMatch=task=>{
-      if(matchesFilter(task)) return true;
-      for(const c of task.children) if(hasMatch(c)) return true;
-      return false;
-    };
+    const hasMatch=task=>{if(matchesFilter(task))return true;for(const c of task.children)if(hasMatch(c))return true;return false};
     const result=[];
-    const process=task=>{
-      if(task.isSummary){if(!hasMatch(task)) return}
-      else{if(!matchesFilter(task)) return}
-      result.push(task);
-      if(task.isSummary&&expMap[task.uid]){
-        for(const c of task.children) process(c);
-      }
-    };
+    const process=task=>{if(task.isSummary){if(!hasMatch(task))return}else{if(!matchesFilter(task))return};result.push(task);if(task.isSummary&&expMap[task.uid]){for(const c of task.children) process(c)}};
     for(const t of activeData.rootTasks||[]) process(t);
     return result;
-  },[activeData,activeTab,expandedMap,filterStatus,filterResource,filterWbsLevel,filterDateFrom,filterDateTo]);
-
-  /* Detect custom field columns to show */
-  const customCols=useMemo(()=>{
-    if(!activeData) return[];
-    return activeData.customFieldNames.slice(0,5); // show up to 5
-  },[activeData]);
+  },[activeData,activeTab,expandedMap,filterStatus,filterResource,filterContractor,filterWbsLevel,filterDateFrom,filterDateTo]);
 
   /* Splitter */
-  useEffect(()=>{
-    if(!splitterActive) return;
-    const onMove=e=>setTablePaneWidth(Math.max(250,Math.min(e.clientX,window.innerWidth-200)));
-    const onUp=()=>setSplitterActive(false);
-    document.addEventListener('mousemove',onMove);
-    document.addEventListener('mouseup',onUp);
-    return()=>{document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp)};
-  },[splitterActive]);
+  useEffect(()=>{if(!splitterActive)return;const onMove=e=>setTablePaneWidth(Math.max(300,Math.min(e.clientX,window.innerWidth-200)));const onUp=()=>setSplitterActive(false);document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);return()=>{document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp)}},[splitterActive]);
 
-  /* Table scroll — write to ref, no re-render */
-  const handleTableScroll=useCallback(e=>{
-    if(isTableScrolling.current) return;
-    scrollTopRef.current={value:e.target.scrollTop,source:'table'};
-  },[]);
+  const handleTableScroll=useCallback(e=>{if(isTableScrolling.current)return;scrollTopRef.current={value:e.target.scrollTop,source:'table'}},[]);
+  useEffect(()=>{let raf;const sync=()=>{const el=tableContainerRef.current;if(el&&scrollTopRef.current?.source==='chart'){isTableScrolling.current=true;el.scrollTop=scrollTopRef.current.value;scrollTopRef.current.source=null;requestAnimationFrame(()=>{isTableScrolling.current=false})};raf=requestAnimationFrame(sync)};raf=requestAnimationFrame(sync);return()=>cancelAnimationFrame(raf)},[]);
 
-  /* Chart → table sync via RAF polling (no state) */
-  useEffect(()=>{
-    let raf;
-    const sync=()=>{
-      const el=tableContainerRef.current;
-      if(el&&scrollTopRef.current&&scrollTopRef.current.source==='chart'){
-        isTableScrolling.current=true;
-        el.scrollTop=scrollTopRef.current.value;
-        scrollTopRef.current.source=null;
-        requestAnimationFrame(()=>{isTableScrolling.current=false});
-      }
-      raf=requestAnimationFrame(sync);
-    };
-    raf=requestAnimationFrame(sync);
-    return()=>cancelAnimationFrame(raf);
-  },[]);
-
-  /* Print */
-  const handlePrint=useCallback(()=>window.print(),[]);
-
-  /* Loading manifest */
   if(!projectList) return <div className="loading-state"><div className="spinner"/><span>Cargando...</span></div>;
 
   /* Welcome */
   if(!activeTab){
-    const serverProjects=projectList.filter(p=>!p.local);
+    const sp=projectList.filter(p=>!p.local);
     return <Fragment>
       <div className="app-header">
         <div className="app-logo">{I.building(18)} BuildPlan <span>Viewer</span></div>
-        <div className="project-tabs"/>
+        <div className="project-tabs">
+          {/* Portfolio tab always visible */}
+          <button className="project-tab" onClick={()=>{setActiveTab('__portfolio');setSubTab('portfolio')}} style={{color:'var(--accent)'}}>
+            {I.users()} Portfolio
+          </button>
+        </div>
         <div className="header-actions">
           <button className="btn btn-ghost btn-icon" onClick={()=>setShowSearch(true)} title="Buscar (Ctrl+K)">{I.search()}</button>
           <button className="btn btn-ghost btn-icon" onClick={toggleTheme}>{theme==='light'?I.moon():I.sun()}</button>
         </div>
       </div>
       <div className="welcome">
-        <div className="welcome-header">
-          <div className="welcome-title">Proyectos</div>
-          <div className="welcome-sub">{serverProjects.length} archivos disponibles</div>
-        </div>
+        <div className="welcome-header"><div className="welcome-title">Proyectos</div><div className="welcome-sub">{sp.length} archivos disponibles</div></div>
         <div className="project-grid">
-          {serverProjects.map(p=><div key={p.key} className="project-card" onClick={()=>openProject(p)}>
+          {sp.map(p=><div key={p.key} className="project-card" onClick={()=>openProject(p)}>
             <div className="project-card-icon">{I.building(16)}</div>
-            <div className="project-card-info">
-              <div className="project-card-name">{p.name}</div>
-              <div className="project-card-meta">{p.size?`${(p.size/1024).toFixed(0)} KB`:'XML'}{p.modified?` · ${new Date(p.modified).toLocaleDateString('es-AR')}`:''}</div>
-            </div>
+            <div className="project-card-info"><div className="project-card-name">{p.name}</div><div className="project-card-meta">{p.size?`${(p.size/1024).toFixed(0)} KB`:'XML'}{p.modified?` · ${new Date(p.modified).toLocaleDateString('es-AR')}`:''}</div></div>
             <div className="project-card-arrow">{I.arrowR()}</div>
           </div>)}
         </div>
-        <div className={`drop-zone ${dragOver?'drag-over':''}`}
-          onDragOver={e=>{e.preventDefault();setDragOver(true)}}
-          onDragLeave={()=>setDragOver(false)}
-          onDrop={e=>{e.preventDefault();setDragOver(false);if(e.dataTransfer.files[0])handleLocalFile(e.dataTransfer.files[0])}}
-          onClick={()=>document.getElementById('file-input').click()}>
-          {I.upload(20)}
-          <div style={{marginTop:6}}>Soltar un archivo XML de MS Project aquí, o hacer clic para seleccionar</div>
-          <input id="file-input" type="file" accept=".xml" onChange={e=>{if(e.target.files[0])handleLocalFile(e.target.files[0])}}/>
+        <div className={`drop-zone ${dragOver?'drag-over':''}`} onDragOver={e=>{e.preventDefault();setDragOver(true)}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);if(e.dataTransfer.files[0])handleLocalFile(e.dataTransfer.files[0])}} onClick={()=>document.getElementById('fi').click()}>
+          {I.upload(20)}<div style={{marginTop:6}}>Soltar un XML de MS Project aquí, o hacer clic para seleccionar</div>
+          <input id="fi" type="file" accept=".xml" onChange={e=>{if(e.target.files[0])handleLocalFile(e.target.files[0])}}/>
         </div>
       </div>
-      {showSearch&&<SearchModal openProjects={projectList.map(p=>({...p,data:projectData[p.key]}))} onClose={()=>setShowSearch(false)}/>}
+      {showSearch&&<div className="search-overlay" onClick={()=>setShowSearch(false)}><div className="search-modal" onClick={e=>e.stopPropagation()}><input className="search-input" placeholder="Buscar tareas..." autoFocus onKeyDown={e=>{if(e.key==='Escape')setShowSearch(false)}}/></div></div>}
+    </Fragment>;
+  }
+
+  /* Portfolio view */
+  if(activeTab==='__portfolio'){
+    return <Fragment>
+      <div className="app-header">
+        <div className="app-logo" onClick={()=>setActiveTab(null)}>{I.building(18)} BuildPlan</div>
+        <div className="project-tabs">
+          <button className="project-tab active">{I.users()} Portfolio</button>
+          {openTabs.filter(k=>k!=='__portfolio').map(key=>{
+            const p=(projectList||[]).find(pr=>pr.key===key);
+            return p?<button key={key} className="project-tab" onClick={()=>{setActiveTab(key);setSubTab('gantt');resetFilters()}}><span className="dot" style={{background:'var(--text-tertiary)'}}/>{p.name}<span className="close-btn" onClick={e=>closeTab(key,e)}>×</span></button>:null;
+          })}
+        </div>
+        <div className="header-actions">
+          <button className="btn btn-ghost btn-icon" onClick={toggleTheme}>{theme==='light'?I.moon():I.sun()}</button>
+        </div>
+      </div>
+      <PortfolioDashboard projectList={projectList} projectData={projectData}/>
     </Fragment>;
   }
 
   /* Project view */
   return <Fragment>
     <div className="print-header"><h1>{activeProj?.name}</h1><p>Generado el {new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})} — BuildPlan Viewer · Bauvek</p></div>
-
     <div className="app-header">
       <div className="app-logo" onClick={()=>setActiveTab(null)}>{I.building(18)} BuildPlan</div>
       <div className="project-tabs">
-        {openTabs.map(key=>{
-          const p=(projectList||[]).find(pr=>pr.key===key);
-          if(!p) return null;
-          const pd=projectData[key];
-          let dot='var(--text-tertiary)';
-          if(pd){
-            const ns=pd.tasks.filter(t=>!t.isSummary);
-            const ov=ns.filter(t=>isOverdue(t)).length;
-            const av=ns.length?ns.reduce((s,t)=>s+t.percentComplete,0)/ns.length:0;
-            if(av>=90)dot='var(--success)';else if(ov>ns.length*0.3)dot='var(--danger)';else if(av>30)dot='var(--warning)';
-          }
-          return <button key={key} className={`project-tab ${activeTab===key?'active':''}`} onClick={()=>{setActiveTab(key);resetFilters()}}>
-            <span className="status-dot" style={{background:dot}}/>{p.name}
-            <span className="close-tab" onClick={e=>closeTab(key,e)}>×</span>
-          </button>;
+        <button className="project-tab" onClick={()=>{setActiveTab('__portfolio');setSubTab('portfolio')}}>{I.users()} Portfolio</button>
+        {openTabs.filter(k=>k!=='__portfolio').map(key=>{
+          const p=(projectList||[]).find(pr=>pr.key===key);if(!p) return null;
+          return <button key={key} className={`project-tab ${activeTab===key?'active':''}`} onClick={()=>{setActiveTab(key);setSubTab('gantt');resetFilters()}}><span className="dot" style={{background:'var(--text-tertiary)'}}/>{p.name}<span className="close-btn" onClick={e=>closeTab(key,e)}>×</span></button>
         })}
       </div>
       <div className="header-actions">
-        <button className="btn btn-ghost btn-icon" onClick={()=>setShowSearch(true)} title="Buscar (Ctrl+K)">{I.search()}</button>
+        <button className="btn btn-ghost btn-icon" onClick={()=>setShowSearch(true)} title="Ctrl+K">{I.search()}</button>
         <button className="btn btn-ghost btn-icon" onClick={toggleTheme}>{theme==='light'?I.moon():I.sun()}</button>
       </div>
     </div>
@@ -1177,106 +810,87 @@ function App(){
     <div className="sub-tabs-bar">
       <button className={`sub-tab ${subTab==='gantt'?'active':''}`} onClick={()=>setSubTab('gantt')}>Gantt</button>
       <button className={`sub-tab ${subTab==='dashboard'?'active':''}`} onClick={()=>setSubTab('dashboard')}>Dashboard</button>
-      <button className={`sub-tab ${subTab==='resources'?'active':''}`} onClick={()=>setSubTab('resources')}>Recursos</button>
-
       {subTab==='gantt'&&activeData&&<div className="sub-tabs-right">
         <button className="btn btn-ghost btn-icon" onClick={()=>expandAll(activeTab,activeData.tasks)} title="Expandir">{I.expandAll()}</button>
         <button className="btn btn-ghost btn-icon" onClick={()=>collapseAll(activeTab,activeData.tasks)} title="Colapsar">{I.collapseAll()}</button>
-        <div className="segmented">
-          {Object.entries(ZOOM).map(([k,v])=><button key={k} className={zoom===k?'active':''} onClick={()=>setZoom(k)}>{v.label}</button>)}
-        </div>
-        <button className="btn btn-ghost btn-icon" onClick={()=>setShowArrows(a=>!a)} title={showArrows?'Ocultar flechas':'Mostrar flechas'} style={{color:showArrows?'var(--accent)':'var(--text-tertiary)'}}>{I.link()}</button>
-        {activeData.hasBaselines&&<button className="btn btn-ghost btn-icon" onClick={()=>setShowBaseline(b=>!b)} title={showBaseline?'Ocultar línea base':'Mostrar línea base'} style={{color:showBaseline?'var(--accent)':'var(--text-tertiary)'}}>{I.baseline()}</button>}
-        <button className="btn btn-ghost" onClick={handlePrint}>{I.print()} PDF</button>
+        <div className="segmented">{Object.entries(ZOOM).map(([k,v])=><button key={k} className={zoom===k?'active':''} onClick={()=>setZoom(k)}>{v.label}</button>)}</div>
+        <button className="btn btn-ghost btn-icon" onClick={()=>setShowArrows(a=>!a)} title="Flechas" style={{color:showArrows?'var(--accent)':'var(--text-tertiary)'}}>{I.link()}</button>
+        {activeData.hasBaselines&&<button className="btn btn-ghost btn-icon" onClick={()=>setShowBaseline(b=>!b)} title="Línea base" style={{color:showBaseline?'var(--accent)':'var(--text-tertiary)'}}>{I.baseline()}</button>}
+        <button className="btn btn-ghost" onClick={()=>window.print()}>{I.print()} PDF</button>
       </div>}
     </div>
 
     {subTab==='gantt'&&activeData&&<div className="filter-bar">
       <span style={{color:'var(--text-tertiary)',marginRight:2}}>{I.filter()}</span>
       <span className="filter-label">Estado</span>
-      <select className="filter-select" value={filterStatus} onChange={e=>setFilterStatus(e.target.value)}>
-        <option value="all">Todos</option><option value="pending">Pendiente</option><option value="in_progress">En curso</option><option value="completed">Completada</option><option value="overdue">Vencida</option>
-      </select>
+      <select className="filter-select" value={filterStatus} onChange={e=>setFilterStatus(e.target.value)}><option value="all">Todos</option><option value="pending">Pendiente</option><option value="in_progress">En curso</option><option value="completed">Completada</option><option value="overdue">Vencida</option></select>
       <span className="filter-label">Recurso</span>
-      <select className="filter-select" value={filterResource} onChange={e=>setFilterResource(e.target.value)}>
-        <option value="all">Todos</option><option value="unassigned">Sin asignar</option>
-        {activeData.resources.map(r=><option key={r} value={r}>{r}</option>)}
-      </select>
+      <select className="filter-select" value={filterResource} onChange={e=>setFilterResource(e.target.value)}><option value="all">Todos</option><option value="unassigned">Sin asignar</option>{activeData.resources.map(r=><option key={r} value={r}>{r}</option>)}</select>
+      <span className="filter-label">Contratista</span>
+      <select className="filter-select" value={filterContractor} onChange={e=>setFilterContractor(e.target.value)}><option value="all">Todos</option><option value="none">Sin contratista</option>{activeData.contractors.map(c=><option key={c} value={c}>{c}</option>)}</select>
       <span className="filter-label">Nivel</span>
-      <select className="filter-select" value={filterWbsLevel} onChange={e=>setFilterWbsLevel(parseInt(e.target.value))}>
-        <option value="99">Todos</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
-      </select>
-      <span className="filter-label">Desde</span>
-      <input type="date" className="filter-input" value={filterDateFrom} onChange={e=>setFilterDateFrom(e.target.value)}/>
-      <span className="filter-label">Hasta</span>
-      <input type="date" className="filter-input" value={filterDateTo} onChange={e=>setFilterDateTo(e.target.value)}/>
+      <select className="filter-select" value={filterWbsLevel} onChange={e=>setFilterWbsLevel(parseInt(e.target.value))}><option value="99">Todos</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+      <span className="filter-label">Desde</span><input type="date" className="filter-input" value={filterDateFrom} onChange={e=>setFilterDateFrom(e.target.value)}/>
+      <span className="filter-label">Hasta</span><input type="date" className="filter-input" value={filterDateTo} onChange={e=>setFilterDateTo(e.target.value)}/>
       {activeFiltersCount>0&&<Fragment><span className="filter-badge">{activeFiltersCount}</span><button className="filter-clear" onClick={resetFilters}>Limpiar</button></Fragment>}
       <span style={{marginLeft:'auto',fontSize:11,color:'var(--text-tertiary)',fontFamily:'var(--font-mono)'}}>{visibleTasks.length} tareas</span>
     </div>}
 
-    {error&&<div className="error-banner">Error al cargar: {error}</div>}
-    {isLoading&&<div className="loading-state"><div className="spinner"/><span>Cargando proyecto...</span></div>}
+    {error&&<div className="error-banner">Error: {error}</div>}
+    {isLoading&&<div className="loading-state"><div className="spinner"/><span>Cargando...</span></div>}
 
     {!isLoading&&activeData&&subTab==='gantt'&&<div className="gantt-wrapper" style={{userSelect:splitterActive?'none':'auto'}}>
       <div className="gantt-table-container" ref={tableContainerRef} style={{width:tablePaneWidth}} onScroll={handleTableScroll}>
         <table className="gantt-table">
           <colgroup>
-            <col style={{width:180}}/>
-            <col style={{width:80}}/>
-            <col style={{width:80}}/>
-            <col style={{width:55}}/>
-            <col style={{width:90}}/>
-            {customCols.map(c=><col key={c} style={{width:80}}/>)}
+            <col style={{width:30}}/>{/* WBS */}
+            <col style={{width:180}}/>{/* Name */}
+            <col style={{width:70}}/>{/* Inicio */}
+            <col style={{width:70}}/>{/* Fin */}
+            <col style={{width:55}}/>{/* Dur */}
+            <col style={{width:45}}/>{/* % */}
+            <col style={{width:80}}/>{/* Recurso */}
+            <col style={{width:80}}/>{/* Contratista */}
+            <col style={{width:55}}/>{/* N° Item */}
           </colgroup>
           <thead><tr>
-            <th>Tarea</th>
-            <th>Inicio</th>
-            <th>Fin</th>
-            <th>%</th>
-            <th>Recurso</th>
-            {customCols.map(c=><th key={c} title={c}>{c.length>10?c.substring(0,10)+'…':c}</th>)}
+            <th>WBS</th><th>Tarea</th><th>Inicio</th><th>Fin</th><th>Dur.</th><th>%</th><th>Recurso</th><th>Contratista</th><th>N° Item</th>
           </tr></thead>
           <tbody>
             {visibleTasks.map(task=>{
               const expMap=expandedMap[activeTab]||{};
               const over=isOverdue(task);
               const indent=task.depth*14;
+              const contr=task.enterprise['Contratista'];
+              const nitem=task.enterprise['N° Item'];
               return <tr key={task.uid} className={task.isSummary?'summary':''}>
+                <td className="td-mono" style={{fontSize:10}}>{task.wbs}</td>
                 <td>
                   <div className="task-name-cell" style={{paddingLeft:indent}}>
                     {task.isSummary?<button className="task-toggle" onClick={()=>toggleTask(activeTab,task.uid)}>{expMap[task.uid]?I.chevDown():I.chevRight()}</button>:<span style={{width:16,flexShrink:0}}/>}
-                    {task.isMilestone&&<span className="task-milestone-icon">♦</span>}
-                    <span className="task-name-text" style={{fontWeight:task.isSummary?600:400,color:over?'var(--danger)':'var(--text-primary)'}} title={task.name}>{task.name}</span>
+                    {task.isMilestone&&<span style={{color:'var(--bar-milestone)',fontSize:10,flexShrink:0}}>♦</span>}
+                    <span style={{overflow:'hidden',textOverflow:'ellipsis',fontWeight:task.isSummary?600:400,color:over?'var(--danger)':task.critical?'var(--accent)':'var(--text-primary)'}} title={task.name}>{task.name}</span>
                   </div>
                 </td>
                 <td className="td-mono">{fmtDate(task.start)}</td>
                 <td className="td-mono" style={{color:over?'var(--danger)':undefined}}>{fmtDate(task.finish)}</td>
-                <td>
-                  <div className="progress-mini">
-                    <div className="progress-mini-bar">
-                      <div className="progress-mini-fill" style={{width:`${task.percentComplete}%`,background:task.percentComplete>=100?'var(--success)':over?'var(--danger)':'var(--accent)'}}/>
-                    </div>
-                    <span className="td-mono" style={{fontSize:10}}>{task.percentComplete}%</span>
-                  </div>
-                </td>
+                <td className="td-mono" style={{fontSize:10}}>{fmtDuration(task.duration)}</td>
+                <td><div className="progress-mini"><div className="progress-mini-bar"><div className="progress-mini-fill" style={{width:`${task.percentComplete}%`,background:task.percentComplete>=100?'var(--success)':over?'var(--danger)':'var(--accent)'}}/></div><span className="td-mono" style={{fontSize:10}}>{task.percentComplete}%</span></div></td>
                 <td style={{fontSize:11,color:'var(--text-secondary)',overflow:'hidden',textOverflow:'ellipsis'}} title={task.resources.join(', ')}>{task.resources.join(', ')||'—'}</td>
-                {customCols.map(c=><td key={c} style={{fontSize:11,color:'var(--text-secondary)'}} title={task.customFields[c]||''}>{task.customFields[c]||'—'}</td>)}
+                <td style={{fontSize:11,color:'var(--text-secondary)'}} title={contr&&!contr.isGuid?contr.value:''}>{contr&&!contr.isGuid?contr.value:'—'}</td>
+                <td className="td-mono" style={{fontSize:10}}>{nitem&&!nitem.isGuid?nitem.value:'—'}</td>
               </tr>;
             })}
           </tbody>
         </table>
       </div>
-
       <div className={`splitter ${splitterActive?'active':''}`} onMouseDown={()=>setSplitterActive(true)}/>
-
-      <GanttChart tasks={visibleTasks} uidMap={activeData.uidMap} minDate={activeData.minDate} maxDate={activeData.maxDate} zoom={zoom} showArrows={showArrows} showBaseline={showBaseline} scrollTopRef={scrollTopRef} onTooltip={setTooltipInfo}/>
+      <GanttChart tasks={visibleTasks} minDate={activeData.minDate} maxDate={activeData.maxDate} zoom={zoom} showArrows={showArrows} showBaseline={showBaseline} scrollTopRef={scrollTopRef} onTooltip={setTooltipInfo}/>
     </div>}
 
-    {!isLoading&&activeData&&subTab==='dashboard'&&<Dashboard data={activeData}/>}
-    {!isLoading&&activeData&&subTab==='resources'&&<ResourcesView data={activeData}/>}
-
+    {!isLoading&&activeData&&subTab==='dashboard'&&<Dashboard data={activeData} projectName={activeProj?.name}/>}
     <Tooltip info={tooltipInfo}/>
-    {showSearch&&<SearchModal openProjects={(projectList||[]).map(p=>({...p,data:projectData[p.key]}))} onClose={()=>setShowSearch(false)}/>}
+    {showSearch&&<div className="search-overlay" onClick={()=>setShowSearch(false)}><div className="search-modal" onClick={e=>e.stopPropagation()}><input className="search-input" placeholder="Buscar tareas..." autoFocus onKeyDown={e=>{if(e.key==='Escape')setShowSearch(false)}}/></div></div>}
     <div className="print-footer">BuildPlan Viewer — Bauvek · {new Date().toLocaleDateString('es-AR')}</div>
   </Fragment>;
 }
