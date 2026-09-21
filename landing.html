@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BkTableros — Bauvek</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#fafbfc;--bg-el:#fff;--c0:#1a1f2e;--c1:#5a6178;--c2:#8b92a5;--b0:#e2e5ea;--b1:#eef0f3;--ac:#3b6cf5;--ac-bg:rgba(59,108,245,.06);--ok:#10b981;--warn:#f59e0b;--sh:0 2px 12px rgba(0,0,0,.06);--ff:'Inter',-apple-system,sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1419;--bg-el:#1e2636;--c0:#e4e8ee;--c1:#8b95a8;--c2:#5e6882;--b0:#2a3344;--b1:#222b3a;--ac-bg:rgba(59,108,245,.1);--sh:0 2px 12px rgba(0,0,0,.3)}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ff);background:var(--bg);color:var(--c0);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.logo svg{color:var(--ac)}
+.logo h1{font-size:24px;font-weight:700}
+.logo span{color:var(--c2);font-weight:400;font-size:14px;margin-left:4px}
+.sub{color:var(--c1);font-size:14px;margin-bottom:40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:900px;width:100%}
+.card{background:var(--bg-el);border:1px solid var(--b1);border-radius:12px;padding:28px 24px;cursor:pointer;text-decoration:none;color:var(--c0);transition:border-color .2s,box-shadow .2s,transform .2s}
+.card:hover{border-color:var(--ac);box-shadow:var(--sh);transform:translateY(-2px)}
+.card-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:22px}
+.card-icon.blue{background:var(--ac-bg);color:var(--ac)}
+.card-icon.green{background:rgba(16,185,129,.08);color:var(--ok)}
+.card-icon.amber{background:rgba(245,158,11,.08);color:var(--warn)}
+.card h2{font-size:16px;font-weight:600;margin-bottom:6px}
+.card p{font-size:13px;color:var(--c1);line-height:1.5}
+.card .tag{display:inline-block;margin-top:12px;font-size:11px;font-weight:500;padding:3px 8px;border-radius:4px;background:var(--ac-bg);color:var(--ac)}
+.card .tag.soon{background:rgba(139,146,165,.1);color:var(--c2)}
+.footer{margin-top:48px;font-size:11px;color:var(--c2)}
+</style>
+</head>
+<body>
+<div class="logo">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"/></svg>
+  <h1>BkTableros <span>Bauvek</span></h1>
+</div>
+<p class="sub">Herramientas de visualización de obra</p>
+
+<div class="grid">
+  <a href="index.html" class="card">
+    <div class="card-icon blue">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    </div>
+    <h2>BuildPlan 360°</h2>
+    <p>Cronogramas, avance de obra, demoras y contratistas. Gantt interactivo con filtros, línea base y portfolio cross-project.</p>
+    <span class="tag">9 proyectos</span>
+  </a>
+
+  <a href="pagos.html" class="card">
+    <div class="card-icon green">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    </div>
+    <h2>Programación de Pagos</h2>
+    <p>Facturas de proveedores por obra, estado de pago cliente y Bauvek, estado de material. Pesos y dólares.</p>
+    <span class="tag">20 obras · 1.243 facturas</span>
+  </a>
+
+  <a href="#" class="card" onclick="return false" style="opacity:.6;cursor:default">
+    <div class="card-icon amber">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+    </div>
+    <h2>Cómputos de Materiales</h2>
+    <p>Control de materiales por proyecto. En desarrollo.</p>
+    <span class="tag soon">Próximamente</span>
+  </a>
+</div>
+
+<p class="footer">Bauvek · Actualización semanal desde MS Project y planillas de administración</p>
+</body>
+</html>
