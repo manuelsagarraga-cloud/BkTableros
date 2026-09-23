@@ -10,6 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root{
   --bg-0:#fafbfc;--bg-1:#f1f3f5;--bg-2:#e9ecef;--bg-el:#fff;
@@ -156,6 +157,38 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
   @page{size:landscape;margin:10mm}
 }
 .ph,.pf{display:none}
+
+/* Map */
+.map-section{max-width:800px;margin:0 auto 20px;background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);overflow:hidden}
+.map-header{padding:10px 14px;font-size:12px;font-weight:600;color:var(--c1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:.5px}
+.map-header .clear-btn{font-size:11px;color:var(--ac);cursor:pointer;border:none;background:none;font-family:var(--ff);font-weight:500;text-transform:none;letter-spacing:0}
+.map-body{padding:16px;display:flex;justify-content:center}
+.map-dot{cursor:pointer;transition:r .15s}
+.map-dot:hover{r:8}
+.map-label{font-family:var(--ff);font-size:9px;fill:var(--c1);pointer-events:none}
+.map-count{font-family:var(--fm);font-size:8px;fill:white;pointer-events:none;font-weight:700}
+.map-ref{font-family:var(--ff);font-size:8px;fill:var(--c2)}
+
+/* Enhanced project cards */
+.pcard2{display:flex;flex-direction:column;gap:6px;padding:14px;background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.pcard2:hover{border-color:var(--ac);box-shadow:var(--sh-m)}
+.pcard2-top{display:flex;align-items:center;gap:8px}
+.pcard2-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pcard2-name{font-size:13px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcard2-status{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;padding:2px 6px;border-radius:2px}
+.pcard2-meta{font-size:11px;color:var(--c1);display:flex;flex-wrap:wrap;gap:4px 12px}
+.pcard2-meta span{display:flex;align-items:center;gap:3px}
+.pcard2-bar{height:4px;border-radius:2px;background:var(--bg-2);overflow:hidden;margin-top:2px}
+.pcard2-fill{height:100%;border-radius:2px;transition:width .3s}
+.pcard2-bottom{display:flex;justify-content:space-between;font-size:10px;color:var(--c2);font-family:var(--fm)}
+.pgrid2{max-width:800px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:8px}
+
+/* Project info header in dashboard */
+.proj-info{background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);padding:16px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.proj-info-item{display:flex;flex-direction:column;gap:2px}
+.proj-info-label{font-size:10px;font-weight:600;color:var(--c2);text-transform:uppercase;letter-spacing:.5px}
+.proj-info-value{font-size:13px;font-weight:500}
+.proj-info-value.mono{font-family:var(--fm);font-size:12px}
 </style>
 </head>
 <body>
@@ -168,6 +201,148 @@ const ENT={
   'b40800a':{n:'Rubro',t:'guid'},'b40800c':{n:'N° Item',t:'text'},'b40800e':{n:'Contratista',t:'text'},
   'b608003':{n:'Zona',t:'guid'},'b60800b':{n:'Jefe Obra',t:'guid'},
 };
+
+/* ═══════ Project metadata from Excel ═══════ */
+const CITY_COORDS={
+  'mendiolaza':{lat:-31.317,lng:-64.290,label:'Mendiolaza'},
+  'mendiolaza - el terrón':{lat:-31.305,lng:-64.295,label:'Mendiolaza - El Terrón'},
+  'mendiolaza - q2':{lat:-31.310,lng:-64.285,label:'Mendiolaza - Q2'},
+  'la calera - vistas de la deseada':{lat:-31.345,lng:-64.335,label:'La Calera'},
+  'malagueño - cañitas':{lat:-31.463,lng:-64.358,label:'Malagueño'},
+  'villa ciudad parque - molvento':{lat:-31.593,lng:-64.463,label:'Molvento'},
+  'molvento':{lat:-31.593,lng:-64.463,label:'Molvento'},
+};
+
+function normalizeForMatch(s){
+  return(s||'').toLowerCase().replace(/[_\-\s.]+/g,'').replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u').replace(/ñ/g,'n').replace('.xml','');
+}
+
+async function loadProjectMeta(){
+  try{
+    const r=await fetch('data/Proyectos_Bauvek.xlsx?t='+Date.now());
+    if(!r.ok) return[];
+    const buf=await r.arrayBuffer();
+    const wb=XLSX.read(new Uint8Array(buf),{type:'array'});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws);
+    return rows.map(row=>{
+      const city=(row['Ciudad / Localidad']||'').toLowerCase();
+      const coordEntry=CITY_COORDS[city];
+      return{
+        proyecto:row['Proyecto']||'',
+        estado:row['Estado']||'',
+        cicloVida:row['Ciclo de Vida']||'',
+        provincia:row['Provincia']||'',
+        ciudad:row['Ciudad / Localidad']||'',
+        comitente:row['Comitente']||'',
+        m2Cubierta:row['m² Construidos cubierta']||0,
+        m2Semi:row['m² Construidos semicubierta']||0,
+        m2Terreno:row['m² Terreno']||0,
+        archivoXML:row['Archivo XML']||'',
+        contratista:row['Contratista Principal']||'',
+        lat:coordEntry?.lat||null,
+        lng:coordEntry?.lng||null,
+        cityLabel:coordEntry?.label||row['Ciudad / Localidad']||'',
+        _norm:normalizeForMatch(row['Proyecto']),
+      };
+    });
+  }catch(e){console.warn('No se pudo cargar metadata:',e);return[]}
+}
+
+function matchMeta(projectName,metaList){
+  if(!metaList||!metaList.length) return null;
+  const norm=normalizeForMatch(projectName);
+  /* Try exact contains match */
+  let best=metaList.find(m=>norm.includes(m._norm)||m._norm.includes(norm));
+  if(!best){
+    /* Try partial: first word match */
+    const words=norm.replace(/vivienda|loteo|losa|proyecto|casa/g,'').trim();
+    if(words.length>2) best=metaList.find(m=>m._norm.includes(words)||words.includes(m._norm.replace(/vivienda|loteo|losa|proyecto|casa/g,'').trim()));
+  }
+  return best||null;
+}
+
+/* ═══════ Map Component ═══════ */
+function CbaMap({projects,metaList,selectedCity,onSelectCity}){
+  /* Group by city label */
+  const cityGroups=useMemo(()=>{
+    const map={};
+    for(const p of projects){
+      const m=matchMeta(p.name,metaList);
+      if(!m||!m.lat) continue;
+      const key=m.cityLabel;
+      if(!map[key]) map[key]={label:key,lat:m.lat,lng:m.lng,count:0,projects:[]};
+      map[key].count++;
+      map[key].projects.push(p.name);
+    }
+    return Object.values(map);
+  },[projects,metaList]);
+
+  if(!cityGroups.length) return null;
+
+  /* SVG viewport: map lat/lng to SVG x/y */
+  const svgW=500,svgH=280;
+  const minLat=-31.65,maxLat=-31.27,minLng=-64.50,maxLng=-64.22;
+  const toX=lng=>(lng-minLng)/(maxLng-minLng)*svgW;
+  const toY=lat=>(lat-minLat)/(maxLat-minLat)*svgH;
+
+  /* Córdoba capital reference point */
+  const cbaX=toX(-64.18),cbaY=toY(-31.42);
+
+  return(
+    <div className="map-section">
+      <div className="map-header">
+        <span>📍 Ubicación de obras — Córdoba</span>
+        {selectedCity&&<button className="clear-btn" onClick={()=>onSelectCity(null)}>Mostrar todas</button>}
+      </div>
+      <div className="map-body">
+        <svg viewBox={`-10 -10 ${svgW+20} ${svgH+20}`} width="100%" height="auto" style={{maxWidth:svgW,maxHeight:svgH}}>
+          {/* Background */}
+          <rect x="-10" y="-10" width={svgW+20} height={svgH+20} fill="var(--bg-1)" rx="4"/>
+
+          {/* Reference: Córdoba capital */}
+          <circle cx={cbaX} cy={cbaY} r="3" fill="var(--c2)" opacity=".4"/>
+          <text x={cbaX+6} y={cbaY+3} className="map-ref">Córdoba capital</text>
+
+          {/* Reference: Ruta E53 approximate line */}
+          <line x1={toX(-64.45)} y1={toY(-31.60)} x2={toX(-64.22)} y2={toY(-31.30)} stroke="var(--b0)" strokeWidth="1.5" strokeDasharray="4,3"/>
+          <text x={toX(-64.44)} y={toY(-31.58)} className="map-ref">Sierras Chicas</text>
+
+          {/* City dots */}
+          {cityGroups.map(c=>{
+            const x=toX(c.lng),y=toY(c.lat);
+            const isSelected=selectedCity===c.label;
+            const r=Math.max(6,Math.min(12,c.count*3+4));
+            return(
+              <g key={c.label} onClick={()=>onSelectCity(isSelected?null:c.label)} style={{cursor:'pointer'}}>
+                <circle cx={x} cy={y} r={r+3} fill={isSelected?'var(--ac)':'var(--ac)'} opacity={isSelected?.2:.08}/>
+                <circle cx={x} cy={y} r={r} fill={isSelected?'var(--ac)':'var(--ac)'} opacity={isSelected?1:.7} className="map-dot"/>
+                <text x={x} y={y+3.5} textAnchor="middle" className="map-count">{c.count}</text>
+                <text x={x} y={y+r+12} textAnchor="middle" className="map-label" style={{fontWeight:isSelected?700:400,fill:isSelected?'var(--ac)':'var(--c1)'}}>{c.label}</text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════ Project Info Header ═══════ */
+function ProjectInfo({meta}){
+  if(!meta) return null;
+  const m2Total=((meta.m2Cubierta||0)+(meta.m2Semi||0));
+  return(
+    <div className="proj-info">
+      {meta.comitente&&<div className="proj-info-item"><span className="proj-info-label">Comitente</span><span className="proj-info-value">{meta.comitente}</span></div>}
+      {meta.ciudad&&<div className="proj-info-item"><span className="proj-info-label">Ubicación</span><span className="proj-info-value">{meta.ciudad}{meta.provincia?`, ${meta.provincia}`:''}</span></div>}
+      {meta.cicloVida&&<div className="proj-info-item"><span className="proj-info-label">Ciclo de vida</span><span className="proj-info-value">{meta.cicloVida}</span></div>}
+      {m2Total>0&&<div className="proj-info-item"><span className="proj-info-label">Superficie cubierta</span><span className="proj-info-value mono">{meta.m2Cubierta?.toLocaleString('es-AR')} m² cub{meta.m2Semi?` + ${meta.m2Semi?.toLocaleString('es-AR')} m² semi`:''}</span></div>}
+      {meta.m2Terreno>0&&<div className="proj-info-item"><span className="proj-info-label">Terreno</span><span className="proj-info-value mono">{meta.m2Terreno?.toLocaleString('es-AR')} m²</span></div>}
+      {meta.contratista&&<div className="proj-info-item"><span className="proj-info-label">Contratista</span><span className="proj-info-value">{meta.contratista}</span></div>}
+    </div>
+  );
+}
 
 /* ═══════ PARSER MSPDI ═══════ */
 function parseMSPDI(xmlText){
@@ -623,17 +798,20 @@ function App(){
   const[fDt,setFDt]=useState('');
   const[expMap,setExpMap]=useState({});
   const[dragO,setDragO]=useState(false);
+  const[metaList,setMetaList]=useState([]);
+  const[mapCity,setMapCity]=useState(null);
 
   const scrollRef=useRef({v:0,src:null});
   const tblRef=useRef(null);
   const tblScrolling=useRef(false);
 
-  /* Load manifest */
+  /* Load manifest + project metadata */
   useEffect(()=>{
     fetch('data/manifest.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
       const list=(d.projects||d||[]).map((p,i)=>({key:'srv_'+(p.file||p.name||i),name:p.name||(typeof p.file==='string'?p.file.replace('.xml',''):null)||`Proyecto ${i+1}`,file:typeof p==='string'?p:p.file,size:p.size||null,modified:p.modified||null}));
       setPList(list);
     }).catch(()=>setPList([]));
+    loadProjectMeta().then(m=>setMetaList(m));
   },[]);
 
   useEffect(()=>{const h=e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();setShowSrch(s=>!s)}};window.addEventListener('keydown',h);return()=>window.removeEventListener('keydown',h)},[]);
@@ -731,9 +909,12 @@ function App(){
   /* ═══ HOME ═══ */
   if(!active){
     const sp=(pList||[]).filter(p=>!p.local);
+    /* Filter by map selection */
+    const filteredSp=mapCity?sp.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.cityLabel===mapCity}):sp;
+
     return <Fragment>
       <div className="hdr">
-        <a href="index.html" style={{color:'var(--c2)',fontSize:11,textDecoration:'none',marginRight:6}}>← BkTableros</a><div className="logo">{I.bld(18)} BuildPlan <span>Viewer</span></div>
+        <a href="index.html" style={{color:'var(--c2)',fontSize:11,textDecoration:'none',marginRight:6}}>← BkTableros</a><div className="logo">{I.bld(18)} BuildPlan <span>360°</span></div>
         <div className="tabs">
           <button className="tab" onClick={()=>{setActive('__pf');setSub('portfolio')}} style={{color:'var(--ac)'}}>{I.usr()} Portfolio</button>
         </div>
@@ -743,12 +924,40 @@ function App(){
         </div>
       </div>
       <div className="home">
-        <div className="home-h"><div className="home-title">Proyectos</div><div className="home-sub">{sp.length} archivos disponibles</div></div>
-        <div className="pgrid">{sp.map(p=><div key={p.key} className="pcard" onClick={()=>openProj(p)}>
-          <div className="pcard-icon">{I.bld(16)}</div>
-          <div className="pcard-info"><div className="pcard-name">{p.name}</div><div className="pcard-meta">{p.size?`${(p.size/1024).toFixed(0)} KB`:'XML'}{p.modified?` · ${new Date(p.modified).toLocaleDateString('es-AR')}`:''}</div></div>
-          <div className="pcard-arr">{I.arrR()}</div>
-        </div>)}</div>
+        <div className="home-h">
+          <div className="home-title">Proyectos</div>
+          <div className="home-sub">{sp.length} obras{mapCity?` · filtrado: ${mapCity}`:''}</div>
+        </div>
+
+        {/* Map */}
+        <CbaMap projects={sp} metaList={metaList} selectedCity={mapCity} onSelectCity={setMapCity}/>
+
+        {/* Enhanced project cards */}
+        <div className="pgrid2">
+          {filteredSp.map(p=>{
+            const m=matchMeta(p.name,metaList);
+            const estado=m?.estado||'';
+            const dotColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)';
+            const stBg=estado==='Activo'?'rgba(16,185,129,.1)':estado==='En pausa'?'rgba(245,158,11,.1)':'rgba(139,146,165,.1)';
+            const stColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)';
+            const m2t=(m?.m2Cubierta||0)+(m?.m2Semi||0);
+            return <div key={p.key} className="pcard2" onClick={()=>openProj(p)}>
+              <div className="pcard2-top">
+                <span className="pcard2-dot" style={{background:dotColor}}/>
+                <span className="pcard2-name">{p.name}</span>
+                {estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
+              </div>
+              <div className="pcard2-meta">
+                {m?.ciudad&&<span>📍 {m.cityLabel||m.ciudad}</span>}
+                {m2t>0&&<span>🏠 {Math.round(m2t)} m² cub</span>}
+                {m?.m2Terreno>0&&<span>📐 {m.m2Terreno.toLocaleString('es-AR')} m² ter</span>}
+                {m?.comitente&&<span>👤 {m.comitente}</span>}
+              </div>
+              {p.size&&<div className="pcard2-bottom"><span>{(p.size/1024).toFixed(0)} KB</span></div>}
+            </div>;
+          })}
+        </div>
+
         <div className={`dropz ${dragO?'over':''}`} onDragOver={e=>{e.preventDefault();setDragO(true)}} onDragLeave={()=>setDragO(false)} onDrop={e=>{e.preventDefault();setDragO(false);if(e.dataTransfer.files[0])handleLocal(e.dataTransfer.files[0])}} onClick={()=>document.getElementById('fi').click()}>
           {I.up(20)}<div style={{marginTop:6}}>Soltar un XML de MS Project aquí, o hacer clic</div>
           <input id="fi" type="file" accept=".xml" onChange={e=>{if(e.target.files[0])handleLocal(e.target.files[0])}}/>
