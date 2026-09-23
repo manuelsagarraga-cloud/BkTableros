@@ -83,79 +83,270 @@ body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:13px;l
 <script type="text/babel">
 const{useState,useEffect,useRef,useCallback,useMemo}=React;
 
+/* ═══════ Normalización de Rubros ═══════ */
+/* Unifica variantes de escritura sin tocar el Excel original.
+   Reglas: trim → quitar acentos → singular → Title Case → alias manual.
+   Si aparece un rubro nuevo no mapeado, queda en Title Case limpio. */
+const _rubroNormLog={};  /* raw → normalizado, para debug */
+
+function normalizeRubro(raw){
+  if(!raw||typeof raw!=='string') return '';
+  const trimmed=raw.trim();
+  if(!trimmed) return '';
+
+  /* 1. Minúsculas + quitar acentos para comparar */
+  const lower=trimmed.toLowerCase();
+  const stripped=lower.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+
+  /* 2. Plurales → singular (patrones comunes en rubros de obra) */
+  let key=stripped
+    .replace(/\s+/g,' ')           /* espacios múltiples */
+    .replace(/materiales/g,'material')
+    .replace(/aridos/g,'arido')
+    .replace(/electricos/g,'electrico')
+    .replace(/sanitarios/g,'sanitario')
+    .replace(/ceramicos/g,'ceramico')
+    .replace(/metalicos/g,'metalico')
+    .replace(/hidraulicos/g,'hidraulico')
+    .replace(/termicos/g,'termico')
+    .replace(/accesorios/g,'accesorio')
+    .replace(/herramientas/g,'herramienta')
+    .replace(/honorarios/g,'honorario')
+    .replace(/seguros/g,'seguro')
+    .replace(/impuestos/g,'impuesto')
+    .replace(/fletes/g,'flete')
+    .replace(/pinturas/g,'pintura')
+    .replace(/instalaciones/g,'instalacion')
+    .replace(/revestimientos/g,'revestimiento')
+    .replace(/aberturas/g,'abertura')
+    .replace(/carpinterias/g,'carpinteria')
+    .replace(/demoliciones/g,'demolicion')
+    .replace(/excavaciones/g,'excavacion')
+    .replace(/fundaciones/g,'fundacion')
+    .replace(/estructuras/g,'estructura')
+    .replace(/mamposteria[s]?/g,'mamposteria')
+    .replace(/albanileria[s]?/g,'albanileria')
+    .replace(/revoques/g,'revoque')
+    .replace(/pisos/g,'piso')
+    .replace(/techos/g,'techo')
+    .replace(/cielorraso[s]?/g,'cielorraso')
+    .replace(/vidrios/g,'vidrio')
+    .replace(/muebles/g,'mueble');
+
+  /* 3. Alias manuales: variantes conocidas → nombre canónico */
+  const aliases={
+    'albanileria':'Albañilería',
+    'albanileria general':'Albañilería General',
+    'mamposteria':'Mampostería',
+    'carpinteria':'Carpintería',
+    'plomeria':'Plomería',
+    'electricidad':'Electricidad',
+    'electrico':'Eléctrico',
+    'electrica':'Eléctrica',
+    'inst. electrica':'Inst. Eléctrica',
+    'inst electrica':'Inst. Eléctrica',
+    'instalacion electrica':'Inst. Eléctrica',
+    'inst. sanitaria':'Inst. Sanitaria',
+    'inst sanitaria':'Inst. Sanitaria',
+    'instalacion sanitaria':'Inst. Sanitaria',
+    'inst. gas':'Inst. Gas',
+    'inst gas':'Inst. Gas',
+    'instalacion gas':'Inst. Gas',
+    'inst. termomecanica':'Inst. Termomecánica',
+    'inst termomecanica':'Inst. Termomecánica',
+    'hormigon':'Hormigón',
+    'hormigon armado':'Hormigón Armado',
+    'hierro':'Hierro',
+    'acero':'Acero',
+    'arido':'Árido',
+    'ceramico':'Cerámico',
+    'material':'Material',
+    'pintura':'Pintura',
+    'revoque':'Revoque',
+    'piso':'Piso',
+    'techo':'Techo',
+    'cielorraso':'Cielorraso',
+    'vidrio':'Vidrio',
+    'abertura':'Abertura',
+    'mueble':'Mueble',
+    'herramienta':'Herramienta',
+    'honorario':'Honorario',
+    'seguro':'Seguro',
+    'impuesto':'Impuesto',
+    'flete':'Flete',
+    'demolicion':'Demolición',
+    'excavacion':'Excavación',
+    'fundacion':'Fundación',
+    'estructura':'Estructura',
+    'revestimiento':'Revestimiento',
+    'metalico':'Metálico',
+    'hidraulico':'Hidráulico',
+    'termico':'Térmico',
+    'accesorio':'Accesorio',
+    'sanitario':'Sanitario',
+    'mov. de suelo':'Mov. de Suelo',
+    'mov de suelo':'Mov. de Suelo',
+    'movimiento de suelo':'Mov. de Suelo',
+    'mov. de tierra':'Mov. de Tierra',
+    'movimiento de tierra':'Mov. de Tierra',
+    'durlock':'Durlock',
+    'steel framing':'Steel Framing',
+    'steel frame':'Steel Framing',
+    'yeseria':'Yesería',
+    'zingueria':'Zinguería',
+    'calefaccion':'Calefacción',
+    'climatizacion':'Climatización',
+    'aire acondicionado':'Climatización',
+    'aa':'Climatización',
+    'pileta':'Pileta',
+    'piscina':'Pileta',
+    'jardineria':'Jardinería',
+    'paisajismo':'Jardinería',
+    'limpieza':'Limpieza',
+    'seguridad':'Seguridad',
+    'proyecto':'Proyecto',
+    'direccion':'Dirección',
+    'direccion de obra':'Dirección de Obra',
+    'documentacion':'Documentación',
+    'tramites':'Trámites',
+    'varios':'Varios',
+    'otro':'Otros',
+    'otros':'Otros',
+    'mano de obra':'Mano de Obra',
+    'mo':'Mano de Obra',
+    'm.o.':'Mano de Obra',
+    'subcontrato':'Subcontrato',
+    'subcontratos':'Subcontrato'
+  };
+
+  const canonical=aliases[key];
+
+  /* 4. Si no hay alias, Title Case del texto original limpio */
+  let result;
+  if(canonical){
+    result=canonical;
+  } else {
+    /* Title Case: primera letra de cada palabra en mayúscula */
+    result=trimmed.replace(/\s+/g,' ').split(' ')
+      .map(w=>w.charAt(0).toUpperCase()+w.slice(1).toLowerCase())
+      .join(' ');
+  }
+
+  /* Log para debug */
+  if(trimmed!==result) _rubroNormLog[trimmed]=result;
+
+  return result;
+}
+
 /* ═══════ Parse Excel ═══════ */
 function parseExcel(data){
   const wb=XLSX.read(data,{type:'array',cellDates:true});
-  const skip=['Proveedores','Calendario','Resumens','Consultas'];
-  const obraSheets=wb.SheetNames.filter(s=>!skip.includes(s));
-  
+
+  /* ── 1. Filtro de hojas robusto (case-insensitive, parcial) ── */
+  const skipPatterns=[/proveedor/i,/calendario/i,/resumen/i,/consulta/i];
+  const obraSheets=wb.SheetNames.filter(s=>!skipPatterns.some(rx=>rx.test(s)));
+
   const invoices=[];
   const obras=new Set();
   const proveedores=new Set();
   const rubros=new Set();
-  
+
+  /* ── 2. Mapa de nombres canónicos por hoja (E3) ── */
+  /* Primero pasamos por todas las hojas para armar el mapa E3 → nombre real,
+     así podemos resolver cuando E3 devuelve solo iniciales (ej: "JS") */
+  const e3Map={};            /* sheetName → valor de E3 */
+  const namesByE3={};        /* e3Lower → nombre más largo encontrado */
   for(const sn of obraSheets){
     const ws=wb.Sheets[sn];
     if(!ws) continue;
-    
-    /* Find header row (row with "OBRA" or "Condición") */
+    const cell=ws[XLSX.utils.encode_cell({r:2,c:4})];
+    const raw=cell&&cell.v?String(cell.v).trim():'';
+    e3Map[sn]=raw;
+    if(raw){
+      const key=raw.toLowerCase();
+      if(!namesByE3[key]||raw.length>namesByE3[key].length) namesByE3[key]=raw;
+    }
+  }
+
+  /* Construir un mapa de alias: si dos hojas tienen el mismo E3 (o vacío),
+     usamos el nombre más largo. Si E3 está vacío, usamos el nombre de hoja limpio. */
+  function resolveObraName(sheetName){
+    const raw=e3Map[sheetName]||'';
+    if(raw){
+      /* Buscar si hay otro E3 que sea la versión larga de este */
+      const key=raw.toLowerCase();
+      return namesByE3[key]||raw;
+    }
+    /* Fallback: limpiar nombre de hoja */
+    return sheetName.replace(/^Obra\s*/i,'').replace(/^Casa\s*/i,'').replace(/^Proyecto\s*/i,'').trim();
+  }
+
+  /* ── 3. Parseo por hoja ── */
+  const knownCols=['OBRA','Fecha de FC','Condición','Razón social','Descripción','Proveedor','Rubro',
+    'Importe final Pesos (Iva incluido)','Importe final USD (Iva incluido)',
+    'Observaciones','Estado Factura Cliente','Estado Factura Bauvek','Estado material',
+    'Resarcimiento Bauvek','Nº Remito','Encargado'];
+
+  for(const sn of obraSheets){
+    const ws=wb.Sheets[sn];
+    if(!ws) continue;
+
+    const obraName=resolveObraName(sn);
+
+    /* Find header row */
     let headerRow=-1;
     const colMap={};
-    
-    for(let r=1;r<=15;r++){
-      const cols=['OBRA','Fecha de FC','Condición','Razón social','Descripción','Proveedor','Rubro',
-        'Importe final Pesos (Iva incluido)','Importe final USD (Iva incluido)',
-        'Observaciones','Estado Factura Cliente','Estado Factura Bauvek','Estado material',
-        'Resarcimiento Bauvek','Nº Remito','Encargado'];
-      
-      for(let c=1;c<=20;c++){
-        const cell=ws[XLSX.utils.encode_cell({r:r-1,c:c-1})];
+    for(let r=0;r<15;r++){
+      let matchesThisRow=0;
+      for(let c=0;c<20;c++){
+        const cell=ws[XLSX.utils.encode_cell({r,c})];
         if(cell&&typeof cell.v==='string'){
-          const idx=cols.findIndex(h=>cell.v.trim().toLowerCase()===h.toLowerCase());
-          if(idx>=0){
-            colMap[cols[idx]]=c-1;
-            headerRow=r;
-          }
+          const idx=knownCols.findIndex(h=>cell.v.trim().toLowerCase()===h.toLowerCase());
+          if(idx>=0){colMap[knownCols[idx]]=c;matchesThisRow++;headerRow=r}
         }
       }
-      if(Object.keys(colMap).length>=5) break;
+      if(matchesThisRow>=5) break;
     }
-    
+
     if(headerRow<0) continue;
-    
+
     const range=XLSX.utils.decode_range(ws['!ref']||'A1');
-    for(let r=headerRow;r<=range.e.r;r++){
+    for(let r=headerRow+1;r<=range.e.r;r++){
       const getV=(col)=>{
         if(colMap[col]===undefined) return null;
         const cell=ws[XLSX.utils.encode_cell({r,c:colMap[col]})];
         return cell?cell.v:null;
       };
-      
-      const obra=getV('OBRA');
+
       const desc=getV('Descripción');
       const prov=getV('Proveedor');
       const impPesos=getV('Importe final Pesos (Iva incluido)');
       const impUSD=getV('Importe final USD (Iva incluido)');
-      
-      /* Skip empty rows and totals */
-      if(!desc&&!prov&&!impPesos&&!impUSD) continue;
-      if(typeof prov==='string'&&prov.toUpperCase()==='TOTAL') continue;
-      
+
+      const hasText=(desc&&String(desc).trim().length>1)||(prov&&String(prov).trim().length>1);
+      if(!hasText) continue;
+
+      const rubro=getV('Rubro');
+      const isTotal=[prov,desc,rubro].some(v=>typeof v==='string'&&v.trim().toUpperCase()==='TOTAL');
+      if(isTotal) continue;
+
+      if(impPesos&&typeof impPesos!=='number') continue;
+
       let fechaFC=getV('Fecha de FC');
       if(fechaFC instanceof Date&&!isNaN(fechaFC)){/* ok */}
       else if(typeof fechaFC==='number'){fechaFC=new Date((fechaFC-25569)*86400000)}
       else if(typeof fechaFC==='string'&&fechaFC){try{fechaFC=new Date(fechaFC)}catch(e){fechaFC=null}}
       else fechaFC=null;
-      
+
       const inv={
-        obra:obra||sn.replace('Obra ','').replace('Casa ','').replace('Proyecto ',''),
+        obra:obraName,
         sheetName:sn,
         fechaFC,
         condicion:getV('Condición')||'',
         razonSocial:getV('Razón social')||'',
-        descripcion:desc||'',
-        proveedor:prov||'',
-        rubro:getV('Rubro')||'',
+        descripcion:String(desc||'').trim(),
+        proveedor:String(prov||'').trim(),
+        rubro:normalizeRubro(rubro),
         importePesos:typeof impPesos==='number'?impPesos:0,
         importeUSD:typeof impUSD==='number'?impUSD:0,
         observaciones:getV('Observaciones')||'',
@@ -166,16 +357,45 @@ function parseExcel(data){
         remito:getV('Nº Remito')||'',
         encargado:getV('Encargado')||''
       };
-      
+
       invoices.push(inv);
-      if(inv.obra) obras.add(inv.obra);
       if(inv.proveedor) proveedores.add(inv.proveedor);
-      if(inv.rubro&&typeof inv.rubro==='string') rubros.add(inv.rubro);
+      if(inv.rubro&&typeof inv.rubro==='string'&&inv.rubro.length>1) rubros.add(inv.rubro);
     }
+
+    obras.add(obraName);
   }
-  
+
+  /* ── 4. Deduplicación por clave compuesta ── */
+  /* Si la misma factura aparece en más de una hoja (ej: Resumens que se coló,
+     o dos hojas con el mismo cliente), nos quedamos con la primera aparición */
+  const seen=new Set();
+  const unique=[];
+  for(const inv of invoices){
+    const dateKey=inv.fechaFC?inv.fechaFC.toISOString().slice(0,10):'';
+    const key=[inv.proveedor.toLowerCase(), inv.importePesos, inv.importeUSD, dateKey, inv.descripcion.toLowerCase().slice(0,60)].join('|');
+    if(seen.has(key)) continue;
+    seen.add(key);
+    unique.push(inv);
+  }
+
+  /* Log para debug (visible en consola del navegador) */
+  if(invoices.length!==unique.length){
+    console.warn(`[Pagos] Dedup: ${invoices.length} → ${unique.length} facturas (${invoices.length-unique.length} duplicadas eliminadas)`);
+  }
+  console.info(`[Pagos] Hojas parseadas: ${obraSheets.join(', ')} | Hojas saltadas: ${wb.SheetNames.filter(s=>skipPatterns.some(rx=>rx.test(s))).join(', ')}`);
+
+  /* Log de normalización de rubros */
+  const normEntries=Object.entries(_rubroNormLog);
+  if(normEntries.length){
+    console.groupCollapsed(`[Pagos] Rubros normalizados (${normEntries.length} variantes unificadas)`);
+    normEntries.sort((a,b)=>a[1].localeCompare(b[1])).forEach(([orig,norm])=>console.log(`  "${orig}" → "${norm}"`));
+    console.groupEnd();
+  }
+  console.info(`[Pagos] Rubros finales (${[...rubros].length}): ${[...rubros].sort().join(', ')}`);
+
   return{
-    invoices,
+    invoices:unique,
     obras:[...obras].sort(),
     proveedores:[...proveedores].sort(),
     rubros:[...rubros].sort(),
