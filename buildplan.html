@@ -68,8 +68,10 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .seg{display:inline-flex;background:var(--bg-1);border-radius:var(--r-s);padding:2px;gap:1px}
 .seg button{padding:3px 10px;font-size:11px;font-weight:500;font-family:var(--ff);border:none;background:transparent;color:var(--c1);cursor:pointer;border-radius:3px}.seg button:hover{color:var(--c0)}.seg button.on{background:var(--bg-el);color:var(--c0);box-shadow:var(--sh-s)}
 
-.home{flex:1;overflow-y:auto;padding:32px}
-.home-h{max-width:640px;margin:0 auto 24px}.home-title{font-size:20px;font-weight:600;margin-bottom:4px}.home-sub{font-size:13px;color:var(--c1)}
+.home{flex:1;overflow-y:auto;display:flex}
+.home-sidebar{width:320px;flex-shrink:0;border-right:1px solid var(--b0);overflow-y:auto;background:var(--bg-el)}
+.home-main{flex:1;overflow-y:auto;padding:24px}
+.home-h{max-width:100%;margin:0 0 16px}.home-title{font-size:20px;font-weight:600;margin-bottom:4px}.home-sub{font-size:13px;color:var(--c1)}
 .pgrid{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:6px}
 .pcard{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);cursor:pointer}.pcard:hover{border-color:var(--ac);box-shadow:var(--sh-s)}
 .pcard-icon{width:34px;height:34px;border-radius:var(--r-s);background:var(--ac-bg);color:var(--ac);display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -159,10 +161,10 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .ph,.pf{display:none}
 
 /* Map */
-.map-section{max-width:800px;margin:0 auto 20px;background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);overflow:hidden}
+.map-section{background:var(--bg-el);overflow:hidden}
 .map-header{padding:10px 14px;font-size:12px;font-weight:600;color:var(--c1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:.5px}
 .map-header .clear-btn{font-size:11px;color:var(--ac);cursor:pointer;border:none;background:none;font-family:var(--ff);font-weight:500;text-transform:none;letter-spacing:0}
-.map-body{padding:16px;display:flex;justify-content:center}
+.map-body{padding:12px}
 .map-dot{cursor:pointer;transition:r .15s}
 .map-dot:hover{r:8}
 .map-label{font-family:var(--ff);font-size:9px;fill:var(--c1);pointer-events:none}
@@ -181,7 +183,7 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .pcard2-bar{height:4px;border-radius:2px;background:var(--bg-2);overflow:hidden;margin-top:2px}
 .pcard2-fill{height:100%;border-radius:2px;transition:width .3s}
 .pcard2-bottom{display:flex;justify-content:space-between;font-size:10px;color:var(--c2);font-family:var(--fm)}
-.pgrid2{max-width:800px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:8px}
+.pgrid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:8px}
 
 /* Project info header in dashboard */
 .proj-info{background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);padding:16px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
@@ -280,8 +282,8 @@ function CbaMap({projects,metaList,selectedCity,onSelectCity}){
 
   if(!cityGroups.length) return null;
 
-  /* SVG viewport: map lat/lng to SVG x/y */
-  const svgW=500,svgH=280;
+  /* SVG viewport: vertical sidebar layout */
+  const svgW=280,svgH=400;
   const minLat=-31.65,maxLat=-31.27,minLng=-64.50,maxLng=-64.22;
   const toX=lng=>(lng-minLng)/(maxLng-minLng)*svgW;
   const toY=lat=>(lat-minLat)/(maxLat-minLat)*svgH;
@@ -292,11 +294,10 @@ function CbaMap({projects,metaList,selectedCity,onSelectCity}){
   return(
     <div className="map-section">
       <div className="map-header">
-        <span>📍 Ubicación de obras — Córdoba</span>
-        {selectedCity&&<button className="clear-btn" onClick={()=>onSelectCity(null)}>Mostrar todas</button>}
+        <span>📍 UBICACIÓN DE OBRAS</span>
       </div>
       <div className="map-body">
-        <svg viewBox={`-10 -10 ${svgW+20} ${svgH+20}`} width="100%" height="auto" style={{maxWidth:svgW,maxHeight:svgH}}>
+        <svg viewBox={`-10 -10 ${svgW+20} ${svgH+20}`} width="100%" height="auto">
           {/* Background */}
           <rect x="-10" y="-10" width={svgW+20} height={svgH+20} fill="var(--bg-1)" rx="4"/>
 
@@ -456,7 +457,7 @@ function parseMSPDI(xmlText){
 }
 
 /* ═══════ Utilities ═══════ */
-function fD(d){if(!d)return'—';return d.toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'2-digit'})}
+function fD(d){if(!d)return'—';return `${d.getDate()}/${d.getMonth()+1}/${String(d.getFullYear()).slice(-2)}`}
 function dB(a,b){if(!a||!b)return 0;return Math.round((b-a)/86400000)}
 function isOv(t){return!!(t.finish&&t.percentComplete<100&&!t.isSummary&&t.finish<new Date())}
 function gSt(t){if(t.percentComplete>=100)return'ok';if(isOv(t))return'ov';if(t.percentComplete>0)return'ip';return'pe'}
@@ -510,7 +511,7 @@ function Tooltip({info}){
     {t.resources.length>0&&<div className="tr"><span className="tl">Recurso</span><span className="tv">{t.resources.join(', ')}</span></div>}
     {ef.map(([k,v])=><div key={k} className="tr"><span className="tl">{k}</span><span className="tv">{v.value}</span></div>)}
     {bl&&<Fragment>
-      <div style={{borderTop:'1px solid var(--b1)',margin:'4px 0',fontSize:10,color:'var(--c2)',paddingTop:3}}>Línea base {bl.number}</div>
+      <div style={{borderTop:'1px solid var(--b1)',margin:'4px 0',fontSize:10,color:'var(--c2)',paddingTop:3}}>Línea base {bl.number}{bl.start?` (${fD(bl.start)})`:''}</div>
       <div className="tr"><span className="tl">Inicio LB</span><span className="tv">{fD(bl.start)}</span></div>
       <div className="tr"><span className="tl">Fin LB</span><span className="tv">{fD(bl.finish)}</span></div>
       {t.finish&&bl.finish&&<div className="tr"><span className="tl">Desvío</span><span className="tv" style={{color:t.finish>bl.finish?'var(--err)':'var(--ok)'}}>{dB(bl.finish,t.finish)} días</span></div>}
@@ -671,7 +672,7 @@ function DemorasView({data}){
     </div>
 
     <div style={{marginBottom:12,display:'flex',alignItems:'center',gap:8}}>
-      <div className="dst" style={{margin:0}}>Detalle de desvíos — Línea base {rows[0]?.blNum}</div>
+      <div className="dst" style={{margin:0}}>Detalle de desvíos — Línea base {rows[0]?.blNum}{rows[0]?.blStart?` (${fD(rows[0].blStart)})`:''}</div>
     </div>
 
     <table className="dt">
@@ -924,43 +925,41 @@ function App(){
         </div>
       </div>
       <div className="home">
-        <div className="home-h">
-          <div className="home-title">Proyectos</div>
-          <div className="home-sub">{sp.length} obras{mapCity?` · filtrado: ${mapCity}`:''}</div>
+        {/* Sidebar: Map */}
+        <div className="home-sidebar">
+          <CbaMap projects={sp} metaList={metaList} selectedCity={mapCity} onSelectCity={setMapCity}/>
         </div>
 
-        {/* Map */}
-        <CbaMap projects={sp} metaList={metaList} selectedCity={mapCity} onSelectCity={setMapCity}/>
-
-        {/* Enhanced project cards */}
-        <div className="pgrid2">
-          {filteredSp.map(p=>{
-            const m=matchMeta(p.name,metaList);
-            const estado=m?.estado||'';
-            const dotColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)';
-            const stBg=estado==='Activo'?'rgba(16,185,129,.1)':estado==='En pausa'?'rgba(245,158,11,.1)':'rgba(139,146,165,.1)';
-            const stColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)';
-            const m2t=(m?.m2Cubierta||0)+(m?.m2Semi||0);
-            return <div key={p.key} className="pcard2" onClick={()=>openProj(p)}>
-              <div className="pcard2-top">
-                <span className="pcard2-dot" style={{background:dotColor}}/>
-                <span className="pcard2-name">{p.name}</span>
-                {estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
-              </div>
-              <div className="pcard2-meta">
-                {m?.ciudad&&<span>📍 {m.cityLabel||m.ciudad}</span>}
-                {m2t>0&&<span>🏠 {Math.round(m2t)} m² cub</span>}
-                {m?.m2Terreno>0&&<span>📐 {m.m2Terreno.toLocaleString('es-AR')} m² ter</span>}
-                {m?.comitente&&<span>👤 {m.comitente}</span>}
-              </div>
-              {p.size&&<div className="pcard2-bottom"><span>{(p.size/1024).toFixed(0)} KB</span></div>}
-            </div>;
-          })}
-        </div>
-
-        <div className={`dropz ${dragO?'over':''}`} onDragOver={e=>{e.preventDefault();setDragO(true)}} onDragLeave={()=>setDragO(false)} onDrop={e=>{e.preventDefault();setDragO(false);if(e.dataTransfer.files[0])handleLocal(e.dataTransfer.files[0])}} onClick={()=>document.getElementById('fi').click()}>
-          {I.up(20)}<div style={{marginTop:6}}>Soltar un XML de MS Project aquí, o hacer clic</div>
-          <input id="fi" type="file" accept=".xml" onChange={e=>{if(e.target.files[0])handleLocal(e.target.files[0])}}/>
+        {/* Main: Project cards */}
+        <div className="home-main">
+          <div className="home-h">
+            <div className="home-title">Proyectos</div>
+            <div className="home-sub">{filteredSp.length} obras{mapCity?` · ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}</div>
+          </div>
+          <div className="pgrid2">
+            {filteredSp.map(p=>{
+              const m=matchMeta(p.name,metaList);
+              const estado=m?.estado||'';
+              const dotColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)';
+              const stBg=estado==='Activo'?'rgba(16,185,129,.1)':estado==='En pausa'?'rgba(245,158,11,.1)':'rgba(139,146,165,.1)';
+              const stColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)';
+              const m2t=(m?.m2Cubierta||0)+(m?.m2Semi||0);
+              return <div key={p.key} className="pcard2" onClick={()=>openProj(p)}>
+                <div className="pcard2-top">
+                  <span className="pcard2-dot" style={{background:dotColor}}/>
+                  <span className="pcard2-name">{p.name}</span>
+                  {estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
+                </div>
+                <div className="pcard2-meta">
+                  {m?.ciudad&&<span>📍 {m.cityLabel||m.ciudad}</span>}
+                  {m2t>0&&<span>🏠 {Math.round(m2t)} m² cub</span>}
+                  {m?.m2Terreno>0&&<span>📐 {m.m2Terreno.toLocaleString('es-AR')} m² ter</span>}
+                  {m?.comitente&&<span>👤 {m.comitente}</span>}
+                </div>
+                {p.size&&<div className="pcard2-bottom"><span>{(p.size/1024).toFixed(0)} KB</span></div>}
+              </div>;
+            })}
+          </div>
         </div>
       </div>
       {showSrch&&<SearchModal onClose={()=>setShowSrch(false)}/>}
