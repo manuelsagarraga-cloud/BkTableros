@@ -669,35 +669,121 @@ function GanttSVG({tasks,minDate,maxDate,zoom,showArr,showBL,scrollRef,onTT}){
 /* ═══════ Dashboard por proyecto ═══════ */
 function ProjDash({data}){
   if(!data)return null;
+  const[dashFilter,setDashFilter]=useState('all'); /* all|ip|ov */
+  const[dashContr,setDashContr]=useState('all');
+  const now=new Date();
   const ts=data.tasks.filter(t=>!t.isSummary);
   const tot=ts.length,done=ts.filter(t=>t.percentComplete>=100).length;
   const ip=ts.filter(t=>t.percentComplete>0&&t.percentComplete<100).length;
   const ov=ts.filter(t=>isOv(t)).length;
   const avg=tot?Math.round(ts.reduce((s,t)=>s+t.percentComplete,0)/tot):0;
 
+  /* Contractor map */
   const cMap={};
-  ts.forEach(t=>{const c=entV(t,'Contratista')||'Sin contratista';if(!cMap[c])cMap[c]={tot:0,done:0,ov:0};cMap[c].tot++;if(t.percentComplete>=100)cMap[c].done++;if(isOv(t))cMap[c].ov++});
+  ts.forEach(t=>{const c=entV(t,'Contratista')||'Sin contratista';if(!cMap[c])cMap[c]={tot:0,done:0,ov:0,ip:0};cMap[c].tot++;if(t.percentComplete>=100)cMap[c].done++;if(isOv(t))cMap[c].ov++;if(t.percentComplete>0&&t.percentComplete<100)cMap[c].ip++});
+  const contractors=[...new Set(ts.map(t=>entV(t,'Contratista')).filter(Boolean))].sort();
 
-  const upcoming=ts.filter(t=>t.finish&&t.finish>=new Date()&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish).slice(0,10);
+  /* Apply contractor filter first */
+  const cFiltered=dashContr==='all'?ts:dashContr==='none'?ts.filter(t=>!entV(t,'Contratista')):ts.filter(t=>entV(t,'Contratista')===dashContr);
+
+  /* HOY — Tareas en curso (start <= today <= finish, not complete) */
+  const inProgressToday=cFiltered.filter(t=>t.start&&t.finish&&t.start<=now&&t.finish>=now&&t.percentComplete<100);
+
+  /* Overdue tasks */
+  const overdueTasks=cFiltered.filter(t=>isOv(t));
+
+  /* Tasks starting next month */
+  const nextMonthStart=new Date(now.getFullYear(),now.getMonth()+1,1);
+  const nextMonthEnd=new Date(now.getFullYear(),now.getMonth()+2,0);
+  const nextMonthTasks=cFiltered.filter(t=>t.start&&t.start>=nextMonthStart&&t.start<=nextMonthEnd&&t.percentComplete<100);
+
+  /* Tasks that start when active ones finish (successors of in-progress tasks) */
+  const ipUids=new Set(inProgressToday.map(t=>t.uid));
+  const waitingOnActive=cFiltered.filter(t=>{
+    if(t.percentComplete>=100||ipUids.has(t.uid))return false;
+    return t.predecessors.some(pr=>ipUids.has(pr.taskUid));
+  });
+
+  /* Determine which table to show based on filter */
+  const filteredList=dashFilter==='ip'?inProgressToday:dashFilter==='ov'?overdueTasks:null;
+  const filteredLabel=dashFilter==='ip'?'en curso hoy':dashFilter==='ov'?'vencidas':null;
+
+  /* Upcoming (unchanged but also filtered by contractor) */
+  const upcoming=cFiltered.filter(t=>t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish).slice(0,10);
+
+  /* Find the "entrega contratada" milestone if exists */
+  const entregaMilestone=data.tasks.find(t=>(t.isMilestone||t.name.toLowerCase().includes('entrega contratada')||t.name.toLowerCase().includes('fecha objetivo'))&&t.finish);
+
+  const renderTaskTable=(list,title,maxRows)=>{
+    if(!list.length)return null;
+    const shown=maxRows?list.slice(0,maxRows):list;
+    return <div style={{marginBottom:16}}>
+      <div className="dst">{title} ({list.length})</div>
+      <table className="dt"><thead><tr><th>Tarea</th><th style={{width:80}}>Inicio</th><th style={{width:80}}>Fin</th><th style={{width:45}}>%</th><th style={{width:90}}>Contratista</th></tr></thead>
+      <tbody>{shown.map(t=>{const o=isOv(t);return <tr key={t.uid}><td style={{fontWeight:500,color:o?'var(--err)':undefined}}>{t.name}</td><td className="mono">{fD(t.start)}</td><td className="mono" style={{color:o?'var(--err)':undefined}}>{fD(t.finish)}</td><td className="mono">{t.percentComplete}%</td><td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Contratista')||'—'}</td></tr>})}</tbody></table>
+      {maxRows&&list.length>maxRows&&<div style={{fontSize:11,color:'var(--c2)',padding:'4px 0'}}>…y {list.length-maxRows} más</div>}
+    </div>;
+  };
 
   return <div className="dash">
+    {/* KPIs — clickeable */}
     <div className="dgrid">
-      <div className="kpi"><div className="kpi-v">{tot}</div><div className="kpi-l">Tareas</div></div>
+      <div className="kpi" style={{cursor:'pointer',outline:dashFilter==='all'?'2px solid var(--ac)':'none'}} onClick={()=>setDashFilter('all')}><div className="kpi-v">{tot}</div><div className="kpi-l">Tareas</div></div>
       <div className="kpi ok"><div className="kpi-v" style={{color:'var(--ok)'}}>{done}</div><div className="kpi-l">Completadas</div></div>
-      <div className="kpi warn"><div className="kpi-v" style={{color:'var(--warn)'}}>{ip}</div><div className="kpi-l">En curso</div></div>
-      <div className="kpi err"><div className="kpi-v" style={{color:'var(--err)'}}>{ov}</div><div className="kpi-l">Vencidas</div></div>
+      <div className="kpi warn" style={{cursor:'pointer',outline:dashFilter==='ip'?'2px solid var(--warn)':'none'}} onClick={()=>setDashFilter(dashFilter==='ip'?'all':'ip')}><div className="kpi-v" style={{color:'var(--warn)'}}>{ip}</div><div className="kpi-l">En curso</div></div>
+      <div className="kpi err" style={{cursor:'pointer',outline:dashFilter==='ov'?'2px solid var(--err)':'none'}} onClick={()=>setDashFilter(dashFilter==='ov'?'all':'ov')}><div className="kpi-v" style={{color:'var(--err)'}}>{ov}</div><div className="kpi-l">Vencidas</div></div>
       <div className="kpi"><div className="kpi-v">{avg}%</div><div className="kpi-l">Avance</div></div>
     </div>
-    <div style={{marginBottom:20,background:'var(--bg-el)',border:'1px solid var(--b1)',borderRadius:'var(--r-m)',padding:14}}>
+
+    {/* Contractor filter */}
+    {contractors.length>0&&<div style={{display:'flex',alignItems:'center',gap:6,marginBottom:12,flexWrap:'wrap'}}>
+      <span style={{color:'var(--c2)',marginRight:2}}>{I.flt()}</span>
+      <span className="fl">Contratista</span>
+      <select className="fsel" value={dashContr} onChange={e=>setDashContr(e.target.value)}>
+        <option value="all">Todos</option><option value="none">Sin contratista</option>
+        {contractors.map(c=><option key={c} value={c}>{c}</option>)}
+      </select>
+      {dashContr!=='all'&&<button className="fclr" onClick={()=>setDashContr('all')}>Limpiar</button>}
+      {dashFilter!=='all'&&<span style={{fontSize:11,color:dashFilter==='ip'?'var(--warn)':'var(--err)',fontWeight:600,marginLeft:8}}>Mostrando: {filteredLabel}</span>}
+    </div>}
+
+    {/* Progress bar */}
+    <div style={{marginBottom:16,background:'var(--bg-el)',border:'1px solid var(--b1)',borderRadius:'var(--r-m)',padding:14}}>
       <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}><span style={{fontSize:12,fontWeight:600}}>Avance general</span><span style={{fontSize:12,fontFamily:'var(--fm)',color:'var(--ac)',fontWeight:600}}>{avg}%</span></div>
       <div style={{height:8,borderRadius:4,background:'var(--bg-2)',overflow:'hidden'}}><div style={{height:'100%',borderRadius:4,width:`${avg}%`,background:'var(--ac)'}}/></div>
+      {entregaMilestone&&<div style={{marginTop:8,display:'flex',alignItems:'center',gap:6,fontSize:11,color:'var(--c1)'}}>
+        <span>🏁</span><span style={{fontWeight:600}}>Entrega contratada:</span><span className="mono">{fD(entregaMilestone.finish)}</span>
+        {(()=>{const d=dB(now,entregaMilestone.finish);return <span style={{color:d<0?'var(--err)':'var(--ok)',fontWeight:600}}>{d<0?`${Math.abs(d)}d vencido`:`faltan ${d}d`}</span>})()}
+      </div>}
     </div>
-    {Object.keys(cMap).length>1&&<div style={{marginBottom:20}}>
+
+    {/* Filtered view: in-progress or overdue */}
+    {filteredList&&renderTaskTable(filteredList, dashFilter==='ip'?'🔄 Tareas en curso hoy':'🚨 Tareas vencidas')}
+
+    {/* If no filter active, show sections */}
+    {dashFilter==='all'&&<Fragment>
+      {/* HOY — tareas activas */}
+      {renderTaskTable(inProgressToday,'🔄 HOY — Tareas en curso',10)}
+
+      {/* Overdue */}
+      {renderTaskTable(overdueTasks,'🚨 Tareas vencidas',10)}
+
+      {/* Starting next month */}
+      {renderTaskTable(nextMonthTasks,`📅 Inician próximo mes (${nextMonthStart.toLocaleDateString('es-AR',{month:'long'})})`,10)}
+
+      {/* Waiting on active tasks */}
+      {renderTaskTable(waitingOnActive,'⏳ Esperando tareas activas (sucesoras)',10)}
+    </Fragment>}
+
+    {/* Contractor breakdown */}
+    {dashFilter==='all'&&Object.keys(cMap).length>1&&<div style={{marginBottom:20}}>
       <div className="dst">Carga por contratista</div>
-      <table className="dt"><thead><tr><th>Contratista</th><th style={{width:60}}>Total</th><th style={{width:80}}>Hechas</th><th style={{width:70}}>Vencidas</th></tr></thead>
-      <tbody>{Object.entries(cMap).sort((a,b)=>b[1].tot-a[1].tot).map(([n,d])=><tr key={n}><td style={{fontWeight:500}}>{n}</td><td className="mono">{d.tot}</td><td className="mono" style={{color:'var(--ok)'}}>{d.done}</td><td className="mono" style={{color:d.ov?'var(--err)':'var(--c2)'}}>{d.ov}</td></tr>)}</tbody></table>
+      <table className="dt"><thead><tr><th>Contratista</th><th style={{width:50}}>Total</th><th style={{width:65}}>En curso</th><th style={{width:65}}>Hechas</th><th style={{width:65}}>Vencidas</th></tr></thead>
+      <tbody>{Object.entries(cMap).sort((a,b)=>b[1].tot-a[1].tot).map(([n,d])=><tr key={n} style={{cursor:'pointer'}} onClick={()=>setDashContr(n==='Sin contratista'?'none':n)}><td style={{fontWeight:500}}>{n}</td><td className="mono">{d.tot}</td><td className="mono" style={{color:d.ip?'var(--warn)':'var(--c2)'}}>{d.ip}</td><td className="mono" style={{color:'var(--ok)'}}>{d.done}</td><td className="mono" style={{color:d.ov?'var(--err)':'var(--c2)'}}>{d.ov}</td></tr>)}</tbody></table>
     </div>}
-    {upcoming.length>0&&<div><div className="dst">Próximas entregas</div>
+
+    {/* Upcoming */}
+    {dashFilter==='all'&&upcoming.length>0&&<div><div className="dst">Próximas entregas</div>
       <table className="dt"><thead><tr><th>Tarea</th><th style={{width:85}}>Fin</th><th style={{width:45}}>%</th><th style={{width:95}}>Contratista</th><th style={{width:80}}>Recurso</th></tr></thead>
       <tbody>{upcoming.map(t=><tr key={t.uid}><td style={{fontWeight:500}}>{t.name}</td><td className="mono">{fD(t.finish)}</td><td className="mono">{t.percentComplete}%</td><td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Contratista')||'—'}</td><td style={{fontSize:11,color:'var(--c1)'}}>{t.resources.join(', ')||'—'}</td></tr>)}</tbody></table>
     </div>}
@@ -710,6 +796,40 @@ function DemorasView({data}){
   const[view,setView]=useState('table');
   const[sortCol,setSortCol]=useState('devFin');
   const[sortDir,setSortDir]=useState('desc');
+  const now=new Date();
+
+  /* Find the "entrega contratada" milestone — look for milestone or task with matching name */
+  const entregaMilestone=useMemo(()=>{
+    const keywords=['entrega contratada','fecha objetivo','fin de obra','obra contratada'];
+    return data.tasks.find(t=>{
+      const nl=t.name.toLowerCase();
+      return (t.isMilestone||nl.includes('entrega')||nl.includes('objetivo'))&&keywords.some(k=>nl.includes(k))&&t.finish;
+    })||null;
+  },[data.tasks]);
+
+  /* Real projected end date: latest finish date of all non-summary tasks */
+  const realEndDate=useMemo(()=>{
+    let latest=null;
+    for(const t of data.tasks){
+      if(!t.isSummary&&t.finish){
+        if(!latest||t.finish>latest) latest=t.finish;
+      }
+    }
+    return latest;
+  },[data.tasks]);
+
+  /* Baseline end date: from baseline of the entrega milestone, or latest baseline finish */
+  const baselineEndDate=useMemo(()=>{
+    if(entregaMilestone&&entregaMilestone.baselines.length>0) return entregaMilestone.baselines[0].finish;
+    let latest=null;
+    for(const t of data.tasks){
+      if(!t.isSummary&&t.baselines.length>0){
+        const bf=t.baselines[0].finish;
+        if(bf&&(!latest||bf>latest)) latest=bf;
+      }
+    }
+    return latest;
+  },[data.tasks,entregaMilestone]);
 
   const rows=useMemo(()=>{
     return data.tasks.filter(t=>!t.isSummary&&t.baselines.length>0).map(t=>{
@@ -740,9 +860,50 @@ function DemorasView({data}){
   const early=withDev.filter(r=>r.devFin<-2).length;
   const avgDev=withDev.length?Math.round(withDev.reduce((s,r)=>s+r.devFin,0)/withDev.length):0;
 
+  /* Obra deadline delta */
+  const targetDate=entregaMilestone?.finish||baselineEndDate;
+  const deadlineDelta=targetDate&&realEndDate?dB(targetDate,realEndDate):null;
+
   if(!rows.length)return <div className="dash"><div style={{textAlign:'center',color:'var(--c2)',padding:40}}>Este proyecto no tiene datos de línea base en el XML. Para ver demoras, se necesita guardar al menos una línea base en MS Project antes de exportar.</div></div>;
 
   return <div className="dash">
+    {/* ══ Fecha objetivo de obra ══ */}
+    {(targetDate||realEndDate)&&<div style={{
+      marginBottom:16,background:'var(--bg-el)',border:'1px solid var(--b1)',borderRadius:'var(--r-m)',padding:16,
+      display:'flex',flexWrap:'wrap',gap:16,alignItems:'center'
+    }}>
+      {targetDate&&<div style={{display:'flex',alignItems:'center',gap:8,flex:'1 1 auto',minWidth:180}}>
+        <span style={{fontSize:20}}>🏁</span>
+        <div>
+          <div style={{fontSize:10,fontWeight:600,color:'var(--c2)',textTransform:'uppercase',letterSpacing:'.5px'}}>Fecha objetivo de entrega</div>
+          <div style={{fontSize:16,fontWeight:700,fontFamily:'var(--fm)',color:'var(--c0)'}}>{fD(targetDate)}</div>
+          {entregaMilestone&&<div style={{fontSize:10,color:'var(--c2)'}}>Hito: {entregaMilestone.name}</div>}
+        </div>
+      </div>}
+      {realEndDate&&<div style={{display:'flex',alignItems:'center',gap:8,flex:'1 1 auto',minWidth:180}}>
+        <span style={{fontSize:20}}>📍</span>
+        <div>
+          <div style={{fontSize:10,fontWeight:600,color:'var(--c2)',textTransform:'uppercase',letterSpacing:'.5px'}}>Fecha real proyectada</div>
+          <div style={{fontSize:16,fontWeight:700,fontFamily:'var(--fm)',color:deadlineDelta&&deadlineDelta>0?'var(--err)':'var(--ok)'}}>{fD(realEndDate)}</div>
+        </div>
+      </div>}
+      {deadlineDelta!==null&&<div style={{
+        display:'flex',alignItems:'center',gap:8,flex:'0 0 auto',
+        padding:'8px 14px',borderRadius:'var(--r-m)',
+        background:deadlineDelta>0?'rgba(239,68,68,.08)':deadlineDelta<0?'rgba(16,185,129,.08)':'rgba(139,146,165,.08)',
+        border:`1px solid ${deadlineDelta>0?'rgba(239,68,68,.2)':deadlineDelta<0?'rgba(16,185,129,.2)':'var(--b1)'}`
+      }}>
+        <div style={{textAlign:'center'}}>
+          <div style={{fontSize:20,fontWeight:700,fontFamily:'var(--fm)',color:deadlineDelta>0?'var(--err)':deadlineDelta<0?'var(--ok)':'var(--c0)',lineHeight:1}}>
+            {deadlineDelta>0?'+':''}{deadlineDelta}d
+          </div>
+          <div style={{fontSize:10,color:'var(--c2)',fontWeight:500}}>
+            {deadlineDelta>0?'de atraso':deadlineDelta<0?'de adelanto':'en fecha'}
+          </div>
+        </div>
+      </div>}
+    </div>}
+
     <div className="dgrid">
       <div className="kpi"><div className="kpi-v">{rows.length}</div><div className="kpi-l">Con baseline</div></div>
       <div className="kpi ok"><div className="kpi-v" style={{color:'var(--ok)'}}>{onTime}</div><div className="kpi-l">En fecha (±2d)</div></div>
@@ -769,7 +930,7 @@ function DemorasView({data}){
       </tr></thead>
       <tbody>{sorted.map(r=>(
         <tr key={r.uid}>
-          <td style={{fontWeight:500}}>{r.name}</td>
+          <td style={{fontWeight:500}}>{r.isMilestone&&<span style={{color:'var(--bar-ms)',marginRight:4}}>🏁</span>}{r.name}</td>
           <td className="mono">{fD(r.blStart)}</td>
           <td className="mono">{fD(r.start)}</td>
           <td className="mono">{fD(r.blFinish)}</td>
