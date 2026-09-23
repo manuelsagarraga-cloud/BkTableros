@@ -162,11 +162,10 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 
 /* Map */
 .map-section{background:var(--bg-el);overflow:hidden}
-.map-header{padding:10px 14px;font-size:12px;font-weight:600;color:var(--c1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:.5px}
-.map-header .clear-btn{font-size:11px;color:var(--ac);cursor:pointer;border:none;background:none;font-family:var(--ff);font-weight:500;text-transform:none;letter-spacing:0}
-.map-body{padding:12px}
-.map-dot{cursor:pointer;transition:r .15s}
-.map-dot:hover{r:8}
+.map-header{padding:10px 14px;font-size:11px;font-weight:600;color:var(--c1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:.5px}
+.map-header .clear-btn{font-size:11px;color:var(--ac);cursor:pointer;border:none;background:none;font-family:var(--ff);font-weight:500;text-transform:none;letter-spacing:0;padding:2px 6px;border-radius:var(--r-s)}.map-header .clear-btn:hover{background:var(--ac-bg)}
+.map-body{padding:10px 12px 4px}
+.map-body svg path{transition:fill-opacity .2s,stroke-opacity .2s,stroke-width .15s}
 .map-label{font-family:var(--ff);font-size:9px;fill:var(--c1);pointer-events:none}
 .map-count{font-family:var(--fm);font-size:8px;fill:white;pointer-events:none;font-weight:700}
 .map-ref{font-family:var(--ff);font-size:8px;fill:var(--c2)}
@@ -205,14 +204,22 @@ const ENT={
 };
 
 /* ═══════ Project metadata from Excel ═══════ */
+/* Map cities to departments */
+const CITY_TO_DEPT={
+  'mendiolaza':'Colón','mendiolaza - el terrón':'Colón','mendiolaza - q2':'Colón',
+  'la calera':'Colón','la calera - vistas de la deseada':'Colón',
+  'malagueño':'Santa María','malagueño - cañitas':'Santa María',
+  'villa ciudad parque - molvento':'Calamuchita','molvento':'Calamuchita',
+  'villa ciudad parque':'Calamuchita',
+};
 const CITY_COORDS={
-  'mendiolaza':{lat:-31.317,lng:-64.290,label:'Mendiolaza'},
-  'mendiolaza - el terrón':{lat:-31.305,lng:-64.295,label:'Mendiolaza - El Terrón'},
-  'mendiolaza - q2':{lat:-31.310,lng:-64.285,label:'Mendiolaza - Q2'},
-  'la calera - vistas de la deseada':{lat:-31.345,lng:-64.335,label:'La Calera'},
-  'malagueño - cañitas':{lat:-31.463,lng:-64.358,label:'Malagueño'},
-  'villa ciudad parque - molvento':{lat:-31.593,lng:-64.463,label:'Molvento'},
-  'molvento':{lat:-31.593,lng:-64.463,label:'Molvento'},
+  'mendiolaza':{lat:-31.317,lng:-64.290,label:'Mendiolaza',dept:'Colón'},
+  'mendiolaza - el terrón':{lat:-31.305,lng:-64.295,label:'Mendiolaza - El Terrón',dept:'Colón'},
+  'mendiolaza - q2':{lat:-31.310,lng:-64.285,label:'Mendiolaza - Q2',dept:'Colón'},
+  'la calera - vistas de la deseada':{lat:-31.345,lng:-64.335,label:'La Calera',dept:'Colón'},
+  'malagueño - cañitas':{lat:-31.463,lng:-64.358,label:'Malagueño',dept:'Santa María'},
+  'villa ciudad parque - molvento':{lat:-31.593,lng:-64.463,label:'Molvento',dept:'Calamuchita'},
+  'molvento':{lat:-31.593,lng:-64.463,label:'Molvento',dept:'Calamuchita'},
 };
 
 function normalizeForMatch(s){
@@ -230,6 +237,7 @@ async function loadProjectMeta(){
     return rows.map(row=>{
       const city=(row['Ciudad / Localidad']||'').toLowerCase();
       const coordEntry=CITY_COORDS[city];
+      const dept=coordEntry?.dept||CITY_TO_DEPT[city]||null;
       return{
         proyecto:row['Proyecto']||'',
         estado:row['Estado']||'',
@@ -245,6 +253,7 @@ async function loadProjectMeta(){
         lat:coordEntry?.lat||null,
         lng:coordEntry?.lng||null,
         cityLabel:coordEntry?.label||row['Ciudad / Localidad']||'',
+        dept:dept,
         _norm:normalizeForMatch(row['Proyecto']),
       };
     });
@@ -264,66 +273,160 @@ function matchMeta(projectName,metaList){
   return best||null;
 }
 
-/* ═══════ Map Component ═══════ */
-function CbaMap({projects,metaList,selectedCity,onSelectCity}){
-  /* Group by city label */
-  const cityGroups=useMemo(()=>{
-    const map={};
+/* ═══════ Department Map Component ═══════ */
+/* Simplified department polygons — Colón, Santa María, Calamuchita in the
+   central-east area of Córdoba province. Coordinates are in a local SVG
+   space designed for a 280×440 sidebar viewport. */
+const DEPT_SHAPES={
+  'Colón':{
+    /* Colón is east of the Sierras Chicas, includes Mendiolaza, La Calera, Jesús María */
+    path:'M 168 8 L 235 15 L 260 50 L 270 105 L 255 148 L 230 175 L 195 190 L 165 178 L 140 148 L 130 110 L 135 60 Z',
+    cx:195, cy:100, color:'#9E0101',
+    cities:['Mendiolaza','La Calera']
+  },
+  'Santa María':{
+    /* Santa María is south-west of Córdoba capital, includes Malagueño, Alta Gracia */
+    path:'M 55 175 L 130 155 L 165 178 L 195 190 L 185 230 L 170 270 L 130 290 L 85 285 L 50 260 L 35 220 Z',
+    cx:115, cy:225, color:'#D4930D',
+    cities:['Malagueño']
+  },
+  'Calamuchita':{
+    /* Calamuchita is further south, includes Villa Ciudad Parque, Molvento */
+    path:'M 85 285 L 130 290 L 170 270 L 185 310 L 180 360 L 155 400 L 120 420 L 80 410 L 55 375 L 50 330 Z',
+    cx:120, cy:350, color:'#10b981',
+    cities:['Villa Ciudad Parque','Molvento']
+  }
+};
+
+function DeptMap({projects,metaList,selectedDept,onSelectDept}){
+  /* Count projects per department */
+  const deptCounts=useMemo(()=>{
+    const counts={};
+    for(const d of Object.keys(DEPT_SHAPES)) counts[d]={count:0,projects:[]};
     for(const p of projects){
       const m=matchMeta(p.name,metaList);
-      if(!m||!m.lat) continue;
-      const key=m.cityLabel;
-      if(!map[key]) map[key]={label:key,lat:m.lat,lng:m.lng,count:0,projects:[]};
-      map[key].count++;
-      map[key].projects.push(p.name);
+      if(!m||!m.dept) continue;
+      if(counts[m.dept]){counts[m.dept].count++;counts[m.dept].projects.push(p.name)}
     }
-    return Object.values(map);
+    return counts;
   },[projects,metaList]);
 
-  if(!cityGroups.length) return null;
+  /* City dots within departments */
+  const cityDots=useMemo(()=>{
+    const dots={};
+    for(const p of projects){
+      const m=matchMeta(p.name,metaList);
+      if(!m||!m.lat||!m.dept) continue;
+      const key=m.cityLabel;
+      if(!dots[key]) dots[key]={label:key,lat:m.lat,lng:m.lng,dept:m.dept,count:0};
+      dots[key].count++;
+    }
+    return Object.values(dots);
+  },[projects,metaList]);
 
-  /* SVG viewport: vertical sidebar layout */
-  const svgW=280,svgH=400;
-  const minLat=-31.65,maxLat=-31.27,minLng=-64.50,maxLng=-64.22;
-  const toX=lng=>(lng-minLng)/(maxLng-minLng)*svgW;
-  const toY=lat=>(lat-minLat)/(maxLat-minLat)*svgH;
+  const totalMapped=Object.values(deptCounts).reduce((s,d)=>s+d.count,0);
+  if(!totalMapped) return null;
 
-  /* Córdoba capital reference point */
-  const cbaX=toX(-64.18),cbaY=toY(-31.42);
+  /* Geo → SVG for city dots (approximate transform for Córdoba area) */
+  const geoToSvg=(lat,lng)=>{
+    const x=((lng-(-64.50))/( -64.10 - (-64.50)))*280;
+    const y=((lat-(-31.20))/( -31.70 - (-31.20)))*440;
+    return{x,y};
+  };
 
   return(
     <div className="map-section">
       <div className="map-header">
-        <span>📍 UBICACIÓN DE OBRAS</span>
+        <span>Obras por departamento</span>
+        {selectedDept&&<button className="clear-btn" onClick={()=>onSelectDept(null)}>Mostrar todas</button>}
       </div>
       <div className="map-body">
-        <svg viewBox={`-10 -10 ${svgW+20} ${svgH+20}`} width="100%" height="auto">
-          {/* Background */}
-          <rect x="-10" y="-10" width={svgW+20} height={svgH+20} fill="var(--bg-1)" rx="4"/>
+        <svg viewBox="-5 -5 290 450" width="100%" style={{display:'block'}}>
+          {/* Province context — faint outline */}
+          <path d="M 10 0 L 270 0 L 280 100 L 275 200 L 260 300 L 200 430 L 100 440 L 30 380 L 0 250 L 5 120 Z"
+            fill="var(--bg-2)" stroke="var(--b0)" strokeWidth="1" opacity=".35"/>
 
-          {/* Reference: Córdoba capital */}
-          <circle cx={cbaX} cy={cbaY} r="3" fill="var(--c2)" opacity=".4"/>
-          <text x={cbaX+6} y={cbaY+3} className="map-ref">Córdoba capital</text>
-
-          {/* Reference: Ruta E53 approximate line */}
-          <line x1={toX(-64.45)} y1={toY(-31.60)} x2={toX(-64.22)} y2={toY(-31.30)} stroke="var(--b0)" strokeWidth="1.5" strokeDasharray="4,3"/>
-          <text x={toX(-64.44)} y={toY(-31.58)} className="map-ref">Sierras Chicas</text>
-
-          {/* City dots */}
-          {cityGroups.map(c=>{
-            const x=toX(c.lng),y=toY(c.lat);
-            const isSelected=selectedCity===c.label;
-            const r=Math.max(6,Math.min(12,c.count*3+4));
+          {/* Department polygons */}
+          {Object.entries(DEPT_SHAPES).map(([name,dept])=>{
+            const isSel=selectedDept===name;
+            const hasProjects=deptCounts[name]?.count>0;
+            const isOther=selectedDept&&!isSel;
             return(
-              <g key={c.label} onClick={()=>onSelectCity(isSelected?null:c.label)} style={{cursor:'pointer'}}>
-                <circle cx={x} cy={y} r={r+3} fill={isSelected?'var(--ac)':'var(--ac)'} opacity={isSelected?.2:.08}/>
-                <circle cx={x} cy={y} r={r} fill={isSelected?'var(--ac)':'var(--ac)'} opacity={isSelected?1:.7} className="map-dot"/>
-                <text x={x} y={y+3.5} textAnchor="middle" className="map-count">{c.count}</text>
-                <text x={x} y={y+r+12} textAnchor="middle" className="map-label" style={{fontWeight:isSelected?700:400,fill:isSelected?'var(--ac)':'var(--c1)'}}>{c.label}</text>
+              <g key={name} onClick={()=>onSelectDept(isSel?null:name)}
+                 style={{cursor:hasProjects?'pointer':'default'}}>
+                <path d={dept.path}
+                  fill={isSel?dept.color:hasProjects?dept.color:'var(--bg-2)'}
+                  fillOpacity={isSel?.22:hasProjects?(isOther?.06:.12):.04}
+                  stroke={isSel?dept.color:hasProjects?dept.color:'var(--b0)'}
+                  strokeWidth={isSel?2.5:1.5}
+                  strokeOpacity={isSel?1:hasProjects?(isOther?.3:.6):.3}
+                />
+                {/* Department label */}
+                <text x={dept.cx} y={dept.cy-(hasProjects?8:0)}
+                  textAnchor="middle" className="map-label"
+                  style={{
+                    fontSize:isSel?11:10,
+                    fontWeight:isSel?700:hasProjects?600:400,
+                    fill:isSel?dept.color:hasProjects?'var(--c0)':'var(--c2)',
+                    opacity:isOther?.4:1
+                  }}>{name}</text>
+                {/* Count badge */}
+                {hasProjects&&<g>
+                  <circle cx={dept.cx} cy={dept.cy+10} r={11}
+                    fill={isSel?dept.color:'var(--c0)'} opacity={isOther?.25:isSel?1:.8}/>
+                  <text x={dept.cx} y={dept.cy+14} textAnchor="middle"
+                    style={{fontSize:11,fontWeight:700,fill:'white',fontFamily:'var(--fm)'}}>
+                    {deptCounts[name].count}
+                  </text>
+                </g>}
               </g>
             );
           })}
+
+          {/* City dots inside selected department */}
+          {selectedDept&&cityDots.filter(c=>c.dept===selectedDept).map(c=>{
+            const{x,y}=geoToSvg(c.lat,c.lng);
+            return(
+              <g key={c.label}>
+                <circle cx={x} cy={y} r={5} fill={DEPT_SHAPES[selectedDept]?.color||'var(--ac)'} opacity=".9"/>
+                <circle cx={x} cy={y} r={8} fill={DEPT_SHAPES[selectedDept]?.color||'var(--ac)'} opacity=".15"/>
+                <text x={x} y={y+3.5} textAnchor="middle" style={{fontSize:8,fontWeight:700,fill:'white',fontFamily:'var(--fm)'}}>{c.count}</text>
+                <text x={x+10} y={y+3} className="map-label" style={{fontSize:9,fontWeight:500,fill:'var(--c0)',textAnchor:'start'}}>{c.label}</text>
+              </g>
+            );
+          })}
+
+          {/* Córdoba capital reference */}
+          {(()=>{const{x,y}=geoToSvg(-31.42,-64.18);return(
+            <g opacity=".5">
+              <circle cx={x} cy={y} r="2.5" fill="var(--c2)"/>
+              <text x={x+5} y={y+3} className="map-ref">Cba. Capital</text>
+            </g>
+          )})()}
         </svg>
+      </div>
+
+      {/* Department legend below the map */}
+      <div style={{padding:'8px 12px',borderTop:'1px solid var(--b1)',display:'flex',flexDirection:'column',gap:4}}>
+        {Object.entries(DEPT_SHAPES).map(([name,dept])=>{
+          const c=deptCounts[name];
+          if(!c||!c.count) return null;
+          const isSel=selectedDept===name;
+          return(
+            <div key={name}
+              onClick={()=>onSelectDept(isSel?null:name)}
+              style={{
+                display:'flex',alignItems:'center',gap:8,padding:'5px 8px',
+                borderRadius:'var(--r-s)',cursor:'pointer',
+                background:isSel?dept.color+'14':'transparent',
+                border:isSel?`1px solid ${dept.color}40`:'1px solid transparent',
+              }}>
+              <span style={{width:10,height:10,borderRadius:2,background:dept.color,opacity:isSel?1:.6,flexShrink:0}}/>
+              <span style={{flex:1,fontSize:12,fontWeight:isSel?600:400,color:isSel?dept.color:'var(--c0)'}}>{name}</span>
+              <span style={{fontSize:11,fontFamily:'var(--fm)',fontWeight:600,color:isSel?dept.color:'var(--c1)'}}>{c.count}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -910,8 +1013,8 @@ function App(){
   /* ═══ HOME ═══ */
   if(!active){
     const sp=(pList||[]).filter(p=>!p.local);
-    /* Filter by map selection */
-    const filteredSp=mapCity?sp.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.cityLabel===mapCity}):sp;
+    /* Filter by department selection */
+    const filteredSp=mapCity?sp.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.dept===mapCity}):sp;
 
     return <Fragment>
       <div className="hdr">
@@ -925,16 +1028,16 @@ function App(){
         </div>
       </div>
       <div className="home">
-        {/* Sidebar: Map */}
+        {/* Sidebar: Department Map */}
         <div className="home-sidebar">
-          <CbaMap projects={sp} metaList={metaList} selectedCity={mapCity} onSelectCity={setMapCity}/>
+          <DeptMap projects={sp} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
         </div>
 
         {/* Main: Project cards */}
         <div className="home-main">
           <div className="home-h">
             <div className="home-title">Proyectos</div>
-            <div className="home-sub">{filteredSp.length} obras{mapCity?` · ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}</div>
+            <div className="home-sub">{filteredSp.length} obras{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}</div>
           </div>
           <div className="pgrid2">
             {filteredSp.map(p=>{
@@ -952,6 +1055,7 @@ function App(){
                 </div>
                 <div className="pcard2-meta">
                   {m?.ciudad&&<span>📍 {m.cityLabel||m.ciudad}</span>}
+                  {m?.dept&&<span style={{color:DEPT_SHAPES[m.dept]?.color||'var(--c2)'}}>◆ {m.dept}</span>}
                   {m2t>0&&<span>🏠 {Math.round(m2t)} m² cub</span>}
                   {m?.m2Terreno>0&&<span>📐 {m.m2Terreno.toLocaleString('es-AR')} m² ter</span>}
                   {m?.comitente&&<span>👤 {m.comitente}</span>}
