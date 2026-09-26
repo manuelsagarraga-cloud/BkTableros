@@ -1,59 +1,71 @@
 {
-  "generated": "2026-09-25T11:38:37.770Z",
-  "count": 9,
+  "generated": "2026-09-26T22:22:59.252Z",
+  "count": 11,
   "projects": [
+    {
+      "file": "Losa Mogetta.xml",
+      "name": "Losa Mogetta.xml",
+      "lastModified": "2026-09-26T22:22:55.414Z",
+      "sizeKB": 991
+    },
     {
       "file": "Loteo - La Vicenta.xml",
       "name": "Loteo - La Vicenta.xml",
-      "lastModified": "2026-09-25T11:38:33.062Z",
+      "lastModified": "2026-09-26T22:22:55.415Z",
       "sizeKB": 1365
     },
     {
       "file": "VIvienda Hermanos Rossi.xml",
       "name": "VIvienda Hermanos Rossi.xml",
-      "lastModified": "2026-09-25T11:38:33.071Z",
-      "sizeKB": 6375
+      "lastModified": "2026-09-26T22:22:55.422Z",
+      "sizeKB": 6619
     },
     {
       "file": "Vivienda AZ.xml",
       "name": "Vivienda AZ.xml",
-      "lastModified": "2026-09-25T11:38:33.075Z",
+      "lastModified": "2026-09-26T22:22:55.425Z",
       "sizeKB": 3115
+    },
+    {
+      "file": "Vivienda Carola Ruda.xml",
+      "name": "Vivienda Carola Ruda.xml",
+      "lastModified": "2026-09-26T22:22:55.432Z",
+      "sizeKB": 7140
     },
     {
       "file": "Vivienda Casali D.xml",
       "name": "Vivienda Casali D.xml",
-      "lastModified": "2026-09-25T11:38:33.081Z",
-      "sizeKB": 3400
+      "lastModified": "2026-09-26T22:22:55.443Z",
+      "sizeKB": 10510
     },
     {
       "file": "Vivienda Julieta Santiago.xml",
       "name": "Vivienda Julieta Santiago.xml",
-      "lastModified": "2026-09-25T11:38:33.093Z",
-      "sizeKB": 8464
+      "lastModified": "2026-09-26T22:22:55.452Z",
+      "sizeKB": 8604
     },
     {
       "file": "Vivienda Lugon.xml",
       "name": "Vivienda Lugon.xml",
-      "lastModified": "2026-09-25T11:38:33.100Z",
+      "lastModified": "2026-09-26T22:22:55.457Z",
       "sizeKB": 5218
     },
     {
       "file": "Vivienda RC.xml",
       "name": "Vivienda RC.xml",
-      "lastModified": "2026-09-25T11:38:33.104Z",
+      "lastModified": "2026-09-26T22:22:55.460Z",
       "sizeKB": 2366
     },
     {
       "file": "Vivienda Reboni.xml",
       "name": "Vivienda Reboni.xml",
-      "lastModified": "2026-09-25T11:38:33.109Z",
+      "lastModified": "2026-09-26T22:22:55.463Z",
       "sizeKB": 3316
     },
     {
       "file": "Vivienda Venturelli - Bernal.xml",
       "name": "Vivienda Venturelli - Bernal.xml",
-      "lastModified": "2026-09-25T11:38:33.115Z",
+      "lastModified": "2026-09-26T22:22:55.468Z",
       "sizeKB": 4348
     }
   ]
