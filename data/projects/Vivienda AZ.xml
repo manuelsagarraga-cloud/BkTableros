@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Project xmlns="http://schemas.microsoft.com/project">
 	<SaveVersion>14</SaveVersion>
-	<BuildNumber>16.0.20131.20126</BuildNumber>
+	<BuildNumber>16.0.14026.20302</BuildNumber>
 	<Name>Vivienda AZ.xml</Name>
-	<GUID>CC9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+	<GUID>E72BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 	<Title>Vivienda AZ</Title>
 	<CreationDate>2025-06-12T09:00:00</CreationDate>
-	<LastSaved>2026-07-16T21:51:00</LastSaved>
+	<LastSaved>2026-09-26T19:12:00</LastSaved>
 	<ScheduleFromStart>1</ScheduleFromStart>
 	<StartDate>2025-03-14T09:00:00</StartDate>
 	<FinishDate>2029-09-04T19:00:00</FinishDate>
@@ -47,7 +47,7 @@
 	<MoveCompletedEndsForward>0</MoveCompletedEndsForward>
 	<BaselineForEarnedValue>0</BaselineForEarnedValue>
 	<AutoAddNewResourcesAndTasks>1</AutoAddNewResourcesAndTasks>
-	<CurrentDate>2026-07-16T08:00:00</CurrentDate>
+	<CurrentDate>2026-09-26T08:00:00</CurrentDate>
 	<MicrosoftProjectServerURL>1</MicrosoftProjectServerURL>
 	<Autolink>0</Autolink>
 	<NewTaskStartDate>0</NewTaskStartDate>
@@ -64,14 +64,18 @@
 	<AgileMode>2</AgileMode>
 	<Views>
 		<View>
-			<Name>Gantt &amp;con escala de tiempo</Name>
-		</View>
-		<View>
 			<Name>Diagrama de Gan&amp;tt</Name>
 			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Esca&amp;la de tiempo</Name>
+			<IsCustomized>true</IsCustomized>
+		</View>
+		<View>
+			<Name>Gantt &amp;con escala de tiempo</Name>
+		</View>
+		<View>
+			<Name>MS</Name>
 			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
@@ -105,7 +109,6 @@
 		</View>
 		<View>
 			<Name>H&amp;oja de recursos</Name>
-			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Gráfico de &amp;recursos</Name>
@@ -117,7 +120,6 @@
 		</View>
 		<View>
 			<Name>&amp;Uso de recursos</Name>
-			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Org&amp;anizador de equipo</Name>
@@ -125,7 +127,6 @@
 		</View>
 		<View>
 			<Name>Planeamiento de recursos</Name>
-			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Entrada de tarea</Name>
@@ -135,11 +136,9 @@
 		</View>
 		<View>
 			<Name>Problemas</Name>
-			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Riesgos</Name>
-			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Panel de tareas</Name>
@@ -197,11 +196,23 @@
 			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
+			<Name>Panel de sprints</Name>
+		</View>
+		<View>
 			<Name>Hoja de panel de tareas</Name>
 			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
-			<Name>Panel de sprints</Name>
+			<Name>Ecipsa MS</Name>
+			<IsCustomized>true</IsCustomized>
+		</View>
+		<View>
+			<Name>Finanzas</Name>
+			<IsCustomized>true</IsCustomized>
+		</View>
+		<View>
+			<Name>Manuel S</Name>
+			<IsCustomized>true</IsCustomized>
 		</View>
 	</Views>
 	<Filters>
@@ -258,12 +269,6 @@
 		</Filter>
 		<Filter>
 			<Name>Trabajo sobrepresupuestado</Name>
-		</Filter>
-		<Filter>
-			<Name>Tareas del panel de tareas</Name>
-		</Filter>
-		<Filter>
-			<Name>Tareas restantes en panel</Name>
 		</Filter>
 		<Filter>
 			<Name>Grupo de recursos...</Name>
@@ -442,6 +447,12 @@
 		<Filter>
 			<Name>Compromisos &amp;propuestos</Name>
 		</Filter>
+		<Filter>
+			<Name>Tareas del panel de tareas</Name>
+		</Filter>
+		<Filter>
+			<Name>Tareas restantes en panel</Name>
+		</Filter>
 	</Filters>
 	<Groups>
 		<Group>
@@ -593,10 +604,6 @@
 			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
-			<Name>Tareas del panel de tareas</Name>
-			<IsCustomized>true</IsCustomized>
-		</Table>
-		<Table>
 			<Name>&amp;Entrada</Name>
 			<IsCustomized>true</IsCustomized>
 		</Table>
@@ -646,6 +653,28 @@
 		</Table>
 		<Table>
 			<Name>Resumen</Name>
+			<IsCustomized>true</IsCustomized>
+		</Table>
+		<Table>
+			<Name>Tareas del panel de tareas</Name>
+			<IsCustomized>true</IsCustomized>
+		</Table>
+		<Table>
+			<Name>Ecipsa Natania</Name>
+		</Table>
+		<Table>
+			<Name>MS Tabla</Name>
+			<IsCustomized>true</IsCustomized>
+		</Table>
+		<Table>
+			<Name>Finanzas Tabla</Name>
+		</Table>
+		<Table>
+			<Name>Manuel S Tabla</Name>
+			<IsCustomized>true</IsCustomized>
+		</Table>
+		<Table>
+			<Name>Tabla Ecipsa</Name>
 			<IsCustomized>true</IsCustomized>
 		</Table>
 	</Tables>
@@ -892,6 +921,38 @@
 		</ExtendedAttribute>
 	</ExtendedAttributes>
 	<Calendars>
+		<Calendar>
+			<UID>7</UID>
+			<GUID>19B10BFC-7CB8-EF11-BBDC-00155D100D0F</GUID>
+			<Name>Proyectos</Name>
+			<IsBaseCalendar>0</IsBaseCalendar>
+			<IsBaselineCalendar>0</IsBaselineCalendar>
+			<BaseCalendarUID>1</BaseCalendarUID>
+		</Calendar>
+		<Calendar>
+			<UID>6</UID>
+			<GUID>1C4DB712-7DB8-EF11-BBDC-00155D100D0F</GUID>
+			<Name>Posventa</Name>
+			<IsBaseCalendar>0</IsBaseCalendar>
+			<IsBaselineCalendar>0</IsBaselineCalendar>
+			<BaseCalendarUID>1</BaseCalendarUID>
+		</Calendar>
+		<Calendar>
+			<UID>5</UID>
+			<GUID>E6BC1151-8810-F011-928E-00155D10E202</GUID>
+			<Name>Julian Steib</Name>
+			<IsBaseCalendar>0</IsBaseCalendar>
+			<IsBaselineCalendar>0</IsBaselineCalendar>
+			<BaseCalendarUID>1</BaseCalendarUID>
+		</Calendar>
+		<Calendar>
+			<UID>4</UID>
+			<GUID>500F8C50-2C9D-EF11-BD9B-00155D110704</GUID>
+			<Name>Gabriela Rojo</Name>
+			<IsBaseCalendar>0</IsBaseCalendar>
+			<IsBaselineCalendar>0</IsBaselineCalendar>
+			<BaseCalendarUID>3</BaseCalendarUID>
+		</Calendar>
 		<Calendar>
 			<UID>1</UID>
 			<GUID>B6635B2E-E747-4771-A78B-24F7509629D0</GUID>
@@ -2411,40 +2472,8 @@
 			</WorkWeeks>
 		</Calendar>
 		<Calendar>
-			<UID>4</UID>
-			<GUID>500F8C50-2C9D-EF11-BD9B-00155D110704</GUID>
-			<Name>Gabriela Rojo</Name>
-			<IsBaseCalendar>0</IsBaseCalendar>
-			<IsBaselineCalendar>0</IsBaselineCalendar>
-			<BaseCalendarUID>3</BaseCalendarUID>
-		</Calendar>
-		<Calendar>
-			<UID>5</UID>
-			<GUID>E6BC1151-8810-F011-928E-00155D10E202</GUID>
-			<Name>Julian Steib</Name>
-			<IsBaseCalendar>0</IsBaseCalendar>
-			<IsBaselineCalendar>0</IsBaselineCalendar>
-			<BaseCalendarUID>1</BaseCalendarUID>
-		</Calendar>
-		<Calendar>
-			<UID>6</UID>
-			<GUID>1C4DB712-7DB8-EF11-BBDC-00155D100D0F</GUID>
-			<Name>Posventa</Name>
-			<IsBaseCalendar>0</IsBaseCalendar>
-			<IsBaselineCalendar>0</IsBaselineCalendar>
-			<BaseCalendarUID>1</BaseCalendarUID>
-		</Calendar>
-		<Calendar>
-			<UID>7</UID>
-			<GUID>19B10BFC-7CB8-EF11-BBDC-00155D100D0F</GUID>
-			<Name>Proyectos</Name>
-			<IsBaseCalendar>0</IsBaseCalendar>
-			<IsBaselineCalendar>0</IsBaselineCalendar>
-			<BaseCalendarUID>1</BaseCalendarUID>
-		</Calendar>
-		<Calendar>
 			<UID>8</UID>
-			<GUID>EB9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>062CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<Name>Para calend. de línea base de Microsoft Project 98</Name>
 			<IsBaseCalendar>1</IsBaseCalendar>
 			<IsBaselineCalendar>1</IsBaselineCalendar>
@@ -3876,7 +3905,7 @@
 	<Tasks>
 		<Task>
 			<UID>0</UID>
-			<GUID>CD9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>E82BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>0</ID>
 			<Name>Vivienda AZ</Name>
 			<Active>1</Active>
@@ -24310,7 +24339,7 @@
 		</Task>
 		<Task>
 			<UID>1</UID>
-			<GUID>CE9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>E92BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>1</ID>
 			<Name>VIVIENDA AGUSTIN ZAMPOL</Name>
 			<Active>1</Active>
@@ -44744,7 +44773,7 @@
 		</Task>
 		<Task>
 			<UID>26</UID>
-			<GUID>DE9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>F92BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>2</ID>
 			<Name>Proyecto Vivienda AZ</Name>
 			<Active>1</Active>
@@ -45314,7 +45343,7 @@
 		</Task>
 		<Task>
 			<UID>25</UID>
-			<GUID>DD9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>F82BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>3</ID>
 			<Name>Presupuestación</Name>
 			<Active>1</Active>
@@ -45596,7 +45625,7 @@
 		</Task>
 		<Task>
 			<UID>24</UID>
-			<GUID>DC9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>F72BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>4</ID>
 			<Name>Recepción de Legajo</Name>
 			<Active>1</Active>
@@ -45726,7 +45755,7 @@
 		</Task>
 		<Task>
 			<UID>23</UID>
-			<GUID>DB9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>F62BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>5</ID>
 			<Name>Cómputo Métrico </Name>
 			<Active>1</Active>
@@ -45892,7 +45921,7 @@
 		</Task>
 		<Task>
 			<UID>22</UID>
-			<GUID>DA9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>F52BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>6</ID>
 			<Name>Cotización Mano de Obra</Name>
 			<Active>1</Active>
@@ -46082,7 +46111,7 @@
 		</Task>
 		<Task>
 			<UID>21</UID>
-			<GUID>D99706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>F42BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>7</ID>
 			<Name>Aceptación Obra y Firma de Contrato</Name>
 			<Active>1</Active>
@@ -46248,7 +46277,7 @@
 		</Task>
 		<Task>
 			<UID>37</UID>
-			<GUID>E99706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>042CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>8</ID>
 			<Name>Diseño</Name>
 			<Active>1</Active>
@@ -46562,7 +46591,7 @@
 		</Task>
 		<Task>
 			<UID>36</UID>
-			<GUID>E89706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>032CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>9</ID>
 			<Name>Diseño Vivienda AGUSTIN ZAMPOL</Name>
 			<Active>1</Active>
@@ -46972,7 +47001,7 @@
 		</Task>
 		<Task>
 			<UID>35</UID>
-			<GUID>E79706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>022CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>10</ID>
 			<Name>Fase 1 Diseño Conceptual - Vivienda AGUSTIN ZAMPOL</Name>
 			<Active>1</Active>
@@ -47503,7 +47532,7 @@
 		</Task>
 		<Task>
 			<UID>34</UID>
-			<GUID>E69706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>012CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>11</ID>
 			<Name>Validacion Cliente - Vivienda AGUSTIN ZAMPOL</Name>
 			<Active>1</Active>
@@ -48001,7 +48030,7 @@
 		</Task>
 		<Task>
 			<UID>33</UID>
-			<GUID>E59706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>002CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>12</ID>
 			<Name>Fase 2 Diseño conceptual - Vivienda AGUSTIN ZAMPOL</Name>
 			<Active>1</Active>
@@ -48117,15 +48146,10 @@
 				<Value>Proyecto</Value>
 			</EnterpriseExtendedAttribute>
 			<b60800b></b60800b>
-			<Baseline>
-				<Number>0</Number>
-				<Work>PT-0H-0M1.#RS</Work>
-				<Cost></Cost>
-			</Baseline>
 		</Task>
 		<Task>
 			<UID>32</UID>
-			<GUID>E49706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>FF2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>13</ID>
 			<Name>Validación Cliente - Vivienda AGUSTIN ZAMPOL</Name>
 			<Active>1</Active>
@@ -48241,15 +48265,10 @@
 				<Value>Proyecto</Value>
 			</EnterpriseExtendedAttribute>
 			<b60800b></b60800b>
-			<Baseline>
-				<Number>0</Number>
-				<Work>PT-0H-0M1.#RS</Work>
-				<Cost></Cost>
-			</Baseline>
 		</Task>
 		<Task>
 			<UID>31</UID>
-			<GUID>E39706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>FE2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>14</ID>
 			<Name>Fase 3 - Diseño Final - Vivienda AGUSTIN ZAMPOL</Name>
 			<Active>1</Active>
@@ -48365,15 +48384,10 @@
 				<Value>Proyecto</Value>
 			</EnterpriseExtendedAttribute>
 			<b60800b></b60800b>
-			<Baseline>
-				<Number>0</Number>
-				<Work>PT-0H-0M1.#RS</Work>
-				<Cost></Cost>
-			</Baseline>
 		</Task>
 		<Task>
 			<UID>30</UID>
-			<GUID>E29706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>FD2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>15</ID>
 			<Name>Validación Cliente Vivienda AGUSTIN ZAMPOL</Name>
 			<Active>1</Active>
@@ -48489,15 +48503,10 @@
 				<Value>Proyecto</Value>
 			</EnterpriseExtendedAttribute>
 			<b60800b></b60800b>
-			<Baseline>
-				<Number>0</Number>
-				<Work>PT-0H-0M1.#RS</Work>
-				<Cost></Cost>
-			</Baseline>
 		</Task>
 		<Task>
 			<UID>38</UID>
-			<GUID>EA9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>052CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>16</ID>
 			<Name>Plano Apto Gestiones y Licitación</Name>
 			<Active>1</Active>
@@ -48759,7 +48768,7 @@
 		</Task>
 		<Task>
 			<UID>20</UID>
-			<GUID>D89706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>F32BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>17</ID>
 			<Name>Armado de Documentación y Compra Materiales</Name>
 			<Active>1</Active>
@@ -48926,7 +48935,7 @@
 		</Task>
 		<Task>
 			<UID>19</UID>
-			<GUID>D79706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>F22BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>18</ID>
 			<Name>Armado de Documentacion - Apto para Gestiones</Name>
 			<Active>1</Active>
@@ -49060,7 +49069,7 @@
 		</Task>
 		<Task>
 			<UID>18</UID>
-			<GUID>D69706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>F12BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>19</ID>
 			<Name>Armado de Documentación - Apto para Construcción</Name>
 			<Active>1</Active>
@@ -49226,7 +49235,7 @@
 		</Task>
 		<Task>
 			<UID>17</UID>
-			<GUID>D59706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>F02BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>20</ID>
 			<Name>Confeccion de presupuestos de materiales y acopios.</Name>
 			<Active>1</Active>
@@ -49392,7 +49401,7 @@
 		</Task>
 		<Task>
 			<UID>16</UID>
-			<GUID>D49706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>EF2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>21</ID>
 			<Name>Gestiones</Name>
 			<Active>1</Active>
@@ -49542,7 +49551,7 @@
 		</Task>
 		<Task>
 			<UID>15</UID>
-			<GUID>D39706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>EE2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>22</ID>
 			<Name>Gestiones CAPC</Name>
 			<Active>1</Active>
@@ -49676,7 +49685,7 @@
 		</Task>
 		<Task>
 			<UID>14</UID>
-			<GUID>D29706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>ED2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>23</ID>
 			<Name>Gestiones Municipales</Name>
 			<Active>1</Active>
@@ -49810,7 +49819,7 @@
 		</Task>
 		<Task>
 			<UID>13</UID>
-			<GUID>D19706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>EC2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>24</ID>
 			<Name>Gestiones de Personal</Name>
 			<Active>1</Active>
@@ -49944,7 +49953,7 @@
 		</Task>
 		<Task>
 			<UID>3</UID>
-			<GUID>CF9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>EA2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>25</ID>
 			<Name>Obra - Vivienda AZ</Name>
 			<Active>1</Active>
@@ -61942,7 +61951,7 @@
 		</Task>
 		<Task>
 			<UID>29</UID>
-			<GUID>E19706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>FC2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>26</ID>
 			<Name>Firma Acta Inicio de Obra</Name>
 			<Active>1</Active>
@@ -62059,7 +62068,7 @@
 		</Task>
 		<Task>
 			<UID>28</UID>
-			<GUID>E09706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>FB2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>27</ID>
 			<Name>Obra Vivieda AZ</Name>
 			<Active>1</Active>
@@ -74057,7 +74066,7 @@
 		</Task>
 		<Task>
 			<UID>27</UID>
-			<GUID>DF9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>FA2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>28</ID>
 			<Name>Firma Acta recepcion Provisoria</Name>
 			<Active>1</Active>
@@ -74181,7 +74190,7 @@
 		</Task>
 		<Task>
 			<UID>4</UID>
-			<GUID>D09706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>EB2BF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>29</ID>
 			<Name>Posventa</Name>
 			<Active>1</Active>
@@ -82255,9 +82264,8 @@
 			<UID>0</UID>
 			<GUID>A0CB8B7E-2A8C-436D-0000-0000000000FF</GUID>
 			<ID>0</ID>
-			<Type>1</Type>
+			<Type>0</Type>
 			<IsNull>0</IsNull>
-			<MaxUnits>1.00</MaxUnits>
 			<PeakUnits>0.00</PeakUnits>
 			<OverAllocated>0</OverAllocated>
 			<CanLevel>1</CanLevel>
@@ -82271,16 +82279,12 @@
 			<RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
 			<PercentWorkComplete>0</PercentWorkComplete>
 			<StandardRate>0</StandardRate>
-			<StandardRateFormat>2</StandardRateFormat>
+			<StandardRateFormat>8</StandardRateFormat>
 			<Cost>0</Cost>
-			<OvertimeRate>0</OvertimeRate>
 			<OvertimeRateFormat>2</OvertimeRateFormat>
-			<OvertimeCost>0</OvertimeCost>
 			<CostPerUse>0</CostPerUse>
 			<ActualCost>0</ActualCost>
-			<ActualOvertimeCost>0</ActualOvertimeCost>
 			<RemainingCost>0</RemainingCost>
-			<RemainingOvertimeCost>0</RemainingOvertimeCost>
 			<WorkVariance>0.00</WorkVariance>
 			<CostVariance>0</CostVariance>
 			<SV>0.00</SV>
@@ -82345,7 +82349,7 @@
 			<IsEnterprise>1</IsEnterprise>
 			<BookingType>0</BookingType>
 			<ActiveDirectoryGUID>8FC48B49-DCE2-467E-9E6C-2DBB5413CBC5</ActiveDirectoryGUID>
-			<CreationDate>2026-07-16T21:48:00</CreationDate>
+			<CreationDate>2026-09-26T19:11:00</CreationDate>
 			<IsCostResource>0</IsCostResource>
 			<AssnOwner>Gabriela Rojo</AssnOwner>
 			<AssnOwnerGuid>500F8C50-2C9D-EF11-BD9B-00155D110704</AssnOwnerGuid>
@@ -82452,7 +82456,7 @@
 			<IsEnterprise>1</IsEnterprise>
 			<BookingType>0</BookingType>
 			<ActiveDirectoryGUID>4A42A7F4-586D-4309-9E29-AFDE762E4151</ActiveDirectoryGUID>
-			<CreationDate>2026-07-16T21:48:00</CreationDate>
+			<CreationDate>2026-09-26T19:11:00</CreationDate>
 			<IsCostResource>0</IsCostResource>
 			<AssnOwner>Julian Steib</AssnOwner>
 			<AssnOwnerGuid>E6BC1151-8810-F011-928E-00155D10E202</AssnOwnerGuid>
@@ -82563,7 +82567,7 @@
 			<IsInactive>0</IsInactive>
 			<IsEnterprise>1</IsEnterprise>
 			<BookingType>0</BookingType>
-			<CreationDate>2026-07-16T21:48:00</CreationDate>
+			<CreationDate>2026-09-26T19:11:00</CreationDate>
 			<IsCostResource>0</IsCostResource>
 			<AssnOwner>Posventa</AssnOwner>
 			<AssnOwnerGuid>1C4DB712-7DB8-EF11-BBDC-00155D100D0F</AssnOwnerGuid>
@@ -82674,7 +82678,7 @@
 			<IsInactive>0</IsInactive>
 			<IsEnterprise>1</IsEnterprise>
 			<BookingType>0</BookingType>
-			<CreationDate>2026-07-16T21:48:00</CreationDate>
+			<CreationDate>2026-09-26T19:11:00</CreationDate>
 			<IsCostResource>0</IsCostResource>
 			<AssnOwner>Proyectos</AssnOwner>
 			<AssnOwnerGuid>19B10BFC-7CB8-EF11-BBDC-00155D100D0F</AssnOwnerGuid>
@@ -82745,7 +82749,7 @@
 	<Assignments>
 		<Assignment>
 			<UID>4</UID>
-			<GUID>EC9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>072CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>4</TaskUID>
 			<ResourceUID>3</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -93633,7 +93637,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>13</UID>
-			<GUID>ED9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>082CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>13</TaskUID>
 			<ResourceUID>1</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -93801,7 +93805,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>14</UID>
-			<GUID>EE9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>092CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>14</TaskUID>
 			<ResourceUID>1</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -94305,7 +94309,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>15</UID>
-			<GUID>EF9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>0A2CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>15</TaskUID>
 			<ResourceUID>1</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -94609,7 +94613,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>17</UID>
-			<GUID>F09706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>0B2CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>17</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -94977,7 +94981,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>18</UID>
-			<GUID>F19706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>0C2CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>18</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -95345,7 +95349,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>19</UID>
-			<GUID>F29706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>0D2CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>19</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -95465,7 +95469,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>21</UID>
-			<GUID>F39706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>0E2CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>21</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -95705,7 +95709,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>22</UID>
-			<GUID>F49706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>0F2CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>22</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -95985,7 +95989,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>23</UID>
-			<GUID>F59706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>102CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>23</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -96401,7 +96405,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>24</UID>
-			<GUID>F69706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>112CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>24</TaskUID>
 			<ResourceUID>1</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -96468,7 +96472,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>27</UID>
-			<GUID>F79706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>122CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>27</TaskUID>
 			<ResourceUID>2</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -96531,7 +96535,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>28</UID>
-			<GUID>F89706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>132CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>28</TaskUID>
 			<ResourceUID>2</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -112787,7 +112791,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>29</UID>
-			<GUID>F99706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>142CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>29</TaskUID>
 			<ResourceUID>2</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -112850,7 +112854,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>30</UID>
-			<GUID>FA9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>152CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>30</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -112905,11 +112909,6 @@
 			<f408008></f408008>
 			<f408001></f408001>
 			<f408003></f408003>
-			<Baseline>
-				<Number>0</Number>
-				<Work>PT-0H-0M1.#RS</Work>
-				<Cost></Cost>
-			</Baseline>
 			<TimephasedData>
 				<Type>1</Type>
 				<UID>30</UID>
@@ -113017,7 +113016,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>31</UID>
-			<GUID>FB9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>162CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>31</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -113072,11 +113071,6 @@
 			<f408008></f408008>
 			<f408001></f408001>
 			<f408003></f408003>
-			<Baseline>
-				<Number>0</Number>
-				<Work>PT-0H-0M1.#RS</Work>
-				<Cost></Cost>
-			</Baseline>
 			<TimephasedData>
 				<Type>1</Type>
 				<UID>31</UID>
@@ -113288,7 +113282,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>32</UID>
-			<GUID>FC9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>172CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>32</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -113343,11 +113337,6 @@
 			<f408008></f408008>
 			<f408001></f408001>
 			<f408003></f408003>
-			<Baseline>
-				<Number>0</Number>
-				<Work>PT-0H-0M1.#RS</Work>
-				<Cost></Cost>
-			</Baseline>
 			<TimephasedData>
 				<Type>1</Type>
 				<UID>32</UID>
@@ -113775,7 +113764,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>33</UID>
-			<GUID>FD9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>182CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>33</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -113830,11 +113819,6 @@
 			<f408008></f408008>
 			<f408001></f408001>
 			<f408003></f408003>
-			<Baseline>
-				<Number>0</Number>
-				<Work>PT-0H-0M1.#RS</Work>
-				<Cost></Cost>
-			</Baseline>
 			<TimephasedData>
 				<Type>1</Type>
 				<UID>33</UID>
@@ -114262,7 +114246,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>34</UID>
-			<GUID>FE9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>192CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>34</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -114650,7 +114634,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>35</UID>
-			<GUID>FF9706A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>1A2CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>35</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -115070,7 +115054,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>36</UID>
-			<GUID>009806A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>1B2CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>36</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>12</PercentWorkComplete>
@@ -116953,7 +116937,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>38</UID>
-			<GUID>019806A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>1C2CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<TaskUID>38</TaskUID>
 			<ResourceUID>4</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -117787,25 +117771,25 @@
 	<BoardColumns>
 		<BoardColumn>
 			<UID>1</UID>
-			<GUID>169806A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>312CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>0</ID>
 			<Name>Sin comenzar</Name>
 		</BoardColumn>
 		<BoardColumn>
 			<UID>2</UID>
-			<GUID>179806A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>322CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>1</ID>
 			<Name>Próximamente</Name>
 		</BoardColumn>
 		<BoardColumn>
 			<UID>3</UID>
-			<GUID>189806A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>332CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>2</ID>
 			<Name>En curso</Name>
 		</BoardColumn>
 		<BoardColumn>
 			<UID>4</UID>
-			<GUID>199806A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>342CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>3</ID>
 			<Name>Listo</Name>
 		</BoardColumn>
@@ -117813,7 +117797,7 @@
 	<Sprints>
 		<Sprint>
 			<UID>1</UID>
-			<GUID>1A9806A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>352CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>0</ID>
 			<Name>No hay ningún sprint</Name>
 			<DurationUnits>39</DurationUnits>
@@ -117821,7 +117805,7 @@
 		</Sprint>
 		<Sprint>
 			<UID>2</UID>
-			<GUID>1B9806A3-7981-F111-AB03-C82158A5B4F4</GUID>
+			<GUID>362CF739-F7B9-F111-96CD-0045E2C8A982</GUID>
 			<ID>1</ID>
 			<Name>Sprint 1</Name>
 			<Start>2025-06-12T08:00:00</Start>
