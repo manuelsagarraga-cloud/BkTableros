@@ -162,10 +162,11 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 
 /* Map */
 .map-section{background:var(--bg-el);overflow:hidden}
-.map-header{padding:10px 14px;font-size:11px;font-weight:600;color:var(--c1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:.5px}
-.map-header .clear-btn{font-size:11px;color:var(--ac);cursor:pointer;border:none;background:none;font-family:var(--ff);font-weight:500;text-transform:none;letter-spacing:0;padding:2px 6px;border-radius:var(--r-s)}.map-header .clear-btn:hover{background:var(--ac-bg)}
-.map-body{padding:10px 12px 4px}
-.map-body svg path{transition:fill-opacity .2s,stroke-opacity .2s,stroke-width .15s}
+.map-header{padding:10px 14px;font-size:12px;font-weight:600;color:var(--c1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:.5px}
+.map-header .clear-btn{font-size:11px;color:var(--ac);cursor:pointer;border:none;background:none;font-family:var(--ff);font-weight:500;text-transform:none;letter-spacing:0}
+.map-body{padding:12px}
+.map-dot{cursor:pointer;transition:r .15s}
+.map-dot:hover{r:8}
 .map-label{font-family:var(--ff);font-size:9px;fill:var(--c1);pointer-events:none}
 .map-count{font-family:var(--fm);font-size:8px;fill:white;pointer-events:none;font-weight:700}
 .map-ref{font-family:var(--ff);font-size:8px;fill:var(--c2)}
@@ -204,22 +205,14 @@ const ENT={
 };
 
 /* ═══════ Project metadata from Excel ═══════ */
-/* Map cities to departments */
-const CITY_TO_DEPT={
-  'mendiolaza':'Colón','mendiolaza - el terrón':'Colón','mendiolaza - q2':'Colón',
-  'la calera':'Colón','la calera - vistas de la deseada':'Colón',
-  'malagueño':'Santa María','malagueño - cañitas':'Santa María',
-  'villa ciudad parque - molvento':'Calamuchita','molvento':'Calamuchita',
-  'villa ciudad parque':'Calamuchita',
-};
 const CITY_COORDS={
-  'mendiolaza':{lat:-31.317,lng:-64.290,label:'Mendiolaza',dept:'Colón'},
-  'mendiolaza - el terrón':{lat:-31.305,lng:-64.295,label:'Mendiolaza - El Terrón',dept:'Colón'},
-  'mendiolaza - q2':{lat:-31.310,lng:-64.285,label:'Mendiolaza - Q2',dept:'Colón'},
-  'la calera - vistas de la deseada':{lat:-31.345,lng:-64.335,label:'La Calera',dept:'Colón'},
-  'malagueño - cañitas':{lat:-31.463,lng:-64.358,label:'Malagueño',dept:'Santa María'},
-  'villa ciudad parque - molvento':{lat:-31.593,lng:-64.463,label:'Molvento',dept:'Calamuchita'},
-  'molvento':{lat:-31.593,lng:-64.463,label:'Molvento',dept:'Calamuchita'},
+  'mendiolaza':{lat:-31.317,lng:-64.290,label:'Mendiolaza'},
+  'mendiolaza - el terrón':{lat:-31.305,lng:-64.295,label:'Mendiolaza - El Terrón'},
+  'mendiolaza - q2':{lat:-31.310,lng:-64.285,label:'Mendiolaza - Q2'},
+  'la calera - vistas de la deseada':{lat:-31.345,lng:-64.335,label:'La Calera'},
+  'malagueño - cañitas':{lat:-31.463,lng:-64.358,label:'Malagueño'},
+  'villa ciudad parque - molvento':{lat:-31.593,lng:-64.463,label:'Molvento'},
+  'molvento':{lat:-31.593,lng:-64.463,label:'Molvento'},
 };
 
 function normalizeForMatch(s){
@@ -237,7 +230,6 @@ async function loadProjectMeta(){
     return rows.map(row=>{
       const city=(row['Ciudad / Localidad']||'').toLowerCase();
       const coordEntry=CITY_COORDS[city];
-      const dept=coordEntry?.dept||CITY_TO_DEPT[city]||null;
       return{
         proyecto:row['Proyecto']||'',
         estado:row['Estado']||'',
@@ -253,7 +245,6 @@ async function loadProjectMeta(){
         lat:coordEntry?.lat||null,
         lng:coordEntry?.lng||null,
         cityLabel:coordEntry?.label||row['Ciudad / Localidad']||'',
-        dept:dept,
         _norm:normalizeForMatch(row['Proyecto']),
       };
     });
@@ -273,137 +264,66 @@ function matchMeta(projectName,metaList){
   return best||null;
 }
 
-/* ═══════ Department Map Component ═══════ */
-/* Real department polygons extracted from official Córdoba province SVG.
-   Source coords ~(70,0)→(218,227). We render inside a viewBox that
-   shows the full province with padding. */
-const PROV={
-  path70:{p:'145.0,4.7 144.2,8.3 143.0,11.4 140.9,13.7 140.2,17.3 139.2,20.9 137.0,23.1 133.4,23.0 130.3,21.9 129.3,18.3 126.5,16.5 122.8,15.6 121.4,13.4 119.6,10.9 118.7,8.0 118.7,4.1 118.8,0.3 121.8,-0.9 125.6,-1.0 129.3,-0.5 133.1,0.1 136.9,0.5 138.2,3.5 141.0,2.0 144.4,2.1'},
-  path72:{p:'118.8,-0.4 119.4,10.9 126.8,16.6 134.2,23.1 145.4,24.7 154.3,29.3 161.3,28.7 173.1,30.4 185.0,32.1 196.5,33.2 194.1,42.4 185.0,41.3 177.5,46.1 169.3,47.1 159.0,44.0 150.3,41.1 142.2,38.5 133.9,39.7 124.7,36.2 123.0,28.2 120.5,22.7 108.7,21.1 99.9,18.0 101.3,7.5 107.0,1.1'},
-  path80:{p:'163.3,10.3 169.4,10.8 175.6,11.3 180.8,11.9 182.3,17.0 186.3,21.2 189.2,24.5 188.5,29.0 190.1,32.8 184.0,32.0 177.8,31.1 171.7,30.2 165.6,29.3 159.5,28.5 157.5,30.0 154.3,27.0 148.9,25.3 142.8,24.2 139.2,21.2 140.5,15.4 143.1,10.9 144.7,5.4 150.1,4.8 155.9,5.6 157.1,10.1'},
-  path98:{p:'99.0,19.8 99.1,26.6 99.2,33.5 98.5,38.4 102.1,44.1 108.0,46.0 112.1,48.6 111.1,54.5 110.6,61.2 109.9,67.0 108.7,73.3 106.0,78.6 102.5,75.4 101.2,68.8 97.9,63.3 93.9,59.6 90.5,56.1 86.4,53.0 83.8,48.0 77.1,46.7 79.2,40.5 81.2,34.0 83.2,27.4 87.7,23.7 94.3,22.2'},
-  path100:{p:'124.9,38.9 128.2,42.7 130.3,47.3 131.8,52.0 127.1,52.8 122.0,52.3 117.2,52.6 116.2,48.5 111.5,48.1 108.4,46.0 103.3,45.8 100.4,41.6 97.6,37.2 99.2,33.7 99.1,28.5 99.1,23.3 100.8,20.1 105.9,20.8 111.0,21.5 116.2,22.1 121.3,22.8 125.2,24.5 123.8,28.5 121.9,31.7 123.6,34.8'},
-  path108:{p:'205.6,39.3 211.0,46.2 215.5,51.7 212.7,61.3 209.9,70.9 207.1,80.5 202.2,88.9 201.8,97.9 201.6,105.0 193.5,101.7 185.9,104.5 177.4,101.7 171.8,94.5 167.2,87.7 163.5,80.0 165.1,71.9 169.6,65.2 175.0,60.1 179.3,53.3 173.1,48.0 177.7,46.3 184.9,42.7 190.4,42.4 196.5,39.3 200.1,32.9'},
-  path110:{p:'152.0,41.0 151.2,45.9 149.3,49.6 148.6,54.2 146.3,57.3 144.0,59.5 141.0,61.5 138.8,58.7 135.0,59.2 130.1,59.8 125.4,58.7 120.8,57.1 119.2,53.0 123.3,52.7 128.2,52.4 131.7,51.0 129.8,46.7 128.0,42.1 125.3,38.9 130.2,39.1 135.0,39.8 137.9,36.9 142.1,37.6 143.5,41.4 148.1,41.7'},
-  path132:{p:'112.1,48.0 116.0,48.4 116.8,51.7 119.2,53.7 119.6,57.8 119.7,62.0 120.2,66.1 121.0,69.8 120.2,73.8 118.8,77.4 117.0,80.9 115.7,84.9 116.2,88.9 113.4,90.1 109.5,89.1 107.6,85.6 106.3,82.0 107.0,78.6 108.3,74.8 109.9,71.0 109.9,66.9 110.8,63.1 110.7,59.6 111.1,55.5 112.6,52.0'},
-  path134:{p:'76.9,46.6 80.9,47.4 84.9,48.2 86.4,51.5 86.7,55.4 90.3,56.1 93.5,56.7 94.4,60.7 96.4,63.8 99.7,65.0 101.2,68.6 101.8,72.1 97.7,72.1 93.6,72.1 89.5,72.1 85.4,72.0 81.3,72.0 77.2,72.0 73.1,72.0 70.8,70.1 70.8,66.0 71.0,62.0 72.5,58.1 73.9,54.3 75.4,50.5'},
-  path142:{p:'142.1,61.5 142.0,64.8 141.1,67.9 141.0,71.8 137.9,72.6 138.5,75.8 137.6,78.3 135.6,79.3 134.1,76.9 133.0,74.0 129.1,73.9 125.3,73.9 122.9,75.7 120.2,74.9 120.4,71.1 120.4,67.8 119.7,64.1 119.6,60.2 119.9,56.5 123.3,57.9 126.8,59.3 130.6,59.7 134.4,59.3 137.5,58.1 138.8,61.0'},
-  path158:{p:'102.2,72.1 102.4,76.0 99.9,78.3 96.3,79.5 94.1,82.7 91.0,85.2 88.6,87.9 84.6,87.7 81.8,86.8 81.1,90.3 78.7,92.3 75.0,92.0 71.0,91.8 70.6,88.2 70.7,84.2 70.7,80.2 70.8,76.3 70.8,72.3 74.4,72.0 78.4,72.0 82.4,72.0 86.3,72.0 90.3,72.1 94.3,72.1 98.3,72.1'},
-  path160:{p:'162.7,75.0 164.2,80.5 165.5,85.5 168.9,88.9 171.2,93.4 173.4,98.6 177.6,102.2 177.1,104.7 172.1,103.5 169.0,101.2 164.5,102.5 161.1,100.4 156.3,101.5 150.9,101.6 147.1,103.4 142.8,101.6 139.2,99.3 138.0,94.4 135.4,90.9 135.6,86.4 140.4,84.2 146.0,83.1 150.6,80.7 154.2,77.8 158.9,76.3'},
-  path162:{p:'134.1,79.2 134.1,80.6 134.1,82.1 133.4,82.8 131.9,82.8 130.4,82.8 129.0,82.8 127.5,82.8 126.0,82.8 124.6,82.7 124.6,81.3 124.6,79.8 124.6,78.3 124.6,76.9 124.6,75.4 124.6,73.9 126.0,73.9 127.5,73.9 128.9,73.9 130.4,74.0 131.9,74.0 133.3,74.0 134.0,74.8 134.0,76.2 134.1,77.7'},
-  path166:{p:'106.4,78.6 107.0,82.4 108.0,86.8 108.5,90.7 108.2,94.9 104.1,96.1 101.2,97.9 97.0,97.6 93.2,99.8 88.7,99.8 85.0,98.2 80.5,98.4 76.4,98.5 72.3,97.6 70.6,94.8 72.1,91.8 76.4,92.3 80.7,92.0 81.8,88.0 84.3,87.4 88.5,87.9 91.3,84.8 94.8,82.1 97.5,78.6 101.9,77.9'},
-  path180:{p:'126.8,102.9 126.3,107.9 125.8,112.8 127.5,116.6 124.8,118.7 120.2,119.1 118.2,122.9 116.8,127.8 111.9,128.1 106.9,127.4 103.6,125.9 102.9,122.5 102.2,118.2 101.2,113.8 101.0,108.8 101.5,103.8 102.0,98.9 106.6,97.9 111.6,98.2 115.7,96.2 117.3,94.6 120.6,96.4 124.0,94.1 125.2,98.2 127.0,98.9'},
-  path188:{p:'102.7,98.5 101.7,101.3 101.7,104.5 101.2,107.7 101.0,111.0 101.3,114.3 99.8,115.7 96.6,115.6 93.3,115.6 91.4,114.2 90.6,111.2 90.3,108.0 89.0,105.3 86.3,103.5 83.3,102.1 80.3,100.5 77.4,99.0 78.3,98.1 81.5,98.4 84.8,98.2 87.4,99.5 90.6,99.9 93.8,99.5 96.7,97.9 99.7,97.1'},
-  path190:{p:'139.2,101.7 146.5,101.6 150.2,102.1 156.8,101.5 163.0,99.9 167.0,102.2 167.9,104.2 162.6,105.4 157.7,107.7 156.2,112.2 152.6,116.9 153.7,122.3 152.2,129.5 152.9,135.8 147.0,134.4 142.8,131.7 137.0,132.3 136.0,128.3 138.0,121.4 137.5,117.2 131.7,114.9 125.9,114.5 126.3,107.4 129.6,102.8 134.9,100.5'},
-  path192:{p:'199.4,104.6 196.5,112.8 197.8,118.1 194.2,125.6 191.4,133.8 190.4,139.0 188.7,146.9 188.8,152.2 186.4,157.4 184.3,166.7 182.3,176.2 176.4,179.8 167.6,178.2 166.1,171.0 168.4,161.6 167.8,154.0 166.5,147.8 169.3,139.1 169.8,132.2 169.3,124.3 170.2,119.6 176.4,116.6 178.1,107.3 184.5,104.2 191.7,101.6'},
-  path202:{p:'178.7,105.0 177.5,111.4 176.1,117.8 171.0,118.4 167.2,121.3 168.7,125.9 170.1,130.9 170.8,136.1 168.3,140.5 166.7,146.9 161.9,148.1 156.8,148.8 157.9,145.3 159.9,139.7 157.6,139.6 153.8,136.4 151.8,131.4 153.2,124.9 154.4,118.6 153.0,113.8 158.2,111.3 157.3,106.7 163.4,105.3 167.9,104.2 172.8,103.8'},
-  path204:{p:'203.5,105.3 207.2,112.1 211.2,119.3 213.6,126.2 213.4,131.2 218.2,136.9 217.5,144.9 211.7,151.0 207.1,158.3 202.4,165.4 197.5,172.5 192.7,179.7 185.9,181.8 181.0,177.8 183.5,170.4 185.3,162.0 185.6,155.5 190.1,149.8 190.0,145.8 190.5,138.2 191.3,134.1 193.9,126.9 196.6,119.5 197.8,114.8 198.1,108.5'},
-  path232:{p:'153.1,136.2 157.6,139.6 159.7,140.4 156.5,145.0 158.9,149.2 164.8,148.7 166.4,153.7 169.2,157.9 167.5,165.0 165.9,172.1 163.1,177.8 155.8,177.8 148.4,177.7 141.1,177.8 134.7,176.9 135.5,170.4 140.2,167.7 140.1,160.4 140.0,153.1 134.7,150.6 136.6,145.6 135.1,141.6 136.9,134.5 142.4,131.7 147.1,134.0'},
-  path268:{p:'164.6,177.3 170.7,178.6 177.4,180.0 184.1,181.5 190.4,183.0 186.4,188.6 182.5,194.3 178.7,200.0 172.4,201.3 165.5,201.3 158.7,201.3 157.9,207.2 152.8,208.5 146.6,207.8 142.3,205.1 139.9,200.5 133.0,200.6 129.9,196.8 131.4,193.0 134.7,188.6 134.7,181.7 137.6,177.8 144.4,177.8 151.3,177.7 158.2,177.8'},
-  path282:{p:'128.1,194.8 131.4,200.6 139.7,200.5 142.3,206.4 149.2,207.8 155.1,206.8 158.8,211.8 158.8,220.1 157.1,226.7 148.8,226.8 140.5,226.7 132.3,226.7 124.0,226.7 115.7,226.7 107.4,226.7 99.2,226.7 95.4,222.2 95.3,214.0 95.3,205.7 95.3,197.4 95.2,189.1 97.7,185.1 105.5,186.9 112.4,191.2 120.0,194.2'},
-};
-const DEPT_SHAPES={
-  'Colón':{
-    p:'172.2,47.6 173.8,48.1 175.6,48.4 176.5,50.0 177.5,51.5 179.2,52.2 179.4,54.2 179.5,56.2 178.9,57.7 176.9,58.3 175.2,59.1 174.8,61.1 174.1,62.6 172.8,63.4 172.0,64.9 170.5,65.3 168.9,65.6 167.8,66.9 167.3,68.9 166.9,70.9 165.9,72.1 164.0,71.7 163.2,73.4 162.4,75.0 160.4,74.6 159.7,75.6 158.5,76.4 156.5,76.3 155.0,77.0 153.8,77.6 152.8,78.5 151.8,80.0 150.0,80.8 148.1,81.2 147.2,82.9 145.2,83.0 143.3,83.6 141.5,84.3 139.5,84.2 137.7,84.3 137.5,82.3 137.6,80.3 137.6,78.3 138.1,76.8 138.3,75.8 137.8,74.3 138.1,72.5 140.1,72.4 141.0,71.3 141.0,69.2 141.1,67.2 141.4,65.5 141.7,64.3 142.1,62.6 142.1,60.6 143.2,59.5 144.3,58.5 144.6,56.9 146.5,57.4 148.2,56.9 148.4,54.9 148.7,53.0 148.9,50.9 149.5,49.5 150.1,47.7 151.1,46.5 151.4,44.5 151.8,42.5 152.1,40.5 154.1,40.9 156.1,41.2 158.1,41.5 159.1,42.7 159.1,44.5 161.1,44.9 163.1,45.2 165.1,45.6 166.2,46.6 168.2,46.9 170.2,47.2',
-    cx:158.5,cy:62.5,color:'#9E0101'
-  },
-  'Santa María':{
-    p:'124.6,75.3 124.6,77.3 124.6,79.2 124.6,81.2 125.0,82.8 127.0,82.8 128.9,82.8 130.9,82.8 132.9,82.8 134.1,82.1 134.1,80.1 135.1,79.1 136.8,80.0 137.5,81.2 137.5,83.2 137.3,84.8 135.8,86.0 136.3,87.5 135.7,88.3 135.5,90.2 135.4,92.1 137.0,92.3 137.9,93.6 138.0,95.6 138.9,96.7 139.1,98.5 139.2,100.5 139.2,102.5 137.6,102.4 137.0,101.0 135.5,100.5 133.6,100.5 132.9,101.9 131.6,102.7 129.7,102.8 127.7,102.9 127.1,101.9 127.8,100.0 127.1,98.9 125.8,99.6 125.2,99.5 125.2,97.5 125.1,95.7 124.0,94.6 123.2,94.5 121.9,95.7 120.4,96.5 118.8,96.3 117.9,95.2 116.6,94.0 115.1,95.0 115.7,96.1 114.8,97.8 112.9,98.0 111.0,98.1 109.0,97.9 107.1,98.2 105.2,97.9 103.5,98.8 103.2,97.6 104.3,95.9 106.0,95.5 108.0,95.2 108.4,93.4 108.7,91.6 108.9,89.8 110.4,89.3 112.2,89.8 113.7,90.7 115.4,90.0 116.2,88.5 116.2,86.7 115.7,84.8 116.3,82.9 116.9,81.1 117.4,79.2 118.5,77.6 120.0,76.4 121.0,75.6 122.7,75.6',
-    cx:120.9,cy:89.1,color:'#D4930D'
-  },
-  'Calamuchita':{
-    p:'127.5,115.9 130.2,114.9 133.3,115.1 136.3,115.8 138.2,117.3 140.0,118.8 138.3,121.2 137.0,123.8 136.4,126.8 135.7,129.9 135.0,133.0 137.5,132.2 136.7,135.3 136.0,138.3 135.2,141.4 134.0,143.9 135.3,145.6 136.8,147.2 134.6,148.3 134.9,151.3 137.9,151.6 140.0,152.9 140.1,156.1 140.1,159.2 140.1,162.3 140.2,165.5 140.2,168.6 138.8,170.4 135.6,170.4 134.7,172.7 134.7,175.8 134.7,179.0 134.7,182.1 134.7,185.2 134.7,188.4 134.7,191.5 132.1,192.8 129.4,194.2 126.4,194.9 123.4,194.3 120.3,194.1 117.5,193.0 114.6,192.0 111.7,190.8 109.3,189.0 106.5,187.5 103.7,186.1 100.6,185.9 97.7,185.1 95.3,183.4 95.2,180.3 95.1,177.1 95.0,174.0 94.9,170.8 94.8,167.7 94.6,164.6 94.4,161.4 94.2,158.3 94.0,155.2 93.9,152.0 96.0,149.8 97.2,148.3 98.2,145.6 98.3,142.8 99.5,140.1 100.4,137.6 100.9,134.6 101.7,131.7 101.9,129.1 103.7,127.2 106.9,127.4 110.0,127.6 113.1,128.1 116.2,128.2 117.2,125.5 118.3,122.6 120.3,120.6 121.3,118.4 124.4,118.8 126.8,118.3',
-    cx:117.1,cy:154.9,color:'#10b981'
-  }
-};
-
-function DeptMap({projects,metaList,selectedDept,onSelectDept}){
-  const deptCounts=useMemo(()=>{
-    const counts={};
-    for(const d of Object.keys(DEPT_SHAPES)) counts[d]={count:0,projects:[]};
+/* ═══════ Map Component ═══════ */
+function CbaMap({projects,metaList,selectedCity,onSelectCity}){
+  /* Group by city label */
+  const cityGroups=useMemo(()=>{
+    const map={};
     for(const p of projects){
       const m=matchMeta(p.name,metaList);
-      if(!m||!m.dept) continue;
-      if(counts[m.dept]){counts[m.dept].count++;counts[m.dept].projects.push(p.name)}
+      if(!m||!m.lat) continue;
+      const key=m.cityLabel;
+      if(!map[key]) map[key]={label:key,lat:m.lat,lng:m.lng,count:0,projects:[]};
+      map[key].count++;
+      map[key].projects.push(p.name);
     }
-    return counts;
+    return Object.values(map);
   },[projects,metaList]);
 
-  const totalMapped=Object.values(deptCounts).reduce((s,d)=>s+d.count,0);
+  if(!cityGroups.length) return null;
+
+  /* SVG viewport: vertical sidebar layout */
+  const svgW=280,svgH=400;
+  const minLat=-31.65,maxLat=-31.27,minLng=-64.50,maxLng=-64.22;
+  const toX=lng=>(lng-minLng)/(maxLng-minLng)*svgW;
+  const toY=lat=>(lat-minLat)/(maxLat-minLat)*svgH;
+
+  /* Córdoba capital reference point */
+  const cbaX=toX(-64.18),cbaY=toY(-31.42);
 
   return(
     <div className="map-section">
       <div className="map-header">
-        <span>Obras por departamento</span>
-        {selectedDept&&<button className="clear-btn" onClick={()=>onSelectDept(null)}>Todas</button>}
+        <span>📍 UBICACIÓN DE OBRAS</span>
       </div>
       <div className="map-body">
-        <svg viewBox="64 -6 162 240" width="100%" style={{display:'block'}}>
-          {/* Province context — all departments as faint shapes */}
-          {Object.entries(PROV).map(([id,d])=>
-            <polygon key={id} points={d.p} fill="var(--bg-2)" stroke="var(--b0)" strokeWidth=".4" opacity=".5"/>
-          )}
+        <svg viewBox={`-10 -10 ${svgW+20} ${svgH+20}`} width="100%" height="auto">
+          {/* Background */}
+          <rect x="-10" y="-10" width={svgW+20} height={svgH+20} fill="var(--bg-1)" rx="4"/>
 
-          {/* Target departments — interactive */}
-          {Object.entries(DEPT_SHAPES).map(([name,dept])=>{
-            const isSel=selectedDept===name;
-            const isOther=selectedDept&&!isSel;
-            const cnt=deptCounts[name]?.count||0;
+          {/* Reference: Córdoba capital */}
+          <circle cx={cbaX} cy={cbaY} r="3" fill="var(--c2)" opacity=".4"/>
+          <text x={cbaX+6} y={cbaY+3} className="map-ref">Córdoba capital</text>
+
+          {/* Reference: Ruta E53 approximate line */}
+          <line x1={toX(-64.45)} y1={toY(-31.60)} x2={toX(-64.22)} y2={toY(-31.30)} stroke="var(--b0)" strokeWidth="1.5" strokeDasharray="4,3"/>
+          <text x={toX(-64.44)} y={toY(-31.58)} className="map-ref">Sierras Chicas</text>
+
+          {/* City dots */}
+          {cityGroups.map(c=>{
+            const x=toX(c.lng),y=toY(c.lat);
+            const isSelected=selectedCity===c.label;
+            const r=Math.max(6,Math.min(12,c.count*3+4));
             return(
-              <g key={name} onClick={()=>onSelectDept(isSel?null:name)} style={{cursor:'pointer'}}>
-                <polygon points={dept.p}
-                  fill={dept.color}
-                  fillOpacity={isSel?.30:isOther?.06:.15}
-                  stroke={dept.color}
-                  strokeWidth={isSel?1.2:.6}
-                  strokeOpacity={isSel?1:isOther?.3:.7}
-                />
-                {/* Badge */}
-                {cnt>0&&<g>
-                  <circle cx={dept.cx} cy={dept.cy+1} r={6}
-                    fill={isSel?dept.color:'var(--c0)'} opacity={isOther?.3:isSel?1:.85}/>
-                  <text x={dept.cx} y={dept.cy+4} textAnchor="middle"
-                    style={{fontSize:7,fontWeight:700,fill:'white',fontFamily:'var(--fm)'}}>
-                    {cnt}
-                  </text>
-                </g>}
-                {/* Label */}
-                <text x={dept.cx} y={dept.cy-(cnt>0?7:0)} textAnchor="middle"
-                  style={{
-                    fontSize:isSel?6.5:5.5,fontWeight:isSel?700:500,
-                    fill:isSel?dept.color:isOther?'var(--c2)':'var(--c0)',
-                    fontFamily:'var(--ff)',pointerEvents:'none'
-                  }}>{name}</text>
+              <g key={c.label} onClick={()=>onSelectCity(isSelected?null:c.label)} style={{cursor:'pointer'}}>
+                <circle cx={x} cy={y} r={r+3} fill={isSelected?'var(--ac)':'var(--ac)'} opacity={isSelected?.2:.08}/>
+                <circle cx={x} cy={y} r={r} fill={isSelected?'var(--ac)':'var(--ac)'} opacity={isSelected?1:.7} className="map-dot"/>
+                <text x={x} y={y+3.5} textAnchor="middle" className="map-count">{c.count}</text>
+                <text x={x} y={y+r+12} textAnchor="middle" className="map-label" style={{fontWeight:isSelected?700:400,fill:isSelected?'var(--ac)':'var(--c1)'}}>{c.label}</text>
               </g>
             );
           })}
-
-          {/* Capital reference dot */}
-          <circle cx="130.9" cy="68.3" r="1.5" fill="var(--c2)" opacity=".5"/>
-          <text x="130.9" y="67" textAnchor="middle" style={{fontSize:4,fill:'var(--c2)',fontFamily:'var(--ff)'}}>Capital</text>
         </svg>
-      </div>
-
-      {/* Legend */}
-      <div style={{padding:'6px 12px',borderTop:'1px solid var(--b1)',display:'flex',flexDirection:'column',gap:3}}>
-        {Object.entries(DEPT_SHAPES).map(([name,dept])=>{
-          const c=deptCounts[name];
-          const isSel=selectedDept===name;
-          return(
-            <div key={name}
-              onClick={()=>onSelectDept(isSel?null:name)}
-              style={{
-                display:'flex',alignItems:'center',gap:8,padding:'4px 8px',
-                borderRadius:'var(--r-s)',cursor:'pointer',
-                background:isSel?dept.color+'14':'transparent',
-                border:isSel?`1px solid ${dept.color}40`:'1px solid transparent',
-              }}>
-              <span style={{width:10,height:10,borderRadius:2,background:dept.color,opacity:isSel?1:.6,flexShrink:0}}/>
-              <span style={{flex:1,fontSize:12,fontWeight:isSel?600:400,color:isSel?dept.color:'var(--c0)'}}>{name}</span>
-              <span style={{fontSize:11,fontFamily:'var(--fm)',fontWeight:600,color:isSel?dept.color:'var(--c1)'}}>{c?.count||0}</span>
-            </div>
-          );
-        })}
       </div>
     </div>
   );
@@ -491,10 +411,17 @@ function parseMSPDI(xmlText){
         if(v&&v!=='None')ent[info.n]={value:v,guid:info.t==='guid'};
       }
     }
-    /* Standard ExtendedAttribute */
+    /* Standard ExtendedAttribute — with fallback for Text1/2/3 */
+    const textFieldMap={'188743731':'Rubro','188743732':'Nivel','188743733':'Tableros'};
     for(const ea of ga(t,'ExtendedAttribute')){
       const fid=g(ea,'FieldID'),val=g(ea,'Value');
-      if(fid&&val){const d=eaDefs[fid];ent[d?(d.al||d.fn):`F${fid}`]={value:val,guid:false}}
+      if(fid&&val){
+        const d=eaDefs[fid];
+        let label=d?(d.al||d.fn):`F${fid}`;
+        /* Fallback: if no alias, use our known mapping */
+        if(textFieldMap[fid]&&(!d||!d.al||d.al===d.fn)) label=textFieldMap[fid];
+        ent[label]={value:val,guid:false};
+      }
     }
 
     tasks.push({
@@ -530,10 +457,19 @@ function parseMSPDI(xmlText){
   const resList=[...new Set(allTasks.flatMap(t=>t.resources))].sort();
   const hasBL=allTasks.some(t=>t.baselines.length>0);
   const contractors=new Set();
-  for(const t of allTasks){const c=t.ent['Contratista'];if(c&&!c.guid&&c.value)contractors.add(c.value)}
+  const rubros=new Set();
+  const niveles=new Set();
+  const tableros=new Set();
+  for(const t of allTasks){
+    const c=t.ent['Contratista'];if(c&&!c.guid&&c.value)contractors.add(c.value);
+    const r=t.ent['Rubro'];if(r&&!r.guid&&r.value)rubros.add(r.value);
+    const n=t.ent['Nivel'];if(n&&!n.guid&&n.value)niveles.add(n.value);
+    const tb=t.ent['Tableros'];if(tb&&!tb.guid&&tb.value)tableros.add(tb.value);
+  }
 
   return{tasks:allTasks,roots,uidMap,resources:resList,rawRes:Object.values(res),
-    minDate:minD,maxDate:maxD,hasBL,contractors:[...contractors].sort()};
+    minDate:minD,maxDate:maxD,hasBL,contractors:[...contractors].sort(),
+    rubros:[...rubros].sort(),niveles:[...niveles].sort(),tableros:[...tableros].sort()};
 }
 
 /* ═══════ Utilities ═══════ */
@@ -669,121 +605,35 @@ function GanttSVG({tasks,minDate,maxDate,zoom,showArr,showBL,scrollRef,onTT}){
 /* ═══════ Dashboard por proyecto ═══════ */
 function ProjDash({data}){
   if(!data)return null;
-  const[dashFilter,setDashFilter]=useState('all'); /* all|ip|ov */
-  const[dashContr,setDashContr]=useState('all');
-  const now=new Date();
   const ts=data.tasks.filter(t=>!t.isSummary);
   const tot=ts.length,done=ts.filter(t=>t.percentComplete>=100).length;
   const ip=ts.filter(t=>t.percentComplete>0&&t.percentComplete<100).length;
   const ov=ts.filter(t=>isOv(t)).length;
   const avg=tot?Math.round(ts.reduce((s,t)=>s+t.percentComplete,0)/tot):0;
 
-  /* Contractor map */
   const cMap={};
-  ts.forEach(t=>{const c=entV(t,'Contratista')||'Sin contratista';if(!cMap[c])cMap[c]={tot:0,done:0,ov:0,ip:0};cMap[c].tot++;if(t.percentComplete>=100)cMap[c].done++;if(isOv(t))cMap[c].ov++;if(t.percentComplete>0&&t.percentComplete<100)cMap[c].ip++});
-  const contractors=[...new Set(ts.map(t=>entV(t,'Contratista')).filter(Boolean))].sort();
+  ts.forEach(t=>{const c=entV(t,'Contratista')||'Sin contratista';if(!cMap[c])cMap[c]={tot:0,done:0,ov:0};cMap[c].tot++;if(t.percentComplete>=100)cMap[c].done++;if(isOv(t))cMap[c].ov++});
 
-  /* Apply contractor filter first */
-  const cFiltered=dashContr==='all'?ts:dashContr==='none'?ts.filter(t=>!entV(t,'Contratista')):ts.filter(t=>entV(t,'Contratista')===dashContr);
-
-  /* HOY — Tareas en curso (start <= today <= finish, not complete) */
-  const inProgressToday=cFiltered.filter(t=>t.start&&t.finish&&t.start<=now&&t.finish>=now&&t.percentComplete<100);
-
-  /* Overdue tasks */
-  const overdueTasks=cFiltered.filter(t=>isOv(t));
-
-  /* Tasks starting next month */
-  const nextMonthStart=new Date(now.getFullYear(),now.getMonth()+1,1);
-  const nextMonthEnd=new Date(now.getFullYear(),now.getMonth()+2,0);
-  const nextMonthTasks=cFiltered.filter(t=>t.start&&t.start>=nextMonthStart&&t.start<=nextMonthEnd&&t.percentComplete<100);
-
-  /* Tasks that start when active ones finish (successors of in-progress tasks) */
-  const ipUids=new Set(inProgressToday.map(t=>t.uid));
-  const waitingOnActive=cFiltered.filter(t=>{
-    if(t.percentComplete>=100||ipUids.has(t.uid))return false;
-    return t.predecessors.some(pr=>ipUids.has(pr.taskUid));
-  });
-
-  /* Determine which table to show based on filter */
-  const filteredList=dashFilter==='ip'?inProgressToday:dashFilter==='ov'?overdueTasks:null;
-  const filteredLabel=dashFilter==='ip'?'en curso hoy':dashFilter==='ov'?'vencidas':null;
-
-  /* Upcoming (unchanged but also filtered by contractor) */
-  const upcoming=cFiltered.filter(t=>t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish).slice(0,10);
-
-  /* Find the "entrega contratada" milestone if exists */
-  const entregaMilestone=data.tasks.find(t=>(t.isMilestone||t.name.toLowerCase().includes('entrega contratada')||t.name.toLowerCase().includes('fecha objetivo'))&&t.finish);
-
-  const renderTaskTable=(list,title,maxRows)=>{
-    if(!list.length)return null;
-    const shown=maxRows?list.slice(0,maxRows):list;
-    return <div style={{marginBottom:16}}>
-      <div className="dst">{title} ({list.length})</div>
-      <table className="dt"><thead><tr><th>Tarea</th><th style={{width:80}}>Inicio</th><th style={{width:80}}>Fin</th><th style={{width:45}}>%</th><th style={{width:90}}>Contratista</th></tr></thead>
-      <tbody>{shown.map(t=>{const o=isOv(t);return <tr key={t.uid}><td style={{fontWeight:500,color:o?'var(--err)':undefined}}>{t.name}</td><td className="mono">{fD(t.start)}</td><td className="mono" style={{color:o?'var(--err)':undefined}}>{fD(t.finish)}</td><td className="mono">{t.percentComplete}%</td><td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Contratista')||'—'}</td></tr>})}</tbody></table>
-      {maxRows&&list.length>maxRows&&<div style={{fontSize:11,color:'var(--c2)',padding:'4px 0'}}>…y {list.length-maxRows} más</div>}
-    </div>;
-  };
+  const upcoming=ts.filter(t=>t.finish&&t.finish>=new Date()&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish).slice(0,10);
 
   return <div className="dash">
-    {/* KPIs — clickeable */}
     <div className="dgrid">
-      <div className="kpi" style={{cursor:'pointer',outline:dashFilter==='all'?'2px solid var(--ac)':'none'}} onClick={()=>setDashFilter('all')}><div className="kpi-v">{tot}</div><div className="kpi-l">Tareas</div></div>
+      <div className="kpi"><div className="kpi-v">{tot}</div><div className="kpi-l">Tareas</div></div>
       <div className="kpi ok"><div className="kpi-v" style={{color:'var(--ok)'}}>{done}</div><div className="kpi-l">Completadas</div></div>
-      <div className="kpi warn" style={{cursor:'pointer',outline:dashFilter==='ip'?'2px solid var(--warn)':'none'}} onClick={()=>setDashFilter(dashFilter==='ip'?'all':'ip')}><div className="kpi-v" style={{color:'var(--warn)'}}>{ip}</div><div className="kpi-l">En curso</div></div>
-      <div className="kpi err" style={{cursor:'pointer',outline:dashFilter==='ov'?'2px solid var(--err)':'none'}} onClick={()=>setDashFilter(dashFilter==='ov'?'all':'ov')}><div className="kpi-v" style={{color:'var(--err)'}}>{ov}</div><div className="kpi-l">Vencidas</div></div>
+      <div className="kpi warn"><div className="kpi-v" style={{color:'var(--warn)'}}>{ip}</div><div className="kpi-l">En curso</div></div>
+      <div className="kpi err"><div className="kpi-v" style={{color:'var(--err)'}}>{ov}</div><div className="kpi-l">Vencidas</div></div>
       <div className="kpi"><div className="kpi-v">{avg}%</div><div className="kpi-l">Avance</div></div>
     </div>
-
-    {/* Contractor filter */}
-    {contractors.length>0&&<div style={{display:'flex',alignItems:'center',gap:6,marginBottom:12,flexWrap:'wrap'}}>
-      <span style={{color:'var(--c2)',marginRight:2}}>{I.flt()}</span>
-      <span className="fl">Contratista</span>
-      <select className="fsel" value={dashContr} onChange={e=>setDashContr(e.target.value)}>
-        <option value="all">Todos</option><option value="none">Sin contratista</option>
-        {contractors.map(c=><option key={c} value={c}>{c}</option>)}
-      </select>
-      {dashContr!=='all'&&<button className="fclr" onClick={()=>setDashContr('all')}>Limpiar</button>}
-      {dashFilter!=='all'&&<span style={{fontSize:11,color:dashFilter==='ip'?'var(--warn)':'var(--err)',fontWeight:600,marginLeft:8}}>Mostrando: {filteredLabel}</span>}
-    </div>}
-
-    {/* Progress bar */}
-    <div style={{marginBottom:16,background:'var(--bg-el)',border:'1px solid var(--b1)',borderRadius:'var(--r-m)',padding:14}}>
+    <div style={{marginBottom:20,background:'var(--bg-el)',border:'1px solid var(--b1)',borderRadius:'var(--r-m)',padding:14}}>
       <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}><span style={{fontSize:12,fontWeight:600}}>Avance general</span><span style={{fontSize:12,fontFamily:'var(--fm)',color:'var(--ac)',fontWeight:600}}>{avg}%</span></div>
       <div style={{height:8,borderRadius:4,background:'var(--bg-2)',overflow:'hidden'}}><div style={{height:'100%',borderRadius:4,width:`${avg}%`,background:'var(--ac)'}}/></div>
-      {entregaMilestone&&<div style={{marginTop:8,display:'flex',alignItems:'center',gap:6,fontSize:11,color:'var(--c1)'}}>
-        <span>🏁</span><span style={{fontWeight:600}}>Entrega contratada:</span><span className="mono">{fD(entregaMilestone.finish)}</span>
-        {(()=>{const d=dB(now,entregaMilestone.finish);return <span style={{color:d<0?'var(--err)':'var(--ok)',fontWeight:600}}>{d<0?`${Math.abs(d)}d vencido`:`faltan ${d}d`}</span>})()}
-      </div>}
     </div>
-
-    {/* Filtered view: in-progress or overdue */}
-    {filteredList&&renderTaskTable(filteredList, dashFilter==='ip'?'🔄 Tareas en curso hoy':'🚨 Tareas vencidas')}
-
-    {/* If no filter active, show sections */}
-    {dashFilter==='all'&&<Fragment>
-      {/* HOY — tareas activas */}
-      {renderTaskTable(inProgressToday,'🔄 HOY — Tareas en curso',10)}
-
-      {/* Overdue */}
-      {renderTaskTable(overdueTasks,'🚨 Tareas vencidas',10)}
-
-      {/* Starting next month */}
-      {renderTaskTable(nextMonthTasks,`📅 Inician próximo mes (${nextMonthStart.toLocaleDateString('es-AR',{month:'long'})})`,10)}
-
-      {/* Waiting on active tasks */}
-      {renderTaskTable(waitingOnActive,'⏳ Esperando tareas activas (sucesoras)',10)}
-    </Fragment>}
-
-    {/* Contractor breakdown */}
-    {dashFilter==='all'&&Object.keys(cMap).length>1&&<div style={{marginBottom:20}}>
+    {Object.keys(cMap).length>1&&<div style={{marginBottom:20}}>
       <div className="dst">Carga por contratista</div>
-      <table className="dt"><thead><tr><th>Contratista</th><th style={{width:50}}>Total</th><th style={{width:65}}>En curso</th><th style={{width:65}}>Hechas</th><th style={{width:65}}>Vencidas</th></tr></thead>
-      <tbody>{Object.entries(cMap).sort((a,b)=>b[1].tot-a[1].tot).map(([n,d])=><tr key={n} style={{cursor:'pointer'}} onClick={()=>setDashContr(n==='Sin contratista'?'none':n)}><td style={{fontWeight:500}}>{n}</td><td className="mono">{d.tot}</td><td className="mono" style={{color:d.ip?'var(--warn)':'var(--c2)'}}>{d.ip}</td><td className="mono" style={{color:'var(--ok)'}}>{d.done}</td><td className="mono" style={{color:d.ov?'var(--err)':'var(--c2)'}}>{d.ov}</td></tr>)}</tbody></table>
+      <table className="dt"><thead><tr><th>Contratista</th><th style={{width:60}}>Total</th><th style={{width:80}}>Hechas</th><th style={{width:70}}>Vencidas</th></tr></thead>
+      <tbody>{Object.entries(cMap).sort((a,b)=>b[1].tot-a[1].tot).map(([n,d])=><tr key={n}><td style={{fontWeight:500}}>{n}</td><td className="mono">{d.tot}</td><td className="mono" style={{color:'var(--ok)'}}>{d.done}</td><td className="mono" style={{color:d.ov?'var(--err)':'var(--c2)'}}>{d.ov}</td></tr>)}</tbody></table>
     </div>}
-
-    {/* Upcoming */}
-    {dashFilter==='all'&&upcoming.length>0&&<div><div className="dst">Próximas entregas</div>
+    {upcoming.length>0&&<div><div className="dst">Próximas entregas</div>
       <table className="dt"><thead><tr><th>Tarea</th><th style={{width:85}}>Fin</th><th style={{width:45}}>%</th><th style={{width:95}}>Contratista</th><th style={{width:80}}>Recurso</th></tr></thead>
       <tbody>{upcoming.map(t=><tr key={t.uid}><td style={{fontWeight:500}}>{t.name}</td><td className="mono">{fD(t.finish)}</td><td className="mono">{t.percentComplete}%</td><td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Contratista')||'—'}</td><td style={{fontSize:11,color:'var(--c1)'}}>{t.resources.join(', ')||'—'}</td></tr>)}</tbody></table>
     </div>}
@@ -796,40 +646,6 @@ function DemorasView({data}){
   const[view,setView]=useState('table');
   const[sortCol,setSortCol]=useState('devFin');
   const[sortDir,setSortDir]=useState('desc');
-  const now=new Date();
-
-  /* Find the "entrega contratada" milestone — look for milestone or task with matching name */
-  const entregaMilestone=useMemo(()=>{
-    const keywords=['entrega contratada','fecha objetivo','fin de obra','obra contratada'];
-    return data.tasks.find(t=>{
-      const nl=t.name.toLowerCase();
-      return (t.isMilestone||nl.includes('entrega')||nl.includes('objetivo'))&&keywords.some(k=>nl.includes(k))&&t.finish;
-    })||null;
-  },[data.tasks]);
-
-  /* Real projected end date: latest finish date of all non-summary tasks */
-  const realEndDate=useMemo(()=>{
-    let latest=null;
-    for(const t of data.tasks){
-      if(!t.isSummary&&t.finish){
-        if(!latest||t.finish>latest) latest=t.finish;
-      }
-    }
-    return latest;
-  },[data.tasks]);
-
-  /* Baseline end date: from baseline of the entrega milestone, or latest baseline finish */
-  const baselineEndDate=useMemo(()=>{
-    if(entregaMilestone&&entregaMilestone.baselines.length>0) return entregaMilestone.baselines[0].finish;
-    let latest=null;
-    for(const t of data.tasks){
-      if(!t.isSummary&&t.baselines.length>0){
-        const bf=t.baselines[0].finish;
-        if(bf&&(!latest||bf>latest)) latest=bf;
-      }
-    }
-    return latest;
-  },[data.tasks,entregaMilestone]);
 
   const rows=useMemo(()=>{
     return data.tasks.filter(t=>!t.isSummary&&t.baselines.length>0).map(t=>{
@@ -860,50 +676,9 @@ function DemorasView({data}){
   const early=withDev.filter(r=>r.devFin<-2).length;
   const avgDev=withDev.length?Math.round(withDev.reduce((s,r)=>s+r.devFin,0)/withDev.length):0;
 
-  /* Obra deadline delta */
-  const targetDate=entregaMilestone?.finish||baselineEndDate;
-  const deadlineDelta=targetDate&&realEndDate?dB(targetDate,realEndDate):null;
-
   if(!rows.length)return <div className="dash"><div style={{textAlign:'center',color:'var(--c2)',padding:40}}>Este proyecto no tiene datos de línea base en el XML. Para ver demoras, se necesita guardar al menos una línea base en MS Project antes de exportar.</div></div>;
 
   return <div className="dash">
-    {/* ══ Fecha objetivo de obra ══ */}
-    {(targetDate||realEndDate)&&<div style={{
-      marginBottom:16,background:'var(--bg-el)',border:'1px solid var(--b1)',borderRadius:'var(--r-m)',padding:16,
-      display:'flex',flexWrap:'wrap',gap:16,alignItems:'center'
-    }}>
-      {targetDate&&<div style={{display:'flex',alignItems:'center',gap:8,flex:'1 1 auto',minWidth:180}}>
-        <span style={{fontSize:20}}>🏁</span>
-        <div>
-          <div style={{fontSize:10,fontWeight:600,color:'var(--c2)',textTransform:'uppercase',letterSpacing:'.5px'}}>Fecha objetivo de entrega</div>
-          <div style={{fontSize:16,fontWeight:700,fontFamily:'var(--fm)',color:'var(--c0)'}}>{fD(targetDate)}</div>
-          {entregaMilestone&&<div style={{fontSize:10,color:'var(--c2)'}}>Hito: {entregaMilestone.name}</div>}
-        </div>
-      </div>}
-      {realEndDate&&<div style={{display:'flex',alignItems:'center',gap:8,flex:'1 1 auto',minWidth:180}}>
-        <span style={{fontSize:20}}>📍</span>
-        <div>
-          <div style={{fontSize:10,fontWeight:600,color:'var(--c2)',textTransform:'uppercase',letterSpacing:'.5px'}}>Fecha real proyectada</div>
-          <div style={{fontSize:16,fontWeight:700,fontFamily:'var(--fm)',color:deadlineDelta&&deadlineDelta>0?'var(--err)':'var(--ok)'}}>{fD(realEndDate)}</div>
-        </div>
-      </div>}
-      {deadlineDelta!==null&&<div style={{
-        display:'flex',alignItems:'center',gap:8,flex:'0 0 auto',
-        padding:'8px 14px',borderRadius:'var(--r-m)',
-        background:deadlineDelta>0?'rgba(239,68,68,.08)':deadlineDelta<0?'rgba(16,185,129,.08)':'rgba(139,146,165,.08)',
-        border:`1px solid ${deadlineDelta>0?'rgba(239,68,68,.2)':deadlineDelta<0?'rgba(16,185,129,.2)':'var(--b1)'}`
-      }}>
-        <div style={{textAlign:'center'}}>
-          <div style={{fontSize:20,fontWeight:700,fontFamily:'var(--fm)',color:deadlineDelta>0?'var(--err)':deadlineDelta<0?'var(--ok)':'var(--c0)',lineHeight:1}}>
-            {deadlineDelta>0?'+':''}{deadlineDelta}d
-          </div>
-          <div style={{fontSize:10,color:'var(--c2)',fontWeight:500}}>
-            {deadlineDelta>0?'de atraso':deadlineDelta<0?'de adelanto':'en fecha'}
-          </div>
-        </div>
-      </div>}
-    </div>}
-
     <div className="dgrid">
       <div className="kpi"><div className="kpi-v">{rows.length}</div><div className="kpi-l">Con baseline</div></div>
       <div className="kpi ok"><div className="kpi-v" style={{color:'var(--ok)'}}>{onTime}</div><div className="kpi-l">En fecha (±2d)</div></div>
@@ -930,7 +705,7 @@ function DemorasView({data}){
       </tr></thead>
       <tbody>{sorted.map(r=>(
         <tr key={r.uid}>
-          <td style={{fontWeight:500}}>{r.isMilestone&&<span style={{color:'var(--bar-ms)',marginRight:4}}>🏁</span>}{r.name}</td>
+          <td style={{fontWeight:500}}>{r.name}</td>
           <td className="mono">{fD(r.blStart)}</td>
           <td className="mono">{fD(r.start)}</td>
           <td className="mono">{fD(r.blFinish)}</td>
@@ -1030,11 +805,14 @@ function App(){
   const[showArr,setShowArr]=useState(true);
   const[showBL,setShowBL]=useState(true);
   const[ttInfo,setTTInfo]=useState(null);
-  const[tblW,setTblW]=useState(560);
+  const[tblW,setTblW]=useState(680);
   const[splOn,setSplOn]=useState(false);
   const[fSt,setFSt]=useState('all');
   const[fRes,setFRes]=useState('all');
   const[fCon,setFCon]=useState('all');
+  const[fRub,setFRub]=useState('all');
+  const[fTab,setFTab]=useState('all');
+  const[fNiv,setFNiv]=useState('all');
   const[fWbs,setFWbs]=useState(99);
   const[fDf,setFDf]=useState('');
   const[fDt,setFDt]=useState('');
@@ -1058,7 +836,7 @@ function App(){
 
   useEffect(()=>{const h=e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();setShowSrch(s=>!s)}};window.addEventListener('keydown',h);return()=>window.removeEventListener('keydown',h)},[]);
 
-  const resetF=useCallback(()=>{setFSt('all');setFRes('all');setFCon('all');setFWbs(99);setFDf('');setFDt('')},[]);
+  const resetF=useCallback(()=>{setFSt('all');setFRes('all');setFCon('all');setFRub('all');setFTab('all');setFNiv('all');setFWbs(99);setFDf('');setFDt('')},[]);
 
   const openProj=useCallback(async(proj)=>{
     const k=proj.key;
@@ -1100,7 +878,7 @@ function App(){
   const expAll=useCallback((k,ts)=>{const m={};ts.forEach(t=>{if(t.isSummary)m[t.uid]=true});setExpMap(p=>({...p,[k]:m}))},[]);
   const colAll=useCallback((k,ts)=>{const m={};ts.forEach(t=>{if(t.isSummary)m[t.uid]=false});setExpMap(p=>({...p,[k]:m}))},[]);
 
-  const fCount=useMemo(()=>{let c=0;if(fSt!=='all')c++;if(fRes!=='all')c++;if(fCon!=='all')c++;if(fWbs<99)c++;if(fDf||fDt)c++;return c},[fSt,fRes,fCon,fWbs,fDf,fDt]);
+  const fCount=useMemo(()=>{let c=0;if(fSt!=='all')c++;if(fRes!=='all')c++;if(fCon!=='all')c++;if(fRub!=='all')c++;if(fTab!=='all')c++;if(fNiv!=='all')c++;if(fWbs<99)c++;if(fDf||fDt)c++;return c},[fSt,fRes,fCon,fRub,fTab,fNiv,fWbs,fDf,fDt]);
 
   const aProj=useMemo(()=>(pList||[]).find(p=>p.key===active),[pList,active]);
   const aData=active?pData[active]:null;
@@ -1115,6 +893,9 @@ function App(){
       if(fSt!=='all'&&gSt(t)!==fSt)return false;
       if(fRes!=='all'){if(fRes==='none'){if(t.resources.length>0)return false}else{if(!t.resources.includes(fRes))return false}}
       if(fCon!=='all'){const cv=entV(t,'Contratista');if(fCon==='none'){if(cv)return false}else{if(cv!==fCon)return false}}
+      if(fRub!=='all'){const rv=entV(t,'Rubro');if(fRub==='none'){if(rv)return false}else{if(rv!==fRub)return false}}
+      if(fTab!=='all'){const tv=entV(t,'Tableros');if(fTab==='none'){if(tv)return false}else{if(tv!==fTab)return false}}
+      if(fNiv!=='all'){const nv=entV(t,'Nivel');if(fNiv==='none'){if(nv)return false}else{if(nv!==fNiv)return false}}
       if(t.outlineLevel>fWbs)return false;
       if(fDf){const f=new Date(fDf);if(t.finish&&t.finish<f)return false}
       if(fDt){const f=new Date(fDt);if(t.start&&t.start>f)return false}
@@ -1125,7 +906,7 @@ function App(){
     const proc=t=>{if(t.isSummary){if(!hm(t))return}else{if(!mf(t))return};res.push(t);if(t.isSummary&&em[t.uid]){for(const c of t.children)proc(c)}};
     for(const t of aData.roots||[])proc(t);
     return res;
-  },[aData,active,expMap,fSt,fRes,fCon,fWbs,fDf,fDt]);
+  },[aData,active,expMap,fSt,fRes,fCon,fRub,fTab,fNiv,fWbs,fDf,fDt]);
 
   /* Splitter */
   useEffect(()=>{if(!splOn)return;const mv=e=>setTblW(Math.max(300,Math.min(e.clientX,window.innerWidth-200)));const up=()=>setSplOn(false);document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);return()=>{document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up)}},[splOn]);
@@ -1151,8 +932,8 @@ function App(){
   /* ═══ HOME ═══ */
   if(!active){
     const sp=(pList||[]).filter(p=>!p.local);
-    /* Filter by department selection */
-    const filteredSp=mapCity?sp.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.dept===mapCity}):sp;
+    /* Filter by map selection */
+    const filteredSp=mapCity?sp.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.cityLabel===mapCity}):sp;
 
     return <Fragment>
       <div className="hdr">
@@ -1166,16 +947,16 @@ function App(){
         </div>
       </div>
       <div className="home">
-        {/* Sidebar: Department Map */}
+        {/* Sidebar: Map */}
         <div className="home-sidebar">
-          <DeptMap projects={sp} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
+          <CbaMap projects={sp} metaList={metaList} selectedCity={mapCity} onSelectCity={setMapCity}/>
         </div>
 
         {/* Main: Project cards */}
         <div className="home-main">
           <div className="home-h">
             <div className="home-title">Proyectos</div>
-            <div className="home-sub">{filteredSp.length} obras{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}</div>
+            <div className="home-sub">{filteredSp.length} obras{mapCity?` · ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}</div>
           </div>
           <div className="pgrid2">
             {filteredSp.map(p=>{
@@ -1193,7 +974,6 @@ function App(){
                 </div>
                 <div className="pcard2-meta">
                   {m?.ciudad&&<span>📍 {m.cityLabel||m.ciudad}</span>}
-                  {m?.dept&&<span style={{color:DEPT_SHAPES[m.dept]?.color||'var(--c2)'}}>◆ {m.dept}</span>}
                   {m2t>0&&<span>🏠 {Math.round(m2t)} m² cub</span>}
                   {m?.m2Terreno>0&&<span>📐 {m.m2Terreno.toLocaleString('es-AR')} m² ter</span>}
                   {m?.comitente&&<span>👤 {m.comitente}</span>}
@@ -1261,7 +1041,13 @@ function App(){
       <select className="fsel" value={fRes} onChange={e=>setFRes(e.target.value)}><option value="all">Todos</option><option value="none">Sin asignar</option>{aData.resources.map(r=><option key={r} value={r}>{r}</option>)}</select>
       <span className="fl">Contratista</span>
       <select className="fsel" value={fCon} onChange={e=>setFCon(e.target.value)}><option value="all">Todos</option><option value="none">Sin contratista</option>{aData.contractors.map(c=><option key={c} value={c}>{c}</option>)}</select>
-      <span className="fl">Nivel</span>
+      {aData.rubros.length>0&&<Fragment><span className="fl">Rubro</span>
+      <select className="fsel" value={fRub} onChange={e=>setFRub(e.target.value)}><option value="all">Todos</option><option value="none">Sin rubro</option>{aData.rubros.map(r=><option key={r} value={r}>{r}</option>)}</select></Fragment>}
+      {aData.tableros.length>0&&<Fragment><span className="fl">Fase</span>
+      <select className="fsel" value={fTab} onChange={e=>setFTab(e.target.value)}><option value="all">Todas</option>{aData.tableros.map(t=><option key={t} value={t}>{t}</option>)}</select></Fragment>}
+      {aData.niveles.length>0&&<Fragment><span className="fl">Nivel obra</span>
+      <select className="fsel" value={fNiv} onChange={e=>setFNiv(e.target.value)}><option value="all">Todos</option>{aData.niveles.map(n=><option key={n} value={n}>{n}</option>)}</select></Fragment>}
+      <span className="fl">Prof. WBS</span>
       <select className="fsel" value={fWbs} onChange={e=>setFWbs(parseInt(e.target.value))}><option value="99">Todos</option>{[1,2,3,4,5].map(n=><option key={n} value={n}>{n}</option>)}</select>
       <span className="fl">Desde</span><input type="date" className="fin" value={fDf} onChange={e=>setFDf(e.target.value)}/>
       <span className="fl">Hasta</span><input type="date" className="fin" value={fDt} onChange={e=>setFDt(e.target.value)}/>
@@ -1276,9 +1062,9 @@ function App(){
       <div className="gtc" ref={tblRef} style={{width:tblW}} onScroll={onTblScroll}>
         <table className="gt">
           <colgroup>
-            <col style={{width:35}}/><col style={{width:180}}/><col style={{width:72}}/><col style={{width:72}}/><col style={{width:42}}/><col style={{width:50}}/><col style={{width:80}}/><col style={{width:85}}/><col style={{width:50}}/>
+            <col style={{width:35}}/><col style={{width:170}}/><col style={{width:62}}/><col style={{width:62}}/><col style={{width:38}}/><col style={{width:48}}/><col style={{width:70}}/><col style={{width:75}}/><col style={{width:65}}/><col style={{width:55}}/><col style={{width:55}}/><col style={{width:45}}/>
           </colgroup>
-          <thead><tr><th>WBS</th><th>Tarea</th><th>Inicio</th><th>Fin</th><th>Dur.</th><th>%</th><th>Recurso</th><th>Contratista</th><th>N° Item</th></tr></thead>
+          <thead><tr><th>WBS</th><th>Tarea</th><th>Inicio</th><th>Fin</th><th>Dur.</th><th>%</th><th>Recurso</th><th>Contratista</th><th>Rubro</th><th>Nivel</th><th>Fase</th><th>N° Item</th></tr></thead>
           <tbody>{visTasks.map(t=>{
             const em=expMap[active]||{};const ov=isOv(t);const ind=t.depth*14;
             return <tr key={t.uid} className={t.isSummary?'sum':''}>
@@ -1294,6 +1080,9 @@ function App(){
               <td><div className="pm"><div className="pmb"><div className="pmf" style={{width:`${t.percentComplete}%`,background:t.percentComplete>=100?'var(--ok)':ov?'var(--err)':'var(--ac)'}}/></div><span className="mono" style={{fontSize:10}}>{t.percentComplete}%</span></div></td>
               <td style={{fontSize:11,color:'var(--c1)',overflow:'hidden',textOverflow:'ellipsis'}} title={t.resources.join(', ')}>{t.resources.join(', ')||'—'}</td>
               <td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Contratista')||'—'}</td>
+              <td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Rubro')||'—'}</td>
+              <td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Nivel')||'—'}</td>
+              <td style={{fontSize:10,color:'var(--c2)'}}>{entV(t,'Tableros')||'—'}</td>
               <td className="mono" style={{fontSize:10}}>{entV(t,'N° Item')||'—'}</td>
             </tr>
           })}</tbody>
