@@ -160,6 +160,150 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 }
 .ph,.pf{display:none}
 
+/* ═══ Semáforo health cards ═══ */
+.pcard2.health-g{border-left:4px solid var(--ok)}
+.pcard2.health-y{border-left:4px solid var(--warn)}
+.pcard2.health-r{border-left:4px solid var(--err)}
+.pcard2.health-x{border-left:4px solid var(--c2)}
+.health-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+.health-badge.g{background:rgba(16,185,129,.12);color:var(--ok)}
+.health-badge.y{background:rgba(245,158,11,.12);color:var(--warn)}
+.health-badge.r{background:rgba(239,68,68,.12);color:var(--err)}
+.health-badge.x{background:rgba(139,146,165,.1);color:var(--c2)}
+.pcard2-health{display:flex;align-items:center;gap:8px;margin-top:4px}
+.pcard2-stats{display:flex;gap:10px;font-size:10px;font-family:var(--fm);color:var(--c1)}
+.pcard2-stats span{display:flex;align-items:center;gap:3px}
+.pcard2-loading{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--c2)}
+.pcard2-loading .mini-sp{width:10px;height:10px;border:1.5px solid var(--b0);border-top-color:var(--ac);border-radius:50%;animation:spin .6s linear infinite}
+
+/* ═══ Navigation sidebar ═══ */
+.app-layout{display:flex;flex:1;overflow:hidden}
+.nav-side{width:52px;background:var(--bg-el);border-right:1px solid var(--b0);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:2px;flex-shrink:0;overflow-y:auto}
+.nav-item{width:40px;height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:var(--r-s);cursor:pointer;border:none;background:none;color:var(--c2);font-family:var(--ff);font-size:8px;font-weight:500;padding:0;position:relative}
+.nav-item:hover{background:var(--bg-1);color:var(--c0)}
+.nav-item.on{background:var(--ac-bg);color:var(--ac)}
+.nav-item .nav-dot{position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%}
+.nav-sep{width:28px;height:1px;background:var(--b0);margin:4px 0}
+.app-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ═══ Weekly view ═══ */
+.week-view{flex:1;overflow-y:auto;padding:20px 24px}
+.week-nav{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.week-nav h3{font-size:14px;font-weight:600;flex:1}
+.week-nav button{padding:4px 10px;font-size:12px;font-weight:500;font-family:var(--ff);border-radius:var(--r-s);border:1px solid var(--b0);background:var(--bg-el);color:var(--c1);cursor:pointer}.week-nav button:hover{background:var(--bg-1);color:var(--c0)}
+.week-day{margin-bottom:16px}
+.week-day-hdr{font-size:11px;font-weight:600;color:var(--c2);text-transform:uppercase;letter-spacing:.5px;padding:6px 0;border-bottom:1px solid var(--b1);margin-bottom:4px}
+.week-task{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r-s);cursor:default}
+.week-task:hover{background:var(--bg-hover)}
+.week-task.ov{background:rgba(239,68,68,.04)}
+.wt-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.wt-name{flex:1;font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wt-meta{font-size:11px;color:var(--c1);font-family:var(--fm)}
+.wt-bar{width:50px;height:4px;border-radius:2px;background:var(--bg-2);overflow:hidden}
+.wt-fill{height:100%;border-radius:2px}
+.week-empty{text-align:center;color:var(--c2);padding:40px 20px;font-size:13px}
+
+/* ═══ Sparkline trend ═══ */
+.sparkline{display:inline-block;vertical-align:middle}
+.trend-row{display:flex;align-items:center;gap:6px;margin-top:4px}
+.trend-label{font-size:9px;color:var(--c2);font-family:var(--fm)}
+.trend-delta{font-size:9px;font-weight:600;font-family:var(--fm)}
+.trend-delta.up{color:var(--ok)}
+.trend-delta.down{color:var(--err)}
+.trend-delta.flat{color:var(--c2)}
+
+/* ═══ Mobile responsive ═══ */
+@media(max-width:768px){
+  .home{flex-direction:column}
+  .home-sidebar{width:100%;max-height:200px;border-right:none;border-bottom:1px solid var(--b0);overflow:hidden}
+  .home-sidebar .map-body{padding:6px}
+  .home-sidebar .map-body svg{max-height:160px}
+  .home-main{padding:12px}
+  .pgrid2{grid-template-columns:1fr}
+  .hdr{padding:0 8px;gap:6px;overflow-x:auto}
+  .logo span{display:none}
+  .tabs{gap:1px}
+  .tab{padding:4px 8px;font-size:11px}
+  .acts{gap:2px}
+  .stbar{padding:0 8px;gap:6px;overflow-x:auto}
+  .fbar{padding:4px 8px;gap:4px}
+  .fsel{font-size:10px;padding:3px 18px 3px 6px}
+  .fl{font-size:10px}
+  .gw{flex-direction:column}
+  .gtc{width:100%!important;max-height:40vh;border-right:none;border-bottom:1px solid var(--b0)}
+  .spl{display:none}
+  .gcc{min-height:300px}
+  .gt th,.gt td{font-size:11px;padding:0 3px}
+  .gt col:nth-child(n+7){width:0!important;display:none}
+  .gt th:nth-child(n+7),.gt td:nth-child(n+7){display:none}
+  .dash{padding:12px}
+  .dgrid{grid-template-columns:repeat(2,1fr);gap:6px}
+  .kpi{padding:10px}
+  .kpi-v{font-size:18px}
+  .dt{font-size:11px}
+  .dt th,.dt td{padding:4px 6px}
+  .cgrid{grid-template-columns:1fr}
+  .proj-info{grid-template-columns:1fr 1fr}
+  .week-view{padding:12px}
+  .week-task{gap:4px;padding:6px 4px}
+  .wt-name{font-size:12px}
+  .wt-meta{font-size:10px}
+  .week-nav{gap:6px}
+  .week-nav h3{font-size:13px}
+  .so .sm{width:95vw}
+  /* Mobile bottom nav */
+  .mob-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--bg-el);border-top:1px solid var(--b0);z-index:200;padding:4px 0;padding-bottom:max(4px,env(safe-area-inset-bottom))}
+  .mob-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;color:var(--c2);font-family:var(--ff);font-size:9px;font-weight:500;padding:6px 0;cursor:pointer}
+  .mob-nav button.on{color:var(--ac)}
+  body{padding-bottom:60px}
+}
+@media(min-width:769px){
+  .mob-nav{display:none}
+}
+
+/* ═══ Onboarding tour ═══ */
+.tour-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:3000;display:flex;align-items:center;justify-content:center}
+.tour-card{background:var(--bg-el);border:1px solid var(--b0);border-radius:var(--r-l);box-shadow:var(--sh-l);padding:24px;max-width:420px;width:90vw}
+.tour-title{font-size:16px;font-weight:700;margin-bottom:8px}
+.tour-body{font-size:13px;color:var(--c1);line-height:1.6;margin-bottom:16px}
+.tour-dots{display:flex;gap:6px;align-items:center}
+.tour-dot{width:8px;height:8px;border-radius:50%;background:var(--b0)}.tour-dot.on{background:var(--ac)}
+.tour-acts{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.tour-skip{font-size:12px;color:var(--c2);border:none;background:none;cursor:pointer;font-family:var(--ff)}.tour-skip:hover{color:var(--c0)}
+.tour-next{padding:6px 16px;font-size:12px;font-weight:600;font-family:var(--ff);border-radius:var(--r-s);border:none;background:var(--ac);color:white;cursor:pointer}.tour-next:hover{opacity:.9}
+
+/* ═══ Client share view ═══ */
+.client-view{min-height:100vh;background:var(--bg-0);padding:24px}
+.client-hdr{text-align:center;padding:20px 0 24px;border-bottom:1px solid var(--b1);margin-bottom:24px}
+.client-hdr h1{font-size:22px;font-weight:700;margin-bottom:4px}
+.client-hdr p{font-size:13px;color:var(--c1)}
+.client-hdr .client-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:16px;font-size:12px;font-weight:600;margin-top:8px}
+.client-progress{max-width:480px;margin:0 auto 24px;background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);padding:20px}
+.client-progress h3{font-size:14px;font-weight:600;margin-bottom:12px}
+.client-bar{height:12px;border-radius:6px;background:var(--bg-2);overflow:hidden;margin-bottom:8px}
+.client-fill{height:100%;border-radius:6px;transition:width .5s}
+.client-milestones{max-width:480px;margin:0 auto}
+.client-ms{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b1)}
+.client-ms:last-child{border-bottom:none}
+.client-ms-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.client-ms-info{flex:1}
+.client-ms-name{font-size:13px;font-weight:500}
+.client-ms-date{font-size:11px;color:var(--c1);font-family:var(--fm)}
+.client-footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px solid var(--b1);font-size:11px;color:var(--c2)}
+
+/* ═══ Procurement forecast ═══ */
+.proc-view{flex:1;overflow-y:auto;padding:20px 24px}
+.proc-controls{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.proc-group{margin-bottom:20px}
+.proc-group-hdr{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:2px solid var(--b1);margin-bottom:6px}
+.proc-group-hdr h4{font-size:13px;font-weight:600;flex:1}
+.proc-group-hdr .proc-count{font-size:11px;font-family:var(--fm);color:var(--c1);background:var(--bg-1);padding:2px 8px;border-radius:10px}
+.proc-task{display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:12px;border-radius:var(--r-s)}
+.proc-task:hover{background:var(--bg-hover)}
+.proc-task.urgent{background:rgba(239,68,68,.05)}
+.proc-alert{font-size:10px;font-weight:600;padding:1px 6px;border-radius:8px;background:rgba(239,68,68,.1);color:var(--err)}
+.proc-empty{text-align:center;color:var(--c2);padding:40px 20px;font-size:13px}
+
 /* Map */
 .map-section{background:var(--bg-el);overflow:hidden}
 .map-header{padding:10px 14px;font-size:12px;font-weight:600;color:var(--c1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:.5px}
@@ -499,6 +643,9 @@ const I={
   exp:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="7 8 12 3 17 8"/><polyline points="7 16 12 21 17 16"/></svg>,
   col:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="7 3 12 8 17 3"/><polyline points="7 21 12 16 17 21"/></svg>,
   arrR:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
+  home:(s=18)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+  cal:(s=18)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+  chart:(s=18)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
   up:(s=16)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
   lnk:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>,
   flt:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
@@ -790,6 +937,322 @@ function Portfolio({projList,projData}){
     </Fragment>}
   </div>;
 }
+/* ═══════ Trend history (localStorage) ═══════ */
+const TREND_KEY='bp360_trend_v1';
+function loadTrend(){try{const d=localStorage.getItem(TREND_KEY);return d?JSON.parse(d):{}}catch(e){return{}}}
+function saveTrend(data){try{localStorage.setItem(TREND_KEY,JSON.stringify(data))}catch(e){}}
+function getWeekKey(d){const dt=d||new Date();const y=dt.getFullYear();const jan1=new Date(y,0,1);const days=Math.floor((dt-jan1)/86400000);const w=Math.ceil((days+jan1.getDay()+1)/7);return `${y}-W${String(w).padStart(2,'0')}`}
+function recordSnapshot(healthMap){
+  const wk=getWeekKey();const trend=loadTrend();
+  if(!trend[wk])trend[wk]={};
+  for(const[k,h] of Object.entries(healthMap)){
+    if(!h)continue;
+    trend[wk][k]={avg:h.avg,ov:h.ov,done:h.done,tot:h.tot,ts:Date.now()};
+  }
+  /* Keep only last 12 weeks */
+  const keys=Object.keys(trend).sort();
+  while(keys.length>12){delete trend[keys.shift()]}
+  saveTrend(trend);
+  return trend;
+}
+function getTrendForProject(trend,projKey){
+  const weeks=Object.keys(trend).sort();
+  return weeks.map(w=>({week:w,...(trend[w][projKey]||{})})).filter(d=>d.avg!==undefined);
+}
+
+/* ═══════ Sparkline SVG ═══════ */
+function Sparkline({data,field='avg',w=60,h=16,color='var(--ac)'}){
+  if(!data||data.length<2)return null;
+  const vals=data.map(d=>d[field]||0);
+  const mn=Math.min(...vals),mx=Math.max(...vals);
+  const range=mx-mn||1;
+  const pts=vals.map((v,i)=>{
+    const x=(i/(vals.length-1))*w;
+    const y=h-((v-mn)/range)*(h-2)-1;
+    return `${x},${y}`;
+  }).join(' ');
+  const last=vals[vals.length-1],prev=vals[vals.length-2];
+  const delta=last-prev;
+  return <span className="trend-row">
+    <svg className="sparkline" width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
+      <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx={w} cy={h-((last-mn)/range)*(h-2)-1} r="2" fill={color}/>
+    </svg>
+    {delta!==0&&<span className={`trend-delta ${delta>0?'up':'down'}`}>{delta>0?'▲':'▼'}{Math.abs(delta)}</span>}
+    {delta===0&&<span className="trend-delta flat">—</span>}
+  </span>;
+}
+
+/* ═══════ Health calculation ═══════ */
+function calcHealth(data){
+  if(!data||!data.tasks)return null;
+  const ts=data.tasks.filter(t=>!t.isSummary);
+  if(!ts.length)return{color:'x',label:'Sin tareas',tot:0,done:0,ov:0,avg:0,ip:0};
+  const tot=ts.length;
+  const done=ts.filter(t=>t.percentComplete>=100).length;
+  const ov=ts.filter(t=>isOv(t)).length;
+  const ip=ts.filter(t=>t.percentComplete>0&&t.percentComplete<100).length;
+  const avg=Math.round(ts.reduce((s,t)=>s+t.percentComplete,0)/tot);
+  const ovPct=tot>0?ov/tot:0;
+  const msOverdue=ts.filter(t=>t.isMilestone&&isOv(t)).length;
+  let color='g',label='En tiempo';
+  if(ovPct>.25||msOverdue>5){color='r';label='En riesgo'}
+  else if(ovPct>.10||msOverdue>2){color='y';label='Atención'}
+  /* Next milestone */
+  const now=new Date();
+  const nextMs=ts.filter(t=>t.isMilestone&&t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish)[0];
+  return{color,label,tot,done,ov,ip,avg,nextMs:nextMs||null};
+}
+
+/* ═══════ Weekly View ═══════ */
+function WeekView({data}){
+  if(!data)return null;
+  const[offset,setOffset]=useState(0);
+  const now=new Date();
+  const weekStart=useMemo(()=>{
+    const d=new Date(now);d.setDate(d.getDate()-d.getDay()+1+offset*7);d.setHours(0,0,0,0);return d;
+  },[offset]);
+  const weekEnd=useMemo(()=>{
+    const d=new Date(weekStart);d.setDate(d.getDate()+4);d.setHours(23,59,59);return d;
+  },[weekStart]);
+
+  const weekLabel=useMemo(()=>{
+    const opts={day:'numeric',month:'short'};
+    return `${weekStart.toLocaleDateString('es-AR',opts)} — ${weekEnd.toLocaleDateString('es-AR',opts)}`;
+  },[weekStart,weekEnd]);
+
+  const tasks=useMemo(()=>{
+    return data.tasks.filter(t=>!t.isSummary&&t.start&&t.finish&&t.start<=weekEnd&&t.finish>=weekStart);
+  },[data.tasks,weekStart,weekEnd]);
+
+  const days=['Lunes','Martes','Miércoles','Jueves','Viernes'];
+  const grouped=useMemo(()=>{
+    const g={};
+    days.forEach((d,i)=>{
+      const dayDate=new Date(weekStart);dayDate.setDate(dayDate.getDate()+i);
+      const dayStr=dayDate.toISOString().slice(0,10);
+      g[dayStr]={label:d+' '+dayDate.getDate(),tasks:[]};
+    });
+    for(const t of tasks){
+      /* Place task on its start day if within the week, else first day */
+      let placed=false;
+      for(let i=0;i<5;i++){
+        const dayDate=new Date(weekStart);dayDate.setDate(dayDate.getDate()+i);
+        const dayStr=dayDate.toISOString().slice(0,10);
+        if(t.start<=dayDate&&t.finish>=dayDate){
+          g[dayStr].tasks.push(t);placed=true;break;
+        }
+      }
+      if(!placed){const firstKey=Object.keys(g)[0];if(firstKey)g[firstKey].tasks.push(t)}
+    }
+    return g;
+  },[tasks,weekStart]);
+
+  const isThisWeek=offset===0;
+
+  return <div className="week-view">
+    <div className="week-nav">
+      <button onClick={()=>setOffset(o=>o-1)}>← Anterior</button>
+      <h3>{weekLabel}{isThisWeek&&<span style={{fontSize:11,color:'var(--ac)',marginLeft:8}}>esta semana</span>}</h3>
+      <button onClick={()=>setOffset(o=>o+1)}>Siguiente →</button>
+      {offset!==0&&<button onClick={()=>setOffset(0)} style={{color:'var(--ac)',borderColor:'var(--ac)'}}>Hoy</button>}
+    </div>
+    <div style={{fontSize:12,color:'var(--c1)',marginBottom:16}}>{tasks.length} tareas en esta semana</div>
+
+    {tasks.length===0&&<div className="week-empty">No hay tareas programadas para esta semana.</div>}
+
+    {Object.entries(grouped).map(([dayKey,day])=>{
+      if(!day.tasks.length)return null;
+      return <div key={dayKey} className="week-day">
+        <div className="week-day-hdr">{day.label} · {day.tasks.length} tareas</div>
+        {day.tasks.sort((a,b)=>(a.finish||0)-(b.finish||0)).map(t=>{
+          const s=gSt(t);
+          return <div key={t.uid} className={`week-task ${s==='ov'?'ov':''}`}>
+            <span className="wt-dot" style={{background:stC(s)}}/>
+            <span className="wt-name" title={t.name}>{t.isMilestone&&<span style={{color:'var(--bar-ms)',marginRight:4}}>♦</span>}{t.name}</span>
+            <span className="wt-meta">{fD(t.start)} → {fD(t.finish)}</span>
+            <div className="wt-bar"><div className="wt-fill" style={{width:`${t.percentComplete}%`,background:stC(s)}}/></div>
+            <span className="wt-meta" style={{width:30,textAlign:'right'}}>{t.percentComplete}%</span>
+            <span className="wt-meta" style={{width:80,overflow:'hidden',textOverflow:'ellipsis'}}>{t.resources.join(', ')||'—'}</span>
+          </div>;
+        })}
+      </div>;
+    })}
+  </div>;
+}
+
+/* ═══════ Onboarding Tour ═══════ */
+const TOUR_KEY='bp360_tour_done';
+const TOUR_STEPS=[
+  {title:'Bienvenido a BuildPlan 360°',body:'Esta herramienta te muestra el estado de todas las obras de Bauvek en un solo lugar. Cada tarjeta tiene un semáforo de salud: verde, amarillo o rojo.'},
+  {title:'Abrí un proyecto',body:'Hacé clic en cualquier tarjeta para ver el Gantt completo, el dashboard con métricas, y la vista semanal de tareas.'},
+  {title:'Vista Semana',body:'Dentro de un proyecto, la pestaña "Semana" te muestra solo las tareas de esta semana, ideal para consultar desde el celular en la obra.'},
+  {title:'Compras y forecast',body:'La pestaña "Compras" te anticipa qué rubros tienen tareas arrancando en las próximas semanas. Útil para planificar abastecimiento.'},
+  {title:'Portfolio cruzado',body:'El botón "Portfolio" compara todas las obras entre sí: avance, contratistas y vencidas. Cargá más de un proyecto para verlo en acción.'},
+  {title:'Tendencia en el tiempo',body:'Cada semana que abrís esta página, se guarda una foto del avance. Con el tiempo vas a ver gráficos de tendencia en cada tarjeta.'},
+];
+function Tour({onDone}){
+  const[step,setStep]=useState(0);
+  const s=TOUR_STEPS[step];
+  return <div className="tour-overlay" onClick={e=>{if(e.target===e.currentTarget)onDone()}}>
+    <div className="tour-card">
+      <div className="tour-title">{s.title}</div>
+      <div className="tour-body">{s.body}</div>
+      <div className="tour-dots">{TOUR_STEPS.map((_,i)=><span key={i} className={`tour-dot ${i===step?'on':''}`}/>)}</div>
+      <div className="tour-acts">
+        <button className="tour-skip" onClick={onDone}>Saltar</button>
+        {step<TOUR_STEPS.length-1?<button className="tour-next" onClick={()=>setStep(s=>s+1)}>Siguiente →</button>:<button className="tour-next" onClick={onDone}>¡Empezar!</button>}
+      </div>
+    </div>
+  </div>;
+}
+
+/* ═══════ Client Share View ═══════ */
+function ClientView({projName,pList,pData,metaList}){
+  /* Find matching project */
+  const match=useMemo(()=>{
+    if(!pList)return null;
+    const norm=projName.toLowerCase();
+    return pList.find(p=>p.name.toLowerCase().includes(norm)||norm.includes(p.name.toLowerCase()));
+  },[projName,pList]);
+  const data=match?pData[match.key]:null;
+  const meta=match?matchMeta(match.name,metaList):null;
+  const health=data?calcHealth(data):null;
+
+  if(!match)return <div className="client-view"><div className="client-hdr"><h1>Proyecto no encontrado</h1><p>No se encontró un proyecto con el nombre "{projName}"</p></div></div>;
+  if(!data)return <div className="client-view"><div className="client-hdr"><h1>{match.name}</h1><p>Cargando datos del proyecto...</p><div style={{textAlign:'center',marginTop:20}}><div className="sp" style={{margin:'0 auto'}}/></div></div></div>;
+
+  const ts=data.tasks.filter(t=>!t.isSummary);
+  const milestones=ts.filter(t=>t.isMilestone).sort((a,b)=>(a.finish||0)-(b.finish||0));
+  const phases=data.tasks.filter(t=>t.isSummary&&t.depth===0).sort((a,b)=>(a.start||0)-(b.start||0));
+  const hColor=health?({g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'}[health.color]):'var(--c2)';
+
+  return <div className="client-view">
+    <div className="client-hdr">
+      <div style={{fontSize:11,color:'var(--c2)',marginBottom:4}}>BAUVEK CONSTRUCCIONES</div>
+      <h1>{match.name}</h1>
+      {meta&&<p>{meta.ciudad&&`${meta.cityLabel||meta.ciudad}`}{meta.comitente&&` · ${meta.comitente}`}</p>}
+      {health&&<div className="client-badge" style={{background:hColor+'20',color:hColor}}>{health.color==='g'?'✓ En tiempo':health.color==='y'?'⚠ Requiere atención':health.color==='r'?'⚠ En riesgo':'—'}</div>}
+    </div>
+
+    <div className="client-progress">
+      <h3>Avance general</h3>
+      <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+        <span style={{fontSize:12,color:'var(--c1)'}}>{health?.done||0} de {health?.tot||0} tareas completadas</span>
+        <span style={{fontSize:14,fontWeight:700,fontFamily:'var(--fm)',color:hColor}}>{health?.avg||0}%</span>
+      </div>
+      <div className="client-bar"><div className="client-fill" style={{width:`${health?.avg||0}%`,background:hColor}}/></div>
+      {health?.ov>0&&<div style={{fontSize:11,color:'var(--err)',marginTop:4}}>{health.ov} tareas con demora</div>}
+    </div>
+
+    {phases.length>0&&<div className="client-milestones">
+      <h3 style={{fontSize:14,fontWeight:600,marginBottom:12}}>Etapas de la obra</h3>
+      {phases.slice(0,12).map(p=>{
+        const pct=p.percentComplete;const done=pct>=100;
+        return <div key={p.uid} className="client-ms">
+          <div className="client-ms-icon" style={{background:done?'rgba(16,185,129,.1)':'rgba(158,1,1,.07)',color:done?'var(--ok)':'var(--ac)'}}>{done?'✓':pct>0?'◐':'○'}</div>
+          <div className="client-ms-info">
+            <div className="client-ms-name">{p.name}</div>
+            <div className="client-ms-date">{fD(p.start)} → {fD(p.finish)}</div>
+          </div>
+          <div style={{textAlign:'right'}}>
+            <div style={{fontSize:13,fontWeight:600,fontFamily:'var(--fm)',color:done?'var(--ok)':'var(--c0)'}}>{pct}%</div>
+          </div>
+        </div>;
+      })}
+    </div>}
+
+    {milestones.length>0&&<div className="client-milestones" style={{marginTop:24}}>
+      <h3 style={{fontSize:14,fontWeight:600,marginBottom:12}}>Hitos del proyecto</h3>
+      {milestones.map(m=>{
+        const done=m.percentComplete>=100;const ov=isOv(m);
+        return <div key={m.uid} className="client-ms">
+          <div className="client-ms-icon" style={{background:done?'rgba(16,185,129,.1)':ov?'rgba(239,68,68,.1)':'rgba(245,158,11,.1)',color:done?'var(--ok)':ov?'var(--err)':'var(--warn)'}}>♦</div>
+          <div className="client-ms-info">
+            <div className="client-ms-name">{m.name}</div>
+            <div className="client-ms-date">{fD(m.finish)}{ov?' · vencido':done?' · cumplido':''}</div>
+          </div>
+        </div>;
+      })}
+    </div>}
+
+    <div className="client-footer">Generado el {new Date().toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'})} · BuildPlan 360° · Bauvek Construcciones</div>
+  </div>;
+}
+
+/* ═══════ Procurement Forecast ═══════ */
+function ProcurementView({data}){
+  if(!data)return null;
+  const[weeks,setWeeks]=useState(4);
+  const now=new Date();
+  const horizon=useMemo(()=>{const d=new Date(now);d.setDate(d.getDate()+weeks*7);return d},[weeks]);
+
+  const upcoming=useMemo(()=>{
+    return data.tasks.filter(t=>!t.isSummary&&t.start&&t.start>=now&&t.start<=horizon&&t.percentComplete<100);
+  },[data.tasks,now,horizon]);
+
+  /* Group by rubro */
+  const byRubro=useMemo(()=>{
+    const m={};
+    for(const t of upcoming){
+      const r=entV(t,'Rubro')||'Sin rubro';
+      if(!m[r])m[r]=[];
+      m[r].push(t);
+    }
+    return Object.entries(m).sort((a,b)=>b[1].length-a[1].length);
+  },[upcoming]);
+
+  /* Group by contratista */
+  const byCon=useMemo(()=>{
+    const m={};
+    for(const t of upcoming){
+      const c=entV(t,'Contratista')||'Sin contratista';
+      if(!m[c])m[c]=0;
+      m[c]++;
+    }
+    return Object.entries(m).sort((a,b)=>b[1]-a[1]);
+  },[upcoming]);
+
+  const daysUntil=t=>{if(!t.start)return 999;return Math.max(0,Math.round((t.start-now)/86400000))};
+
+  return <div className="proc-view">
+    <div style={{marginBottom:16}}>
+      <div style={{fontSize:16,fontWeight:600,marginBottom:4}}>Forecast de necesidades</div>
+      <div style={{fontSize:12,color:'var(--c1)'}}>Tareas que arrancan en las próximas semanas, agrupadas por rubro. Útil para anticipar compras y coordinar contratistas.</div>
+    </div>
+    <div className="proc-controls">
+      <span className="fl">Horizonte</span>
+      <div className="seg">
+        {[2,4,8].map(w=><button key={w} className={weeks===w?'on':''} onClick={()=>setWeeks(w)}>{w} sem</button>)}
+      </div>
+      <span style={{fontSize:12,fontFamily:'var(--fm)',color:'var(--c1)'}}>{upcoming.length} tareas por arrancar</span>
+    </div>
+
+    {byCon.length>1&&<div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:16}}>
+      {byCon.map(([c,n])=><span key={c} style={{fontSize:10,padding:'3px 8px',borderRadius:10,background:'var(--bg-1)',color:'var(--c1)',fontWeight:500}}>{c}: {n}</span>)}
+    </div>}
+
+    {upcoming.length===0&&<div className="proc-empty">No hay tareas programadas para arrancar en las próximas {weeks} semanas.</div>}
+
+    {byRubro.map(([rubro,tasks])=><div key={rubro} className="proc-group">
+      <div className="proc-group-hdr">
+        <h4>{rubro}</h4>
+        <span className="proc-count">{tasks.length} tareas</span>
+      </div>
+      {tasks.sort((a,b)=>(a.start||0)-(b.start||0)).map(t=>{
+        const days=daysUntil(t);const urgent=days<=7;
+        return <div key={t.uid} className={`proc-task ${urgent?'urgent':''}`}>
+          <span style={{flex:1,fontWeight:500}}>{t.name}</span>
+          <span className="wt-meta">{fD(t.start)}</span>
+          <span className="wt-meta" style={{width:50,textAlign:'right'}}>{days===0?'Hoy':`${days}d`}</span>
+          {urgent&&<span className="proc-alert">Urgente</span>}
+          <span style={{fontSize:10,color:'var(--c1)',width:80,textAlign:'right',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{entV(t,'Contratista')||'—'}</span>
+        </div>;
+      })}
+    </div>)}
+  </div>;
+}
+
 /* ═══════ MAIN APP ═══════ */
 function App(){
   const[th,togTh]=useTheme();
@@ -820,6 +1283,12 @@ function App(){
   const[dragO,setDragO]=useState(false);
   const[metaList,setMetaList]=useState([]);
   const[mapCity,setMapCity]=useState(null);
+  const[healthMap,setHealthMap]=useState({});
+  const[autoLoading,setAutoLoading]=useState({});
+  const[trendData,setTrendData]=useState(()=>loadTrend());
+  const[mobileTab,setMobileTab]=useState('home');
+  const[showTour,setShowTour]=useState(()=>{try{return!localStorage.getItem(TOUR_KEY)}catch(e){return false}});
+  const clientProj=useMemo(()=>{const p=new URLSearchParams(window.location.search);return p.get('proyecto')||p.get('project')||null},[]);
 
   const scrollRef=useRef({v:0,src:null});
   const tblRef=useRef(null);
@@ -835,6 +1304,48 @@ function App(){
   },[]);
 
   useEffect(()=>{const h=e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();setShowSrch(s=>!s)}};window.addEventListener('keydown',h);return()=>window.removeEventListener('keydown',h)},[]);
+
+  /* Auto-load all project XMLs in background for health indicators */
+  useEffect(()=>{
+    if(!pList||!pList.length)return;
+    const serverProjs=pList.filter(p=>!p.local&&p.file);
+    let cancelled=false;
+    (async()=>{
+      for(const proj of serverProjs){
+        if(cancelled)break;
+        const k=proj.key;
+        if(pData[k])continue; /* already loaded */
+        setAutoLoading(p=>({...p,[k]:true}));
+        try{
+          const r=await fetch(`data/projects/${proj.file}?t=${Date.now()}`);
+          if(!r.ok)continue;
+          const txt=await r.text();
+          const d=parseMSPDI(txt);
+          if(cancelled)break;
+          setPData(p=>({...p,[k]:d}));
+          const em={};d.tasks.forEach(t=>{if(t.isSummary)em[t.uid]=true});
+          setExpMap(p=>({...p,[k]:em}));
+          const h=calcHealth(d);
+          setHealthMap(p=>({...p,[k]:h}));
+        }catch(e){/* skip failed loads */}
+        finally{setAutoLoading(p=>{const n={...p};delete n[k];return n})}
+      }
+    })();
+    return()=>{cancelled=true};
+  },[pList]);
+
+  /* Recalculate health when project data changes + record trend */
+  useEffect(()=>{
+    const newH={};
+    for(const[k,d] of Object.entries(pData)){
+      newH[k]=calcHealth(d);
+    }
+    setHealthMap(newH);
+    if(Object.keys(newH).length>0){
+      const updated=recordSnapshot(newH);
+      setTrendData(updated);
+    }
+  },[pData]);
 
   const resetF=useCallback(()=>{setFSt('all');setFRes('all');setFCon('all');setFRub('all');setFTab('all');setFNiv('all');setFWbs(99);setFDf('');setFDt('')},[]);
 
@@ -927,7 +1438,14 @@ function App(){
     </div></div>;
   },[pList,pData]);
 
+  const dismissTour=useCallback(()=>{setShowTour(false);try{localStorage.setItem(TOUR_KEY,'1')}catch(e){}},[]);
+
   if(!pList)return <div className="ld"><div className="sp"/><span>Cargando...</span></div>;
+
+  /* ═══ CLIENT SHARE VIEW ═══ */
+  if(clientProj){
+    return <ClientView projName={clientProj} pList={pList} pData={pData} metaList={metaList}/>;
+  }
 
   /* ═══ HOME ═══ */
   if(!active){
@@ -935,13 +1453,20 @@ function App(){
     /* Filter by map selection */
     const filteredSp=mapCity?sp.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.cityLabel===mapCity}):sp;
 
+    /* Health summary for nav badges */
+    const hVals=Object.values(healthMap).filter(Boolean);
+    const totalOv=hVals.reduce((s,h)=>s+h.ov,0);
+
     return <Fragment>
       <div className="hdr">
         <a href="index.html" style={{color:'var(--c2)',fontSize:11,textDecoration:'none',marginRight:6}}>← BkTableros</a><div className="logo">{I.bld(18)} BuildPlan <span>360°</span></div>
         <div className="tabs">
-          <button className="tab" onClick={()=>{setActive('__pf');setSub('portfolio')}} style={{color:'var(--ac)'}}>{I.usr()} Portfolio</button>
+          <button className="tab on">{I.home(14)} Inicio</button>
+          <button className="tab" onClick={()=>{setActive('__pf');setSub('portfolio')}} style={{color:'var(--ac)'}}>{I.usr(14)} Portfolio</button>
+          {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);return p?<button key={k} className="tab" onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>:null})}
         </div>
         <div className="acts">
+          {totalOv>0&&<span style={{fontSize:11,color:'var(--err)',fontWeight:600,fontFamily:'var(--fm)'}}>{totalOv} vencidas</span>}
           <button className="btn btn-g btn-i" onClick={()=>setShowSrch(true)} title="Ctrl+K">{I.srch()}</button>
           <button className="btn btn-g btn-i" onClick={togTh}>{th==='light'?I.moon():I.sun()}</button>
         </div>
@@ -950,41 +1475,74 @@ function App(){
         {/* Sidebar: Map */}
         <div className="home-sidebar">
           <CbaMap projects={sp} metaList={metaList} selectedCity={mapCity} onSelectCity={setMapCity}/>
+          {/* Health summary under map */}
+          {hVals.length>0&&<div style={{padding:'12px',borderTop:'1px solid var(--b1)'}}>
+            <div style={{fontSize:11,fontWeight:600,color:'var(--c1)',marginBottom:8,textTransform:'uppercase',letterSpacing:'.5px'}}>Salud global</div>
+            <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+              <span className="health-badge g">{hVals.filter(h=>h.color==='g').length} en tiempo</span>
+              {hVals.filter(h=>h.color==='y').length>0&&<span className="health-badge y">{hVals.filter(h=>h.color==='y').length} atención</span>}
+              {hVals.filter(h=>h.color==='r').length>0&&<span className="health-badge r">{hVals.filter(h=>h.color==='r').length} en riesgo</span>}
+            </div>
+          </div>}
         </div>
 
         {/* Main: Project cards */}
         <div className="home-main">
           <div className="home-h">
             <div className="home-title">Proyectos</div>
-            <div className="home-sub">{filteredSp.length} obras{mapCity?` · ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}</div>
+            <div className="home-sub">{filteredSp.length} obras{mapCity?` · ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{hVals.length>0&&!mapCity&&<span style={{marginLeft:8,color:'var(--c2)'}}>· {hVals.length} analizadas</span>}</div>
           </div>
           <div className="pgrid2">
             {filteredSp.map(p=>{
               const m=matchMeta(p.name,metaList);
               const estado=m?.estado||'';
-              const dotColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)';
+              const h=healthMap[p.key];
+              const isLoading=!!autoLoading[p.key];
+              const hClass=h?`health-${h.color}`:'';
+              const dotColor=h?({g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'}[h.color]):(estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)');
               const stBg=estado==='Activo'?'rgba(16,185,129,.1)':estado==='En pausa'?'rgba(245,158,11,.1)':'rgba(139,146,165,.1)';
               const stColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)';
               const m2t=(m?.m2Cubierta||0)+(m?.m2Semi||0);
-              return <div key={p.key} className="pcard2" onClick={()=>openProj(p)}>
+              return <div key={p.key} className={`pcard2 ${hClass}`} onClick={()=>openProj(p)}>
                 <div className="pcard2-top">
                   <span className="pcard2-dot" style={{background:dotColor}}/>
                   <span className="pcard2-name">{p.name}</span>
-                  {estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
+                  {h&&<span className={`health-badge ${h.color}`}>{h.color==='g'?'✓':h.color==='y'?'⚠':h.color==='r'?'✕':'—'} {h.label}</span>}
+                  {!h&&estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
                 </div>
                 <div className="pcard2-meta">
                   {m?.ciudad&&<span>📍 {m.cityLabel||m.ciudad}</span>}
                   {m2t>0&&<span>🏠 {Math.round(m2t)} m² cub</span>}
-                  {m?.m2Terreno>0&&<span>📐 {m.m2Terreno.toLocaleString('es-AR')} m² ter</span>}
                   {m?.comitente&&<span>👤 {m.comitente}</span>}
                 </div>
-                {p.size&&<div className="pcard2-bottom"><span>{(p.size/1024).toFixed(0)} KB</span></div>}
+                {h&&<Fragment>
+                  <div className="pcard2-bar"><div className="pcard2-fill" style={{width:`${h.avg}%`,background:dotColor}}/></div>
+                  <div className="pcard2-health">
+                    <div className="pcard2-stats">
+                      <span style={{fontWeight:600,color:'var(--c0)'}}>{h.avg}%</span>
+                      <span>{h.done}/{h.tot} hechas</span>
+                      {h.ov>0&&<span style={{color:'var(--err)'}}>{h.ov} vencidas</span>}
+                      {h.ip>0&&<span style={{color:'var(--warn)'}}>{h.ip} en curso</span>}
+                    </div>
+                  </div>
+                  {h.nextMs&&<div style={{fontSize:10,color:'var(--c2)',marginTop:2}}>Próximo hito: {h.nextMs.name} ({fD(h.nextMs.finish)})</div>}
+                  {(()=>{const td=getTrendForProject(trendData,p.key);return td.length>=2?<div style={{display:'flex',alignItems:'center',gap:8,marginTop:3}}><span style={{fontSize:9,color:'var(--c2)'}}>Avance</span><Sparkline data={td} field="avg" color="var(--ac)"/><span style={{fontSize:9,color:'var(--c2)',marginLeft:4}}>Vencidas</span><Sparkline data={td} field="ov" color="var(--err)" w={40}/></div>:null})()}
+                </Fragment>}
+                {!h&&isLoading&&<div className="pcard2-loading"><div className="mini-sp"/>Analizando...</div>}
+                {!h&&!isLoading&&p.size&&<div className="pcard2-bottom"><span>{(p.size/1024).toFixed(0)} KB</span></div>}
               </div>;
             })}
           </div>
         </div>
       </div>
+      {showTour&&<Tour onDone={dismissTour}/>}
       {showSrch&&<SearchModal onClose={()=>setShowSrch(false)}/>}
+      <div className="mob-nav">
+        <button className="on" onClick={()=>setActive(null)}>{I.home(18)}<span>Inicio</span></button>
+        <button onClick={()=>{setActive('__pf');setSub('portfolio')}}>{I.chart(18)}<span>Portfolio</span></button>
+        <button onClick={()=>setShowSrch(true)}>{I.srch(18)}<span>Buscar</span></button>
+        <button onClick={togTh}>{th==='light'?I.moon(18):I.sun(18)}<span>Tema</span></button>
+      </div>
     </Fragment>;
   }
 
@@ -1021,6 +1579,8 @@ function App(){
 
     <div className="stbar">
       <button className={`st ${sub==='gantt'?'on':''}`} onClick={()=>setSub('gantt')}>Gantt</button>
+      <button className={`st ${sub==='semana'?'on':''}`} onClick={()=>setSub('semana')}>Semana</button>
+      <button className={`st ${sub==='compras'?'on':''}`} onClick={()=>setSub('compras')}>Compras</button>
       <button className={`st ${sub==='dash'?'on':''}`} onClick={()=>setSub('dash')}>Dashboard</button>
       <button className={`st ${sub==='demoras'?'on':''}`} onClick={()=>setSub('demoras')}>Demoras</button>
       {sub==='gantt'&&aData&&<div className="str">
@@ -1030,6 +1590,8 @@ function App(){
         <button className="btn btn-g btn-i" onClick={()=>setShowArr(a=>!a)} title="Flechas" style={{color:showArr?'var(--ac)':'var(--c2)'}}>{I.lnk()}</button>
         {aData.hasBL&&<button className="btn btn-g btn-i" onClick={()=>setShowBL(b=>!b)} title="Línea base" style={{color:showBL?'var(--ac)':'var(--c2)'}}>{I.bl()}</button>}
         <button className="btn btn-g" onClick={()=>window.print()}>{I.prt()} PDF</button>
+        <a href="pagos.html" className="btn btn-g" style={{textDecoration:'none'}} title="Ver programación de pagos">$ Pagos</a>
+        <button className="btn btn-g" onClick={()=>{const url=window.location.origin+window.location.pathname+'?proyecto='+encodeURIComponent(aProj?.name||'');navigator.clipboard.writeText(url).then(()=>alert('Link copiado: '+url)).catch(()=>prompt('Copiá este link para compartir:',url))}} title="Compartir vista cliente">{I.lnk()} Compartir</button>
       </div>}
     </div>
 
@@ -1092,12 +1654,20 @@ function App(){
       <GanttSVG tasks={visTasks} minDate={aData.minDate} maxDate={aData.maxDate} zoom={zoom} showArr={showArr} showBL={showBL} scrollRef={scrollRef} onTT={setTTInfo}/>
     </div>}
 
+    {!aLoading&&aData&&sub==='semana'&&<WeekView data={aData}/>}
+    {!aLoading&&aData&&sub==='compras'&&<ProcurementView data={aData}/>}
     {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData}/>}
     {!aLoading&&aData&&sub==='demoras'&&<DemorasView data={aData}/>}
 
     <Tooltip info={ttInfo}/>
     {showSrch&&<SearchModal onClose={()=>setShowSrch(false)}/>}
     <div className="pf">BuildPlan Viewer — Bauvek · {new Date().toLocaleDateString('es-AR')}</div>
+    <div className="mob-nav">
+      <button onClick={()=>setActive(null)}>{I.home(18)}<span>Inicio</span></button>
+      <button className={sub==='semana'?'on':''} onClick={()=>setSub('semana')}>{I.cal(18)}<span>Semana</span></button>
+      <button className={sub==='gantt'?'on':''} onClick={()=>setSub('gantt')}>{I.bld(18)}<span>Gantt</span></button>
+      <button className={sub==='dash'?'on':''} onClick={()=>setSub('dash')}>{I.chart(18)}<span>Dashboard</span></button>
+    </div>
   </Fragment>;
 }
 
