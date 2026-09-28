@@ -1078,25 +1078,47 @@ function Sparkline({data,field='avg',w=60,h=16,color='var(--ac)'}){
   </span>;
 }
 
-/* ═══════ Health calculation ═══════ */
+/* ═══════ Health: Obra contratada (alcance total) vs Obra real (avance) ═══════ */
 function calcHealth(data){
   if(!data||!data.tasks)return null;
   const ts=data.tasks.filter(t=>!t.isSummary);
-  if(!ts.length)return{color:'x',label:'Sin tareas',tot:0,done:0,ov:0,avg:0,ip:0};
+  if(!ts.length)return{color:'x',label:'Sin tareas',tot:0,done:0,ov:0,avg:0,ip:0,timePct:0,gap:0};
+  const now=new Date();
+
+  /* Obra contratada = alcance total (nunca cambia) */
   const tot=ts.length;
+
+  /* Obra real = lo que efectivamente se hizo */
   const done=ts.filter(t=>t.percentComplete>=100).length;
   const ov=ts.filter(t=>isOv(t)).length;
   const ip=ts.filter(t=>t.percentComplete>0&&t.percentComplete<100).length;
   const avg=Math.round(ts.reduce((s,t)=>s+t.percentComplete,0)/tot);
-  const ovPct=tot>0?ov/tot:0;
-  const msOverdue=ts.filter(t=>t.isMilestone&&isOv(t)).length;
+  const donePct=Math.round(done/tot*100);
+
+  /* Tiempo transcurrido del proyecto */
+  const withDates=ts.filter(t=>t.start&&t.finish);
+  let timePct=0;
+  if(withDates.length){
+    const projStart=new Date(Math.min(...withDates.map(t=>t.start.getTime())));
+    const projEnd=new Date(Math.max(...withDates.map(t=>t.finish.getTime())));
+    const totalSpan=projEnd-projStart;
+    if(totalSpan>0){
+      const elapsed=Math.max(0,Math.min(now-projStart,totalSpan));
+      timePct=Math.round(elapsed/totalSpan*100);
+    }
+  }
+
+  /* Brecha: dónde debería estar vs dónde está */
+  const gap=timePct-donePct; /* positivo = atrasado, negativo = adelantado */
+
+  /* Semáforo */
   let color='g',label='En tiempo';
-  if(ovPct>.25||msOverdue>5){color='r';label='En riesgo'}
-  else if(ovPct>.10||msOverdue>2){color='y';label='Atención'}
-  /* Next milestone */
-  const now=new Date();
+  if(gap>25){color='r';label='En riesgo'}
+  else if(gap>10){color='y';label='Atención'}
+  else if(gap<=0){color='g';label=gap<-5?'Adelantada':'En tiempo'}
+
   const nextMs=ts.filter(t=>t.isMilestone&&t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish)[0];
-  return{color,label,tot,done,ov,ip,avg,nextMs:nextMs||null};
+  return{color,label,tot,done,ov,ip,avg,donePct,timePct,gap,nextMs:nextMs||null};
 }
 
 /* ═══════ Weekly View ═══════ */
@@ -1571,12 +1593,13 @@ function App(){
           <DeptMap projects={sp} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
           {/* Health summary under map */}
           {hVals.length>0&&<div style={{padding:'12px',borderTop:'1px solid var(--b1)'}}>
-            <div style={{fontSize:11,fontWeight:600,color:'var(--c1)',marginBottom:8,textTransform:'uppercase',letterSpacing:'.5px'}}>Salud global</div>
+            <div style={{fontSize:11,fontWeight:600,color:'var(--c1)',marginBottom:8,textTransform:'uppercase',letterSpacing:'.5px'}}>Contratada vs Real</div>
             <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
               <span className="health-badge g">{hVals.filter(h=>h.color==='g').length} en tiempo</span>
               {hVals.filter(h=>h.color==='y').length>0&&<span className="health-badge y">{hVals.filter(h=>h.color==='y').length} atención</span>}
               {hVals.filter(h=>h.color==='r').length>0&&<span className="health-badge r">{hVals.filter(h=>h.color==='r').length} en riesgo</span>}
             </div>
+            {(()=>{const totalDone=hVals.reduce((s,h)=>s+h.done,0);const totalTot=hVals.reduce((s,h)=>s+h.tot,0);return totalTot>0?<div style={{fontSize:10,color:'var(--c1)',marginTop:6}}>{totalDone} de {totalTot} tareas completadas ({Math.round(totalDone/totalTot*100)}%)</div>:null})()}
           </div>}
         </div>
 
@@ -1611,13 +1634,24 @@ function App(){
                   {m?.comitente&&<span>👤 {m.comitente}</span>}
                 </div>
                 {h&&<Fragment>
-                  <div className="pcard2-bar"><div className="pcard2-fill" style={{width:`${h.avg}%`,background:dotColor}}/></div>
+                  {/* Doble barra: tiempo vs avance */}
+                  <div style={{display:'flex',gap:4,alignItems:'center',marginTop:4}}>
+                    <span style={{fontSize:9,color:'var(--c2)',width:52,flexShrink:0}}>Contratada</span>
+                    <div className="pcard2-bar" style={{flex:1}}><div className="pcard2-fill" style={{width:`${h.timePct}%`,background:'var(--c2)'}}/></div>
+                    <span style={{fontSize:9,fontFamily:'var(--fm)',color:'var(--c1)',width:28,textAlign:'right'}}>{h.timePct}%</span>
+                  </div>
+                  <div style={{display:'flex',gap:4,alignItems:'center'}}>
+                    <span style={{fontSize:9,color:dotColor,fontWeight:600,width:52,flexShrink:0}}>Real</span>
+                    <div className="pcard2-bar" style={{flex:1}}><div className="pcard2-fill" style={{width:`${h.donePct}%`,background:dotColor}}/></div>
+                    <span style={{fontSize:9,fontFamily:'var(--fm)',color:'var(--c0)',fontWeight:600,width:28,textAlign:'right'}}>{h.donePct}%</span>
+                  </div>
                   <div className="pcard2-health">
                     <div className="pcard2-stats">
-                      <span style={{fontWeight:600,color:'var(--c0)'}}>{h.avg}%</span>
                       <span>{h.done}/{h.tot} hechas</span>
                       {h.ov>0&&<span style={{color:'var(--err)'}}>{h.ov} vencidas</span>}
                       {h.ip>0&&<span style={{color:'var(--warn)'}}>{h.ip} en curso</span>}
+                      {h.gap>0&&<span style={{color:h.gap>25?'var(--err)':h.gap>10?'var(--warn)':'var(--c1)',fontWeight:600}}>↓ {h.gap}% atrás</span>}
+                      {h.gap<=-5&&<span style={{color:'var(--ok)',fontWeight:600}}>↑ {Math.abs(h.gap)}% adelantada</span>}
                     </div>
                   </div>
                   {h.nextMs&&<div style={{fontSize:10,color:'var(--c2)',marginTop:2}}>Próximo hito: {h.nextMs.name} ({fD(h.nextMs.finish)})</div>}
