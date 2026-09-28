@@ -308,9 +308,8 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .map-section{background:var(--bg-el);overflow:hidden}
 .map-header{padding:10px 14px;font-size:12px;font-weight:600;color:var(--c1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:.5px}
 .map-header .clear-btn{font-size:11px;color:var(--ac);cursor:pointer;border:none;background:none;font-family:var(--ff);font-weight:500;text-transform:none;letter-spacing:0}
-.map-body{padding:12px}
-.map-dot{cursor:pointer;transition:r .15s}
-.map-dot:hover{r:8}
+.map-body{padding:10px 12px 4px}
+.map-body svg path{transition:fill-opacity .2s,stroke-opacity .2s,stroke-width .15s}
 .map-label{font-family:var(--ff);font-size:9px;fill:var(--c1);pointer-events:none}
 .map-count{font-family:var(--fm);font-size:8px;fill:white;pointer-events:none;font-weight:700}
 .map-ref{font-family:var(--ff);font-size:8px;fill:var(--c2)}
@@ -349,14 +348,22 @@ const ENT={
 };
 
 /* ═══════ Project metadata from Excel ═══════ */
+/* Map cities to departments */
+const CITY_TO_DEPT={
+  'mendiolaza':'Colón','mendiolaza - el terrón':'Colón','mendiolaza - q2':'Colón',
+  'la calera':'Colón','la calera - vistas de la deseada':'Colón',
+  'malagueño':'Santa María','malagueño - cañitas':'Santa María',
+  'villa ciudad parque - molvento':'Calamuchita','molvento':'Calamuchita',
+  'villa ciudad parque':'Calamuchita',
+};
 const CITY_COORDS={
-  'mendiolaza':{lat:-31.317,lng:-64.290,label:'Mendiolaza'},
-  'mendiolaza - el terrón':{lat:-31.305,lng:-64.295,label:'Mendiolaza - El Terrón'},
-  'mendiolaza - q2':{lat:-31.310,lng:-64.285,label:'Mendiolaza - Q2'},
-  'la calera - vistas de la deseada':{lat:-31.345,lng:-64.335,label:'La Calera'},
-  'malagueño - cañitas':{lat:-31.463,lng:-64.358,label:'Malagueño'},
-  'villa ciudad parque - molvento':{lat:-31.593,lng:-64.463,label:'Molvento'},
-  'molvento':{lat:-31.593,lng:-64.463,label:'Molvento'},
+  'mendiolaza':{lat:-31.317,lng:-64.290,label:'Mendiolaza',dept:'Colón'},
+  'mendiolaza - el terrón':{lat:-31.305,lng:-64.295,label:'Mendiolaza - El Terrón',dept:'Colón'},
+  'mendiolaza - q2':{lat:-31.310,lng:-64.285,label:'Mendiolaza - Q2',dept:'Colón'},
+  'la calera - vistas de la deseada':{lat:-31.345,lng:-64.335,label:'La Calera',dept:'Colón'},
+  'malagueño - cañitas':{lat:-31.463,lng:-64.358,label:'Malagueño',dept:'Santa María'},
+  'villa ciudad parque - molvento':{lat:-31.593,lng:-64.463,label:'Molvento',dept:'Calamuchita'},
+  'molvento':{lat:-31.593,lng:-64.463,label:'Molvento',dept:'Calamuchita'},
 };
 
 function normalizeForMatch(s){
@@ -374,6 +381,7 @@ async function loadProjectMeta(){
     return rows.map(row=>{
       const city=(row['Ciudad / Localidad']||'').toLowerCase();
       const coordEntry=CITY_COORDS[city];
+      const dept=coordEntry?.dept||CITY_TO_DEPT[city]||null;
       return{
         proyecto:row['Proyecto']||'',
         estado:row['Estado']||'',
@@ -389,6 +397,7 @@ async function loadProjectMeta(){
         lat:coordEntry?.lat||null,
         lng:coordEntry?.lng||null,
         cityLabel:coordEntry?.label||row['Ciudad / Localidad']||'',
+        dept:dept,
         _norm:normalizeForMatch(row['Proyecto']),
       };
     });
@@ -408,105 +417,151 @@ function matchMeta(projectName,metaList){
   return best||null;
 }
 
-/* ═══════ Map Component ═══════ */
-function CbaMap({projects,metaList,selectedCity,onSelectCity}){
-  /* Group by city label */
-  const cityGroups=useMemo(()=>{
-    const map={};
+/* ═══════ Department Map — All 26 departments of Córdoba ═══════ */
+const ALL_DEPTS={
+  "Sobremonte":{path:"M 120 5 L 195 0 L 200 25 L 205 65 L 165 80 L 130 75 L 100 55 L 105 25 Z",cx:153,cy:40},
+  "Tulumba":{path:"M 195 0 L 290 0 L 300 15 L 295 55 L 280 80 L 240 90 L 205 85 L 205 65 L 200 25 Z",cx:245,cy:45},
+  "Río Seco":{path:"M 290 0 L 395 10 L 395 100 L 370 115 L 330 120 L 295 105 L 280 80 L 295 55 L 300 15 Z",cx:340,cy:60},
+  "Cruz del Eje":{path:"M 30 55 L 100 55 L 130 75 L 165 80 L 160 110 L 155 140 L 120 155 L 85 145 L 40 125 L 20 95 Z",cx:90,cy:105},
+  "Ischilín":{path:"M 165 80 L 205 85 L 210 105 L 200 130 L 175 140 L 155 140 L 160 110 Z",cx:182,cy:112},
+  "Totoral":{path:"M 205 85 L 240 90 L 255 100 L 260 130 L 245 145 L 215 150 L 200 130 L 210 105 Z",cx:228,cy:118},
+  "Río Primero":{path:"M 240 90 L 280 80 L 295 105 L 310 130 L 310 165 L 280 175 L 255 170 L 245 145 L 260 130 L 255 100 Z",cx:275,cy:135},
+  "San Justo":{path:"M 295 105 L 330 120 L 370 115 L 395 100 L 400 170 L 395 240 L 355 250 L 320 225 L 310 195 L 310 165 L 310 130 Z",cx:355,cy:175},
+  "Minas":{path:"M 0 95 L 20 95 L 40 125 L 45 155 L 30 180 L 10 185 L 0 170 Z",cx:20,cy:145},
+  "Pocho":{path:"M 0 170 L 10 185 L 30 180 L 45 155 L 85 145 L 90 175 L 80 210 L 55 225 L 20 225 L 0 210 Z",cx:45,cy:190},
+  "San Alberto":{path:"M 85 145 L 120 155 L 155 140 L 175 140 L 180 170 L 175 200 L 160 220 L 125 230 L 90 215 L 80 210 L 90 175 Z",cx:130,cy:190},
+  "Capital":{path:"M 195 155 L 215 150 L 225 160 L 225 180 L 210 185 L 195 180 Z",cx:210,cy:168},
+  "Colón":{path:"M 175 140 L 200 130 L 215 150 L 195 155 L 195 180 L 210 185 L 225 180 L 230 195 L 240 215 L 215 230 L 185 225 L 175 200 L 180 170 Z",cx:205,cy:190},
+  "Río Segundo":{path:"M 225 160 L 245 145 L 255 170 L 280 175 L 285 200 L 285 225 L 260 240 L 240 235 L 240 215 L 230 195 L 225 180 Z",cx:258,cy:200},
+  "Gral. San Martín":{path:"M 280 175 L 310 165 L 310 195 L 320 225 L 325 255 L 300 265 L 280 255 L 270 240 L 285 225 L 285 200 Z",cx:298,cy:222},
+  "San Javier":{path:"M 0 210 L 20 225 L 55 225 L 80 210 L 90 215 L 85 250 L 65 275 L 40 280 L 10 270 L 0 250 Z",cx:45,cy:248},
+  "Santa María":{path:"M 90 215 L 125 230 L 160 220 L 175 200 L 185 225 L 215 230 L 210 260 L 195 280 L 165 290 L 130 285 L 95 275 L 85 250 Z",cx:150,cy:255},
+  "Tercero Arriba":{path:"M 215 230 L 240 235 L 260 240 L 270 240 L 280 255 L 275 285 L 255 300 L 225 300 L 210 280 L 210 260 Z",cx:245,cy:270},
+  "Unión":{path:"M 280 255 L 300 265 L 325 255 L 355 250 L 395 240 L 400 310 L 385 350 L 350 345 L 320 330 L 295 320 L 275 285 Z",cx:345,cy:295},
+  "Calamuchita":{path:"M 65 275 L 95 275 L 130 285 L 165 290 L 170 320 L 155 355 L 125 365 L 90 355 L 65 330 L 55 300 Z",cx:115,cy:322},
+  "Juárez Celman":{path:"M 165 290 L 195 280 L 210 280 L 225 300 L 255 300 L 260 330 L 245 365 L 220 375 L 185 370 L 170 345 L 170 320 Z",cx:213,cy:335},
+  "Marcos Juárez":{path:"M 255 300 L 275 285 L 295 320 L 320 330 L 350 345 L 355 375 L 340 395 L 310 400 L 280 390 L 260 365 L 260 330 Z",cx:305,cy:350},
+  "Río Cuarto":{path:"M 40 280 L 65 275 L 55 300 L 65 330 L 90 355 L 125 365 L 155 355 L 170 345 L 185 370 L 175 415 L 150 450 L 115 475 L 65 485 L 30 465 L 10 420 L 15 370 L 25 330 Z",cx:100,cy:415},
+  "General Roca":{path:"M 185 370 L 220 375 L 245 365 L 260 365 L 280 390 L 310 400 L 340 395 L 355 375 L 385 350 L 400 310 L 405 400 L 395 460 L 365 500 L 315 520 L 250 520 L 200 490 L 175 450 L 175 415 Z",cx:300,cy:445},
+};
+
+/* Colors for departments with projects */
+const DEPT_COLORS={
+  'Colón':'#9E0101',
+  'Santa María':'#D4930D',
+  'Calamuchita':'#10b981',
+};
+
+function DeptMap({projects,metaList,selectedDept,onSelectDept}){
+  const deptCounts=useMemo(()=>{
+    const counts={};
+    for(const d of Object.keys(ALL_DEPTS)) counts[d]={count:0,projects:[]};
     for(const p of projects){
       const m=matchMeta(p.name,metaList);
-      if(!m||!m.lat) continue;
-      const key=m.cityLabel;
-      if(!map[key]) map[key]={label:key,lat:m.lat,lng:m.lng,count:0,projects:[]};
-      map[key].count++;
-      map[key].projects.push(p.name);
+      if(!m||!m.dept) continue;
+      if(counts[m.dept]){counts[m.dept].count++;counts[m.dept].projects.push(p.name)}
     }
-    return Object.values(map);
+    return counts;
   },[projects,metaList]);
 
-  if(!cityGroups.length) return null;
-
-  /* SVG viewport */
-  const svgW=280,svgH=400;
-  const minLat=-31.65,maxLat=-31.27,minLng=-64.50,maxLng=-64.22;
-  const toX=lng=>(lng-minLng)/(maxLng-minLng)*svgW;
-  const toY=lat=>(lat-minLat)/(maxLat-minLat)*svgH;
-
-  /* Anti-collision: spread markers that are too close */
-  const positioned=useMemo(()=>{
-    const minDist=35; /* minimum px between centers */
-    const pts=cityGroups.map(c=>({...c,x:toX(c.lng),y:toY(c.lat)}));
-    /* Simple iterative repulsion (3 passes) */
-    for(let pass=0;pass<5;pass++){
-      for(let i=0;i<pts.length;i++){
-        for(let j=i+1;j<pts.length;j++){
-          const dx=pts[j].x-pts[i].x;
-          const dy=pts[j].y-pts[i].y;
-          const dist=Math.sqrt(dx*dx+dy*dy);
-          if(dist<minDist&&dist>0){
-            const push=(minDist-dist)/2;
-            const nx=dx/dist,ny=dy/dist;
-            pts[i].x-=nx*push;pts[i].y-=ny*push;
-            pts[j].x+=nx*push;pts[j].y+=ny*push;
-          }else if(dist===0){
-            /* Identical positions: offset diagonally */
-            pts[j].x+=minDist*0.5;pts[j].y-=minDist*0.5;
-          }
-        }
-      }
+  const cityDots=useMemo(()=>{
+    const dots={};
+    for(const p of projects){
+      const m=matchMeta(p.name,metaList);
+      if(!m||!m.lat||!m.dept) continue;
+      const key=m.cityLabel;
+      if(!dots[key]) dots[key]={label:key,lat:m.lat,lng:m.lng,dept:m.dept,count:0};
+      dots[key].count++;
     }
-    /* Clamp within SVG bounds */
-    for(const p of pts){
-      p.x=Math.max(20,Math.min(svgW-20,p.x));
-      p.y=Math.max(20,Math.min(svgH-20,p.y));
-    }
-    return pts;
-  },[cityGroups]);
+    return Object.values(dots);
+  },[projects,metaList]);
 
-  const cbaX=toX(-64.18),cbaY=toY(-31.42);
+  const activeDepts=Object.entries(deptCounts).filter(([,v])=>v.count>0);
 
-  /* Decide label placement per marker: alternate above/below to reduce overlap */
-  const labelSide=(idx)=>idx%2===0?1:-1;
+  /* Geo → SVG for city dots within the 400×550 viewBox */
+  const geoToSvg=(lat,lng)=>({
+    x:((lng-(-65.00))/(-62.80-(-65.00)))*400,
+    y:((lat-(-29.30))/(-35.00-(-29.30)))*550
+  });
 
   return(
     <div className="map-section">
       <div className="map-header">
-        <span>📍 UBICACIÓN DE OBRAS</span>
-        {selectedCity&&<button className="clear-btn" onClick={()=>onSelectCity(null)}>Mostrar todas</button>}
+        <span>Córdoba · Departamentos</span>
+        {selectedDept&&<button className="clear-btn" onClick={()=>onSelectDept(null)}>Mostrar todas</button>}
       </div>
       <div className="map-body">
-        <svg viewBox={`-10 -10 ${svgW+20} ${svgH+20}`} width="100%" height="auto">
-          <rect x="-10" y="-10" width={svgW+20} height={svgH+20} fill="var(--bg-1)" rx="4"/>
-
-          <circle cx={cbaX} cy={cbaY} r="3" fill="var(--c2)" opacity=".4"/>
-          <text x={cbaX+6} y={cbaY+3} className="map-ref">Córdoba capital</text>
-
-          <line x1={toX(-64.45)} y1={toY(-31.60)} x2={toX(-64.22)} y2={toY(-31.30)} stroke="var(--b0)" strokeWidth="1.5" strokeDasharray="4,3"/>
-          <text x={toX(-64.44)} y={toY(-31.58)} className="map-ref">Sierras Chicas</text>
-
-          {/* Connection lines from original position to displaced position */}
-          {positioned.map((c,i)=>{
-            const ox=toX(c.lng),oy=toY(c.lat);
-            const dist=Math.sqrt((c.x-ox)**2+(c.y-oy)**2);
-            if(dist<5)return null;
-            return <line key={'ln'+i} x1={ox} y1={oy} x2={c.x} y2={c.y} stroke="var(--b0)" strokeWidth="0.8" strokeDasharray="2,2" opacity=".5"/>;
+        <svg viewBox="-10 -10 420 550" width="100%" style={{display:'block'}}>
+          {/* All 26 departments */}
+          {Object.entries(ALL_DEPTS).map(([name,dept])=>{
+            const count=deptCounts[name]?.count||0;
+            const hasProjects=count>0;
+            const color=DEPT_COLORS[name]||'var(--c2)';
+            const isSel=selectedDept===name;
+            const isOther=selectedDept&&!isSel;
+            const isSmall=name==='Capital'||name==='Minas'||name==='Ischilín';
+            return(
+              <g key={name}
+                 onClick={hasProjects?()=>onSelectDept(isSel?null:name):undefined}
+                 style={{cursor:hasProjects?'pointer':'default'}}>
+                <path d={dept.path}
+                  fill={isSel?color:hasProjects?color:'var(--bg-2)'}
+                  fillOpacity={isSel?.25:hasProjects?(isOther?.05:.15):.5}
+                  stroke={isSel?color:hasProjects?color:'var(--b0)'}
+                  strokeWidth={isSel?2.5:hasProjects?1.5:.7}
+                  strokeOpacity={isSel?1:hasProjects?(isOther?.3:.7):.4}
+                />
+                {/* Label — hide smallest depts when not selected, show all active ones */}
+                {(!isSmall||isSel||hasProjects)&&!isOther&&<text x={dept.cx} y={dept.cy-(hasProjects?8:2)}
+                  textAnchor="middle" className="map-label"
+                  style={{
+                    fontSize:isSel?9:hasProjects?8:6,
+                    fontWeight:isSel?700:hasProjects?600:400,
+                    fill:isSel?color:hasProjects?color:'var(--c2)',
+                    opacity:hasProjects?1:.5
+                  }}>{name}</text>}
+                {/* Count badge for departments with projects */}
+                {hasProjects&&<g>
+                  <circle cx={dept.cx} cy={dept.cy+(isSmall?6:10)} r={isSmall?8:11}
+                    fill={isSel?color:'var(--c0)'} opacity={isOther?.2:isSel?1:.8}/>
+                  <text x={dept.cx} y={dept.cy+(isSmall?10:14)} textAnchor="middle"
+                    style={{fontSize:isSmall?9:11,fontWeight:700,fill:'white',fontFamily:'var(--fm)'}}>{count}</text>
+                </g>}
+              </g>
+            );
           })}
 
-          {positioned.map((c,idx)=>{
-            const isSelected=selectedCity===c.label;
-            const r=Math.max(7,Math.min(12,c.count*3+4));
-            const side=labelSide(idx);
-            const labelY=side>0?c.y+r+12:c.y-r-4;
+          {/* City dots inside selected department */}
+          {selectedDept&&cityDots.filter(c=>c.dept===selectedDept).map(c=>{
+            const pos=geoToSvg(c.lat,c.lng);
+            const color=DEPT_COLORS[selectedDept]||'var(--ac)';
             return(
-              <g key={c.label} onClick={()=>onSelectCity(isSelected?null:c.label)} style={{cursor:'pointer'}}>
-                <circle cx={c.x} cy={c.y} r={r+4} fill="var(--ac)" opacity={isSelected?.18:.06}/>
-                <circle cx={c.x} cy={c.y} r={r} fill="var(--ac)" opacity={isSelected?1:.75} className="map-dot"/>
-                <text x={c.x} y={c.y+3.5} textAnchor="middle" className="map-count">{c.count}</text>
-                <text x={c.x} y={labelY} textAnchor="middle" className="map-label" style={{fontWeight:isSelected?700:500,fill:isSelected?'var(--ac)':'var(--c1)'}}>{c.label}</text>
+              <g key={c.label}>
+                <circle cx={pos.x} cy={pos.y} r={5} fill={color} opacity=".9"/>
+                <circle cx={pos.x} cy={pos.y} r={9} fill={color} opacity=".12"/>
+                <text x={pos.x} y={pos.y+3.5} textAnchor="middle" style={{fontSize:7,fontWeight:700,fill:'white',fontFamily:'var(--fm)'}}>{c.count}</text>
+                <text x={pos.x+8} y={pos.y+3} className="map-label" style={{fontSize:8,fontWeight:500,fill:'var(--c0)',textAnchor:'start'}}>{c.label}</text>
               </g>
             );
           })}
         </svg>
+      </div>
+
+      {/* Legend: only departments with projects */}
+      <div style={{padding:'8px 12px',borderTop:'1px solid var(--b1)',display:'flex',flexDirection:'column',gap:4}}>
+        {activeDepts.map(([name,data])=>{
+          const color=DEPT_COLORS[name]||'var(--c2)';
+          const isSel=selectedDept===name;
+          return(
+            <div key={name} onClick={()=>onSelectDept(isSel?null:name)}
+              style={{display:'flex',alignItems:'center',gap:8,padding:'5px 8px',borderRadius:'var(--r-s)',cursor:'pointer',
+                background:isSel?color+'14':'transparent',border:isSel?'1px solid '+color+'40':'1px solid transparent'}}>
+              <span style={{width:10,height:10,borderRadius:2,background:color,opacity:isSel?1:.6,flexShrink:0}}/>
+              <span style={{flex:1,fontSize:12,fontWeight:isSel?600:400,color:isSel?color:'var(--c0)'}}>{name}</span>
+              <span style={{fontSize:11,fontFamily:'var(--fm)',fontWeight:600,color:isSel?color:'var(--c1)'}}>{data.count}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -1490,7 +1545,7 @@ function App(){
   if(!active){
     const sp=(pList||[]).filter(p=>!p.local);
     /* Filter by map selection */
-    const filteredSp=mapCity?sp.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.cityLabel===mapCity}):sp;
+    const filteredSp=mapCity?sp.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.dept===mapCity}):sp;
 
     /* Health summary for nav badges */
     const hVals=Object.values(healthMap).filter(Boolean);
@@ -1513,7 +1568,7 @@ function App(){
       <div className="home">
         {/* Sidebar: Map */}
         <div className="home-sidebar">
-          <CbaMap projects={sp} metaList={metaList} selectedCity={mapCity} onSelectCity={setMapCity}/>
+          <DeptMap projects={sp} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
           {/* Health summary under map */}
           {hVals.length>0&&<div style={{padding:'12px',borderTop:'1px solid var(--b1)'}}>
             <div style={{fontSize:11,fontWeight:600,color:'var(--c1)',marginBottom:8,textTransform:'uppercase',letterSpacing:'.5px'}}>Salud global</div>
@@ -1529,7 +1584,7 @@ function App(){
         <div className="home-main">
           <div className="home-h">
             <div className="home-title">Proyectos</div>
-            <div className="home-sub">{filteredSp.length} obras{mapCity?` · ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{hVals.length>0&&!mapCity&&<span style={{marginLeft:8,color:'var(--c2)'}}>· {hVals.length} analizadas</span>}</div>
+            <div className="home-sub">{filteredSp.length} obras{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{hVals.length>0&&!mapCity&&<span style={{marginLeft:8,color:'var(--c2)'}}>· {hVals.length} analizadas</span>}</div>
           </div>
           <div className="pgrid2">
             {filteredSp.map(p=>{
@@ -1551,6 +1606,7 @@ function App(){
                 </div>
                 <div className="pcard2-meta">
                   {m?.ciudad&&<span>📍 {m.cityLabel||m.ciudad}</span>}
+                  {m?.dept&&<span style={{color:DEPT_SHAPES[m.dept]?.color||'var(--c2)'}}>◆ {m.dept}</span>}
                   {m2t>0&&<span>🏠 {Math.round(m2t)} m² cub</span>}
                   {m?.comitente&&<span>👤 {m.comitente}</span>}
                 </div>
