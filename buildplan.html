@@ -426,44 +426,83 @@ function CbaMap({projects,metaList,selectedCity,onSelectCity}){
 
   if(!cityGroups.length) return null;
 
-  /* SVG viewport: vertical sidebar layout */
+  /* SVG viewport */
   const svgW=280,svgH=400;
   const minLat=-31.65,maxLat=-31.27,minLng=-64.50,maxLng=-64.22;
   const toX=lng=>(lng-minLng)/(maxLng-minLng)*svgW;
   const toY=lat=>(lat-minLat)/(maxLat-minLat)*svgH;
 
-  /* Córdoba capital reference point */
+  /* Anti-collision: spread markers that are too close */
+  const positioned=useMemo(()=>{
+    const minDist=35; /* minimum px between centers */
+    const pts=cityGroups.map(c=>({...c,x:toX(c.lng),y:toY(c.lat)}));
+    /* Simple iterative repulsion (3 passes) */
+    for(let pass=0;pass<5;pass++){
+      for(let i=0;i<pts.length;i++){
+        for(let j=i+1;j<pts.length;j++){
+          const dx=pts[j].x-pts[i].x;
+          const dy=pts[j].y-pts[i].y;
+          const dist=Math.sqrt(dx*dx+dy*dy);
+          if(dist<minDist&&dist>0){
+            const push=(minDist-dist)/2;
+            const nx=dx/dist,ny=dy/dist;
+            pts[i].x-=nx*push;pts[i].y-=ny*push;
+            pts[j].x+=nx*push;pts[j].y+=ny*push;
+          }else if(dist===0){
+            /* Identical positions: offset diagonally */
+            pts[j].x+=minDist*0.5;pts[j].y-=minDist*0.5;
+          }
+        }
+      }
+    }
+    /* Clamp within SVG bounds */
+    for(const p of pts){
+      p.x=Math.max(20,Math.min(svgW-20,p.x));
+      p.y=Math.max(20,Math.min(svgH-20,p.y));
+    }
+    return pts;
+  },[cityGroups]);
+
   const cbaX=toX(-64.18),cbaY=toY(-31.42);
+
+  /* Decide label placement per marker: alternate above/below to reduce overlap */
+  const labelSide=(idx)=>idx%2===0?1:-1;
 
   return(
     <div className="map-section">
       <div className="map-header">
         <span>📍 UBICACIÓN DE OBRAS</span>
+        {selectedCity&&<button className="clear-btn" onClick={()=>onSelectCity(null)}>Mostrar todas</button>}
       </div>
       <div className="map-body">
         <svg viewBox={`-10 -10 ${svgW+20} ${svgH+20}`} width="100%" height="auto">
-          {/* Background */}
           <rect x="-10" y="-10" width={svgW+20} height={svgH+20} fill="var(--bg-1)" rx="4"/>
 
-          {/* Reference: Córdoba capital */}
           <circle cx={cbaX} cy={cbaY} r="3" fill="var(--c2)" opacity=".4"/>
           <text x={cbaX+6} y={cbaY+3} className="map-ref">Córdoba capital</text>
 
-          {/* Reference: Ruta E53 approximate line */}
           <line x1={toX(-64.45)} y1={toY(-31.60)} x2={toX(-64.22)} y2={toY(-31.30)} stroke="var(--b0)" strokeWidth="1.5" strokeDasharray="4,3"/>
           <text x={toX(-64.44)} y={toY(-31.58)} className="map-ref">Sierras Chicas</text>
 
-          {/* City dots */}
-          {cityGroups.map(c=>{
-            const x=toX(c.lng),y=toY(c.lat);
+          {/* Connection lines from original position to displaced position */}
+          {positioned.map((c,i)=>{
+            const ox=toX(c.lng),oy=toY(c.lat);
+            const dist=Math.sqrt((c.x-ox)**2+(c.y-oy)**2);
+            if(dist<5)return null;
+            return <line key={'ln'+i} x1={ox} y1={oy} x2={c.x} y2={c.y} stroke="var(--b0)" strokeWidth="0.8" strokeDasharray="2,2" opacity=".5"/>;
+          })}
+
+          {positioned.map((c,idx)=>{
             const isSelected=selectedCity===c.label;
-            const r=Math.max(6,Math.min(12,c.count*3+4));
+            const r=Math.max(7,Math.min(12,c.count*3+4));
+            const side=labelSide(idx);
+            const labelY=side>0?c.y+r+12:c.y-r-4;
             return(
               <g key={c.label} onClick={()=>onSelectCity(isSelected?null:c.label)} style={{cursor:'pointer'}}>
-                <circle cx={x} cy={y} r={r+3} fill={isSelected?'var(--ac)':'var(--ac)'} opacity={isSelected?.2:.08}/>
-                <circle cx={x} cy={y} r={r} fill={isSelected?'var(--ac)':'var(--ac)'} opacity={isSelected?1:.7} className="map-dot"/>
-                <text x={x} y={y+3.5} textAnchor="middle" className="map-count">{c.count}</text>
-                <text x={x} y={y+r+12} textAnchor="middle" className="map-label" style={{fontWeight:isSelected?700:400,fill:isSelected?'var(--ac)':'var(--c1)'}}>{c.label}</text>
+                <circle cx={c.x} cy={c.y} r={r+4} fill="var(--ac)" opacity={isSelected?.18:.06}/>
+                <circle cx={c.x} cy={c.y} r={r} fill="var(--ac)" opacity={isSelected?1:.75} className="map-dot"/>
+                <text x={c.x} y={c.y+3.5} textAnchor="middle" className="map-count">{c.count}</text>
+                <text x={c.x} y={labelY} textAnchor="middle" className="map-label" style={{fontWeight:isSelected?700:500,fill:isSelected?'var(--ac)':'var(--c1)'}}>{c.label}</text>
               </g>
             );
           })}
