@@ -11,6 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 :root{
   --bg-0:#fafbfc;--bg-1:#f1f3f5;--bg-2:#e9ecef;--bg-el:#fff;
@@ -334,6 +335,32 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .proj-info-label{font-size:10px;font-weight:600;color:var(--c2);text-transform:uppercase;letter-spacing:.5px}
 .proj-info-value{font-size:13px;font-weight:500}
 .proj-info-value.mono{font-family:var(--fm);font-size:12px}
+/* ═══════ Materials integration ═══════ */
+.mat-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;padding:1px 5px;border-radius:8px;background:var(--ac-bg);color:var(--ac);font-weight:600;margin-left:4px;vertical-align:middle}
+.mat-tt{border-top:1px solid var(--b1);margin-top:6px;padding-top:6px}
+.mat-tt-title{font-size:10px;font-weight:600;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mat-tt-item{display:flex;justify-content:space-between;gap:8px;font-size:11px;padding:2px 0}
+.mat-tt-item .mn{color:var(--c0);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mat-tt-item .mq{font-family:var(--fm);color:var(--ac);white-space:nowrap}
+.mat-panel{background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);overflow:hidden}
+.mat-panel-hdr{padding:12px 16px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.mat-panel-hdr h3{font-size:14px;font-weight:600;margin:0}
+.mat-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--b1);background:var(--bg-0)}
+.mat-table{width:100%;border-collapse:collapse;font-size:12px}
+.mat-table th{text-align:left;padding:8px 12px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--c2);border-bottom:2px solid var(--b0);position:sticky;top:0;background:var(--bg-el);z-index:1}
+.mat-table td{padding:6px 12px;border-bottom:1px solid var(--b1)}
+.mat-table tr:hover td{background:var(--bg-hover)}
+.mat-table .mono{font-family:var(--fm);font-size:11px}
+.mat-kpi{display:flex;gap:12px;padding:12px 16px;flex-wrap:wrap}
+.mat-kpi-card{flex:1;min-width:140px;padding:12px;background:var(--bg-0);border-radius:var(--r-s);border:1px solid var(--b1)}
+.mat-kpi-card .label{font-size:10px;color:var(--c2);text-transform:uppercase;letter-spacing:.5px}
+.mat-kpi-card .value{font-size:20px;font-weight:700;font-family:var(--fm);color:var(--ac);margin-top:2px}
+.mat-kpi-card .sub{font-size:11px;color:var(--c1);margin-top:1px}
+.mat-status{display:inline-block;padding:2px 6px;border-radius:8px;font-size:10px;font-weight:600}
+.mat-status.linked{background:rgba(16,185,129,.12);color:#059669}
+.mat-status.no-link{background:var(--bg-2);color:var(--c2)}
+.mat-empty{padding:40px 20px;text-align:center;color:var(--c2);font-size:13px}
+.mat-scroll{max-height:60vh;overflow-y:auto}
 </style>
 </head>
 <body>
@@ -753,11 +780,12 @@ const I={
 const ZM={day:{l:'Día',w:28},week:{l:'Semana',w:8},month:{l:'Mes',w:2.5},qtr:{l:'Trim.',w:.8}};
 
 /* ═══════ Tooltip ═══════ */
-function Tooltip({info}){
+function Tooltip({info,computoData}){
   if(!info)return null;
   const{task:t,x,y}=info;const s=gSt(t);const bl=t.baselines.length?t.baselines[0]:null;
   const ef=Object.entries(t.ent).filter(([,v])=>!v.guid);
-  return <div className="tt" style={{left:Math.min(x,window.innerWidth-300),top:Math.max(y-150,10)}}>
+  const nItem=entV(t,'N° Item');
+  return <div className="tt" style={{left:Math.min(x,window.innerWidth-300),top:Math.max(y-200,10),maxWidth:320}}>
     <div className="tn">{t.name}</div>
     {t.wbs&&<div className="tr"><span className="tl">WBS</span><span className="tv">{t.wbs}</span></div>}
     <div className="tr"><span className="tl">Estado</span><span className="tv" style={{color:stC(s)}}>{stL(s)}</span></div>
@@ -774,6 +802,7 @@ function Tooltip({info}){
       <div className="tr"><span className="tl">Fin LB</span><span className="tv">{fD(bl.finish)}</span></div>
       {t.finish&&bl.finish&&<div className="tr"><span className="tl">Desvío</span><span className="tv" style={{color:t.finish>bl.finish?'var(--err)':'var(--ok)'}}>{dB(bl.finish,t.finish)} días</span></div>}
     </Fragment>}
+    <MatTooltipSection computoData={computoData} nItem={nItem}/>
   </div>;
 }
 /* ═══════ GANTT SVG ═══════ */
@@ -1078,47 +1107,25 @@ function Sparkline({data,field='avg',w=60,h=16,color='var(--ac)'}){
   </span>;
 }
 
-/* ═══════ Health: Obra contratada (alcance total) vs Obra real (avance) ═══════ */
+/* ═══════ Health calculation ═══════ */
 function calcHealth(data){
   if(!data||!data.tasks)return null;
   const ts=data.tasks.filter(t=>!t.isSummary);
-  if(!ts.length)return{color:'x',label:'Sin tareas',tot:0,done:0,ov:0,avg:0,ip:0,timePct:0,gap:0};
-  const now=new Date();
-
-  /* Obra contratada = alcance total (nunca cambia) */
+  if(!ts.length)return{color:'x',label:'Sin tareas',tot:0,done:0,ov:0,avg:0,ip:0};
   const tot=ts.length;
-
-  /* Obra real = lo que efectivamente se hizo */
   const done=ts.filter(t=>t.percentComplete>=100).length;
   const ov=ts.filter(t=>isOv(t)).length;
   const ip=ts.filter(t=>t.percentComplete>0&&t.percentComplete<100).length;
   const avg=Math.round(ts.reduce((s,t)=>s+t.percentComplete,0)/tot);
-  const donePct=Math.round(done/tot*100);
-
-  /* Tiempo transcurrido del proyecto */
-  const withDates=ts.filter(t=>t.start&&t.finish);
-  let timePct=0;
-  if(withDates.length){
-    const projStart=new Date(Math.min(...withDates.map(t=>t.start.getTime())));
-    const projEnd=new Date(Math.max(...withDates.map(t=>t.finish.getTime())));
-    const totalSpan=projEnd-projStart;
-    if(totalSpan>0){
-      const elapsed=Math.max(0,Math.min(now-projStart,totalSpan));
-      timePct=Math.round(elapsed/totalSpan*100);
-    }
-  }
-
-  /* Brecha: dónde debería estar vs dónde está */
-  const gap=timePct-donePct; /* positivo = atrasado, negativo = adelantado */
-
-  /* Semáforo */
+  const ovPct=tot>0?ov/tot:0;
+  const msOverdue=ts.filter(t=>t.isMilestone&&isOv(t)).length;
   let color='g',label='En tiempo';
-  if(gap>25){color='r';label='En riesgo'}
-  else if(gap>10){color='y';label='Atención'}
-  else if(gap<=0){color='g';label=gap<-5?'Adelantada':'En tiempo'}
-
+  if(ovPct>.25||msOverdue>5){color='r';label='En riesgo'}
+  else if(ovPct>.10||msOverdue>2){color='y';label='Atención'}
+  /* Next milestone */
+  const now=new Date();
   const nextMs=ts.filter(t=>t.isMilestone&&t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish)[0];
-  return{color,label,tot,done,ov,ip,avg,donePct,timePct,gap,nextMs:nextMs||null};
+  return{color,label,tot,done,ov,ip,avg,nextMs:nextMs||null};
 }
 
 /* ═══════ Weekly View ═══════ */
@@ -1370,6 +1377,238 @@ function ProcurementView({data}){
   </div>;
 }
 
+/* ═══════ COMPUTO-OBRAS INTEGRATION ═══════ */
+const COMPUTO_URL='https://beuzmwrhqlmjoplsillf.supabase.co';
+const COMPUTO_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldXptd3JocWxtam9wbHNpbGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc1NDcsImV4cCI6MjA5NTA2MzU0N30.Rw82cnyzp2S2Alc6lWiBCDxVL8u_8wAfCTConDGpYFE';
+let _csb=null;
+function getComputoSb(){if(!_csb)_csb=window.supabase.createClient(COMPUTO_URL,COMPUTO_KEY);return _csb}
+
+/* Cache computo data per project code */
+const _computoCache={};
+async function fetchComputoForProject(projectCode){
+  if(!projectCode)return null;
+  if(_computoCache[projectCode])return _computoCache[projectCode];
+  try{
+    const sb=getComputoSb();
+    /* Fetch coeficientes (task recipes - shared, read-only) */
+    const{data:coefs,error:e1}=await sb.from('coeficientes').select('id,cod,nombre,rubro,unidad,mats');
+    if(e1)throw e1;
+    /* Fetch materiales (base materials - shared, read-only) */
+    const{data:mats,error:e2}=await sb.from('materiales').select('id,cod,nombre,unidad,cat,precio');
+    if(e2)throw e2;
+    /* Try to fetch obra and mediciones for this specific project */
+    let obra=null,mediciones=[];
+    const{data:obras}=await sb.from('obras').select('*').eq('cod',projectCode);
+    if(obras&&obras.length){
+      obra=obras[0];
+      const{data:meds}=await sb.from('mediciones').select('*').eq('obra_id',obra.id);
+      if(meds)mediciones=meds;
+    }
+    /* Build lookup maps */
+    const coefMap={};for(const c of(coefs||[]))coefMap[c.cod]=c;
+    const matByName={};for(const m of(mats||[]))matByName[m.nombre]=m;
+    /* Build medicion lookup by coef_id */
+    const medByCoef={};for(const m of mediciones){if(!medByCoef[m.coef_id])medByCoef[m.coef_id]=[];medByCoef[m.coef_id].push(m)}
+    const result={obra,coefs:coefs||[],coefMap,materiales:mats||[],matByName,mediciones,medByCoef,loaded:true};
+    _computoCache[projectCode]=result;
+    return result;
+  }catch(err){
+    console.warn('Computo fetch error:',err);
+    return{loaded:false,error:err.message||'Error de conexión',coefs:[],coefMap:{},materiales:[],matByName:{},mediciones:[],medByCoef:{},obra:null};
+  }
+}
+
+/* Get materials for a task by its N° Item code */
+function getTaskMaterials(computoData,nItem){
+  if(!computoData||!nItem||!computoData.coefMap[nItem])return null;
+  const coef=computoData.coefMap[nItem];
+  if(!coef.mats||!coef.mats.length)return{coef,items:[],mediciones:[]};
+  const meds=computoData.medByCoef[coef.id]||[];
+  const totalQty=meds.reduce((s,m)=>s+(m.cantidad||0),0);
+  const items=(coef.mats||[]).map(m=>{
+    const mat=computoData.matByName[m.matRef];
+    const needed=totalQty>0?totalQty*m.coef:m.coef;
+    const commercial=m.divisor&&m.divisor>1?Math.ceil(needed/m.divisor):needed;
+    return{...m,materialInfo:mat,cantidadNecesaria:needed.toFixed(2),cantidadComercial:commercial,totalMedido:totalQty};
+  });
+  return{coef,items,mediciones:meds,totalMedido:totalQty};
+}
+
+/* ═══════ Materials Tooltip Section ═══════ */
+function MatTooltipSection({computoData,nItem}){
+  if(!computoData||!nItem)return null;
+  const info=getTaskMaterials(computoData,nItem);
+  if(!info||!info.items.length)return null;
+  return <div className="mat-tt">
+    <div className="mat-tt-title">Materiales ({info.items.length})</div>
+    {info.totalMedido>0&&<div style={{fontSize:10,color:'var(--c1)',marginBottom:4}}>Medido: {info.totalMedido} {info.coef.unidad}</div>}
+    {info.items.slice(0,6).map((m,i)=><div key={i} className="mat-tt-item">
+      <span className="mn">{m.matRef}</span>
+      <span className="mq">{info.totalMedido>0?m.cantidadNecesaria:m.coef} {m.un}</span>
+    </div>)}
+    {info.items.length>6&&<div style={{fontSize:10,color:'var(--c2)',marginTop:2}}>+{info.items.length-6} más</div>}
+  </div>;
+}
+
+/* ═══════ Materials View (full tab) ═══════ */
+function MaterialsView({data,computoData,visTasks}){
+  const[viewMode,setViewMode]=useState('gantt');/*gantt|list|period*/
+  const[periodMode,setPeriodMode]=useState('month');/*week|month*/
+  const[selTask,setSelTask]=useState(null);
+  const[fRubro,setFRubro]=useState('all');
+  const[fMat,setFMat]=useState('');
+
+  if(!computoData||!computoData.loaded)return <div className="mat-empty">
+    <div style={{fontSize:16,marginBottom:8}}>⚠️ No se pudo conectar con Cómputo de Obras</div>
+    <div>{computoData?.error||'Verificá la conexión a internet e intentá de nuevo.'}</div>
+  </div>;
+
+  /* Build consolidated materials list from all tasks */
+  const allMaterials=useMemo(()=>{
+    const matMap={};
+    const taskMats=[];
+    for(const t of(visTasks||data.tasks)){
+      const nItem=entV(t,'N° Item');
+      if(!nItem)continue;
+      const info=getTaskMaterials(computoData,nItem);
+      if(!info||!info.items.length)continue;
+      taskMats.push({task:t,info});
+      for(const m of info.items){
+        const key=m.matRef;
+        if(!matMap[key])matMap[key]={matRef:m.matRef,un:m.un,unComercial:m.unComercial||m.un,cat:m.materialInfo?.cat||'',precio:m.materialInfo?.precio||0,totalNeeded:0,tasks:[],byPeriod:{}};
+        matMap[key].totalNeeded+=parseFloat(m.cantidadNecesaria)||0;
+        matMap[key].tasks.push({task:t,qty:parseFloat(m.cantidadNecesaria)||0});
+        /* Group by period */
+        if(t.start){
+          const pk=periodMode==='week'
+            ?`${t.start.getFullYear()}-S${String(Math.ceil((t.start.getDate()+new Date(t.start.getFullYear(),t.start.getMonth(),1).getDay())/7)).padStart(2,'0')}-${String(t.start.getMonth()+1).padStart(2,'0')}`
+            :`${t.start.getFullYear()}-${String(t.start.getMonth()+1).padStart(2,'0')}`;
+          if(!matMap[key].byPeriod[pk])matMap[key].byPeriod[pk]=0;
+          matMap[key].byPeriod[pk]+=parseFloat(m.cantidadNecesaria)||0;
+        }
+      }
+    }
+    return{matMap,taskMats,list:Object.values(matMap).sort((a,b)=>b.totalNeeded-a.totalNeeded)};
+  },[visTasks,data.tasks,computoData,periodMode]);
+
+  /* Get unique rubros from coefs */
+  const rubros=useMemo(()=>{
+    const s=new Set();
+    for(const c of computoData.coefs)if(c.rubro)s.add(c.rubro);
+    return[...s].sort();
+  },[computoData.coefs]);
+
+  /* Get all periods sorted */
+  const periods=useMemo(()=>{
+    const s=new Set();
+    for(const m of allMaterials.list)for(const pk of Object.keys(m.byPeriod))s.add(pk);
+    return[...s].sort();
+  },[allMaterials.list]);
+
+  /* Filtered list */
+  const filtered=useMemo(()=>{
+    let list=allMaterials.list;
+    if(fRubro!=='all')list=list.filter(m=>m.cat===fRubro);
+    if(fMat)list=list.filter(m=>m.matRef.toLowerCase().includes(fMat.toLowerCase()));
+    return list;
+  },[allMaterials.list,fRubro,fMat]);
+
+  /* KPIs */
+  const kpis=useMemo(()=>{
+    const linked=allMaterials.taskMats.length;
+    const total=(visTasks||data.tasks).filter(t=>!t.isSummary).length;
+    return{linked,total,materials:allMaterials.list.length,pct:total?Math.round(linked/total*100):0};
+  },[allMaterials,visTasks,data.tasks]);
+
+  /* Export to Excel */
+  const exportXls=useCallback(()=>{
+    const rows=filtered.map(m=>({'Material':m.matRef,'Cantidad':Math.round(m.totalNeeded*100)/100,'Unidad':m.un,'Unidad Comercial':m.unComercial,'Categoría':m.cat,'Precio unitario':m.precio,'Subtotal':Math.round(m.totalNeeded*m.precio),'Tareas vinculadas':m.tasks.length}));
+    const ws=XLSX.utils.json_to_sheet(rows);
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Materiales');
+    XLSX.writeFile(wb,`Materiales_${data.tasks[0]?.name||'obra'}_${new Date().toISOString().slice(0,10)}.xlsx`);
+  },[filtered,data]);
+
+  /* Format period label */
+  const fPeriod=pk=>{
+    if(periodMode==='week'){const[y,sw,mo]=pk.split('-');const mn=new Date(parseInt(y),parseInt(mo)-1).toLocaleDateString('es-AR',{month:'short'});return`${mn} ${sw}`}
+    const[y,mo]=pk.split('-');return new Date(parseInt(y),parseInt(mo)-1).toLocaleDateString('es-AR',{month:'long',year:'numeric'});
+  };
+
+  return <div>
+    {/* KPIs */}
+    <div className="mat-kpi">
+      <div className="mat-kpi-card"><div className="label">Tareas vinculadas</div><div className="value">{kpis.linked}<span style={{fontSize:13,color:'var(--c1)'}}>/{kpis.total}</span></div><div className="sub">{kpis.pct}% con materiales</div></div>
+      <div className="mat-kpi-card"><div className="label">Materiales distintos</div><div className="value">{kpis.materials}</div></div>
+      <div className="mat-kpi-card"><div className="label">Obra en cómputo</div><div className="value" style={{fontSize:14}}>{computoData.obra?computoData.obra.nombre:'No vinculada'}</div><div className="sub">{computoData.obra?<span className="mat-status linked">Vinculada</span>:<span className="mat-status no-link">Sin mediciones</span>}</div></div>
+    </div>
+
+    {/* Controls */}
+    <div className="mat-controls">
+      <div className="seg">
+        <button className={viewMode==='list'?'on':''} onClick={()=>setViewMode('list')}>Lista</button>
+        <button className={viewMode==='period'?'on':''} onClick={()=>setViewMode('period')}>Por período</button>
+      </div>
+      {viewMode==='period'&&<div className="seg">
+        <button className={periodMode==='week'?'on':''} onClick={()=>setPeriodMode('week')}>Semana</button>
+        <button className={periodMode==='month'?'on':''} onClick={()=>setPeriodMode('month')}>Mes</button>
+      </div>}
+      <span className="fl">Rubro</span>
+      <select className="fsel" value={fRubro} onChange={e=>setFRubro(e.target.value)}>
+        <option value="all">Todos</option>
+        {rubros.map(r=><option key={r} value={r}>{r}</option>)}
+      </select>
+      <input type="text" className="fin" placeholder="Buscar material..." value={fMat} onChange={e=>setFMat(e.target.value)} style={{width:160}}/>
+      <button className="btn btn-g" onClick={exportXls} style={{marginLeft:'auto'}}>↓ Excel</button>
+    </div>
+
+    {/* List view */}
+    {viewMode==='list'&&<div className="mat-panel">
+      <div className="mat-scroll">
+        <table className="mat-table">
+          <thead><tr><th>Material</th><th>Cantidad</th><th>Unidad</th><th>U. Comercial</th><th>Categoría</th><th>Precio</th><th>Subtotal</th><th>Tareas</th></tr></thead>
+          <tbody>{filtered.map(m=><tr key={m.matRef}>
+            <td style={{fontWeight:500,maxWidth:250,overflow:'hidden',textOverflow:'ellipsis'}}>{m.matRef}</td>
+            <td className="mono">{Math.round(m.totalNeeded*100)/100}</td>
+            <td>{m.un}</td>
+            <td>{m.unComercial}</td>
+            <td style={{fontSize:11,color:'var(--c1)'}}>{m.cat||'—'}</td>
+            <td className="mono">{m.precio?`$${m.precio.toLocaleString('es-AR')}`:' —'}</td>
+            <td className="mono" style={{fontWeight:600}}>{m.precio?`$${Math.round(m.totalNeeded*m.precio).toLocaleString('es-AR')}`:' —'}</td>
+            <td className="mono">{m.tasks.length}</td>
+          </tr>)}</tbody>
+        </table>
+      </div>
+      {filtered.length===0&&<div className="mat-empty">No se encontraron materiales con los filtros actuales.</div>}
+    </div>}
+
+    {/* Period view */}
+    {viewMode==='period'&&<div className="mat-panel">
+      {periods.length===0&&<div className="mat-empty">No hay materiales con fecha de inicio para agrupar por período.</div>}
+      {periods.map(pk=>{
+        const periodMats=filtered.filter(m=>m.byPeriod[pk]>0).map(m=>({...m,periodQty:m.byPeriod[pk]})).sort((a,b)=>b.periodQty-a.periodQty);
+        if(!periodMats.length)return null;
+        return <div key={pk}>
+          <div style={{padding:'10px 16px',background:'var(--bg-0)',borderBottom:'1px solid var(--b1)',fontWeight:600,fontSize:13,display:'flex',justifyContent:'space-between'}}>
+            <span>{fPeriod(pk)}</span>
+            <span style={{fontSize:11,color:'var(--c1)',fontWeight:400}}>{periodMats.length} materiales</span>
+          </div>
+          <table className="mat-table">
+            <thead><tr><th>Material</th><th>Cantidad</th><th>Unidad</th><th>Categoría</th><th>Subtotal</th></tr></thead>
+            <tbody>{periodMats.map(m=><tr key={m.matRef}>
+              <td style={{fontWeight:500}}>{m.matRef}</td>
+              <td className="mono">{Math.round(m.periodQty*100)/100}</td>
+              <td>{m.un}</td>
+              <td style={{fontSize:11,color:'var(--c1)'}}>{m.cat||'—'}</td>
+              <td className="mono" style={{fontWeight:600}}>{m.precio?`$${Math.round(m.periodQty*m.precio).toLocaleString('es-AR')}`:' —'}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>;
+      })}
+    </div>}
+  </div>;
+}
+
 /* ═══════ MAIN APP ═══════ */
 function App(){
   const[th,togTh]=useTheme();
@@ -1406,9 +1645,45 @@ function App(){
   const[showTour,setShowTour]=useState(()=>{try{return!localStorage.getItem(TOUR_KEY)}catch(e){return false}});
   const clientProj=useMemo(()=>{const p=new URLSearchParams(window.location.search);return p.get('proyecto')||p.get('project')||null},[]);
 
+  const[computoData,setComputoData]=useState({});
+
   const scrollRef=useRef({v:0,src:null});
   const tblRef=useRef(null);
   const tblScrolling=useRef(false);
+
+  /* Load computo data when a project is active */
+  useEffect(()=>{
+    if(!active||!pData[active])return;
+    const d=pData[active];if(!d||!d.tasks)return;
+    /* Try to find project code from metadata or N° Item pattern */
+    const meta=matchMeta(d.tasks[0]?.name||'',metaList);
+    /* Try multiple code sources: meta archivoXML, or first task with N° Item */
+    let code=null;
+    /* Check if the project Excel metadata has a code-like field */
+    if(meta&&meta.proyecto){
+      /* Try to derive code from project name - check if obras has matching name */
+      code=meta.proyecto;
+    }
+    /* Also try to match by project name directly */
+    const projName=(pList||[]).find(p=>p.key===active)?.name||'';
+    fetchComputoForProject(code).then(r=>{
+      if(r)setComputoData(prev=>({...prev,[active]:r}));
+      /* If code didn't work, try matching by name */
+      if((!r||!r.obra)&&projName){
+        const sb=getComputoSb();
+        sb.from('obras').select('*').then(({data:allObras})=>{
+          if(!allObras)return;
+          const norm=normalizeForMatch(projName);
+          const match=allObras.find(o=>normalizeForMatch(o.nombre).includes(norm)||norm.includes(normalizeForMatch(o.nombre)));
+          if(match&&match.cod){
+            fetchComputoForProject(match.cod).then(r2=>{
+              if(r2)setComputoData(prev=>({...prev,[active]:r2}));
+            });
+          }
+        });
+      }
+    });
+  },[active,pData,metaList,pList]);
 
   /* Load manifest + project metadata */
   useEffect(()=>{
@@ -1593,13 +1868,12 @@ function App(){
           <DeptMap projects={sp} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
           {/* Health summary under map */}
           {hVals.length>0&&<div style={{padding:'12px',borderTop:'1px solid var(--b1)'}}>
-            <div style={{fontSize:11,fontWeight:600,color:'var(--c1)',marginBottom:8,textTransform:'uppercase',letterSpacing:'.5px'}}>Contratada vs Real</div>
+            <div style={{fontSize:11,fontWeight:600,color:'var(--c1)',marginBottom:8,textTransform:'uppercase',letterSpacing:'.5px'}}>Salud global</div>
             <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
               <span className="health-badge g">{hVals.filter(h=>h.color==='g').length} en tiempo</span>
               {hVals.filter(h=>h.color==='y').length>0&&<span className="health-badge y">{hVals.filter(h=>h.color==='y').length} atención</span>}
               {hVals.filter(h=>h.color==='r').length>0&&<span className="health-badge r">{hVals.filter(h=>h.color==='r').length} en riesgo</span>}
             </div>
-            {(()=>{const totalDone=hVals.reduce((s,h)=>s+h.done,0);const totalTot=hVals.reduce((s,h)=>s+h.tot,0);return totalTot>0?<div style={{fontSize:10,color:'var(--c1)',marginTop:6}}>{totalDone} de {totalTot} tareas completadas ({Math.round(totalDone/totalTot*100)}%)</div>:null})()}
           </div>}
         </div>
 
@@ -1634,24 +1908,13 @@ function App(){
                   {m?.comitente&&<span>👤 {m.comitente}</span>}
                 </div>
                 {h&&<Fragment>
-                  {/* Doble barra: tiempo vs avance */}
-                  <div style={{display:'flex',gap:4,alignItems:'center',marginTop:4}}>
-                    <span style={{fontSize:9,color:'var(--c2)',width:52,flexShrink:0}}>Contratada</span>
-                    <div className="pcard2-bar" style={{flex:1}}><div className="pcard2-fill" style={{width:`${h.timePct}%`,background:'var(--c2)'}}/></div>
-                    <span style={{fontSize:9,fontFamily:'var(--fm)',color:'var(--c1)',width:28,textAlign:'right'}}>{h.timePct}%</span>
-                  </div>
-                  <div style={{display:'flex',gap:4,alignItems:'center'}}>
-                    <span style={{fontSize:9,color:dotColor,fontWeight:600,width:52,flexShrink:0}}>Real</span>
-                    <div className="pcard2-bar" style={{flex:1}}><div className="pcard2-fill" style={{width:`${h.donePct}%`,background:dotColor}}/></div>
-                    <span style={{fontSize:9,fontFamily:'var(--fm)',color:'var(--c0)',fontWeight:600,width:28,textAlign:'right'}}>{h.donePct}%</span>
-                  </div>
+                  <div className="pcard2-bar"><div className="pcard2-fill" style={{width:`${h.avg}%`,background:dotColor}}/></div>
                   <div className="pcard2-health">
                     <div className="pcard2-stats">
+                      <span style={{fontWeight:600,color:'var(--c0)'}}>{h.avg}%</span>
                       <span>{h.done}/{h.tot} hechas</span>
                       {h.ov>0&&<span style={{color:'var(--err)'}}>{h.ov} vencidas</span>}
                       {h.ip>0&&<span style={{color:'var(--warn)'}}>{h.ip} en curso</span>}
-                      {h.gap>0&&<span style={{color:h.gap>25?'var(--err)':h.gap>10?'var(--warn)':'var(--c1)',fontWeight:600}}>↓ {h.gap}% atrás</span>}
-                      {h.gap<=-5&&<span style={{color:'var(--ok)',fontWeight:600}}>↑ {Math.abs(h.gap)}% adelantada</span>}
                     </div>
                   </div>
                   {h.nextMs&&<div style={{fontSize:10,color:'var(--c2)',marginTop:2}}>Próximo hito: {h.nextMs.name} ({fD(h.nextMs.finish)})</div>}
@@ -1710,6 +1973,7 @@ function App(){
       <button className={`st ${sub==='gantt'?'on':''}`} onClick={()=>setSub('gantt')}>Gantt</button>
       <button className={`st ${sub==='semana'?'on':''}`} onClick={()=>setSub('semana')}>Semana</button>
       <button className={`st ${sub==='compras'?'on':''}`} onClick={()=>setSub('compras')}>Compras</button>
+      <button className={`st ${sub==='materiales'?'on':''}`} onClick={()=>setSub('materiales')} style={sub==='materiales'?{borderColor:'var(--ac)'}:{}}>Materiales</button>
       <button className={`st ${sub==='dash'?'on':''}`} onClick={()=>setSub('dash')}>Dashboard</button>
       <button className={`st ${sub==='demoras'?'on':''}`} onClick={()=>setSub('demoras')}>Demoras</button>
       {sub==='gantt'&&aData&&<div className="str">
@@ -1774,7 +2038,7 @@ function App(){
               <td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Rubro')||'—'}</td>
               <td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Nivel')||'—'}</td>
               <td style={{fontSize:10,color:'var(--c2)'}}>{entV(t,'Tableros')||'—'}</td>
-              <td className="mono" style={{fontSize:10}}>{entV(t,'N° Item')||'—'}</td>
+              <td className="mono" style={{fontSize:10}}>{entV(t,'N° Item')||'—'}{entV(t,'N° Item')&&computoData[active]?.coefMap?.[entV(t,'N° Item')]&&<span className="mat-badge" title="Tiene materiales en cómputo">⬡</span>}</td>
             </tr>
           })}</tbody>
         </table>
@@ -1785,10 +2049,11 @@ function App(){
 
     {!aLoading&&aData&&sub==='semana'&&<WeekView data={aData}/>}
     {!aLoading&&aData&&sub==='compras'&&<ProcurementView data={aData}/>}
+    {!aLoading&&aData&&sub==='materiales'&&<MaterialsView data={aData} computoData={computoData[active]||null} visTasks={visTasks}/>}
     {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData}/>}
     {!aLoading&&aData&&sub==='demoras'&&<DemorasView data={aData}/>}
 
-    <Tooltip info={ttInfo}/>
+    <Tooltip info={ttInfo} computoData={computoData[active]||null}/>
     {showSrch&&<SearchModal onClose={()=>setShowSrch(false)}/>}
     <div className="pf">BuildPlan Viewer — Bauvek · {new Date().toLocaleDateString('es-AR')}</div>
     <div className="mob-nav">
