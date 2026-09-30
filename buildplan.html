@@ -1119,13 +1119,25 @@ function calcHealth(data){
   const avg=Math.round(ts.reduce((s,t)=>s+t.percentComplete,0)/tot);
   const ovPct=tot>0?ov/tot:0;
   const msOverdue=ts.filter(t=>t.isMilestone&&isOv(t)).length;
-  let color='g',label='En tiempo';
-  if(ovPct>.25||msOverdue>5){color='r';label='En riesgo'}
-  else if(ovPct>.10||msOverdue>2){color='y';label='Atención'}
-  /* Next milestone */
+  /* Check if project end date is still in the future (has time buffer) */
   const now=new Date();
+  const maxFinish=ts.reduce((mx,t)=>t.finish&&t.finish>mx?t.finish:mx,new Date(0));
+  const daysToEnd=maxFinish>now?Math.round((maxFinish-now)/86400000):0;
+  const hasBuffer=daysToEnd>30;/* más de 30 días para terminar = tiene margen */
+  /* Thresholds are more lenient if the project still has time buffer */
+  let color='g',label='En tiempo';
+  if(hasBuffer){
+    /* Proyecto con margen: solo rojo si >40% vencidas o >8 hitos vencidos */
+    if(ovPct>.40||msOverdue>8){color='r';label='En riesgo'}
+    else if(ovPct>.25||msOverdue>5){color='y';label='Atención'}
+  }else{
+    /* Proyecto sin margen o vencido: umbrales más estrictos */
+    if(ovPct>.20||msOverdue>3){color='r';label='En riesgo'}
+    else if(ovPct>.10||msOverdue>1){color='y';label='Atención'}
+  }
+  /* Next milestone */
   const nextMs=ts.filter(t=>t.isMilestone&&t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish)[0];
-  return{color,label,tot,done,ov,ip,avg,nextMs:nextMs||null};
+  return{color,label,tot,done,ov,ip,avg,nextMs:nextMs||null,daysToEnd};
 }
 
 /* ═══════ Weekly View ═══════ */
@@ -1211,7 +1223,7 @@ const TOUR_STEPS=[
   {title:'Bienvenido a BuildPlan 360°',body:'Esta herramienta te muestra el estado de todas las obras de Bauvek en un solo lugar. Cada tarjeta tiene un semáforo de salud: verde, amarillo o rojo.'},
   {title:'Abrí un proyecto',body:'Hacé clic en cualquier tarjeta para ver el Gantt completo, el dashboard con métricas, y la vista semanal de tareas.'},
   {title:'Vista Semana',body:'Dentro de un proyecto, la pestaña "Semana" te muestra solo las tareas de esta semana, ideal para consultar desde el celular en la obra.'},
-  {title:'Compras y forecast',body:'La pestaña "Compras" te anticipa qué rubros tienen tareas arrancando en las próximas semanas. Útil para planificar abastecimiento.'},
+  {title:'Compras y necesidades',body:'La pestaña "Compras" te anticipa qué rubros tienen tareas arrancando en las próximas semanas. Útil para planificar abastecimiento.'},
   {title:'Portfolio cruzado',body:'El botón "Portfolio" compara todas las obras entre sí: avance, contratistas y vencidas. Cargá más de un proyecto para verlo en acción.'},
   {title:'Tendencia en el tiempo',body:'Cada semana que abrís esta página, se guarda una foto del avance. Con el tiempo vas a ver gráficos de tendencia en cada tarjeta.'},
 ];
@@ -1341,7 +1353,7 @@ function ProcurementView({data}){
 
   return <div className="proc-view">
     <div style={{marginBottom:16}}>
-      <div style={{fontSize:16,fontWeight:600,marginBottom:4}}>Forecast de necesidades</div>
+      <div style={{fontSize:16,fontWeight:600,marginBottom:4}}>Próximas necesidades</div>
       <div style={{fontSize:12,color:'var(--c1)'}}>Tareas que arrancan en las próximas semanas, agrupadas por rubro. Útil para anticipar compras y coordinar contratistas.</div>
     </div>
     <div className="proc-controls">
@@ -1957,8 +1969,9 @@ function App(){
   return <Fragment>
     <div className="ph"><h1>{aProj?.name}</h1><p>Generado el {new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})} — BuildPlan Viewer · Bauvek</p></div>
     <div className="hdr">
-      <a href="index.html" style={{color:'var(--c2)',fontSize:11,textDecoration:'none',marginRight:6}}>← BkTableros</a><div className="logo" onClick={()=>setActive(null)}>{I.bld(18)} BuildPlan</div>
+      <button onClick={()=>setActive(null)} style={{background:'none',border:'none',color:'var(--c2)',fontSize:11,cursor:'pointer',marginRight:6,padding:0}}>← BuildPlan</button><div className="logo" onClick={()=>setActive(null)}>{I.bld(18)} BuildPlan</div>
       <div className="tabs">
+        <a href="index.html" className="tab" style={{textDecoration:'none',color:'var(--c1)',fontWeight:600,fontSize:12,letterSpacing:'.3px'}}>TABLEROS BK</a>
         <button className="tab" onClick={()=>{setActive('__pf');setSub('portfolio')}}>{I.usr()} Portfolio</button>
         {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);if(!p)return null;
           return <button key={k} className={`tab ${active===k?'on':''}`} onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>})}
