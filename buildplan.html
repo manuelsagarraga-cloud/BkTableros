@@ -1938,9 +1938,9 @@ function App(){
         </div>
       </div>
       <div className="home">
-        {/* Sidebar: Map — only active projects */}
+        {/* Sidebar: Map — all projects */}
         <div className="home-sidebar">
-          <DeptMap projects={activeProjs} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
+          <DeptMap projects={sp} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
           {/* Health summary under map — only active */}
           {hVals.length>0&&<div style={{padding:'12px',borderTop:'1px solid var(--b1)'}}>
             <div style={{fontSize:11,fontWeight:600,color:'var(--c1)',marginBottom:8,textTransform:'uppercase',letterSpacing:'.5px'}}>Salud obras activas</div>
