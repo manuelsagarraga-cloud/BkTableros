@@ -378,19 +378,29 @@ const ENT={
 /* Map cities to departments */
 const CITY_TO_DEPT={
   'mendiolaza':'Colón','mendiolaza - el terrón':'Colón','mendiolaza - q2':'Colón',
-  'la calera':'Colón','la calera - vistas de la deseada':'Colón',
+  'villa allende':'Colón',
+  'la calera':'Colón','la calera - vistas de la deseada':'Colón','la calera - la deseada':'Colón',
   'malagueño':'Santa María','malagueño - cañitas':'Santa María',
   'villa ciudad parque - molvento':'Calamuchita','molvento':'Calamuchita',
   'villa ciudad parque':'Calamuchita',
+  'villa del dique':'Calamuchita',
+  'córdoba capital':'Capital','cordoba capital':'Capital',
+  'alta gracia':'Santa María',
 };
 const CITY_COORDS={
   'mendiolaza':{lat:-31.317,lng:-64.290,label:'Mendiolaza',dept:'Colón'},
   'mendiolaza - el terrón':{lat:-31.305,lng:-64.295,label:'Mendiolaza - El Terrón',dept:'Colón'},
   'mendiolaza - q2':{lat:-31.310,lng:-64.285,label:'Mendiolaza - Q2',dept:'Colón'},
+  'villa allende':{lat:-31.295,lng:-64.296,label:'Villa Allende',dept:'Colón'},
   'la calera - vistas de la deseada':{lat:-31.345,lng:-64.335,label:'La Calera',dept:'Colón'},
+  'la calera - la deseada':{lat:-31.345,lng:-64.335,label:'La Calera - La Deseada',dept:'Colón'},
   'malagueño - cañitas':{lat:-31.463,lng:-64.358,label:'Malagueño',dept:'Santa María'},
   'villa ciudad parque - molvento':{lat:-31.593,lng:-64.463,label:'Molvento',dept:'Calamuchita'},
   'molvento':{lat:-31.593,lng:-64.463,label:'Molvento',dept:'Calamuchita'},
+  'villa del dique':{lat:-32.170,lng:-64.453,label:'Villa del Dique',dept:'Calamuchita'},
+  'córdoba capital':{lat:-31.420,lng:-64.188,label:'Córdoba Capital',dept:'Capital'},
+  'cordoba capital':{lat:-31.420,lng:-64.188,label:'Córdoba Capital',dept:'Capital'},
+  'alta gracia':{lat:-31.660,lng:-64.432,label:'Alta Gracia',dept:'Santa María'},
 };
 
 function normalizeForMatch(s){
@@ -478,6 +488,7 @@ const DEPT_COLORS={
   'Colón':'#9E0101',
   'Santa María':'#D4930D',
   'Calamuchita':'#10b981',
+  'Capital':'#6366f1',
 };
 
 function DeptMap({projects,metaList,selectedDept,onSelectDept}){
@@ -1850,61 +1861,37 @@ function App(){
     return <ClientView projName={clientProj} pList={pList} pData={pData} metaList={metaList}/>;
   }
 
+  const[showFinished,setShowFinished]=useState(false);
+
   /* ═══ HOME ═══ */
   if(!active){
     const sp=(pList||[]).filter(p=>!p.local);
-    /* Filter by map selection */
-    const filteredSp=mapCity?sp.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.dept===mapCity}):sp;
+    /* Classify projects by state from Excel metadata */
+    const getEstado=p=>{const m=matchMeta(p.name,metaList);return(m?.estado||'').trim()};
+    const activoProjs=sp.filter(p=>getEstado(p)==='Activo');
+    const pausaProjs=sp.filter(p=>getEstado(p)==='En pausa');
+    const finalizadoProjs=sp.filter(p=>getEstado(p)==='Finalizado');
+    const canceladaProjs=sp.filter(p=>{const e=getEstado(p);return e==='Cancelada'||e==='Cancelado'});
+    const sinEstado=sp.filter(p=>{const e=getEstado(p);return!e||!['Activo','En pausa','Finalizado','Cancelada','Cancelado'].includes(e)});
+    const activeProjs=[...activoProjs,...pausaProjs,...sinEstado];
+    /* Filter by map selection (only active) */
+    const filteredActive=mapCity?activeProjs.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.dept===mapCity}):activeProjs;
 
-    /* Health summary for nav badges */
-    const hVals=Object.values(healthMap).filter(Boolean);
+    /* Health summary for nav badges (only active projects) */
+    const activeKeys=new Set(activeProjs.map(p=>p.key));
+    const hVals=Object.entries(healthMap).filter(([k,v])=>v&&activeKeys.has(k)).map(([,v])=>v);
     const totalOv=hVals.reduce((s,h)=>s+h.ov,0);
 
-    return <Fragment>
-      <div className="hdr">
-        <a href="index.html" style={{color:'var(--c2)',fontSize:11,textDecoration:'none',marginRight:6}}>← BkTableros</a><div className="logo">{I.bld(18)} BuildPlan <span>360°</span></div>
-        <div className="tabs">
-          <button className="tab on">{I.home(14)} Inicio</button>
-          <button className="tab" onClick={()=>{setActive('__pf');setSub('portfolio')}} style={{color:'var(--ac)'}}>{I.usr(14)} Portfolio</button>
-          {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);return p?<button key={k} className="tab" onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>:null})}
-        </div>
-        <div className="acts">
-          {totalOv>0&&<span style={{fontSize:11,color:'var(--err)',fontWeight:600,fontFamily:'var(--fm)'}}>{totalOv} vencidas</span>}
-          <button className="btn btn-g btn-i" onClick={()=>setShowSrch(true)} title="Ctrl+K">{I.srch()}</button>
-          <button className="btn btn-g btn-i" onClick={togTh}>{th==='light'?I.moon():I.sun()}</button>
-        </div>
-      </div>
-      <div className="home">
-        {/* Sidebar: Map */}
-        <div className="home-sidebar">
-          <DeptMap projects={sp} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
-          {/* Health summary under map */}
-          {hVals.length>0&&<div style={{padding:'12px',borderTop:'1px solid var(--b1)'}}>
-            <div style={{fontSize:11,fontWeight:600,color:'var(--c1)',marginBottom:8,textTransform:'uppercase',letterSpacing:'.5px'}}>Salud global</div>
-            <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
-              <span className="health-badge g">{hVals.filter(h=>h.color==='g').length} en tiempo</span>
-              {hVals.filter(h=>h.color==='y').length>0&&<span className="health-badge y">{hVals.filter(h=>h.color==='y').length} atención</span>}
-              {hVals.filter(h=>h.color==='r').length>0&&<span className="health-badge r">{hVals.filter(h=>h.color==='r').length} en riesgo</span>}
-            </div>
-          </div>}
-        </div>
-
-        {/* Main: Project cards */}
-        <div className="home-main">
-          <div className="home-h">
-            <div className="home-title">Proyectos</div>
-            <div className="home-sub">{filteredSp.length} obras{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{hVals.length>0&&!mapCity&&<span style={{marginLeft:8,color:'var(--c2)'}}>· {hVals.length} analizadas</span>}</div>
-          </div>
-          <div className="pgrid2">
-            {filteredSp.map(p=>{
+    /* Render a project card */
+    const renderCard=(p)=>{
               const m=matchMeta(p.name,metaList);
               const estado=m?.estado||'';
               const h=healthMap[p.key];
               const isLoading=!!autoLoading[p.key];
               const hClass=h?`health-${h.color}`:'';
-              const dotColor=h?({g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'}[h.color]):(estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)');
-              const stBg=estado==='Activo'?'rgba(16,185,129,.1)':estado==='En pausa'?'rgba(245,158,11,.1)':'rgba(139,146,165,.1)';
-              const stColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)';
+              const dotColor=h?({g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'}[h.color]):(estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':estado==='Cancelada'?'var(--err)':'var(--c2)');
+              const stBg=estado==='Activo'?'rgba(16,185,129,.1)':estado==='En pausa'?'rgba(245,158,11,.1)':estado==='Cancelada'?'rgba(239,68,68,.08)':estado==='Finalizado'?'rgba(139,146,165,.08)':'rgba(139,146,165,.1)';
+              const stColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':estado==='Cancelada'?'var(--err)':'var(--c2)';
               const m2t=(m?.m2Cubierta||0)+(m?.m2Semi||0);
               return <div key={p.key} className={`pcard2 ${hClass}`} onClick={()=>openProj(p)}>
                 <div className="pcard2-top">
@@ -1935,8 +1922,73 @@ function App(){
                 {!h&&isLoading&&<div className="pcard2-loading"><div className="mini-sp"/>Analizando...</div>}
                 {!h&&!isLoading&&p.size&&<div className="pcard2-bottom"><span>{(p.size/1024).toFixed(0)} KB</span></div>}
               </div>;
-            })}
+    };
+
+    return <Fragment>
+      <div className="hdr">
+        <a href="index.html" style={{color:'var(--c2)',fontSize:11,textDecoration:'none',marginRight:6}}>← BkTableros</a><div className="logo">{I.bld(18)} BuildPlan <span>360°</span></div>
+        <div className="tabs">
+          <button className="tab on">{I.home(14)} Inicio</button>
+          <button className="tab" onClick={()=>{setActive('__pf');setSub('portfolio')}} style={{color:'var(--ac)'}}>{I.usr(14)} Portfolio</button>
+          {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);return p?<button key={k} className="tab" onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>:null})}
+        </div>
+        <div className="acts">
+          {totalOv>0&&<span style={{fontSize:11,color:'var(--err)',fontWeight:600,fontFamily:'var(--fm)'}}>{totalOv} vencidas</span>}
+          <button className="btn btn-g btn-i" onClick={()=>setShowSrch(true)} title="Ctrl+K">{I.srch()}</button>
+          <button className="btn btn-g btn-i" onClick={togTh}>{th==='light'?I.moon():I.sun()}</button>
+        </div>
+      </div>
+      <div className="home">
+        {/* Sidebar: Map — only active projects */}
+        <div className="home-sidebar">
+          <DeptMap projects={activeProjs} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
+          {/* Health summary under map — only active */}
+          {hVals.length>0&&<div style={{padding:'12px',borderTop:'1px solid var(--b1)'}}>
+            <div style={{fontSize:11,fontWeight:600,color:'var(--c1)',marginBottom:8,textTransform:'uppercase',letterSpacing:'.5px'}}>Salud obras activas</div>
+            <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+              <span className="health-badge g">{hVals.filter(h=>h.color==='g').length} en tiempo</span>
+              {hVals.filter(h=>h.color==='y').length>0&&<span className="health-badge y">{hVals.filter(h=>h.color==='y').length} atención</span>}
+              {hVals.filter(h=>h.color==='r').length>0&&<span className="health-badge r">{hVals.filter(h=>h.color==='r').length} en riesgo</span>}
+            </div>
+          </div>}
+        </div>
+
+        {/* Main: Project cards — separated */}
+        <div className="home-main">
+          {/* ACTIVE PROJECTS */}
+          <div className="home-h">
+            <div className="home-title">Obras activas</div>
+            <div className="home-sub">{filteredActive.length} obras{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{hVals.length>0&&!mapCity&&<span style={{marginLeft:8,color:'var(--c2)'}}>· {hVals.length} analizadas</span>}</div>
           </div>
+          <div className="pgrid2">
+            {filteredActive.map(renderCard)}
+          </div>
+
+          {/* FINALIZADAS — collapsible */}
+          {finalizadoProjs.length>0&&<div style={{marginTop:32}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'12px 0',borderTop:'1px solid var(--b1)'}} onClick={()=>setShowFinished(f=>f==='fin'?false:'fin')}>
+              <span style={{width:10,height:10,borderRadius:2,background:'var(--ok)',opacity:.5,flexShrink:0}}/>
+              <span style={{fontSize:14,fontWeight:600,color:'var(--c1)'}}>Obras finalizadas</span>
+              <span style={{fontSize:11,color:'var(--c2)',fontFamily:'var(--fm)',background:'rgba(16,185,129,.1)',color:'var(--ok)',padding:'2px 8px',borderRadius:10,fontWeight:600}}>{finalizadoProjs.length}</span>
+              <span style={{fontSize:11,color:'var(--c2)',marginLeft:'auto'}}>{showFinished==='fin'?'▲ Ocultar':'▼ Mostrar'}</span>
+            </div>
+            {showFinished==='fin'&&<div className="pgrid2" style={{opacity:.6}}>
+              {finalizadoProjs.map(renderCard)}
+            </div>}
+          </div>}
+
+          {/* CANCELADAS — collapsible */}
+          {canceladaProjs.length>0&&<div style={{marginTop:16}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'12px 0',borderTop:'1px solid var(--b1)'}} onClick={()=>setShowFinished(f=>f==='can'?false:'can')}>
+              <span style={{width:10,height:10,borderRadius:2,background:'var(--err)',opacity:.5,flexShrink:0}}/>
+              <span style={{fontSize:14,fontWeight:600,color:'var(--c1)'}}>Obras canceladas</span>
+              <span style={{fontSize:11,fontFamily:'var(--fm)',background:'rgba(239,68,68,.1)',color:'var(--err)',padding:'2px 8px',borderRadius:10,fontWeight:600}}>{canceladaProjs.length}</span>
+              <span style={{fontSize:11,color:'var(--c2)',marginLeft:'auto'}}>{showFinished==='can'?'▲ Ocultar':'▼ Mostrar'}</span>
+            </div>
+            {showFinished==='can'&&<div className="pgrid2" style={{opacity:.6}}>
+              {canceladaProjs.map(renderCard)}
+            </div>}
+          </div>}
         </div>
       </div>
       {showTour&&<Tour onDone={dismissTour}/>}
