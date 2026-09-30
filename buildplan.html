@@ -436,6 +436,7 @@ async function loadProjectMeta(){
         cityLabel:coordEntry?.label||row['Ciudad / Localidad']||'',
         dept:dept,
         _norm:normalizeForMatch(row['Proyecto']),
+        _normXml:normalizeForMatch(row['Archivo XML']||''),
       };
     });
   }catch(e){console.warn('No se pudo cargar metadata:',e);return[]}
@@ -444,12 +445,19 @@ async function loadProjectMeta(){
 function matchMeta(projectName,metaList){
   if(!metaList||!metaList.length) return null;
   const norm=normalizeForMatch(projectName);
-  /* Try exact contains match */
+  /* Try exact contains match on project name */
   let best=metaList.find(m=>norm.includes(m._norm)||m._norm.includes(norm));
   if(!best){
-    /* Try partial: first word match */
-    const words=norm.replace(/vivienda|loteo|losa|proyecto|casa/g,'').trim();
-    if(words.length>2) best=metaList.find(m=>m._norm.includes(words)||words.includes(m._norm.replace(/vivienda|loteo|losa|proyecto|casa/g,'').trim()));
+    /* Try matching by archivoXML column (e.g. "Vivienda RC.xml" matches the XML filename) */
+    best=metaList.find(m=>m._normXml&&(norm.includes(m._normXml)||m._normXml.includes(norm)));
+  }
+  if(!best){
+    /* Try partial: strip common prefixes and match core words */
+    const words=norm.replace(/vivienda|viviendas|vivivenda|loteo|losa|proyecto|casa|quincho|qincho/g,'').trim();
+    if(words.length>2) best=metaList.find(m=>{
+      const mw=m._norm.replace(/vivienda|viviendas|vivivenda|loteo|losa|proyecto|casa|quincho|qincho/g,'').trim();
+      return mw.length>2&&(words.includes(mw)||mw.includes(words));
+    });
   }
   return best||null;
 }
@@ -1712,7 +1720,7 @@ function App(){
   /* Load manifest + project metadata */
   useEffect(()=>{
     fetch('data/manifest.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
-      const list=(d.projects||d||[]).map((p,i)=>({key:'srv_'+(p.file||p.name||i),name:p.name||(typeof p.file==='string'?p.file.replace('.xml',''):null)||`Proyecto ${i+1}`,file:typeof p==='string'?p:p.file,size:p.size||null,modified:p.modified||null}));
+      const list=(d.projects||d||[]).map((p,i)=>{const rawName=p.name||(typeof p.file==='string'?p.file.replace('.xml',''):null)||`Proyecto ${i+1}`;return{key:'srv_'+(p.file||p.name||i),name:rawName.replace(/\.xml$/i,''),file:typeof p==='string'?p:p.file,size:p.size||null,modified:p.modified||null}});
       setPList(list);
     }).catch(()=>setPList([]));
     loadProjectMeta().then(m=>setMetaList(m));
@@ -1872,7 +1880,7 @@ function App(){
     const finalizadoProjs=sp.filter(p=>getEstado(p)==='Finalizado');
     const canceladaProjs=sp.filter(p=>{const e=getEstado(p);return e==='Cancelada'||e==='Cancelado'});
     const sinEstado=sp.filter(p=>{const e=getEstado(p);return!e||!['Activo','En pausa','Finalizado','Cancelada','Cancelado'].includes(e)});
-    const activeProjs=[...activoProjs,...pausaProjs,...sinEstado];
+    const activeProjs=[...activoProjs,...pausaProjs];
     /* Filter by map selection (only active) */
     const filteredActive=mapCity?activeProjs.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.dept===mapCity}):activeProjs;
 
@@ -1986,6 +1994,20 @@ function App(){
             </div>
             {showFinished==='can'&&<div className="pgrid2" style={{opacity:.6}}>
               {canceladaProjs.map(renderCard)}
+            </div>}
+          </div>}
+
+          {/* SIN CLASIFICAR — projects not in Excel */}
+          {sinEstado.length>0&&<div style={{marginTop:16}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'12px 0',borderTop:'1px solid var(--b1)'}} onClick={()=>setShowFinished(f=>f==='other'?false:'other')}>
+              <span style={{width:10,height:10,borderRadius:2,background:'var(--c2)',opacity:.5,flexShrink:0}}/>
+              <span style={{fontSize:14,fontWeight:600,color:'var(--c1)'}}>Sin clasificar</span>
+              <span style={{fontSize:11,fontFamily:'var(--fm)',background:'var(--bg-2)',padding:'2px 8px',borderRadius:10,color:'var(--c2)',fontWeight:600}}>{sinEstado.length}</span>
+              <span style={{fontSize:10,color:'var(--c2)'}}>No están en el Excel de proyectos</span>
+              <span style={{fontSize:11,color:'var(--c2)',marginLeft:'auto'}}>{showFinished==='other'?'▲ Ocultar':'▼ Mostrar'}</span>
+            </div>
+            {showFinished==='other'&&<div className="pgrid2" style={{opacity:.5}}>
+              {sinEstado.map(renderCard)}
             </div>}
           </div>}
         </div>
