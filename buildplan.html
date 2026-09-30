@@ -1666,6 +1666,7 @@ function App(){
   const[autoLoading,setAutoLoading]=useState({});
   const[trendData,setTrendData]=useState(()=>loadTrend());
   const[showTour,setShowTour]=useState(()=>{try{return!localStorage.getItem(TOUR_KEY)}catch(e){return false}});
+  const[showFinished,setShowFinished]=useState(false);
   const clientProj=useMemo(()=>{const p=new URLSearchParams(window.location.search);return p.get('proyecto')||p.get('project')||null},[]);
 
   const[computoData,setComputoData]=useState({});
@@ -1860,8 +1861,6 @@ function App(){
   if(clientProj){
     return <ClientView projName={clientProj} pList={pList} pData={pData} metaList={metaList}/>;
   }
-
-  const[showFinished,setShowFinished]=useState(false);
 
   /* ═══ HOME ═══ */
   if(!active){
