@@ -11,7 +11,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 :root{
   --bg-0:#fafbfc;--bg-1:#f1f3f5;--bg-2:#e9ecef;--bg-el:#fff;
@@ -161,156 +160,13 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 }
 .ph,.pf{display:none}
 
-/* ═══ Semáforo health cards ═══ */
-.pcard2.health-g{border-left:4px solid var(--ok)}
-.pcard2.health-y{border-left:4px solid var(--warn)}
-.pcard2.health-r{border-left:4px solid var(--err)}
-.pcard2.health-x{border-left:4px solid var(--c2)}
-.health-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
-.health-badge.g{background:rgba(16,185,129,.12);color:var(--ok)}
-.health-badge.y{background:rgba(245,158,11,.12);color:var(--warn)}
-.health-badge.r{background:rgba(239,68,68,.12);color:var(--err)}
-.health-badge.x{background:rgba(139,146,165,.1);color:var(--c2)}
-.pcard2-health{display:flex;align-items:center;gap:8px;margin-top:4px}
-.pcard2-stats{display:flex;gap:10px;font-size:10px;font-family:var(--fm);color:var(--c1)}
-.pcard2-stats span{display:flex;align-items:center;gap:3px}
-.pcard2-loading{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--c2)}
-.pcard2-loading .mini-sp{width:10px;height:10px;border:1.5px solid var(--b0);border-top-color:var(--ac);border-radius:50%;animation:spin .6s linear infinite}
-
-/* ═══ Navigation sidebar ═══ */
-.app-layout{display:flex;flex:1;overflow:hidden}
-.nav-side{width:52px;background:var(--bg-el);border-right:1px solid var(--b0);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:2px;flex-shrink:0;overflow-y:auto}
-.nav-item{width:40px;height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:var(--r-s);cursor:pointer;border:none;background:none;color:var(--c2);font-family:var(--ff);font-size:8px;font-weight:500;padding:0;position:relative}
-.nav-item:hover{background:var(--bg-1);color:var(--c0)}
-.nav-item.on{background:var(--ac-bg);color:var(--ac)}
-.nav-item .nav-dot{position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%}
-.nav-sep{width:28px;height:1px;background:var(--b0);margin:4px 0}
-.app-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
-
-/* ═══ Weekly view ═══ */
-.week-view{flex:1;overflow-y:auto;padding:20px 24px}
-.week-nav{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.week-nav h3{font-size:14px;font-weight:600;flex:1}
-.week-nav button{padding:4px 10px;font-size:12px;font-weight:500;font-family:var(--ff);border-radius:var(--r-s);border:1px solid var(--b0);background:var(--bg-el);color:var(--c1);cursor:pointer}.week-nav button:hover{background:var(--bg-1);color:var(--c0)}
-.week-day{margin-bottom:16px}
-.week-day-hdr{font-size:11px;font-weight:600;color:var(--c2);text-transform:uppercase;letter-spacing:.5px;padding:6px 0;border-bottom:1px solid var(--b1);margin-bottom:4px}
-.week-task{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r-s);cursor:default}
-.week-task:hover{background:var(--bg-hover)}
-.week-task.ov{background:rgba(239,68,68,.04)}
-.wt-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.wt-name{flex:1;font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.wt-meta{font-size:11px;color:var(--c1);font-family:var(--fm)}
-.wt-bar{width:50px;height:4px;border-radius:2px;background:var(--bg-2);overflow:hidden}
-.wt-fill{height:100%;border-radius:2px}
-.week-empty{text-align:center;color:var(--c2);padding:40px 20px;font-size:13px}
-
-/* ═══ Sparkline trend ═══ */
-.sparkline{display:inline-block;vertical-align:middle}
-.trend-row{display:flex;align-items:center;gap:6px;margin-top:4px}
-.trend-label{font-size:9px;color:var(--c2);font-family:var(--fm)}
-.trend-delta{font-size:9px;font-weight:600;font-family:var(--fm)}
-.trend-delta.up{color:var(--ok)}
-.trend-delta.down{color:var(--err)}
-.trend-delta.flat{color:var(--c2)}
-
-/* ═══ Mobile responsive ═══ */
-@media(max-width:768px){
-  .home{flex-direction:column}
-  .home-sidebar{width:100%;max-height:200px;border-right:none;border-bottom:1px solid var(--b0);overflow:hidden}
-  .home-sidebar .map-body{padding:6px}
-  .home-sidebar .map-body svg{max-height:160px}
-  .home-main{padding:12px}
-  .pgrid2{grid-template-columns:1fr}
-  .hdr{padding:0 8px;gap:6px;overflow-x:auto}
-  .logo span{display:none}
-  .tabs{gap:1px}
-  .tab{padding:4px 8px;font-size:11px}
-  .acts{gap:2px}
-  .stbar{padding:0 8px;gap:6px;overflow-x:auto}
-  .fbar{padding:4px 8px;gap:4px}
-  .fsel{font-size:10px;padding:3px 18px 3px 6px}
-  .fl{font-size:10px}
-  .gw{flex-direction:column}
-  .gtc{width:100%!important;max-height:40vh;border-right:none;border-bottom:1px solid var(--b0)}
-  .spl{display:none}
-  .gcc{min-height:300px}
-  .gt th,.gt td{font-size:11px;padding:0 3px}
-  .gt col:nth-child(n+7){width:0!important;display:none}
-  .gt th:nth-child(n+7),.gt td:nth-child(n+7){display:none}
-  .dash{padding:12px}
-  .dgrid{grid-template-columns:repeat(2,1fr);gap:6px}
-  .kpi{padding:10px}
-  .kpi-v{font-size:18px}
-  .dt{font-size:11px}
-  .dt th,.dt td{padding:4px 6px}
-  .cgrid{grid-template-columns:1fr}
-  .proj-info{grid-template-columns:1fr 1fr}
-  .week-view{padding:12px}
-  .week-task{gap:4px;padding:6px 4px}
-  .wt-name{font-size:12px}
-  .wt-meta{font-size:10px}
-  .week-nav{gap:6px}
-  .week-nav h3{font-size:13px}
-  .so .sm{width:95vw}
-  /* Mobile bottom nav */
-  .mob-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--bg-el);border-top:1px solid var(--b0);z-index:200;padding:4px 0;padding-bottom:max(4px,env(safe-area-inset-bottom))}
-  .mob-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;color:var(--c2);font-family:var(--ff);font-size:9px;font-weight:500;padding:6px 0;cursor:pointer}
-  .mob-nav button.on{color:var(--ac)}
-  body{padding-bottom:60px}
-}
-@media(min-width:769px){
-  .mob-nav{display:none}
-}
-
-/* ═══ Onboarding tour ═══ */
-.tour-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:3000;display:flex;align-items:center;justify-content:center}
-.tour-card{background:var(--bg-el);border:1px solid var(--b0);border-radius:var(--r-l);box-shadow:var(--sh-l);padding:24px;max-width:420px;width:90vw}
-.tour-title{font-size:16px;font-weight:700;margin-bottom:8px}
-.tour-body{font-size:13px;color:var(--c1);line-height:1.6;margin-bottom:16px}
-.tour-dots{display:flex;gap:6px;align-items:center}
-.tour-dot{width:8px;height:8px;border-radius:50%;background:var(--b0)}.tour-dot.on{background:var(--ac)}
-.tour-acts{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
-.tour-skip{font-size:12px;color:var(--c2);border:none;background:none;cursor:pointer;font-family:var(--ff)}.tour-skip:hover{color:var(--c0)}
-.tour-next{padding:6px 16px;font-size:12px;font-weight:600;font-family:var(--ff);border-radius:var(--r-s);border:none;background:var(--ac);color:white;cursor:pointer}.tour-next:hover{opacity:.9}
-
-/* ═══ Client share view ═══ */
-.client-view{min-height:100vh;background:var(--bg-0);padding:24px}
-.client-hdr{text-align:center;padding:20px 0 24px;border-bottom:1px solid var(--b1);margin-bottom:24px}
-.client-hdr h1{font-size:22px;font-weight:700;margin-bottom:4px}
-.client-hdr p{font-size:13px;color:var(--c1)}
-.client-hdr .client-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:16px;font-size:12px;font-weight:600;margin-top:8px}
-.client-progress{max-width:480px;margin:0 auto 24px;background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);padding:20px}
-.client-progress h3{font-size:14px;font-weight:600;margin-bottom:12px}
-.client-bar{height:12px;border-radius:6px;background:var(--bg-2);overflow:hidden;margin-bottom:8px}
-.client-fill{height:100%;border-radius:6px;transition:width .5s}
-.client-milestones{max-width:480px;margin:0 auto}
-.client-ms{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b1)}
-.client-ms:last-child{border-bottom:none}
-.client-ms-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
-.client-ms-info{flex:1}
-.client-ms-name{font-size:13px;font-weight:500}
-.client-ms-date{font-size:11px;color:var(--c1);font-family:var(--fm)}
-.client-footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px solid var(--b1);font-size:11px;color:var(--c2)}
-
-/* ═══ Procurement forecast ═══ */
-.proc-view{flex:1;overflow-y:auto;padding:20px 24px}
-.proc-controls{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.proc-group{margin-bottom:20px}
-.proc-group-hdr{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:2px solid var(--b1);margin-bottom:6px}
-.proc-group-hdr h4{font-size:13px;font-weight:600;flex:1}
-.proc-group-hdr .proc-count{font-size:11px;font-family:var(--fm);color:var(--c1);background:var(--bg-1);padding:2px 8px;border-radius:10px}
-.proc-task{display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:12px;border-radius:var(--r-s)}
-.proc-task:hover{background:var(--bg-hover)}
-.proc-task.urgent{background:rgba(239,68,68,.05)}
-.proc-alert{font-size:10px;font-weight:600;padding:1px 6px;border-radius:8px;background:rgba(239,68,68,.1);color:var(--err)}
-.proc-empty{text-align:center;color:var(--c2);padding:40px 20px;font-size:13px}
-
 /* Map */
 .map-section{background:var(--bg-el);overflow:hidden}
 .map-header{padding:10px 14px;font-size:12px;font-weight:600;color:var(--c1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:.5px}
 .map-header .clear-btn{font-size:11px;color:var(--ac);cursor:pointer;border:none;background:none;font-family:var(--ff);font-weight:500;text-transform:none;letter-spacing:0}
-.map-body{padding:10px 12px 4px}
-.map-body svg path{transition:fill-opacity .2s,stroke-opacity .2s,stroke-width .15s}
+.map-body{padding:12px}
+.map-dot{cursor:pointer;transition:r .15s}
+.map-dot:hover{r:8}
 .map-label{font-family:var(--ff);font-size:9px;fill:var(--c1);pointer-events:none}
 .map-count{font-family:var(--fm);font-size:8px;fill:white;pointer-events:none;font-weight:700}
 .map-ref{font-family:var(--ff);font-size:8px;fill:var(--c2)}
@@ -335,32 +191,6 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .proj-info-label{font-size:10px;font-weight:600;color:var(--c2);text-transform:uppercase;letter-spacing:.5px}
 .proj-info-value{font-size:13px;font-weight:500}
 .proj-info-value.mono{font-family:var(--fm);font-size:12px}
-/* ═══════ Materials integration ═══════ */
-.mat-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;padding:1px 5px;border-radius:8px;background:var(--ac-bg);color:var(--ac);font-weight:600;margin-left:4px;vertical-align:middle}
-.mat-tt{border-top:1px solid var(--b1);margin-top:6px;padding-top:6px}
-.mat-tt-title{font-size:10px;font-weight:600;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.mat-tt-item{display:flex;justify-content:space-between;gap:8px;font-size:11px;padding:2px 0}
-.mat-tt-item .mn{color:var(--c0);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mat-tt-item .mq{font-family:var(--fm);color:var(--ac);white-space:nowrap}
-.mat-panel{background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);overflow:hidden}
-.mat-panel-hdr{padding:12px 16px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
-.mat-panel-hdr h3{font-size:14px;font-weight:600;margin:0}
-.mat-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--b1);background:var(--bg-0)}
-.mat-table{width:100%;border-collapse:collapse;font-size:12px}
-.mat-table th{text-align:left;padding:8px 12px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--c2);border-bottom:2px solid var(--b0);position:sticky;top:0;background:var(--bg-el);z-index:1}
-.mat-table td{padding:6px 12px;border-bottom:1px solid var(--b1)}
-.mat-table tr:hover td{background:var(--bg-hover)}
-.mat-table .mono{font-family:var(--fm);font-size:11px}
-.mat-kpi{display:flex;gap:12px;padding:12px 16px;flex-wrap:wrap}
-.mat-kpi-card{flex:1;min-width:140px;padding:12px;background:var(--bg-0);border-radius:var(--r-s);border:1px solid var(--b1)}
-.mat-kpi-card .label{font-size:10px;color:var(--c2);text-transform:uppercase;letter-spacing:.5px}
-.mat-kpi-card .value{font-size:20px;font-weight:700;font-family:var(--fm);color:var(--ac);margin-top:2px}
-.mat-kpi-card .sub{font-size:11px;color:var(--c1);margin-top:1px}
-.mat-status{display:inline-block;padding:2px 6px;border-radius:8px;font-size:10px;font-weight:600}
-.mat-status.linked{background:rgba(16,185,129,.12);color:#059669}
-.mat-status.no-link{background:var(--bg-2);color:var(--c2)}
-.mat-empty{padding:40px 20px;text-align:center;color:var(--c2);font-size:13px}
-.mat-scroll{max-height:60vh;overflow-y:auto}
 </style>
 </head>
 <body>
@@ -375,32 +205,14 @@ const ENT={
 };
 
 /* ═══════ Project metadata from Excel ═══════ */
-/* Map cities to departments */
-const CITY_TO_DEPT={
-  'mendiolaza':'Colón','mendiolaza - el terrón':'Colón','mendiolaza - q2':'Colón',
-  'villa allende':'Colón',
-  'la calera':'Colón','la calera - vistas de la deseada':'Colón','la calera - la deseada':'Colón',
-  'malagueño':'Santa María','malagueño - cañitas':'Santa María',
-  'villa ciudad parque - molvento':'Calamuchita','molvento':'Calamuchita',
-  'villa ciudad parque':'Calamuchita',
-  'villa del dique':'Calamuchita',
-  'córdoba capital':'Capital','cordoba capital':'Capital',
-  'alta gracia':'Santa María',
-};
 const CITY_COORDS={
-  'mendiolaza':{lat:-31.317,lng:-64.290,label:'Mendiolaza',dept:'Colón'},
-  'mendiolaza - el terrón':{lat:-31.305,lng:-64.295,label:'Mendiolaza - El Terrón',dept:'Colón'},
-  'mendiolaza - q2':{lat:-31.310,lng:-64.285,label:'Mendiolaza - Q2',dept:'Colón'},
-  'villa allende':{lat:-31.295,lng:-64.296,label:'Villa Allende',dept:'Colón'},
-  'la calera - vistas de la deseada':{lat:-31.345,lng:-64.335,label:'La Calera',dept:'Colón'},
-  'la calera - la deseada':{lat:-31.345,lng:-64.335,label:'La Calera - La Deseada',dept:'Colón'},
-  'malagueño - cañitas':{lat:-31.463,lng:-64.358,label:'Malagueño',dept:'Santa María'},
-  'villa ciudad parque - molvento':{lat:-31.593,lng:-64.463,label:'Molvento',dept:'Calamuchita'},
-  'molvento':{lat:-31.593,lng:-64.463,label:'Molvento',dept:'Calamuchita'},
-  'villa del dique':{lat:-32.170,lng:-64.453,label:'Villa del Dique',dept:'Calamuchita'},
-  'córdoba capital':{lat:-31.420,lng:-64.188,label:'Córdoba Capital',dept:'Capital'},
-  'cordoba capital':{lat:-31.420,lng:-64.188,label:'Córdoba Capital',dept:'Capital'},
-  'alta gracia':{lat:-31.660,lng:-64.432,label:'Alta Gracia',dept:'Santa María'},
+  'mendiolaza':{lat:-31.317,lng:-64.290,label:'Mendiolaza'},
+  'mendiolaza - el terrón':{lat:-31.305,lng:-64.295,label:'Mendiolaza - El Terrón'},
+  'mendiolaza - q2':{lat:-31.310,lng:-64.285,label:'Mendiolaza - Q2'},
+  'la calera - vistas de la deseada':{lat:-31.345,lng:-64.335,label:'La Calera'},
+  'malagueño - cañitas':{lat:-31.463,lng:-64.358,label:'Malagueño'},
+  'villa ciudad parque - molvento':{lat:-31.593,lng:-64.463,label:'Molvento'},
+  'molvento':{lat:-31.593,lng:-64.463,label:'Molvento'},
 };
 
 function normalizeForMatch(s){
@@ -418,7 +230,6 @@ async function loadProjectMeta(){
     return rows.map(row=>{
       const city=(row['Ciudad / Localidad']||'').toLowerCase();
       const coordEntry=CITY_COORDS[city];
-      const dept=coordEntry?.dept||CITY_TO_DEPT[city]||null;
       return{
         proyecto:row['Proyecto']||'',
         estado:row['Estado']||'',
@@ -434,9 +245,7 @@ async function loadProjectMeta(){
         lat:coordEntry?.lat||null,
         lng:coordEntry?.lng||null,
         cityLabel:coordEntry?.label||row['Ciudad / Localidad']||'',
-        dept:dept,
         _norm:normalizeForMatch(row['Proyecto']),
-        _normXml:normalizeForMatch(row['Archivo XML']||''),
       };
     });
   }catch(e){console.warn('No se pudo cargar metadata:',e);return[]}
@@ -445,170 +254,76 @@ async function loadProjectMeta(){
 function matchMeta(projectName,metaList){
   if(!metaList||!metaList.length) return null;
   const norm=normalizeForMatch(projectName);
-  /* Try exact contains match on project name */
+  /* Try exact contains match */
   let best=metaList.find(m=>norm.includes(m._norm)||m._norm.includes(norm));
   if(!best){
-    /* Try matching by archivoXML column (e.g. "Vivienda RC.xml" matches the XML filename) */
-    best=metaList.find(m=>m._normXml&&(norm.includes(m._normXml)||m._normXml.includes(norm)));
-  }
-  if(!best){
-    /* Try partial: strip common prefixes and match core words */
-    const words=norm.replace(/vivienda|viviendas|vivivenda|loteo|losa|proyecto|casa|quincho|qincho/g,'').trim();
-    if(words.length>2) best=metaList.find(m=>{
-      const mw=m._norm.replace(/vivienda|viviendas|vivivenda|loteo|losa|proyecto|casa|quincho|qincho/g,'').trim();
-      return mw.length>2&&(words.includes(mw)||mw.includes(words));
-    });
+    /* Try partial: first word match */
+    const words=norm.replace(/vivienda|loteo|losa|proyecto|casa/g,'').trim();
+    if(words.length>2) best=metaList.find(m=>m._norm.includes(words)||words.includes(m._norm.replace(/vivienda|loteo|losa|proyecto|casa/g,'').trim()));
   }
   return best||null;
 }
 
-/* ═══════ Department Map — All 26 departments of Córdoba ═══════ */
-const ALL_DEPTS={
-  "Pte. Roque Sáenz Peña":{path:"M 275.6 409.7 L 299.8 414.9 L 270.2 453.9 L 224.9 453.9 L 224.9 467.0 L 185.5 468.1 L 185.2 451.7 L 156.4 452.2 L 156.4 443.5 L 148.4 440.9 L 164.7 434.2 L 164.6 404.4 L 237.3 404.2 L 238.0 401.6 L 275.6 409.7 Z",cx:213.8,cy:434.0},
-  "Tercero Arriba":{path:"M 248.8 237.3 L 242.1 247.5 L 241.0 243.5 L 234.0 245.9 L 217.1 245.9 L 225.7 256.1 L 218.0 260.9 L 213.4 258.6 L 208.5 272.5 L 213.7 273.6 L 207.2 301.9 L 209.3 302.4 L 207.6 308.5 L 209.4 312.8 L 194.8 309.6 L 196.3 303.9 L 177.3 302.7 L 166.9 306.3 L 172.5 281.8 L 176.3 280.0 L 178.3 272.3 L 163.5 266.3 L 147.7 265.6 L 147.4 270.0 L 142.5 266.8 L 142.8 254.4 L 146.9 252.6 L 146.2 245.1 L 148.6 237.6 L 163.4 237.7 L 163.4 233.6 L 172.3 233.7 L 172.3 236.7 L 176.7 238.3 L 196.8 237.0 L 196.8 240.8 L 198.5 240.8 L 198.6 237.2 L 200.3 239.4 L 207.0 234.9 L 220.1 236.7 L 238.2 231.4 L 239.3 237.6 L 246.5 232.6 L 250.0 233.0 L 248.8 237.3 Z",cx:196.4,cy:258.7},
-  "Juárez Celman":{path:"M 209.4 312.8 L 212.3 313.5 L 211.2 317.6 L 220.9 321.1 L 222.6 315.6 L 227.8 316.7 L 223.4 333.0 L 217.5 332.0 L 215.5 339.9 L 230.9 342.7 L 232.4 337.2 L 240.4 338.7 L 239.2 350.9 L 251.1 353.6 L 247.6 366.8 L 249.1 367.2 L 237.3 404.2 L 164.6 404.4 L 164.4 388.2 L 179.8 388.2 L 179.5 347.1 L 165.3 346.1 L 165.3 338.6 L 171.6 339.0 L 172.9 334.6 L 163.0 332.5 L 165.7 328.9 L 170.4 305.9 L 177.3 302.7 L 196.3 303.9 L 194.8 309.6 L 209.4 312.8 Z",cx:204.0,cy:338.9},
-  "Sobremonte":{path:"M 194.2 24.1 L 189.3 24.1 L 189.4 28.1 L 191.3 28.2 L 189.2 34.1 L 185.7 37.5 L 185.6 43.2 L 179.2 45.6 L 178.8 51.8 L 175.2 56.2 L 175.1 63.5 L 154.1 62.4 L 150.3 53.7 L 133.4 49.7 L 133.6 40.7 L 127.9 39.6 L 127.9 11.7 L 138.6 10.0 L 171.5 15.0 L 173.2 21.0 L 181.2 21.2 L 183.7 17.4 L 188.9 17.6 L 186.0 20.4 L 191.6 21.0 L 194.2 24.1 Z",cx:171.9,cy:33.1},
-  "Tulumba":{path:"M 175.1 63.5 L 182.5 65.2 L 183.9 67.7 L 211.6 72.4 L 211.1 80.9 L 223.7 80.9 L 224.1 85.3 L 227.6 85.9 L 230.4 75.1 L 300.9 87.7 L 299.2 95.4 L 318.2 98.8 L 318.1 104.3 L 299.0 104.8 L 298.1 102.1 L 293.0 103.5 L 288.0 102.2 L 288.4 100.6 L 283.6 104.3 L 286.7 104.6 L 286.4 107.6 L 266.0 112.8 L 267.6 115.3 L 264.1 114.9 L 264.0 112.6 L 263.0 115.8 L 257.0 115.2 L 254.3 117.9 L 223.9 110.1 L 224.5 107.8 L 203.9 103.5 L 202.9 107.3 L 186.8 107.2 L 186.7 101.9 L 183.8 101.8 L 183.5 93.4 L 173.0 93.2 L 169.4 99.0 L 166.0 99.5 L 142.9 98.0 L 142.9 89.8 L 135.7 89.8 L 135.5 86.8 L 138.7 74.6 L 143.8 75.1 L 145.0 66.5 L 142.7 66.3 L 142.9 64.3 L 80.9 56.3 L 80.7 45.5 L 85.0 41.6 L 82.7 18.7 L 127.9 11.7 L 127.9 39.6 L 133.6 40.7 L 133.4 49.7 L 150.3 53.7 L 154.1 62.4 L 175.1 63.5 Z",cx:202.9,cy:85.0},
-  "Ischilín":{path:"M 145.9 98.2 L 161.1 127.9 L 122.6 125.6 L 121.3 117.4 L 105.5 117.3 L 105.2 113.0 L 93.0 113.2 L 75.7 93.1 L 81.1 93.0 L 80.9 56.3 L 142.9 64.3 L 142.7 66.3 L 145.0 66.5 L 143.8 75.1 L 138.7 74.6 L 135.7 89.8 L 142.9 89.8 L 142.9 98.0 L 145.9 98.2 Z",cx:124.9,cy:93.6},
-  "Totoral":{path:"M 206.9 104.1 L 203.3 117.4 L 199.3 116.6 L 193.1 140.8 L 190.2 140.2 L 190.1 144.7 L 184.0 144.9 L 184.1 149.3 L 178.8 149.2 L 178.5 142.1 L 169.3 138.5 L 162.3 142.8 L 154.7 143.9 L 145.2 140.4 L 132.0 139.2 L 131.1 125.9 L 143.6 128.3 L 161.3 127.7 L 145.9 98.2 L 166.0 99.5 L 169.4 99.0 L 173.0 93.2 L 183.5 93.4 L 183.8 101.8 L 186.7 101.9 L 186.8 107.2 L 202.9 107.3 L 203.9 103.5 L 206.9 104.1 Z",cx:176.4,cy:122.2},
-  "Cruz del Eje":{path:"M 80.9 56.3 L 81.1 93.0 L 75.7 93.1 L 93.0 113.2 L 105.2 113.0 L 105.5 117.3 L 114.0 117.4 L 115.0 124.9 L 109.4 129.6 L 106.5 147.6 L 111.8 149.9 L 98.2 184.2 L 86.1 182.6 L 85.1 163.5 L 75.9 150.3 L 68.8 148.9 L 65.3 134.8 L 50.9 135.5 L 48.3 119.2 L 26.3 113.6 L 32.6 99.5 L 41.4 66.3 L 65.2 59.7 L 80.7 45.5 L 80.9 56.3 Z",cx:80.2,cy:116.6},
-  "Colón":{path:"M 184.1 149.3 L 184.2 153.9 L 180.6 157.0 L 180.7 170.9 L 173.5 171.0 L 174.9 179.0 L 172.3 187.8 L 164.4 185.9 L 164.4 174.2 L 141.7 174.2 L 141.6 180.6 L 133.8 178.1 L 129.1 181.5 L 132.0 139.2 L 145.2 140.4 L 154.7 143.9 L 162.3 142.8 L 169.3 138.5 L 178.5 142.1 L 178.8 149.2 L 184.1 149.3 Z",cx:163.3,cy:161.4},
-  "Punilla":{path:"M 129.1 181.5 L 120.1 197.1 L 122.5 209.6 L 115.4 210.5 L 103.6 207.6 L 93.9 183.8 L 98.2 184.2 L 102.4 177.1 L 111.8 149.9 L 106.5 147.6 L 109.4 129.6 L 115.0 124.9 L 114.0 117.4 L 121.3 117.4 L 122.6 125.6 L 130.2 127.2 L 132.3 143.6 L 129.1 181.5 Z",cx:115.4,cy:162.0},
-  "Capital":{path:"M 164.4 185.9 L 164.4 193.8 L 141.6 193.7 L 141.7 174.2 L 164.4 174.2 L 164.4 185.9 Z",cx:156.8,cy:184.6},
-  "Gral. San Martín":{path:"M 248.8 237.3 L 272.6 244.2 L 265.9 273.5 L 256.9 272.7 L 255.7 277.2 L 251.1 277.4 L 246.2 284.3 L 254.5 286.1 L 249.4 311.6 L 252.8 312.1 L 253.3 315.6 L 250.2 315.0 L 248.6 321.3 L 247.0 321.0 L 242.4 339.1 L 232.4 337.2 L 230.9 342.7 L 215.5 339.9 L 217.5 332.0 L 223.4 333.0 L 227.8 316.7 L 222.6 315.6 L 220.9 321.1 L 211.2 317.6 L 212.3 313.5 L 209.4 312.8 L 207.6 308.5 L 209.3 302.4 L 207.2 301.9 L 213.7 273.6 L 208.5 272.5 L 210.3 266.3 L 213.4 258.6 L 218.0 260.9 L 225.7 256.1 L 217.1 245.9 L 234.0 245.9 L 241.0 243.5 L 242.1 247.5 L 248.8 237.3 Z",cx:232.9,cy:292.3},
-  "Santa María":{path:"M 174.5 197.1 L 168.1 201.6 L 171.0 204.8 L 166.9 208.3 L 166.7 216.2 L 174.2 214.4 L 174.3 225.6 L 177.0 225.6 L 176.7 238.3 L 172.3 236.7 L 172.3 233.7 L 163.4 233.6 L 163.4 237.7 L 148.6 237.6 L 150.5 230.4 L 144.5 230.0 L 142.7 232.5 L 142.7 221.7 L 140.1 218.7 L 131.5 224.4 L 129.7 222.3 L 125.7 223.1 L 124.4 220.5 L 120.0 226.6 L 88.2 228.0 L 92.4 223.5 L 102.3 220.6 L 101.2 216.1 L 103.6 207.6 L 115.4 210.5 L 122.5 209.6 L 120.1 204.5 L 120.5 195.5 L 131.7 178.6 L 141.6 180.6 L 141.6 193.7 L 164.4 193.8 L 164.4 185.9 L 171.6 188.1 L 173.4 186.5 L 174.5 197.1 Z",cx:145.1,cy:214.2},
-  "Minas":{path:"M 10.0 168.7 L 10.0 150.4 L 26.3 113.6 L 48.3 119.2 L 50.9 135.5 L 65.3 134.8 L 68.8 148.9 L 74.1 149.2 L 80.8 155.2 L 86.2 167.9 L 10.0 168.7 Z",cx:48.2,cy:146.6},
-  "Pocho":{path:"M 86.2 181.2 L 69.8 184.6 L 66.6 188.2 L 64.7 196.5 L 59.7 201.2 L 54.5 202.5 L 54.4 204.5 L 43.3 204.7 L 43.3 201.9 L 37.0 201.8 L 36.9 208.8 L 33.9 215.0 L 10.1 213.5 L 10.0 168.7 L 86.2 169.4 L 86.2 181.2 Z",cx:52.7,cy:195.2},
-  "San Alberto":{path:"M 88.2 228.0 L 74.2 225.8 L 70.6 229.2 L 55.4 232.1 L 47.5 227.1 L 24.7 226.4 L 24.7 228.8 L 10.2 227.1 L 10.1 213.5 L 33.9 215.0 L 36.9 208.8 L 37.0 201.8 L 43.3 201.9 L 43.3 204.7 L 54.4 204.5 L 54.5 202.5 L 59.7 201.2 L 64.7 196.5 L 66.6 188.2 L 69.8 184.6 L 86.2 181.2 L 93.9 183.8 L 104.1 208.3 L 101.2 216.1 L 102.3 220.6 L 92.4 223.5 L 88.2 228.0 Z",cx:60.7,cy:211.5},
-  "San Javier":{path:"M 79.3 226.0 L 88.2 228.0 L 84.7 264.4 L 81.7 266.4 L 60.4 266.8 L 57.4 245.4 L 24.7 228.8 L 24.7 226.4 L 47.5 227.1 L 55.4 232.1 L 79.3 226.0 Z",cx:62.1,cy:239.8},
-  "Río Segundo":{path:"M 248.8 237.3 L 250.0 233.0 L 246.5 232.6 L 239.3 237.6 L 238.2 231.4 L 220.1 236.7 L 207.0 234.9 L 200.3 239.4 L 198.6 237.2 L 198.5 240.8 L 196.8 240.8 L 196.8 237.0 L 176.8 236.8 L 174.2 214.4 L 166.7 216.2 L 166.9 208.3 L 171.0 204.8 L 168.1 201.6 L 174.5 197.1 L 197.8 195.3 L 197.9 190.5 L 206.2 189.0 L 210.1 183.8 L 225.6 180.1 L 225.4 174.2 L 234.7 176.5 L 234.9 190.0 L 240.3 190.1 L 238.5 198.4 L 242.3 199.1 L 243.1 204.1 L 247.4 205.0 L 247.5 207.7 L 253.8 207.6 L 257.7 221.2 L 260.3 221.2 L 263.0 227.4 L 262.9 231.4 L 272.6 244.2 L 248.8 237.3 Z",cx:221.2,cy:214.8},
-  "San Justo":{path:"M 334.9 90.5 L 337.6 99.1 L 363.6 123.1 L 338.1 202.3 L 327.8 209.9 L 329.8 213.7 L 329.4 226.7 L 334.4 236.0 L 332.5 244.9 L 319.8 242.3 L 320.7 238.5 L 301.4 235.0 L 300.3 238.2 L 292.8 236.8 L 291.4 242.5 L 273.8 239.4 L 272.6 242.4 L 267.9 240.1 L 267.8 235.5 L 262.9 231.4 L 263.0 227.4 L 260.3 221.2 L 257.7 221.2 L 253.8 207.6 L 247.5 207.7 L 247.4 205.0 L 243.1 204.1 L 242.3 199.1 L 238.5 198.4 L 240.3 190.1 L 234.9 190.0 L 234.7 176.5 L 237.9 171.1 L 242.2 172.1 L 248.6 156.6 L 255.6 158.1 L 258.6 152.9 L 262.6 153.8 L 265.7 143.9 L 274.6 141.7 L 277.0 133.8 L 273.8 127.8 L 265.1 123.4 L 266.5 120.4 L 260.3 121.9 L 254.8 121.1 L 253.9 118.6 L 257.0 115.2 L 263.0 115.8 L 264.0 112.6 L 264.1 114.9 L 267.6 115.3 L 266.0 112.8 L 286.4 107.6 L 286.7 104.6 L 283.6 104.3 L 288.4 100.6 L 288.0 102.2 L 293.0 103.5 L 298.1 102.1 L 299.0 104.8 L 317.9 104.4 L 318.3 87.2 L 334.9 90.5 Z",cx:280.3,cy:166.1},
-  "Unión":{path:"M 275.6 409.7 L 238.0 401.6 L 249.1 367.2 L 247.6 366.8 L 251.1 353.6 L 239.2 350.9 L 238.8 346.7 L 247.0 321.0 L 248.6 321.3 L 250.2 315.0 L 253.3 315.6 L 252.8 312.1 L 249.4 311.6 L 254.5 286.1 L 246.2 284.3 L 251.1 277.4 L 255.7 277.2 L 256.9 272.7 L 265.9 273.5 L 273.8 239.4 L 291.4 242.5 L 292.8 236.8 L 300.3 238.2 L 301.4 235.0 L 320.7 238.5 L 319.8 242.3 L 323.4 243.1 L 321.6 250.7 L 318.9 250.3 L 315.8 264.2 L 322.1 265.7 L 321.1 270.6 L 317.5 270.8 L 315.8 278.4 L 312.7 278.0 L 303.7 307.8 L 309.1 315.9 L 302.2 314.5 L 300.1 324.0 L 303.2 324.7 L 301.3 332.6 L 292.1 338.7 L 302.9 341.4 L 298.2 348.4 L 287.7 355.4 L 295.3 356.5 L 291.4 360.5 L 281.1 400.2 L 278.0 399.6 L 275.6 409.7 Z",cx:283.2,cy:308.8},
-  "Río Primero":{path:"M 254.3 117.9 L 254.8 121.1 L 266.5 120.4 L 265.1 123.4 L 273.8 127.8 L 277.0 133.8 L 274.6 141.7 L 265.7 143.9 L 262.6 153.8 L 258.6 152.9 L 255.6 158.1 L 248.6 156.6 L 242.2 172.1 L 237.9 171.1 L 236.1 176.8 L 225.4 174.2 L 225.6 180.1 L 210.1 183.8 L 206.2 189.0 L 197.9 190.5 L 197.8 195.3 L 186.7 197.6 L 173.0 196.0 L 174.9 179.0 L 173.5 171.0 L 180.7 170.9 L 180.6 157.0 L 184.2 153.9 L 184.0 144.9 L 190.1 144.7 L 190.2 140.2 L 193.1 140.8 L 199.3 116.6 L 203.3 117.4 L 206.9 104.1 L 254.3 117.9 Z",cx:222.5,cy:153.8},
-  "Marcos Juárez":{path:"M 281.6 411.0 L 275.6 409.7 L 278.0 399.6 L 281.1 400.2 L 291.4 360.5 L 295.3 356.5 L 287.7 355.4 L 298.2 348.4 L 302.9 341.4 L 292.1 338.7 L 301.3 332.6 L 303.2 324.7 L 300.1 324.0 L 302.2 314.5 L 309.1 315.9 L 304.0 306.3 L 312.7 278.0 L 315.8 278.4 L 317.5 270.8 L 321.1 270.6 L 322.1 265.7 L 315.8 264.2 L 318.9 250.3 L 321.6 250.7 L 323.4 243.1 L 332.5 244.9 L 333.2 251.5 L 345.9 260.9 L 357.1 282.1 L 355.7 286.8 L 358.3 289.0 L 356.1 290.3 L 359.4 293.0 L 354.3 296.4 L 354.3 299.0 L 362.2 300.4 L 368.7 309.4 L 368.6 328.7 L 356.6 339.1 L 299.8 414.9 L 281.6 411.0 Z",cx:319.9,cy:314.8},
-  "Río Cuarto":{path:"M 170.4 305.9 L 165.7 328.9 L 163.0 332.5 L 172.9 334.6 L 171.6 339.0 L 165.3 338.6 L 165.3 346.1 L 179.5 347.1 L 179.8 388.2 L 164.4 388.2 L 164.7 434.2 L 149.0 440.9 L 140.6 438.4 L 129.7 438.9 L 111.7 433.2 L 108.3 429.7 L 98.6 427.6 L 94.1 423.9 L 79.7 422.4 L 68.9 414.0 L 66.6 345.8 L 73.8 339.8 L 79.5 328.4 L 77.5 325.7 L 82.6 315.9 L 82.1 310.4 L 87.0 299.0 L 86.4 292.8 L 88.9 290.5 L 110.1 294.6 L 123.2 294.0 L 130.8 274.1 L 139.8 276.3 L 141.2 272.4 L 146.3 273.7 L 147.7 265.6 L 163.5 266.3 L 178.3 272.3 L 176.3 280.0 L 172.5 281.8 L 166.9 306.3 L 170.4 305.9 Z",cx:131.8,cy:339.6},
-  "General Roca":{path:"M 148.4 440.9 L 156.4 443.5 L 156.4 452.2 L 185.2 451.7 L 185.5 468.1 L 224.9 467.0 L 224.8 510.0 L 68.9 510.0 L 68.9 414.0 L 79.7 422.4 L 94.1 423.9 L 120.2 436.6 L 148.4 440.9 Z",cx:143.2,cy:452.4},
-  "Calamuchita":{path:"M 141.4 220.2 L 142.7 232.5 L 144.5 230.0 L 150.5 230.4 L 146.2 245.1 L 146.9 252.6 L 142.8 254.4 L 142.5 266.8 L 146.1 267.9 L 146.3 273.7 L 141.2 272.4 L 139.8 276.3 L 130.8 274.1 L 123.2 294.0 L 110.1 294.6 L 88.9 290.5 L 84.7 264.4 L 87.2 229.2 L 106.6 226.1 L 120.0 226.6 L 124.4 220.5 L 125.7 223.1 L 129.7 222.3 L 131.5 224.4 L 140.1 218.7 L 141.4 220.2 Z",cx:129.8,cy:248.1},
-  "Río Seco":{path:"M 194.2 24.1 L 217.6 24.9 L 216.2 30.5 L 218.1 30.5 L 218.1 33.3 L 276.8 38.7 L 273.9 43.2 L 278.1 51.8 L 289.9 55.4 L 288.7 58.7 L 290.4 60.4 L 299.3 61.1 L 295.7 70.3 L 296.0 79.0 L 302.6 86.5 L 333.7 86.8 L 334.9 90.5 L 318.3 87.2 L 318.2 98.8 L 299.2 95.4 L 300.9 87.7 L 230.4 75.1 L 227.6 85.9 L 224.1 85.3 L 223.7 80.9 L 211.1 80.9 L 211.6 72.4 L 183.9 67.7 L 182.5 65.2 L 175.1 63.5 L 175.2 56.2 L 178.8 51.8 L 179.2 45.6 L 185.6 43.2 L 185.7 37.5 L 189.2 34.1 L 191.3 28.2 L 189.4 28.1 L 189.3 24.1 L 194.2 24.1 Z",cx:239.7,cy:58.6},
-};
-
-const DEPT_COLORS={
-  'Colón':'#9E0101',
-  'Santa María':'#D4930D',
-  'Calamuchita':'#10b981',
-  'Capital':'#6366f1',
-};
-
-function DeptMap({projects,metaList,selectedDept,onSelectDept}){
-  const deptCounts=useMemo(()=>{
-    const counts={};
-    for(const d of Object.keys(ALL_DEPTS)) counts[d]={count:0,projects:[]};
+/* ═══════ Map Component ═══════ */
+function CbaMap({projects,metaList,selectedCity,onSelectCity}){
+  /* Group by city label */
+  const cityGroups=useMemo(()=>{
+    const map={};
     for(const p of projects){
       const m=matchMeta(p.name,metaList);
-      if(!m||!m.dept) continue;
-      if(counts[m.dept]){counts[m.dept].count++;counts[m.dept].projects.push(p.name)}
-    }
-    return counts;
-  },[projects,metaList]);
-
-  const cityDots=useMemo(()=>{
-    const dots={};
-    for(const p of projects){
-      const m=matchMeta(p.name,metaList);
-      if(!m||!m.lat||!m.dept) continue;
+      if(!m||!m.lat) continue;
       const key=m.cityLabel;
-      if(!dots[key]) dots[key]={label:key,lat:m.lat,lng:m.lng,dept:m.dept,count:0};
-      dots[key].count++;
+      if(!map[key]) map[key]={label:key,lat:m.lat,lng:m.lng,count:0,projects:[]};
+      map[key].count++;
+      map[key].projects.push(p.name);
     }
-    return Object.values(dots);
+    return Object.values(map);
   },[projects,metaList]);
 
-  const activeDepts=Object.entries(deptCounts).filter(([,v])=>v.count>0);
+  if(!cityGroups.length) return null;
 
-  /* Geo → SVG for city dots within the 400×550 viewBox */
-  const geoToSvg=(lat,lng)=>({
-    x:((lng-(-65.00))/(-62.80-(-65.00)))*400,
-    y:((lat-(-29.30))/(-35.00-(-29.30)))*550
-  });
+  /* SVG viewport: vertical sidebar layout */
+  const svgW=280,svgH=400;
+  const minLat=-31.65,maxLat=-31.27,minLng=-64.50,maxLng=-64.22;
+  const toX=lng=>(lng-minLng)/(maxLng-minLng)*svgW;
+  const toY=lat=>(lat-minLat)/(maxLat-minLat)*svgH;
+
+  /* Córdoba capital reference point */
+  const cbaX=toX(-64.18),cbaY=toY(-31.42);
 
   return(
     <div className="map-section">
       <div className="map-header">
-        <span>Córdoba · Departamentos</span>
-        {selectedDept&&<button className="clear-btn" onClick={()=>onSelectDept(null)}>Mostrar todas</button>}
+        <span>📍 UBICACIÓN DE OBRAS</span>
       </div>
       <div className="map-body">
-        <svg viewBox="-5 -5 395 525" width="100%" style={{display:'block'}}>
-          {/* All 26 departments */}
-          {Object.entries(ALL_DEPTS).map(([name,dept])=>{
-            const count=deptCounts[name]?.count||0;
-            const hasProjects=count>0;
-            const color=DEPT_COLORS[name]||'var(--c2)';
-            const isSel=selectedDept===name;
-            const isOther=selectedDept&&!isSel;
-            const isSmall=name==='Capital'||name==='Minas'||name==='Ischilín';
-            return(
-              <g key={name}
-                 onClick={hasProjects?()=>onSelectDept(isSel?null:name):undefined}
-                 style={{cursor:hasProjects?'pointer':'default'}}>
-                <path d={dept.path}
-                  fill={isSel?color:hasProjects?color:'var(--bg-2)'}
-                  fillOpacity={isSel?.25:hasProjects?(isOther?.05:.15):.5}
-                  stroke={isSel?color:hasProjects?color:'var(--b0)'}
-                  strokeWidth={isSel?2.5:hasProjects?1.5:.7}
-                  strokeOpacity={isSel?1:hasProjects?(isOther?.3:.7):.4}
-                />
-                {/* Label — hide smallest depts when not selected, show all active ones */}
-                {(!isSmall||isSel||hasProjects)&&!isOther&&<text x={dept.cx} y={dept.cy-(hasProjects?8:2)}
-                  textAnchor="middle" className="map-label"
-                  style={{
-                    fontSize:isSel?9:hasProjects?8:6,
-                    fontWeight:isSel?700:hasProjects?600:400,
-                    fill:isSel?color:hasProjects?color:'var(--c2)',
-                    opacity:hasProjects?1:.5
-                  }}>{name}</text>}
-                {/* Count badge for departments with projects */}
-                {hasProjects&&<g>
-                  <circle cx={dept.cx} cy={dept.cy+(isSmall?6:10)} r={isSmall?8:11}
-                    fill={isSel?color:'var(--c0)'} opacity={isOther?.2:isSel?1:.8}/>
-                  <text x={dept.cx} y={dept.cy+(isSmall?10:14)} textAnchor="middle"
-                    style={{fontSize:isSmall?9:11,fontWeight:700,fill:'white',fontFamily:'var(--fm)'}}>{count}</text>
-                </g>}
-              </g>
-            );
-          })}
+        <svg viewBox={`-10 -10 ${svgW+20} ${svgH+20}`} width="100%" height="auto">
+          {/* Background */}
+          <rect x="-10" y="-10" width={svgW+20} height={svgH+20} fill="var(--bg-1)" rx="4"/>
 
-          {/* City dots inside selected department */}
-          {selectedDept&&cityDots.filter(c=>c.dept===selectedDept).map(c=>{
-            const pos=geoToSvg(c.lat,c.lng);
-            const color=DEPT_COLORS[selectedDept]||'var(--ac)';
+          {/* Reference: Córdoba capital */}
+          <circle cx={cbaX} cy={cbaY} r="3" fill="var(--c2)" opacity=".4"/>
+          <text x={cbaX+6} y={cbaY+3} className="map-ref">Córdoba capital</text>
+
+          {/* Reference: Ruta E53 approximate line */}
+          <line x1={toX(-64.45)} y1={toY(-31.60)} x2={toX(-64.22)} y2={toY(-31.30)} stroke="var(--b0)" strokeWidth="1.5" strokeDasharray="4,3"/>
+          <text x={toX(-64.44)} y={toY(-31.58)} className="map-ref">Sierras Chicas</text>
+
+          {/* City dots */}
+          {cityGroups.map(c=>{
+            const x=toX(c.lng),y=toY(c.lat);
+            const isSelected=selectedCity===c.label;
+            const r=Math.max(6,Math.min(12,c.count*3+4));
             return(
-              <g key={c.label}>
-                <circle cx={pos.x} cy={pos.y} r={5} fill={color} opacity=".9"/>
-                <circle cx={pos.x} cy={pos.y} r={9} fill={color} opacity=".12"/>
-                <text x={pos.x} y={pos.y+3.5} textAnchor="middle" style={{fontSize:7,fontWeight:700,fill:'white',fontFamily:'var(--fm)'}}>{c.count}</text>
-                <text x={pos.x+8} y={pos.y+3} className="map-label" style={{fontSize:8,fontWeight:500,fill:'var(--c0)',textAnchor:'start'}}>{c.label}</text>
+              <g key={c.label} onClick={()=>onSelectCity(isSelected?null:c.label)} style={{cursor:'pointer'}}>
+                <circle cx={x} cy={y} r={r+3} fill={isSelected?'var(--ac)':'var(--ac)'} opacity={isSelected?.2:.08}/>
+                <circle cx={x} cy={y} r={r} fill={isSelected?'var(--ac)':'var(--ac)'} opacity={isSelected?1:.7} className="map-dot"/>
+                <text x={x} y={y+3.5} textAnchor="middle" className="map-count">{c.count}</text>
+                <text x={x} y={y+r+12} textAnchor="middle" className="map-label" style={{fontWeight:isSelected?700:400,fill:isSelected?'var(--ac)':'var(--c1)'}}>{c.label}</text>
               </g>
             );
           })}
         </svg>
-      </div>
-
-      {/* Legend: only departments with projects */}
-      <div style={{padding:'8px 12px',borderTop:'1px solid var(--b1)',display:'flex',flexDirection:'column',gap:4}}>
-        {activeDepts.map(([name,data])=>{
-          const color=DEPT_COLORS[name]||'var(--c2)';
-          const isSel=selectedDept===name;
-          return(
-            <div key={name} onClick={()=>onSelectDept(isSel?null:name)}
-              style={{display:'flex',alignItems:'center',gap:8,padding:'5px 8px',borderRadius:'var(--r-s)',cursor:'pointer',
-                background:isSel?color+'14':'transparent',border:isSel?'1px solid '+color+'40':'1px solid transparent'}}>
-              <span style={{width:10,height:10,borderRadius:2,background:color,opacity:isSel?1:.6,flexShrink:0}}/>
-              <span style={{flex:1,fontSize:12,fontWeight:isSel?600:400,color:isSel?color:'var(--c0)'}}>{name}</span>
-              <span style={{fontSize:11,fontFamily:'var(--fm)',fontWeight:600,color:isSel?color:'var(--c1)'}}>{data.count}</span>
-            </div>
-          );
-        })}
       </div>
     </div>
   );
@@ -766,6 +481,69 @@ function stC(s){return s==='ok'?'var(--ok)':s==='ov'?'var(--err)':s==='ip'?'var(
 function stL(s){return s==='ok'?'Completada':s==='ov'?'Vencida':s==='ip'?'En curso':'Pendiente'}
 function fDur(d){if(!d)return'—';const m=d.match(/PT(\d+)H/);if(!m)return'—';const h=parseInt(m[1]);const dy=Math.round(h/8);return dy===0?'0d':`${dy}d`}
 function entV(t,k){const e=t.ent[k];return e&&!e.guid?e.value:''}
+
+/* ═══════ Semáforo: Obra contratada vs Obra real + Standby ═══════ */
+function calcSemaforo(projectData){
+  if(!projectData||!projectData.tasks) return{color:'var(--c2)',label:'Sin datos',days:null,standbyDays:0,standbyTasks:[]};
+  const tasks=projectData.tasks;
+  
+  /* Find "contratada" task */
+  let contratada=null;
+  let obraSummary=null;
+  
+  for(const t of tasks){
+    const nl=t.name.toLowerCase();
+    if(nl.includes('contratada')&&!t.isSummary) contratada=t;
+  }
+  
+  /* Find main obra summary task */
+  for(const t of tasks){
+    if(t.isSummary&&t.depth<=1&&t.children.length>5&&!t.name.toLowerCase().includes('contratada')){
+      if(!obraSummary||t.children.length>obraSummary.children.length) obraSummary=t;
+    }
+  }
+  
+  /* Find standby tasks — "standby", "stand by", "stand-by" in name */
+  const standbyTasks=[];
+  let standbyDays=0;
+  for(const t of tasks){
+    const nl=t.name.toLowerCase();
+    if((nl.includes('standby')||nl.includes('stand by')||nl.includes('stand-by'))&&!t.isSummary){
+      const dur=t.durDays||0;
+      standbyDays+=dur;
+      standbyTasks.push({name:t.name,days:dur,start:t.start,finish:t.finish});
+    }
+  }
+  
+  if(!contratada||!contratada.finish) return{color:'var(--c2)',label:'Sin fecha contratada',days:null,standbyDays,standbyTasks};
+  
+  /* Compare dates */
+  let realFinish=null;
+  if(obraSummary&&obraSummary.finish) realFinish=obraSummary.finish;
+  else{
+    for(const t of tasks){
+      if(t.finish&&!t.isMilestone&&!t.name.toLowerCase().includes('contratada')){
+        if(!realFinish||t.finish>realFinish) realFinish=t.finish;
+      }
+    }
+  }
+  
+  if(!realFinish) return{color:'var(--c2)',label:'Sin datos de obra',days:null,standbyDays,standbyTasks};
+  
+  const diffDays=Math.round((realFinish-contratada.finish)/86400000);
+  const netDelay=diffDays-standbyDays; /* retraso neto descontando standby */
+  
+  /* Semáforo se calcula sobre el retraso BRUTO (contratada vs real) */
+  let color,label;
+  if(diffDays<=0){color='var(--ok)';label=`En fecha (${Math.abs(diffDays)}d adelanto)`}
+  else if(diffDays<=15){color='var(--warn)';label=`Alerta (${diffDays}d retraso)`}
+  else{color='var(--err)';label=`Crítico (${diffDays}d retraso)`}
+  
+  /* Si hay standby, agregar contexto al label */
+  if(standbyDays>0&&diffDays>0) label+=` · ${standbyDays}d standby`;
+  
+  return{color,label,days:diffDays,standbyDays,standbyTasks,netDelay};
+}
 /* ═══════ Theme ═══════ */
 function useTheme(){
   const[th,setTh]=useState(()=>window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
@@ -784,9 +562,6 @@ const I={
   exp:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="7 8 12 3 17 8"/><polyline points="7 16 12 21 17 16"/></svg>,
   col:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="7 3 12 8 17 3"/><polyline points="7 21 12 16 17 21"/></svg>,
   arrR:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
-  home:(s=18)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
-  cal:(s=18)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
-  chart:(s=18)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
   up:(s=16)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
   lnk:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>,
   flt:(s=14)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
@@ -799,12 +574,11 @@ const I={
 const ZM={day:{l:'Día',w:28},week:{l:'Semana',w:8},month:{l:'Mes',w:2.5},qtr:{l:'Trim.',w:.8}};
 
 /* ═══════ Tooltip ═══════ */
-function Tooltip({info,computoData}){
+function Tooltip({info}){
   if(!info)return null;
   const{task:t,x,y}=info;const s=gSt(t);const bl=t.baselines.length?t.baselines[0]:null;
   const ef=Object.entries(t.ent).filter(([,v])=>!v.guid);
-  const nItem=entV(t,'N° Item');
-  return <div className="tt" style={{left:Math.min(x,window.innerWidth-300),top:Math.max(y-200,10),maxWidth:320}}>
+  return <div className="tt" style={{left:Math.min(x,window.innerWidth-300),top:Math.max(y-150,10)}}>
     <div className="tn">{t.name}</div>
     {t.wbs&&<div className="tr"><span className="tl">WBS</span><span className="tv">{t.wbs}</span></div>}
     <div className="tr"><span className="tl">Estado</span><span className="tv" style={{color:stC(s)}}>{stL(s)}</span></div>
@@ -821,7 +595,6 @@ function Tooltip({info,computoData}){
       <div className="tr"><span className="tl">Fin LB</span><span className="tv">{fD(bl.finish)}</span></div>
       {t.finish&&bl.finish&&<div className="tr"><span className="tl">Desvío</span><span className="tv" style={{color:t.finish>bl.finish?'var(--err)':'var(--ok)'}}>{dB(bl.finish,t.finish)} días</span></div>}
     </Fragment>}
-    <MatTooltipSection computoData={computoData} nItem={nItem}/>
   </div>;
 }
 /* ═══════ GANTT SVG ═══════ */
@@ -906,7 +679,51 @@ function ProjDash({data}){
 
   const upcoming=ts.filter(t=>t.finish&&t.finish>=new Date()&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish).slice(0,10);
 
+  const sem=calcSemaforo(data);
+
+  /* Find the contracted and obra tasks for display */
+  const contratadaTask=data.tasks.find(t=>t.name.toLowerCase().includes('contratada')&&!t.isSummary);
+  const obraTask=data.tasks.find(t=>t.isSummary&&t.depth<=1&&t.children.length>5&&!t.name.toLowerCase().includes('contratada'));
+
   return <div className="dash">
+    {/* Semáforo principal */}
+    {sem.days!==null&&<div style={{marginBottom:16,background:'var(--bg-el)',border:'1px solid var(--b1)',borderRadius:'var(--r-m)',padding:16,borderLeft:`4px solid ${sem.color}`}}>
+      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:8}}>
+        <span style={{width:14,height:14,borderRadius:'50%',background:sem.color,flexShrink:0}}/>
+        <span style={{fontSize:15,fontWeight:700}}>{sem.label}</span>
+      </div>
+      <div style={{display:'flex',gap:20,fontSize:12,color:'var(--c1)',flexWrap:'wrap'}}>
+        {contratadaTask&&<div>
+          <span style={{color:'var(--c2)'}}>Fin contratado: </span>
+          <span className="mono" style={{fontWeight:500}}>{fD(contratadaTask.finish)}</span>
+        </div>}
+        {obraTask&&<div>
+          <span style={{color:'var(--c2)'}}>Fin obra: </span>
+          <span className="mono" style={{fontWeight:500}}>{fD(obraTask.finish)}</span>
+        </div>}
+        {sem.days!==null&&<div>
+          <span style={{color:'var(--c2)'}}>Desvío bruto: </span>
+          <span className="mono" style={{fontWeight:600,color:sem.color}}>{sem.days<=0?`${Math.abs(sem.days)}d adelanto`:`+${sem.days}d`}</span>
+        </div>}
+        {sem.standbyDays>0&&<div>
+          <span style={{color:'var(--c2)'}}>Standby: </span>
+          <span className="mono" style={{fontWeight:600,color:'var(--ac)'}}>{sem.standbyDays}d</span>
+        </div>}
+        {sem.standbyDays>0&&sem.days>0&&<div>
+          <span style={{color:'var(--c2)'}}>Desvío neto (sin standby): </span>
+          <span className="mono" style={{fontWeight:600,color:sem.netDelay<=0?'var(--ok)':sem.netDelay<=15?'var(--warn)':'var(--err)'}}>{sem.netDelay<=0?`${Math.abs(sem.netDelay)}d adelanto`:`+${sem.netDelay}d`}</span>
+        </div>}
+      </div>
+      {sem.standbyTasks.length>0&&<div style={{marginTop:10,borderTop:'1px solid var(--b1)',paddingTop:8}}>
+        <div style={{fontSize:11,fontWeight:600,color:'var(--c2)',marginBottom:4}}>Detalle standby ({sem.standbyTasks.length} {sem.standbyTasks.length===1?'período':'períodos'})</div>
+        {sem.standbyTasks.map((st,i)=><div key={i} style={{fontSize:11,color:'var(--c1)',display:'flex',gap:12,marginBottom:2}}>
+          <span style={{flex:1}}>{st.name}</span>
+          <span className="mono">{fD(st.start)} → {fD(st.finish)}</span>
+          <span className="mono" style={{fontWeight:500}}>{st.days}d</span>
+        </div>)}
+      </div>}
+    </div>}
+
     <div className="dgrid">
       <div className="kpi"><div className="kpi-v">{tot}</div><div className="kpi-l">Tareas</div></div>
       <div className="kpi ok"><div className="kpi-v" style={{color:'var(--ok)'}}>{done}</div><div className="kpi-l">Completadas</div></div>
@@ -1080,566 +897,6 @@ function Portfolio({projList,projData}){
     </Fragment>}
   </div>;
 }
-/* ═══════ Trend history (localStorage) ═══════ */
-const TREND_KEY='bp360_trend_v1';
-function loadTrend(){try{const d=localStorage.getItem(TREND_KEY);return d?JSON.parse(d):{}}catch(e){return{}}}
-function saveTrend(data){try{localStorage.setItem(TREND_KEY,JSON.stringify(data))}catch(e){}}
-function getWeekKey(d){const dt=d||new Date();const y=dt.getFullYear();const jan1=new Date(y,0,1);const days=Math.floor((dt-jan1)/86400000);const w=Math.ceil((days+jan1.getDay()+1)/7);return `${y}-W${String(w).padStart(2,'0')}`}
-function recordSnapshot(healthMap){
-  const wk=getWeekKey();const trend=loadTrend();
-  if(!trend[wk])trend[wk]={};
-  for(const[k,h] of Object.entries(healthMap)){
-    if(!h)continue;
-    trend[wk][k]={avg:h.avg,ov:h.ov,done:h.done,tot:h.tot,ts:Date.now()};
-  }
-  /* Keep only last 12 weeks */
-  const keys=Object.keys(trend).sort();
-  while(keys.length>12){delete trend[keys.shift()]}
-  saveTrend(trend);
-  return trend;
-}
-function getTrendForProject(trend,projKey){
-  const weeks=Object.keys(trend).sort();
-  return weeks.map(w=>({week:w,...(trend[w][projKey]||{})})).filter(d=>d.avg!==undefined);
-}
-
-/* ═══════ Sparkline SVG ═══════ */
-function Sparkline({data,field='avg',w=60,h=16,color='var(--ac)'}){
-  if(!data||data.length<2)return null;
-  const vals=data.map(d=>d[field]||0);
-  const mn=Math.min(...vals),mx=Math.max(...vals);
-  const range=mx-mn||1;
-  const pts=vals.map((v,i)=>{
-    const x=(i/(vals.length-1))*w;
-    const y=h-((v-mn)/range)*(h-2)-1;
-    return `${x},${y}`;
-  }).join(' ');
-  const last=vals[vals.length-1],prev=vals[vals.length-2];
-  const delta=last-prev;
-  return <span className="trend-row">
-    <svg className="sparkline" width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
-      <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <circle cx={w} cy={h-((last-mn)/range)*(h-2)-1} r="2" fill={color}/>
-    </svg>
-    {delta!==0&&<span className={`trend-delta ${delta>0?'up':'down'}`}>{delta>0?'▲':'▼'}{Math.abs(delta)}</span>}
-    {delta===0&&<span className="trend-delta flat">—</span>}
-  </span>;
-}
-
-/* ═══════ Health calculation ═══════ */
-function calcHealth(data){
-  if(!data||!data.tasks)return null;
-  const ts=data.tasks.filter(t=>!t.isSummary);
-  if(!ts.length)return{color:'x',label:'Sin tareas',tot:0,done:0,ov:0,avg:0,ip:0};
-  const tot=ts.length;
-  const done=ts.filter(t=>t.percentComplete>=100).length;
-  const ov=ts.filter(t=>isOv(t)).length;
-  const ip=ts.filter(t=>t.percentComplete>0&&t.percentComplete<100).length;
-  const avg=Math.round(ts.reduce((s,t)=>s+t.percentComplete,0)/tot);
-  const ovPct=tot>0?ov/tot:0;
-  const msOverdue=ts.filter(t=>t.isMilestone&&isOv(t)).length;
-  /* Check if project end date is still in the future (has time buffer) */
-  const now=new Date();
-  const maxFinish=ts.reduce((mx,t)=>t.finish&&t.finish>mx?t.finish:mx,new Date(0));
-  const daysToEnd=maxFinish>now?Math.round((maxFinish-now)/86400000):0;
-  const hasBuffer=daysToEnd>30;/* más de 30 días para terminar = tiene margen */
-  /* Thresholds are more lenient if the project still has time buffer */
-  let color='g',label='En tiempo';
-  if(hasBuffer){
-    /* Proyecto con margen: solo rojo si >40% vencidas o >8 hitos vencidos */
-    if(ovPct>.40||msOverdue>8){color='r';label='En riesgo'}
-    else if(ovPct>.25||msOverdue>5){color='y';label='Atención'}
-  }else{
-    /* Proyecto sin margen o vencido: umbrales más estrictos */
-    if(ovPct>.20||msOverdue>3){color='r';label='En riesgo'}
-    else if(ovPct>.10||msOverdue>1){color='y';label='Atención'}
-  }
-  /* Next milestone */
-  const nextMs=ts.filter(t=>t.isMilestone&&t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish)[0];
-  return{color,label,tot,done,ov,ip,avg,nextMs:nextMs||null,daysToEnd};
-}
-
-/* ═══════ Weekly View ═══════ */
-function WeekView({data}){
-  if(!data)return null;
-  const[offset,setOffset]=useState(0);
-  const now=new Date();
-  const weekStart=useMemo(()=>{
-    const d=new Date(now);d.setDate(d.getDate()-d.getDay()+1+offset*7);d.setHours(0,0,0,0);return d;
-  },[offset]);
-  const weekEnd=useMemo(()=>{
-    const d=new Date(weekStart);d.setDate(d.getDate()+4);d.setHours(23,59,59);return d;
-  },[weekStart]);
-
-  const weekLabel=useMemo(()=>{
-    const opts={day:'numeric',month:'short'};
-    return `${weekStart.toLocaleDateString('es-AR',opts)} — ${weekEnd.toLocaleDateString('es-AR',opts)}`;
-  },[weekStart,weekEnd]);
-
-  const tasks=useMemo(()=>{
-    return data.tasks.filter(t=>!t.isSummary&&t.start&&t.finish&&t.start<=weekEnd&&t.finish>=weekStart);
-  },[data.tasks,weekStart,weekEnd]);
-
-  const days=['Lunes','Martes','Miércoles','Jueves','Viernes'];
-  const grouped=useMemo(()=>{
-    const g={};
-    days.forEach((d,i)=>{
-      const dayDate=new Date(weekStart);dayDate.setDate(dayDate.getDate()+i);
-      const dayStr=dayDate.toISOString().slice(0,10);
-      g[dayStr]={label:d+' '+dayDate.getDate(),tasks:[]};
-    });
-    for(const t of tasks){
-      /* Place task on its start day if within the week, else first day */
-      let placed=false;
-      for(let i=0;i<5;i++){
-        const dayDate=new Date(weekStart);dayDate.setDate(dayDate.getDate()+i);
-        const dayStr=dayDate.toISOString().slice(0,10);
-        if(t.start<=dayDate&&t.finish>=dayDate){
-          g[dayStr].tasks.push(t);placed=true;break;
-        }
-      }
-      if(!placed){const firstKey=Object.keys(g)[0];if(firstKey)g[firstKey].tasks.push(t)}
-    }
-    return g;
-  },[tasks,weekStart]);
-
-  const isThisWeek=offset===0;
-
-  return <div className="week-view">
-    <div className="week-nav">
-      <button onClick={()=>setOffset(o=>o-1)}>← Anterior</button>
-      <h3>{weekLabel}{isThisWeek&&<span style={{fontSize:11,color:'var(--ac)',marginLeft:8}}>esta semana</span>}</h3>
-      <button onClick={()=>setOffset(o=>o+1)}>Siguiente →</button>
-      {offset!==0&&<button onClick={()=>setOffset(0)} style={{color:'var(--ac)',borderColor:'var(--ac)'}}>Hoy</button>}
-    </div>
-    <div style={{fontSize:12,color:'var(--c1)',marginBottom:16}}>{tasks.length} tareas en esta semana</div>
-
-    {tasks.length===0&&<div className="week-empty">No hay tareas programadas para esta semana.</div>}
-
-    {Object.entries(grouped).map(([dayKey,day])=>{
-      if(!day.tasks.length)return null;
-      return <div key={dayKey} className="week-day">
-        <div className="week-day-hdr">{day.label} · {day.tasks.length} tareas</div>
-        {day.tasks.sort((a,b)=>(a.finish||0)-(b.finish||0)).map(t=>{
-          const s=gSt(t);
-          return <div key={t.uid} className={`week-task ${s==='ov'?'ov':''}`}>
-            <span className="wt-dot" style={{background:stC(s)}}/>
-            <span className="wt-name" title={t.name}>{t.isMilestone&&<span style={{color:'var(--bar-ms)',marginRight:4}}>♦</span>}{t.name}</span>
-            <span className="wt-meta">{fD(t.start)} → {fD(t.finish)}</span>
-            <div className="wt-bar"><div className="wt-fill" style={{width:`${t.percentComplete}%`,background:stC(s)}}/></div>
-            <span className="wt-meta" style={{width:30,textAlign:'right'}}>{t.percentComplete}%</span>
-            <span className="wt-meta" style={{width:80,overflow:'hidden',textOverflow:'ellipsis'}}>{t.resources.join(', ')||'—'}</span>
-          </div>;
-        })}
-      </div>;
-    })}
-  </div>;
-}
-
-/* ═══════ Onboarding Tour ═══════ */
-const TOUR_KEY='bp360_tour_done';
-const TOUR_STEPS=[
-  {title:'Bienvenido a BuildPlan 360°',body:'Esta herramienta te muestra el estado de todas las obras de Bauvek en un solo lugar. Cada tarjeta tiene un semáforo de salud: verde, amarillo o rojo.'},
-  {title:'Abrí un proyecto',body:'Hacé clic en cualquier tarjeta para ver el Gantt completo, el dashboard con métricas, y la vista semanal de tareas.'},
-  {title:'Vista Semana',body:'Dentro de un proyecto, la pestaña "Semana" te muestra solo las tareas de esta semana, ideal para consultar desde el celular en la obra.'},
-  {title:'Compras y necesidades',body:'La pestaña "Compras" te anticipa qué rubros tienen tareas arrancando en las próximas semanas. Útil para planificar abastecimiento.'},
-  {title:'Portfolio cruzado',body:'El botón "Portfolio" compara todas las obras entre sí: avance, contratistas y vencidas. Cargá más de un proyecto para verlo en acción.'},
-  {title:'Tendencia en el tiempo',body:'Cada semana que abrís esta página, se guarda una foto del avance. Con el tiempo vas a ver gráficos de tendencia en cada tarjeta.'},
-];
-function Tour({onDone}){
-  const[step,setStep]=useState(0);
-  const s=TOUR_STEPS[step];
-  return <div className="tour-overlay" onClick={e=>{if(e.target===e.currentTarget)onDone()}}>
-    <div className="tour-card">
-      <div className="tour-title">{s.title}</div>
-      <div className="tour-body">{s.body}</div>
-      <div className="tour-dots">{TOUR_STEPS.map((_,i)=><span key={i} className={`tour-dot ${i===step?'on':''}`}/>)}</div>
-      <div className="tour-acts">
-        <button className="tour-skip" onClick={onDone}>Saltar</button>
-        {step<TOUR_STEPS.length-1?<button className="tour-next" onClick={()=>setStep(s=>s+1)}>Siguiente →</button>:<button className="tour-next" onClick={onDone}>¡Empezar!</button>}
-      </div>
-    </div>
-  </div>;
-}
-
-/* ═══════ Client Share View ═══════ */
-function ClientView({projName,pList,pData,metaList}){
-  /* Find matching project */
-  const match=useMemo(()=>{
-    if(!pList)return null;
-    const norm=projName.toLowerCase();
-    return pList.find(p=>p.name.toLowerCase().includes(norm)||norm.includes(p.name.toLowerCase()));
-  },[projName,pList]);
-  const data=match?pData[match.key]:null;
-  const meta=match?matchMeta(match.name,metaList):null;
-  const health=data?calcHealth(data):null;
-
-  if(!match)return <div className="client-view"><div className="client-hdr"><h1>Proyecto no encontrado</h1><p>No se encontró un proyecto con el nombre "{projName}"</p></div></div>;
-  if(!data)return <div className="client-view"><div className="client-hdr"><h1>{match.name}</h1><p>Cargando datos del proyecto...</p><div style={{textAlign:'center',marginTop:20}}><div className="sp" style={{margin:'0 auto'}}/></div></div></div>;
-
-  const ts=data.tasks.filter(t=>!t.isSummary);
-  const milestones=ts.filter(t=>t.isMilestone).sort((a,b)=>(a.finish||0)-(b.finish||0));
-  const phases=data.tasks.filter(t=>t.isSummary&&t.depth===0).sort((a,b)=>(a.start||0)-(b.start||0));
-  const hColor=health?({g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'}[health.color]):'var(--c2)';
-
-  return <div className="client-view">
-    <div className="client-hdr">
-      <div style={{fontSize:11,color:'var(--c2)',marginBottom:4}}>BAUVEK CONSTRUCCIONES</div>
-      <h1>{match.name}</h1>
-      {meta&&<p>{meta.ciudad&&`${meta.cityLabel||meta.ciudad}`}{meta.comitente&&` · ${meta.comitente}`}</p>}
-      {health&&<div className="client-badge" style={{background:hColor+'20',color:hColor}}>{health.color==='g'?'✓ En tiempo':health.color==='y'?'⚠ Requiere atención':health.color==='r'?'⚠ En riesgo':'—'}</div>}
-    </div>
-
-    <div className="client-progress">
-      <h3>Avance general</h3>
-      <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
-        <span style={{fontSize:12,color:'var(--c1)'}}>{health?.done||0} de {health?.tot||0} tareas completadas</span>
-        <span style={{fontSize:14,fontWeight:700,fontFamily:'var(--fm)',color:hColor}}>{health?.avg||0}%</span>
-      </div>
-      <div className="client-bar"><div className="client-fill" style={{width:`${health?.avg||0}%`,background:hColor}}/></div>
-      {health?.ov>0&&<div style={{fontSize:11,color:'var(--err)',marginTop:4}}>{health.ov} tareas con demora</div>}
-    </div>
-
-    {phases.length>0&&<div className="client-milestones">
-      <h3 style={{fontSize:14,fontWeight:600,marginBottom:12}}>Etapas de la obra</h3>
-      {phases.slice(0,12).map(p=>{
-        const pct=p.percentComplete;const done=pct>=100;
-        return <div key={p.uid} className="client-ms">
-          <div className="client-ms-icon" style={{background:done?'rgba(16,185,129,.1)':'rgba(158,1,1,.07)',color:done?'var(--ok)':'var(--ac)'}}>{done?'✓':pct>0?'◐':'○'}</div>
-          <div className="client-ms-info">
-            <div className="client-ms-name">{p.name}</div>
-            <div className="client-ms-date">{fD(p.start)} → {fD(p.finish)}</div>
-          </div>
-          <div style={{textAlign:'right'}}>
-            <div style={{fontSize:13,fontWeight:600,fontFamily:'var(--fm)',color:done?'var(--ok)':'var(--c0)'}}>{pct}%</div>
-          </div>
-        </div>;
-      })}
-    </div>}
-
-    {milestones.length>0&&<div className="client-milestones" style={{marginTop:24}}>
-      <h3 style={{fontSize:14,fontWeight:600,marginBottom:12}}>Hitos del proyecto</h3>
-      {milestones.map(m=>{
-        const done=m.percentComplete>=100;const ov=isOv(m);
-        return <div key={m.uid} className="client-ms">
-          <div className="client-ms-icon" style={{background:done?'rgba(16,185,129,.1)':ov?'rgba(239,68,68,.1)':'rgba(245,158,11,.1)',color:done?'var(--ok)':ov?'var(--err)':'var(--warn)'}}>♦</div>
-          <div className="client-ms-info">
-            <div className="client-ms-name">{m.name}</div>
-            <div className="client-ms-date">{fD(m.finish)}{ov?' · vencido':done?' · cumplido':''}</div>
-          </div>
-        </div>;
-      })}
-    </div>}
-
-    <div className="client-footer">Generado el {new Date().toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'})} · BuildPlan 360° · Bauvek Construcciones</div>
-  </div>;
-}
-
-/* ═══════ Procurement Forecast ═══════ */
-function ProcurementView({data}){
-  if(!data)return null;
-  const[weeks,setWeeks]=useState(4);
-  const now=new Date();
-  const horizon=useMemo(()=>{const d=new Date(now);d.setDate(d.getDate()+weeks*7);return d},[weeks]);
-
-  const upcoming=useMemo(()=>{
-    return data.tasks.filter(t=>!t.isSummary&&t.start&&t.start>=now&&t.start<=horizon&&t.percentComplete<100);
-  },[data.tasks,now,horizon]);
-
-  /* Group by rubro */
-  const byRubro=useMemo(()=>{
-    const m={};
-    for(const t of upcoming){
-      const r=entV(t,'Rubro')||'Sin rubro';
-      if(!m[r])m[r]=[];
-      m[r].push(t);
-    }
-    return Object.entries(m).sort((a,b)=>b[1].length-a[1].length);
-  },[upcoming]);
-
-  /* Group by contratista */
-  const byCon=useMemo(()=>{
-    const m={};
-    for(const t of upcoming){
-      const c=entV(t,'Contratista')||'Sin contratista';
-      if(!m[c])m[c]=0;
-      m[c]++;
-    }
-    return Object.entries(m).sort((a,b)=>b[1]-a[1]);
-  },[upcoming]);
-
-  const daysUntil=t=>{if(!t.start)return 999;return Math.max(0,Math.round((t.start-now)/86400000))};
-
-  return <div className="proc-view">
-    <div style={{marginBottom:16}}>
-      <div style={{fontSize:16,fontWeight:600,marginBottom:4}}>Próximas necesidades</div>
-      <div style={{fontSize:12,color:'var(--c1)'}}>Tareas que arrancan en las próximas semanas, agrupadas por rubro. Útil para anticipar compras y coordinar contratistas.</div>
-    </div>
-    <div className="proc-controls">
-      <span className="fl">Horizonte</span>
-      <div className="seg">
-        {[2,4,8].map(w=><button key={w} className={weeks===w?'on':''} onClick={()=>setWeeks(w)}>{w} sem</button>)}
-      </div>
-      <span style={{fontSize:12,fontFamily:'var(--fm)',color:'var(--c1)'}}>{upcoming.length} tareas por arrancar</span>
-    </div>
-
-    {byCon.length>1&&<div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:16}}>
-      {byCon.map(([c,n])=><span key={c} style={{fontSize:10,padding:'3px 8px',borderRadius:10,background:'var(--bg-1)',color:'var(--c1)',fontWeight:500}}>{c}: {n}</span>)}
-    </div>}
-
-    {upcoming.length===0&&<div className="proc-empty">No hay tareas programadas para arrancar en las próximas {weeks} semanas.</div>}
-
-    {byRubro.map(([rubro,tasks])=><div key={rubro} className="proc-group">
-      <div className="proc-group-hdr">
-        <h4>{rubro}</h4>
-        <span className="proc-count">{tasks.length} tareas</span>
-      </div>
-      {tasks.sort((a,b)=>(a.start||0)-(b.start||0)).map(t=>{
-        const days=daysUntil(t);const urgent=days<=7;
-        return <div key={t.uid} className={`proc-task ${urgent?'urgent':''}`}>
-          <span style={{flex:1,fontWeight:500}}>{t.name}</span>
-          <span className="wt-meta">{fD(t.start)}</span>
-          <span className="wt-meta" style={{width:50,textAlign:'right'}}>{days===0?'Hoy':`${days}d`}</span>
-          {urgent&&<span className="proc-alert">Urgente</span>}
-          <span style={{fontSize:10,color:'var(--c1)',width:80,textAlign:'right',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{entV(t,'Contratista')||'—'}</span>
-        </div>;
-      })}
-    </div>)}
-  </div>;
-}
-
-/* ═══════ COMPUTO-OBRAS INTEGRATION ═══════ */
-const COMPUTO_URL='https://beuzmwrhqlmjoplsillf.supabase.co';
-const COMPUTO_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldXptd3JocWxtam9wbHNpbGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc1NDcsImV4cCI6MjA5NTA2MzU0N30.Rw82cnyzp2S2Alc6lWiBCDxVL8u_8wAfCTConDGpYFE';
-let _csb=null;
-function getComputoSb(){if(!_csb)_csb=window.supabase.createClient(COMPUTO_URL,COMPUTO_KEY);return _csb}
-
-/* Cache computo data per project code */
-const _computoCache={};
-async function fetchComputoForProject(projectCode){
-  if(!projectCode)return null;
-  if(_computoCache[projectCode])return _computoCache[projectCode];
-  try{
-    const sb=getComputoSb();
-    /* Fetch coeficientes (task recipes - shared, read-only) */
-    const{data:coefs,error:e1}=await sb.from('coeficientes').select('id,cod,nombre,rubro,unidad,mats');
-    if(e1)throw e1;
-    /* Fetch materiales (base materials - shared, read-only) */
-    const{data:mats,error:e2}=await sb.from('materiales').select('id,cod,nombre,unidad,cat,precio');
-    if(e2)throw e2;
-    /* Try to fetch obra and mediciones for this specific project */
-    let obra=null,mediciones=[];
-    const{data:obras}=await sb.from('obras').select('*').eq('cod',projectCode);
-    if(obras&&obras.length){
-      obra=obras[0];
-      const{data:meds}=await sb.from('mediciones').select('*').eq('obra_id',obra.id);
-      if(meds)mediciones=meds;
-    }
-    /* Build lookup maps */
-    const coefMap={};for(const c of(coefs||[]))coefMap[c.cod]=c;
-    const matByName={};for(const m of(mats||[]))matByName[m.nombre]=m;
-    /* Build medicion lookup by coef_id */
-    const medByCoef={};for(const m of mediciones){if(!medByCoef[m.coef_id])medByCoef[m.coef_id]=[];medByCoef[m.coef_id].push(m)}
-    const result={obra,coefs:coefs||[],coefMap,materiales:mats||[],matByName,mediciones,medByCoef,loaded:true};
-    _computoCache[projectCode]=result;
-    return result;
-  }catch(err){
-    console.warn('Computo fetch error:',err);
-    return{loaded:false,error:err.message||'Error de conexión',coefs:[],coefMap:{},materiales:[],matByName:{},mediciones:[],medByCoef:{},obra:null};
-  }
-}
-
-/* Get materials for a task by its N° Item code */
-function getTaskMaterials(computoData,nItem){
-  if(!computoData||!nItem||!computoData.coefMap[nItem])return null;
-  const coef=computoData.coefMap[nItem];
-  if(!coef.mats||!coef.mats.length)return{coef,items:[],mediciones:[]};
-  const meds=computoData.medByCoef[coef.id]||[];
-  const totalQty=meds.reduce((s,m)=>s+(m.cantidad||0),0);
-  const items=(coef.mats||[]).map(m=>{
-    const mat=computoData.matByName[m.matRef];
-    const needed=totalQty>0?totalQty*m.coef:m.coef;
-    const commercial=m.divisor&&m.divisor>1?Math.ceil(needed/m.divisor):needed;
-    return{...m,materialInfo:mat,cantidadNecesaria:needed.toFixed(2),cantidadComercial:commercial,totalMedido:totalQty};
-  });
-  return{coef,items,mediciones:meds,totalMedido:totalQty};
-}
-
-/* ═══════ Materials Tooltip Section ═══════ */
-function MatTooltipSection({computoData,nItem}){
-  if(!computoData||!nItem)return null;
-  const info=getTaskMaterials(computoData,nItem);
-  if(!info||!info.items.length)return null;
-  return <div className="mat-tt">
-    <div className="mat-tt-title">Materiales ({info.items.length})</div>
-    {info.totalMedido>0&&<div style={{fontSize:10,color:'var(--c1)',marginBottom:4}}>Medido: {info.totalMedido} {info.coef.unidad}</div>}
-    {info.items.slice(0,6).map((m,i)=><div key={i} className="mat-tt-item">
-      <span className="mn">{m.matRef}</span>
-      <span className="mq">{info.totalMedido>0?m.cantidadNecesaria:m.coef} {m.un}</span>
-    </div>)}
-    {info.items.length>6&&<div style={{fontSize:10,color:'var(--c2)',marginTop:2}}>+{info.items.length-6} más</div>}
-  </div>;
-}
-
-/* ═══════ Materials View (full tab) ═══════ */
-function MaterialsView({data,computoData,visTasks}){
-  const[viewMode,setViewMode]=useState('gantt');/*gantt|list|period*/
-  const[periodMode,setPeriodMode]=useState('month');/*week|month*/
-  const[selTask,setSelTask]=useState(null);
-  const[fRubro,setFRubro]=useState('all');
-  const[fMat,setFMat]=useState('');
-
-  if(!computoData||!computoData.loaded)return <div className="mat-empty">
-    <div style={{fontSize:16,marginBottom:8}}>⚠️ No se pudo conectar con Cómputo de Obras</div>
-    <div>{computoData?.error||'Verificá la conexión a internet e intentá de nuevo.'}</div>
-  </div>;
-
-  /* Build consolidated materials list from all tasks */
-  const allMaterials=useMemo(()=>{
-    const matMap={};
-    const taskMats=[];
-    for(const t of(visTasks||data.tasks)){
-      const nItem=entV(t,'N° Item');
-      if(!nItem)continue;
-      const info=getTaskMaterials(computoData,nItem);
-      if(!info||!info.items.length)continue;
-      taskMats.push({task:t,info});
-      for(const m of info.items){
-        const key=m.matRef;
-        if(!matMap[key])matMap[key]={matRef:m.matRef,un:m.un,unComercial:m.unComercial||m.un,cat:m.materialInfo?.cat||'',precio:m.materialInfo?.precio||0,totalNeeded:0,tasks:[],byPeriod:{}};
-        matMap[key].totalNeeded+=parseFloat(m.cantidadNecesaria)||0;
-        matMap[key].tasks.push({task:t,qty:parseFloat(m.cantidadNecesaria)||0});
-        /* Group by period */
-        if(t.start){
-          const pk=periodMode==='week'
-            ?`${t.start.getFullYear()}-S${String(Math.ceil((t.start.getDate()+new Date(t.start.getFullYear(),t.start.getMonth(),1).getDay())/7)).padStart(2,'0')}-${String(t.start.getMonth()+1).padStart(2,'0')}`
-            :`${t.start.getFullYear()}-${String(t.start.getMonth()+1).padStart(2,'0')}`;
-          if(!matMap[key].byPeriod[pk])matMap[key].byPeriod[pk]=0;
-          matMap[key].byPeriod[pk]+=parseFloat(m.cantidadNecesaria)||0;
-        }
-      }
-    }
-    return{matMap,taskMats,list:Object.values(matMap).sort((a,b)=>b.totalNeeded-a.totalNeeded)};
-  },[visTasks,data.tasks,computoData,periodMode]);
-
-  /* Get unique rubros from coefs */
-  const rubros=useMemo(()=>{
-    const s=new Set();
-    for(const c of computoData.coefs)if(c.rubro)s.add(c.rubro);
-    return[...s].sort();
-  },[computoData.coefs]);
-
-  /* Get all periods sorted */
-  const periods=useMemo(()=>{
-    const s=new Set();
-    for(const m of allMaterials.list)for(const pk of Object.keys(m.byPeriod))s.add(pk);
-    return[...s].sort();
-  },[allMaterials.list]);
-
-  /* Filtered list */
-  const filtered=useMemo(()=>{
-    let list=allMaterials.list;
-    if(fRubro!=='all')list=list.filter(m=>m.cat===fRubro);
-    if(fMat)list=list.filter(m=>m.matRef.toLowerCase().includes(fMat.toLowerCase()));
-    return list;
-  },[allMaterials.list,fRubro,fMat]);
-
-  /* KPIs */
-  const kpis=useMemo(()=>{
-    const linked=allMaterials.taskMats.length;
-    const total=(visTasks||data.tasks).filter(t=>!t.isSummary).length;
-    return{linked,total,materials:allMaterials.list.length,pct:total?Math.round(linked/total*100):0};
-  },[allMaterials,visTasks,data.tasks]);
-
-  /* Export to Excel */
-  const exportXls=useCallback(()=>{
-    const rows=filtered.map(m=>({'Material':m.matRef,'Cantidad':Math.round(m.totalNeeded*100)/100,'Unidad':m.un,'Unidad Comercial':m.unComercial,'Categoría':m.cat,'Precio unitario':m.precio,'Subtotal':Math.round(m.totalNeeded*m.precio),'Tareas vinculadas':m.tasks.length}));
-    const ws=XLSX.utils.json_to_sheet(rows);
-    const wb=XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb,ws,'Materiales');
-    XLSX.writeFile(wb,`Materiales_${data.tasks[0]?.name||'obra'}_${new Date().toISOString().slice(0,10)}.xlsx`);
-  },[filtered,data]);
-
-  /* Format period label */
-  const fPeriod=pk=>{
-    if(periodMode==='week'){const[y,sw,mo]=pk.split('-');const mn=new Date(parseInt(y),parseInt(mo)-1).toLocaleDateString('es-AR',{month:'short'});return`${mn} ${sw}`}
-    const[y,mo]=pk.split('-');return new Date(parseInt(y),parseInt(mo)-1).toLocaleDateString('es-AR',{month:'long',year:'numeric'});
-  };
-
-  return <div>
-    {/* KPIs */}
-    <div className="mat-kpi">
-      <div className="mat-kpi-card"><div className="label">Tareas vinculadas</div><div className="value">{kpis.linked}<span style={{fontSize:13,color:'var(--c1)'}}>/{kpis.total}</span></div><div className="sub">{kpis.pct}% con materiales</div></div>
-      <div className="mat-kpi-card"><div className="label">Materiales distintos</div><div className="value">{kpis.materials}</div></div>
-      <div className="mat-kpi-card"><div className="label">Obra en cómputo</div><div className="value" style={{fontSize:14}}>{computoData.obra?computoData.obra.nombre:'No vinculada'}</div><div className="sub">{computoData.obra?<span className="mat-status linked">Vinculada</span>:<span className="mat-status no-link">Sin mediciones</span>}</div></div>
-    </div>
-
-    {/* Controls */}
-    <div className="mat-controls">
-      <div className="seg">
-        <button className={viewMode==='list'?'on':''} onClick={()=>setViewMode('list')}>Lista</button>
-        <button className={viewMode==='period'?'on':''} onClick={()=>setViewMode('period')}>Por período</button>
-      </div>
-      {viewMode==='period'&&<div className="seg">
-        <button className={periodMode==='week'?'on':''} onClick={()=>setPeriodMode('week')}>Semana</button>
-        <button className={periodMode==='month'?'on':''} onClick={()=>setPeriodMode('month')}>Mes</button>
-      </div>}
-      <span className="fl">Rubro</span>
-      <select className="fsel" value={fRubro} onChange={e=>setFRubro(e.target.value)}>
-        <option value="all">Todos</option>
-        {rubros.map(r=><option key={r} value={r}>{r}</option>)}
-      </select>
-      <input type="text" className="fin" placeholder="Buscar material..." value={fMat} onChange={e=>setFMat(e.target.value)} style={{width:160}}/>
-      <button className="btn btn-g" onClick={exportXls} style={{marginLeft:'auto'}}>↓ Excel</button>
-    </div>
-
-    {/* List view */}
-    {viewMode==='list'&&<div className="mat-panel">
-      <div className="mat-scroll">
-        <table className="mat-table">
-          <thead><tr><th>Material</th><th>Cantidad</th><th>Unidad</th><th>U. Comercial</th><th>Categoría</th><th>Precio</th><th>Subtotal</th><th>Tareas</th></tr></thead>
-          <tbody>{filtered.map(m=><tr key={m.matRef}>
-            <td style={{fontWeight:500,maxWidth:250,overflow:'hidden',textOverflow:'ellipsis'}}>{m.matRef}</td>
-            <td className="mono">{Math.round(m.totalNeeded*100)/100}</td>
-            <td>{m.un}</td>
-            <td>{m.unComercial}</td>
-            <td style={{fontSize:11,color:'var(--c1)'}}>{m.cat||'—'}</td>
-            <td className="mono">{m.precio?`$${m.precio.toLocaleString('es-AR')}`:' —'}</td>
-            <td className="mono" style={{fontWeight:600}}>{m.precio?`$${Math.round(m.totalNeeded*m.precio).toLocaleString('es-AR')}`:' —'}</td>
-            <td className="mono">{m.tasks.length}</td>
-          </tr>)}</tbody>
-        </table>
-      </div>
-      {filtered.length===0&&<div className="mat-empty">No se encontraron materiales con los filtros actuales.</div>}
-    </div>}
-
-    {/* Period view */}
-    {viewMode==='period'&&<div className="mat-panel">
-      {periods.length===0&&<div className="mat-empty">No hay materiales con fecha de inicio para agrupar por período.</div>}
-      {periods.map(pk=>{
-        const periodMats=filtered.filter(m=>m.byPeriod[pk]>0).map(m=>({...m,periodQty:m.byPeriod[pk]})).sort((a,b)=>b.periodQty-a.periodQty);
-        if(!periodMats.length)return null;
-        return <div key={pk}>
-          <div style={{padding:'10px 16px',background:'var(--bg-0)',borderBottom:'1px solid var(--b1)',fontWeight:600,fontSize:13,display:'flex',justifyContent:'space-between'}}>
-            <span>{fPeriod(pk)}</span>
-            <span style={{fontSize:11,color:'var(--c1)',fontWeight:400}}>{periodMats.length} materiales</span>
-          </div>
-          <table className="mat-table">
-            <thead><tr><th>Material</th><th>Cantidad</th><th>Unidad</th><th>Categoría</th><th>Subtotal</th></tr></thead>
-            <tbody>{periodMats.map(m=><tr key={m.matRef}>
-              <td style={{fontWeight:500}}>{m.matRef}</td>
-              <td className="mono">{Math.round(m.periodQty*100)/100}</td>
-              <td>{m.un}</td>
-              <td style={{fontSize:11,color:'var(--c1)'}}>{m.cat||'—'}</td>
-              <td className="mono" style={{fontWeight:600}}>{m.precio?`$${Math.round(m.periodQty*m.precio).toLocaleString('es-AR')}`:' —'}</td>
-            </tr>)}</tbody>
-          </table>
-        </div>;
-      })}
-    </div>}
-  </div>;
-}
-
 /* ═══════ MAIN APP ═══════ */
 function App(){
   const[th,togTh]=useTheme();
@@ -1670,105 +927,21 @@ function App(){
   const[dragO,setDragO]=useState(false);
   const[metaList,setMetaList]=useState([]);
   const[mapCity,setMapCity]=useState(null);
-  const[healthMap,setHealthMap]=useState({});
-  const[autoLoading,setAutoLoading]=useState({});
-  const[trendData,setTrendData]=useState(()=>loadTrend());
-  const[showTour,setShowTour]=useState(()=>{try{return!localStorage.getItem(TOUR_KEY)}catch(e){return false}});
-  const[showFinished,setShowFinished]=useState(false);
-  const clientProj=useMemo(()=>{const p=new URLSearchParams(window.location.search);return p.get('proyecto')||p.get('project')||null},[]);
-
-  const[computoData,setComputoData]=useState({});
 
   const scrollRef=useRef({v:0,src:null});
   const tblRef=useRef(null);
   const tblScrolling=useRef(false);
 
-  /* Load computo data when a project is active */
-  useEffect(()=>{
-    if(!active||!pData[active])return;
-    const d=pData[active];if(!d||!d.tasks)return;
-    /* Try to find project code from metadata or N° Item pattern */
-    const meta=matchMeta(d.tasks[0]?.name||'',metaList);
-    /* Try multiple code sources: meta archivoXML, or first task with N° Item */
-    let code=null;
-    /* Check if the project Excel metadata has a code-like field */
-    if(meta&&meta.proyecto){
-      /* Try to derive code from project name - check if obras has matching name */
-      code=meta.proyecto;
-    }
-    /* Also try to match by project name directly */
-    const projName=(pList||[]).find(p=>p.key===active)?.name||'';
-    fetchComputoForProject(code).then(r=>{
-      if(r)setComputoData(prev=>({...prev,[active]:r}));
-      /* If code didn't work, try matching by name */
-      if((!r||!r.obra)&&projName){
-        const sb=getComputoSb();
-        sb.from('obras').select('*').then(({data:allObras})=>{
-          if(!allObras)return;
-          const norm=normalizeForMatch(projName);
-          const match=allObras.find(o=>normalizeForMatch(o.nombre).includes(norm)||norm.includes(normalizeForMatch(o.nombre)));
-          if(match&&match.cod){
-            fetchComputoForProject(match.cod).then(r2=>{
-              if(r2)setComputoData(prev=>({...prev,[active]:r2}));
-            });
-          }
-        });
-      }
-    });
-  },[active,pData,metaList,pList]);
-
   /* Load manifest + project metadata */
   useEffect(()=>{
     fetch('data/manifest.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
-      const list=(d.projects||d||[]).map((p,i)=>{const rawName=p.name||(typeof p.file==='string'?p.file.replace('.xml',''):null)||`Proyecto ${i+1}`;return{key:'srv_'+(p.file||p.name||i),name:rawName.replace(/\.xml$/i,''),file:typeof p==='string'?p:p.file,size:p.size||null,modified:p.modified||null}});
+      const list=(d.projects||d||[]).map((p,i)=>({key:'srv_'+(p.file||p.name||i),name:p.name||(typeof p.file==='string'?p.file.replace('.xml',''):null)||`Proyecto ${i+1}`,file:typeof p==='string'?p:p.file,size:p.size||null,modified:p.modified||null}));
       setPList(list);
     }).catch(()=>setPList([]));
     loadProjectMeta().then(m=>setMetaList(m));
   },[]);
 
   useEffect(()=>{const h=e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();setShowSrch(s=>!s)}};window.addEventListener('keydown',h);return()=>window.removeEventListener('keydown',h)},[]);
-
-  /* Auto-load all project XMLs in background for health indicators */
-  useEffect(()=>{
-    if(!pList||!pList.length)return;
-    const serverProjs=pList.filter(p=>!p.local&&p.file);
-    let cancelled=false;
-    (async()=>{
-      for(const proj of serverProjs){
-        if(cancelled)break;
-        const k=proj.key;
-        if(pData[k])continue; /* already loaded */
-        setAutoLoading(p=>({...p,[k]:true}));
-        try{
-          const r=await fetch(`data/projects/${proj.file}?t=${Date.now()}`);
-          if(!r.ok)continue;
-          const txt=await r.text();
-          const d=parseMSPDI(txt);
-          if(cancelled)break;
-          setPData(p=>({...p,[k]:d}));
-          const em={};d.tasks.forEach(t=>{if(t.isSummary)em[t.uid]=true});
-          setExpMap(p=>({...p,[k]:em}));
-          const h=calcHealth(d);
-          setHealthMap(p=>({...p,[k]:h}));
-        }catch(e){/* skip failed loads */}
-        finally{setAutoLoading(p=>{const n={...p};delete n[k];return n})}
-      }
-    })();
-    return()=>{cancelled=true};
-  },[pList]);
-
-  /* Recalculate health when project data changes + record trend */
-  useEffect(()=>{
-    const newH={};
-    for(const[k,d] of Object.entries(pData)){
-      newH[k]=calcHealth(d);
-    }
-    setHealthMap(newH);
-    if(Object.keys(newH).length>0){
-      const updated=recordSnapshot(newH);
-      setTrendData(updated);
-    }
-  },[pData]);
 
   const resetF=useCallback(()=>{setFSt('all');setFRes('all');setFCon('all');setFRub('all');setFTab('all');setFNiv('all');setFWbs(99);setFDf('');setFDt('')},[]);
 
@@ -1861,165 +1034,67 @@ function App(){
     </div></div>;
   },[pList,pData]);
 
-  const dismissTour=useCallback(()=>{setShowTour(false);try{localStorage.setItem(TOUR_KEY,'1')}catch(e){}},[]);
-
   if(!pList)return <div className="ld"><div className="sp"/><span>Cargando...</span></div>;
-
-  /* ═══ CLIENT SHARE VIEW ═══ */
-  if(clientProj){
-    return <ClientView projName={clientProj} pList={pList} pData={pData} metaList={metaList}/>;
-  }
 
   /* ═══ HOME ═══ */
   if(!active){
     const sp=(pList||[]).filter(p=>!p.local);
-    /* Classify projects by state from Excel metadata */
-    const getEstado=p=>{const m=matchMeta(p.name,metaList);return(m?.estado||'').trim()};
-    const activoProjs=sp.filter(p=>getEstado(p)==='Activo');
-    const pausaProjs=sp.filter(p=>getEstado(p)==='En pausa');
-    const finalizadoProjs=sp.filter(p=>getEstado(p)==='Finalizado');
-    const canceladaProjs=sp.filter(p=>{const e=getEstado(p);return e==='Cancelada'||e==='Cancelado'});
-    const sinEstado=sp.filter(p=>{const e=getEstado(p);return!e||!['Activo','En pausa','Finalizado','Cancelada','Cancelado'].includes(e)});
-    const activeProjs=[...activoProjs,...pausaProjs];
-    /* Filter by map selection (only active) */
-    const filteredActive=mapCity?activeProjs.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.dept===mapCity}):activeProjs;
-
-    /* Health summary for nav badges (only active projects) */
-    const activeKeys=new Set(activeProjs.map(p=>p.key));
-    const hVals=Object.entries(healthMap).filter(([k,v])=>v&&activeKeys.has(k)).map(([,v])=>v);
-    const totalOv=hVals.reduce((s,h)=>s+h.ov,0);
-
-    /* Render a project card */
-    const renderCard=(p)=>{
-              const m=matchMeta(p.name,metaList);
-              const estado=m?.estado||'';
-              const h=healthMap[p.key];
-              const isLoading=!!autoLoading[p.key];
-              const hClass=h?`health-${h.color}`:'';
-              const dotColor=h?({g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'}[h.color]):(estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':estado==='Cancelada'?'var(--err)':'var(--c2)');
-              const stBg=estado==='Activo'?'rgba(16,185,129,.1)':estado==='En pausa'?'rgba(245,158,11,.1)':estado==='Cancelada'?'rgba(239,68,68,.08)':estado==='Finalizado'?'rgba(139,146,165,.08)':'rgba(139,146,165,.1)';
-              const stColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':estado==='Cancelada'?'var(--err)':'var(--c2)';
-              const m2t=(m?.m2Cubierta||0)+(m?.m2Semi||0);
-              return <div key={p.key} className={`pcard2 ${hClass}`} onClick={()=>openProj(p)}>
-                <div className="pcard2-top">
-                  <span className="pcard2-dot" style={{background:dotColor}}/>
-                  <span className="pcard2-name">{p.name}</span>
-                  {h&&<span className={`health-badge ${h.color}`}>{h.color==='g'?'✓':h.color==='y'?'⚠':h.color==='r'?'✕':'—'} {h.label}</span>}
-                  {!h&&estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
-                </div>
-                <div className="pcard2-meta">
-                  {m?.ciudad&&<span>📍 {m.cityLabel||m.ciudad}</span>}
-                  {m?.dept&&<span style={{color:DEPT_COLORS[m.dept]||'var(--c2)'}}>◆ {m.dept}</span>}
-                  {m2t>0&&<span>🏠 {Math.round(m2t)} m² cub</span>}
-                  {m?.comitente&&<span>👤 {m.comitente}</span>}
-                </div>
-                {h&&<Fragment>
-                  <div className="pcard2-bar"><div className="pcard2-fill" style={{width:`${h.avg}%`,background:dotColor}}/></div>
-                  <div className="pcard2-health">
-                    <div className="pcard2-stats">
-                      <span style={{fontWeight:600,color:'var(--c0)'}}>{h.avg}%</span>
-                      <span>{h.done}/{h.tot} hechas</span>
-                      {h.ov>0&&<span style={{color:'var(--err)'}}>{h.ov} vencidas</span>}
-                      {h.ip>0&&<span style={{color:'var(--warn)'}}>{h.ip} en curso</span>}
-                    </div>
-                  </div>
-                  {h.nextMs&&<div style={{fontSize:10,color:'var(--c2)',marginTop:2}}>Próximo hito: {h.nextMs.name} ({fD(h.nextMs.finish)})</div>}
-                  {(()=>{const td=getTrendForProject(trendData,p.key);return td.length>=2?<div style={{display:'flex',alignItems:'center',gap:8,marginTop:3}}><span style={{fontSize:9,color:'var(--c2)'}}>Avance</span><Sparkline data={td} field="avg" color="var(--ac)"/><span style={{fontSize:9,color:'var(--c2)',marginLeft:4}}>Vencidas</span><Sparkline data={td} field="ov" color="var(--err)" w={40}/></div>:null})()}
-                </Fragment>}
-                {!h&&isLoading&&<div className="pcard2-loading"><div className="mini-sp"/>Analizando...</div>}
-                {!h&&!isLoading&&p.size&&<div className="pcard2-bottom"><span>{(p.size/1024).toFixed(0)} KB</span></div>}
-              </div>;
-    };
+    /* Filter by map selection */
+    const filteredSp=mapCity?sp.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.cityLabel===mapCity}):sp;
 
     return <Fragment>
       <div className="hdr">
         <a href="index.html" style={{color:'var(--c2)',fontSize:11,textDecoration:'none',marginRight:6}}>← BkTableros</a><div className="logo">{I.bld(18)} BuildPlan <span>360°</span></div>
         <div className="tabs">
-          <button className="tab on">{I.home(14)} Inicio</button>
-          <button className="tab" onClick={()=>{setActive('__pf');setSub('portfolio')}} style={{color:'var(--ac)'}}>{I.usr(14)} Portfolio</button>
-          {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);return p?<button key={k} className="tab" onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>:null})}
+          <button className="tab" onClick={()=>{setActive('__pf');setSub('portfolio')}} style={{color:'var(--ac)'}}>{I.usr()} Portfolio</button>
         </div>
         <div className="acts">
-          {totalOv>0&&<span style={{fontSize:11,color:'var(--err)',fontWeight:600,fontFamily:'var(--fm)'}}>{totalOv} vencidas</span>}
           <button className="btn btn-g btn-i" onClick={()=>setShowSrch(true)} title="Ctrl+K">{I.srch()}</button>
           <button className="btn btn-g btn-i" onClick={togTh}>{th==='light'?I.moon():I.sun()}</button>
         </div>
       </div>
       <div className="home">
-        {/* Sidebar: Map — all projects */}
+        {/* Sidebar: Map */}
         <div className="home-sidebar">
-          <DeptMap projects={sp} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
-          {/* Health summary under map — only active */}
-          {hVals.length>0&&<div style={{padding:'12px',borderTop:'1px solid var(--b1)'}}>
-            <div style={{fontSize:11,fontWeight:600,color:'var(--c1)',marginBottom:8,textTransform:'uppercase',letterSpacing:'.5px'}}>Salud obras activas</div>
-            <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
-              <span className="health-badge g">{hVals.filter(h=>h.color==='g').length} en tiempo</span>
-              {hVals.filter(h=>h.color==='y').length>0&&<span className="health-badge y">{hVals.filter(h=>h.color==='y').length} atención</span>}
-              {hVals.filter(h=>h.color==='r').length>0&&<span className="health-badge r">{hVals.filter(h=>h.color==='r').length} en riesgo</span>}
-            </div>
-          </div>}
+          <CbaMap projects={sp} metaList={metaList} selectedCity={mapCity} onSelectCity={setMapCity}/>
         </div>
 
-        {/* Main: Project cards — separated */}
+        {/* Main: Project cards */}
         <div className="home-main">
-          {/* ACTIVE PROJECTS */}
           <div className="home-h">
-            <div className="home-title">Obras activas</div>
-            <div className="home-sub">{filteredActive.length} obras{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{hVals.length>0&&!mapCity&&<span style={{marginLeft:8,color:'var(--c2)'}}>· {hVals.length} analizadas</span>}</div>
+            <div className="home-title">Proyectos</div>
+            <div className="home-sub">{filteredSp.length} obras{mapCity?` · ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}</div>
           </div>
           <div className="pgrid2">
-            {filteredActive.map(renderCard)}
+            {filteredSp.map(p=>{
+              const m=matchMeta(p.name,metaList);
+              const pd=pData[p.key];
+              const sem=pd?calcSemaforo(pd):null;
+              const estado=m?.estado||'';
+              const dotColor=sem?sem.color:(estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)');
+              const stBg=estado==='Activo'?'rgba(16,185,129,.1)':estado==='En pausa'?'rgba(245,158,11,.1)':'rgba(139,146,165,.1)';
+              const stColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':'var(--c2)';
+              const m2t=(m?.m2Cubierta||0)+(m?.m2Semi||0);
+              return <div key={p.key} className="pcard2" onClick={()=>openProj(p)}>
+                <div className="pcard2-top">
+                  <span className="pcard2-dot" style={{background:dotColor}} title={sem?sem.label:''}/>
+                  <span className="pcard2-name">{p.name}</span>
+                  {sem&&sem.days!==null&&<span className="pcard2-status" style={{background:sem.color==='var(--ok)'?'rgba(16,185,129,.1)':sem.color==='var(--warn)'?'rgba(245,158,11,.1)':'rgba(239,68,68,.1)',color:sem.color,fontSize:10}}>{sem.days<=0?`${Math.abs(sem.days)}d ✓`:`+${sem.days}d`}</span>}
+                  {!sem&&estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
+                </div>
+                <div className="pcard2-meta">
+                  {m?.ciudad&&<span>📍 {m.cityLabel||m.ciudad}</span>}
+                  {m2t>0&&<span>🏠 {Math.round(m2t)} m² cub</span>}
+                  {m?.m2Terreno>0&&<span>📐 {m.m2Terreno.toLocaleString('es-AR')} m² ter</span>}
+                  {m?.comitente&&<span>👤 {m.comitente}</span>}
+                </div>
+                {p.size&&<div className="pcard2-bottom"><span>{(p.size/1024).toFixed(0)} KB</span></div>}
+              </div>;
+            })}
           </div>
-
-          {/* FINALIZADAS — collapsible */}
-          {finalizadoProjs.length>0&&<div style={{marginTop:32}}>
-            <div style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'12px 0',borderTop:'1px solid var(--b1)'}} onClick={()=>setShowFinished(f=>f==='fin'?false:'fin')}>
-              <span style={{width:10,height:10,borderRadius:2,background:'var(--ok)',opacity:.5,flexShrink:0}}/>
-              <span style={{fontSize:14,fontWeight:600,color:'var(--c1)'}}>Obras finalizadas</span>
-              <span style={{fontSize:11,color:'var(--c2)',fontFamily:'var(--fm)',background:'rgba(16,185,129,.1)',color:'var(--ok)',padding:'2px 8px',borderRadius:10,fontWeight:600}}>{finalizadoProjs.length}</span>
-              <span style={{fontSize:11,color:'var(--c2)',marginLeft:'auto'}}>{showFinished==='fin'?'▲ Ocultar':'▼ Mostrar'}</span>
-            </div>
-            {showFinished==='fin'&&<div className="pgrid2" style={{opacity:.6}}>
-              {finalizadoProjs.map(renderCard)}
-            </div>}
-          </div>}
-
-          {/* CANCELADAS — collapsible */}
-          {canceladaProjs.length>0&&<div style={{marginTop:16}}>
-            <div style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'12px 0',borderTop:'1px solid var(--b1)'}} onClick={()=>setShowFinished(f=>f==='can'?false:'can')}>
-              <span style={{width:10,height:10,borderRadius:2,background:'var(--err)',opacity:.5,flexShrink:0}}/>
-              <span style={{fontSize:14,fontWeight:600,color:'var(--c1)'}}>Obras canceladas</span>
-              <span style={{fontSize:11,fontFamily:'var(--fm)',background:'rgba(239,68,68,.1)',color:'var(--err)',padding:'2px 8px',borderRadius:10,fontWeight:600}}>{canceladaProjs.length}</span>
-              <span style={{fontSize:11,color:'var(--c2)',marginLeft:'auto'}}>{showFinished==='can'?'▲ Ocultar':'▼ Mostrar'}</span>
-            </div>
-            {showFinished==='can'&&<div className="pgrid2" style={{opacity:.6}}>
-              {canceladaProjs.map(renderCard)}
-            </div>}
-          </div>}
-
-          {/* SIN CLASIFICAR — projects not in Excel */}
-          {sinEstado.length>0&&<div style={{marginTop:16}}>
-            <div style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'12px 0',borderTop:'1px solid var(--b1)'}} onClick={()=>setShowFinished(f=>f==='other'?false:'other')}>
-              <span style={{width:10,height:10,borderRadius:2,background:'var(--c2)',opacity:.5,flexShrink:0}}/>
-              <span style={{fontSize:14,fontWeight:600,color:'var(--c1)'}}>Sin clasificar</span>
-              <span style={{fontSize:11,fontFamily:'var(--fm)',background:'var(--bg-2)',padding:'2px 8px',borderRadius:10,color:'var(--c2)',fontWeight:600}}>{sinEstado.length}</span>
-              <span style={{fontSize:10,color:'var(--c2)'}}>No están en el Excel de proyectos</span>
-              <span style={{fontSize:11,color:'var(--c2)',marginLeft:'auto'}}>{showFinished==='other'?'▲ Ocultar':'▼ Mostrar'}</span>
-            </div>
-            {showFinished==='other'&&<div className="pgrid2" style={{opacity:.5}}>
-              {sinEstado.map(renderCard)}
-            </div>}
-          </div>}
         </div>
       </div>
-      {showTour&&<Tour onDone={dismissTour}/>}
       {showSrch&&<SearchModal onClose={()=>setShowSrch(false)}/>}
-      <div className="mob-nav">
-        <button className="on" onClick={()=>setActive(null)}>{I.home(18)}<span>Inicio</span></button>
-        <button onClick={()=>{setActive('__pf');setSub('portfolio')}}>{I.chart(18)}<span>Portfolio</span></button>
-        <button onClick={()=>setShowSrch(true)}>{I.srch(18)}<span>Buscar</span></button>
-        <button onClick={togTh}>{th==='light'?I.moon(18):I.sun(18)}<span>Tema</span></button>
-      </div>
     </Fragment>;
   }
 
@@ -2042,12 +1117,12 @@ function App(){
   return <Fragment>
     <div className="ph"><h1>{aProj?.name}</h1><p>Generado el {new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})} — BuildPlan Viewer · Bauvek</p></div>
     <div className="hdr">
-      <button onClick={()=>setActive(null)} style={{background:'none',border:'none',color:'var(--c2)',fontSize:11,cursor:'pointer',marginRight:6,padding:0}}>← BuildPlan</button><div className="logo" onClick={()=>setActive(null)}>{I.bld(18)} BuildPlan</div>
+      <a href="index.html" style={{color:'var(--c2)',fontSize:11,textDecoration:'none',marginRight:6}}>← BkTableros</a><div className="logo" onClick={()=>setActive(null)}>{I.bld(18)} BuildPlan</div>
       <div className="tabs">
-        <a href="index.html" className="tab" style={{textDecoration:'none',color:'var(--c1)',fontWeight:600,fontSize:12,letterSpacing:'.3px'}}>TABLEROS BK</a>
         <button className="tab" onClick={()=>{setActive('__pf');setSub('portfolio')}}>{I.usr()} Portfolio</button>
         {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);if(!p)return null;
-          return <button key={k} className={`tab ${active===k?'on':''}`} onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>})}
+          const tabSem=pData[k]?calcSemaforo(pData[k]):null;
+          return <button key={k} className={`tab ${active===k?'on':''}`} onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:tabSem?tabSem.color:'var(--c2)'}} title={tabSem?tabSem.label:''}/>{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>})}
       </div>
       <div className="acts">
         <button className="btn btn-g btn-i" onClick={()=>setShowSrch(true)} title="Ctrl+K">{I.srch()}</button>
@@ -2057,9 +1132,6 @@ function App(){
 
     <div className="stbar">
       <button className={`st ${sub==='gantt'?'on':''}`} onClick={()=>setSub('gantt')}>Gantt</button>
-      <button className={`st ${sub==='semana'?'on':''}`} onClick={()=>setSub('semana')}>Semana</button>
-      <button className={`st ${sub==='compras'?'on':''}`} onClick={()=>setSub('compras')}>Compras</button>
-      <button className={`st ${sub==='materiales'?'on':''}`} onClick={()=>setSub('materiales')} style={sub==='materiales'?{borderColor:'var(--ac)'}:{}}>Materiales</button>
       <button className={`st ${sub==='dash'?'on':''}`} onClick={()=>setSub('dash')}>Dashboard</button>
       <button className={`st ${sub==='demoras'?'on':''}`} onClick={()=>setSub('demoras')}>Demoras</button>
       {sub==='gantt'&&aData&&<div className="str">
@@ -2069,8 +1141,6 @@ function App(){
         <button className="btn btn-g btn-i" onClick={()=>setShowArr(a=>!a)} title="Flechas" style={{color:showArr?'var(--ac)':'var(--c2)'}}>{I.lnk()}</button>
         {aData.hasBL&&<button className="btn btn-g btn-i" onClick={()=>setShowBL(b=>!b)} title="Línea base" style={{color:showBL?'var(--ac)':'var(--c2)'}}>{I.bl()}</button>}
         <button className="btn btn-g" onClick={()=>window.print()}>{I.prt()} PDF</button>
-        <a href="pagos.html" className="btn btn-g" style={{textDecoration:'none'}} title="Ver programación de pagos">$ Pagos</a>
-        <button className="btn btn-g" onClick={()=>{const url=window.location.origin+window.location.pathname+'?proyecto='+encodeURIComponent(aProj?.name||'');navigator.clipboard.writeText(url).then(()=>alert('Link copiado: '+url)).catch(()=>prompt('Copiá este link para compartir:',url))}} title="Compartir vista cliente">{I.lnk()} Compartir</button>
       </div>}
     </div>
 
@@ -2124,7 +1194,7 @@ function App(){
               <td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Rubro')||'—'}</td>
               <td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Nivel')||'—'}</td>
               <td style={{fontSize:10,color:'var(--c2)'}}>{entV(t,'Tableros')||'—'}</td>
-              <td className="mono" style={{fontSize:10}}>{entV(t,'N° Item')||'—'}{entV(t,'N° Item')&&computoData[active]?.coefMap?.[entV(t,'N° Item')]&&<span className="mat-badge" title="Tiene materiales en cómputo">⬡</span>}</td>
+              <td className="mono" style={{fontSize:10}}>{entV(t,'N° Item')||'—'}</td>
             </tr>
           })}</tbody>
         </table>
@@ -2133,21 +1203,12 @@ function App(){
       <GanttSVG tasks={visTasks} minDate={aData.minDate} maxDate={aData.maxDate} zoom={zoom} showArr={showArr} showBL={showBL} scrollRef={scrollRef} onTT={setTTInfo}/>
     </div>}
 
-    {!aLoading&&aData&&sub==='semana'&&<WeekView data={aData}/>}
-    {!aLoading&&aData&&sub==='compras'&&<ProcurementView data={aData}/>}
-    {!aLoading&&aData&&sub==='materiales'&&<MaterialsView data={aData} computoData={computoData[active]||null} visTasks={visTasks}/>}
     {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData}/>}
     {!aLoading&&aData&&sub==='demoras'&&<DemorasView data={aData}/>}
 
-    <Tooltip info={ttInfo} computoData={computoData[active]||null}/>
+    <Tooltip info={ttInfo}/>
     {showSrch&&<SearchModal onClose={()=>setShowSrch(false)}/>}
     <div className="pf">BuildPlan Viewer — Bauvek · {new Date().toLocaleDateString('es-AR')}</div>
-    <div className="mob-nav">
-      <button onClick={()=>setActive(null)}>{I.home(18)}<span>Inicio</span></button>
-      <button className={sub==='semana'?'on':''} onClick={()=>setSub('semana')}>{I.cal(18)}<span>Semana</span></button>
-      <button className={sub==='gantt'?'on':''} onClick={()=>setSub('gantt')}>{I.bld(18)}<span>Gantt</span></button>
-      <button className={sub==='dash'?'on':''} onClick={()=>setSub('dash')}>{I.chart(18)}<span>Dashboard</span></button>
-    </div>
   </Fragment>;
 }
 
