@@ -893,7 +893,7 @@ function GanttSVG({tasks,minDate,maxDate,zoom,showArr,showBL,scrollRef,onTT}){
   );
 }
 /* ═══════ Dashboard por proyecto ═══════ */
-function ProjDash({data}){
+function ProjDash({data,health}){
   if(!data)return null;
   const ts=data.tasks.filter(t=>!t.isSummary);
   const tot=ts.length,done=ts.filter(t=>t.percentComplete>=100).length;
@@ -905,8 +905,35 @@ function ProjDash({data}){
   ts.forEach(t=>{const c=entV(t,'Contratista')||'Sin contratista';if(!cMap[c])cMap[c]={tot:0,done:0,ov:0};cMap[c].tot++;if(t.percentComplete>=100)cMap[c].done++;if(isOv(t))cMap[c].ov++});
 
   const upcoming=ts.filter(t=>t.finish&&t.finish>=new Date()&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish).slice(0,10);
+  const h=health;
+  const semaColor=h?{g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'}[h.color]:'var(--c2)';
 
   return <div className="dash">
+    {/* Semáforo banner */}
+    {h&&<div style={{marginBottom:20,background:'var(--bg-el)',border:`2px solid ${semaColor}`,borderRadius:'var(--r-m)',padding:16}}>
+      <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:h.hasContratada?10:0}}>
+        <span style={{width:16,height:16,borderRadius:'50%',background:semaColor,flexShrink:0}}/>
+        <span style={{fontSize:15,fontWeight:700,color:semaColor}}>{h.label}</span>
+        {h.desvioBruto!==null&&<span style={{fontSize:13,fontFamily:'var(--fm)',color:'var(--c0)'}}>{h.desvioBruto>0?`+${h.desvioBruto}d retraso`:h.desvioBruto===0?'En fecha':`${Math.abs(h.desvioBruto)}d adelanto`}</span>}
+        {h.standbyDays>0&&<span style={{fontSize:12,color:'var(--c2)',marginLeft:4}}>· {h.standbyDays}d standby</span>}
+      </div>
+      {h.hasContratada&&<div style={{display:'flex',gap:24,flexWrap:'wrap',fontSize:12}}>
+        <div><span style={{color:'var(--c2)'}}>Fin contratado: </span><span style={{fontFamily:'var(--fm)',fontWeight:600}}>{fD(h.finContratado)}</span></div>
+        <div><span style={{color:'var(--c2)'}}>Fin obra: </span><span style={{fontFamily:'var(--fm)',fontWeight:600}}>{fD(h.finObra)}</span></div>
+        {h.desvioBruto!==null&&<div><span style={{color:'var(--c2)'}}>Desvío bruto: </span><span style={{fontFamily:'var(--fm)',fontWeight:600,color:semaColor}}>{h.desvioBruto>0?'+':''}{h.desvioBruto}d</span></div>}
+        {h.standbyDays>0&&<div><span style={{color:'var(--c2)'}}>Standby: </span><span style={{fontFamily:'var(--fm)',fontWeight:600}}>{h.standbyDays}d</span></div>}
+        {h.standbyDays>0&&h.desvioNeto!==null&&<div><span style={{color:'var(--c2)'}}>Desvío neto: </span><span style={{fontFamily:'var(--fm)',fontWeight:600,color:h.desvioNeto<=0?'var(--ok)':h.desvioNeto<=15?'var(--warn)':'var(--err)'}}>{h.desvioNeto>0?'+':''}{h.desvioNeto}d</span></div>}
+      </div>}
+      {h.standbyDetail&&h.standbyDetail.length>0&&<div style={{marginTop:10,borderTop:'1px solid var(--b1)',paddingTop:8}}>
+        <div style={{fontSize:10,fontWeight:600,color:'var(--c2)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:4}}>Detalle standby ({h.standbyDetail.length} período{h.standbyDetail.length>1?'s':''})</div>
+        {h.standbyDetail.map((sb,i)=><div key={i} style={{fontSize:11,display:'flex',gap:12,padding:'2px 0'}}>
+          <span style={{flex:1,color:'var(--c1)'}}>{sb.name}</span>
+          <span style={{fontFamily:'var(--fm)',color:'var(--c2)',whiteSpace:'nowrap'}}>{fD(sb.start)} → {fD(sb.finish)}</span>
+          <span style={{fontFamily:'var(--fm)',fontWeight:600,whiteSpace:'nowrap'}}>{sb.days}d</span>
+        </div>)}
+      </div>}
+      {!h.hasContratada&&<div style={{fontSize:11,color:'var(--c2)',marginTop:4}}>No se encontró tarea "contratada" en este cronograma. El semáforo no puede calcularse.</div>}
+    </div>}
     <div className="dgrid">
       <div className="kpi"><div className="kpi-v">{tot}</div><div className="kpi-l">Tareas</div></div>
       <div className="kpi ok"><div className="kpi-v" style={{color:'var(--ok)'}}>{done}</div><div className="kpi-l">Completadas</div></div>
@@ -1136,27 +1163,51 @@ function calcHealth(data){
   const ov=ts.filter(t=>isOv(t)).length;
   const ip=ts.filter(t=>t.percentComplete>0&&t.percentComplete<100).length;
   const avg=Math.round(ts.reduce((s,t)=>s+t.percentComplete,0)/tot);
-  const ovPct=tot>0?ov/tot:0;
-  const msOverdue=ts.filter(t=>t.isMilestone&&isOv(t)).length;
-  /* Check if project end date is still in the future (has time buffer) */
   const now=new Date();
-  const maxFinish=ts.reduce((mx,t)=>t.finish&&t.finish>mx?t.finish:mx,new Date(0));
-  const daysToEnd=maxFinish>now?Math.round((maxFinish-now)/86400000):0;
-  const hasBuffer=daysToEnd>30;/* más de 30 días para terminar = tiene margen */
-  /* Thresholds are more lenient if the project still has time buffer */
-  let color='g',label='En tiempo';
-  if(hasBuffer){
-    /* Proyecto con margen: solo rojo si >40% vencidas o >8 hitos vencidos */
-    if(ovPct>.40||msOverdue>8){color='r';label='En riesgo'}
-    else if(ovPct>.25||msOverdue>5){color='y';label='Atención'}
-  }else{
-    /* Proyecto sin margen o vencido: umbrales más estrictos */
-    if(ovPct>.20||msOverdue>3){color='r';label='En riesgo'}
-    else if(ovPct>.10||msOverdue>1){color='y';label='Atención'}
+
+  /* ═══ Semáforo por fecha contratada vs cronograma ═══ */
+  /* 1. Find "contratada" task — the committed deadline */
+  const allTasks=data.tasks;
+  const contratadaTask=allTasks.find(t=>/contratad[ao]/i.test(t.name));
+  const finContratado=contratadaTask?.finish||null;
+
+  /* 2. Find main summary task — the top-level summary with most children */
+  const summaries=allTasks.filter(t=>t.isSummary&&t.outlineLevel<=1&&t.finish);
+  const macroTask=summaries.sort((a,b)=>{
+    const aKids=allTasks.filter(x=>x.outlineLevel>a.outlineLevel).length;
+    const bKids=allTasks.filter(x=>x.outlineLevel>b.outlineLevel).length;
+    return bKids-aKids;
+  })[0];
+  const finObra=macroTask?.finish||ts.reduce((mx,t)=>t.finish&&t.finish>mx?t.finish:mx,new Date(0));
+
+  /* 3. Standby detection — tasks with "standby" / "stand by" / "stand-by" */
+  const standbyTasks=allTasks.filter(t=>/stand[\s\-]?by/i.test(t.name)&&!t.isSummary);
+  const standbyDays=standbyTasks.reduce((s,t)=>{
+    if(t.start&&t.finish){return s+Math.max(0,Math.round((t.finish-t.start)/86400000))}
+    return s;
+  },0);
+  const standbyDetail=standbyTasks.map(t=>({
+    name:t.name,
+    start:t.start,finish:t.finish,
+    days:t.start&&t.finish?Math.max(0,Math.round((t.finish-t.start)/86400000)):0
+  }));
+
+  /* 4. Calculate deviation */
+  let desvioBruto=null,desvioNeto=null,color='x',label='Sin fecha contratada';
+  if(finContratado){
+    desvioBruto=Math.round((finObra-finContratado)/86400000);
+    desvioNeto=desvioBruto-standbyDays;
+    if(desvioBruto<=0){color='g';label='En tiempo'}
+    else if(desvioBruto<=15){color='y';label='Atención'}
+    else{color='r';label='Crítico'}
   }
+
   /* Next milestone */
   const nextMs=ts.filter(t=>t.isMilestone&&t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish)[0];
-  return{color,label,tot,done,ov,ip,avg,nextMs:nextMs||null,daysToEnd};
+
+  return{color,label,tot,done,ov,ip,avg,nextMs:nextMs||null,
+    finContratado,finObra,desvioBruto,desvioNeto,
+    standbyDays,standbyDetail,hasContratada:!!finContratado};
 }
 
 /* ═══════ Weekly View ═══════ */
@@ -1863,6 +1914,26 @@ function App(){
 
   const dismissTour=useCallback(()=>{setShowTour(false);try{localStorage.setItem(TOUR_KEY,'1')}catch(e){}},[]);
 
+  /* Classify projects — must be top-level hook (before any conditional return) */
+  const allSp=useMemo(()=>(pList||[]).filter(p=>!p.local),[pList]);
+  const classified=useMemo(()=>{
+    const used=new Set();
+    const result={activo:[],pausa:[],finalizado:[],cancelada:[],sin:[]};
+    for(const p of allSp){
+      const m=matchMeta(p.name,metaList);
+      const mKey=m?.proyecto||null;
+      if(m&&mKey&&used.has(mKey))continue;
+      if(m&&mKey)used.add(mKey);
+      const e=(m?.estado||'').trim();
+      if(e==='Activo')result.activo.push(p);
+      else if(e==='En pausa')result.pausa.push(p);
+      else if(e==='Finalizado')result.finalizado.push(p);
+      else if(e==='Cancelada'||e==='Cancelado')result.cancelada.push(p);
+      else result.sin.push(p);
+    }
+    return result;
+  },[allSp,metaList]);
+
   if(!pList)return <div className="ld"><div className="sp"/><span>Cargando...</span></div>;
 
   /* ═══ CLIENT SHARE VIEW ═══ */
@@ -1872,26 +1943,7 @@ function App(){
 
   /* ═══ HOME ═══ */
   if(!active){
-    const sp=(pList||[]).filter(p=>!p.local);
-    /* Classify projects — single pass with dedup so no Excel row is matched twice */
-    const classified=useMemo(()=>{
-      const used=new Set();
-      const result={activo:[],pausa:[],finalizado:[],cancelada:[],sin:[]};
-      for(const p of sp){
-        const m=matchMeta(p.name,metaList);
-        const mKey=m?.proyecto||null;
-        /* If this Excel row was already claimed by another XML, skip entirely */
-        if(m&&mKey&&used.has(mKey))continue;
-        if(m&&mKey)used.add(mKey);
-        const e=(m?.estado||'').trim();
-        if(e==='Activo')result.activo.push(p);
-        else if(e==='En pausa')result.pausa.push(p);
-        else if(e==='Finalizado')result.finalizado.push(p);
-        else if(e==='Cancelada'||e==='Cancelado')result.cancelada.push(p);
-        else result.sin.push(p);
-      }
-      return result;
-    },[sp,metaList]);
+    const sp=allSp;
     const activoProjs=classified.activo;
     const pausaProjs=classified.pausa;
     const finalizadoProjs=classified.finalizado;
@@ -1921,7 +1973,7 @@ function App(){
                 <div className="pcard2-top">
                   <span className="pcard2-dot" style={{background:dotColor}}/>
                   <span className="pcard2-name">{p.name}</span>
-                  {h&&<span className={`health-badge ${h.color}`}>{h.color==='g'?'✓':h.color==='y'?'⚠':h.color==='r'?'✕':'—'} {h.label}</span>}
+                  {h&&<span className={`health-badge ${h.color}`}>{h.color==='g'?'✓':h.color==='y'?'⚠':h.color==='r'?'✕':'—'} {h.label}{h.desvioBruto!==null&&h.desvioBruto!==0&&<span style={{marginLeft:3,fontSize:10,fontFamily:'var(--fm)'}}>{h.desvioBruto>0?`+${h.desvioBruto}d`:`${h.desvioBruto}d`}</span>}</span>}
                   {!h&&estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
                 </div>
                 <div className="pcard2-meta">
@@ -1940,6 +1992,7 @@ function App(){
                       {h.ip>0&&<span style={{color:'var(--warn)'}}>{h.ip} en curso</span>}
                     </div>
                   </div>
+                  {h.standbyDays>0&&<div style={{fontSize:10,color:'var(--c2)',marginTop:2}}>⏸ {h.standbyDays}d standby{h.desvioNeto!==null&&h.desvioBruto!==h.desvioNeto?` · Neto: ${h.desvioNeto>0?'+':''}${h.desvioNeto}d`:''}</div>}
                   {h.nextMs&&<div style={{fontSize:10,color:'var(--c2)',marginTop:2}}>Próximo hito: {h.nextMs.name} ({fD(h.nextMs.finish)})</div>}
                   {(()=>{const td=getTrendForProject(trendData,p.key);return td.length>=2?<div style={{display:'flex',alignItems:'center',gap:8,marginTop:3}}><span style={{fontSize:9,color:'var(--c2)'}}>Avance</span><Sparkline data={td} field="avg" color="var(--ac)"/><span style={{fontSize:9,color:'var(--c2)',marginLeft:4}}>Vencidas</span><Sparkline data={td} field="ov" color="var(--err)" w={40}/></div>:null})()}
                 </Fragment>}
@@ -2153,7 +2206,7 @@ function App(){
     {!aLoading&&aData&&sub==='semana'&&<WeekView data={aData}/>}
     {!aLoading&&aData&&sub==='compras'&&<ProcurementView data={aData}/>}
     {!aLoading&&aData&&sub==='materiales'&&<MaterialsView data={aData} computoData={computoData[active]||null} visTasks={visTasks}/>}
-    {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData}/>}
+    {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData} health={healthMap[active]}/>}
     {!aLoading&&aData&&sub==='demoras'&&<DemorasView data={aData}/>}
 
     <Tooltip info={ttInfo} computoData={computoData[active]||null}/>
