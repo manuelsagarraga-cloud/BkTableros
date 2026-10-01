@@ -1171,14 +1171,36 @@ function calcHealth(data){
   const contratadaTask=allTasks.find(t=>/contratad[ao]/i.test(t.name));
   const finContratado=contratadaTask?.finish||null;
 
-  /* 2. Find main summary task — the top-level summary with most children */
-  const summaries=allTasks.filter(t=>t.isSummary&&t.outlineLevel<=1&&t.finish);
-  const macroTask=summaries.sort((a,b)=>{
-    const aKids=allTasks.filter(x=>x.outlineLevel>a.outlineLevel).length;
-    const bKids=allTasks.filter(x=>x.outlineLevel>b.outlineLevel).length;
-    return bKids-aKids;
-  })[0];
-  const finObra=macroTask?.finish||ts.reduce((mx,t)=>t.finish&&t.finish>mx?t.finish:mx,new Date(0));
+  /* 2. Find main obra task — the real construction schedule to compare against */
+  let obraTask=null;
+  if(contratadaTask){
+    const cLevel=contratadaTask.outlineLevel;
+    /* Strategy A: siblings at the same outline level (excluding contratada and milestones with 0 children) */
+    const siblings=allTasks.filter(t=>
+      t.outlineLevel===cLevel&&t.finish&&t!==contratadaTask&&
+      !/contratad[ao]/i.test(t.name));
+    /* Prefer summaries (have children) sorted by most children */
+    const sibSummaries=siblings.filter(t=>t.isSummary&&t.children&&t.children.length>0);
+    if(sibSummaries.length){
+      sibSummaries.sort((a,b)=>(b.children?b.children.length:0)-(a.children?a.children.length:0));
+      obraTask=sibSummaries[0];
+    }
+    /* Strategy B: if no sibling summary, use parent of contratada (the root that contains everything) */
+    if(!obraTask&&contratadaTask.parent){
+      /* Parent's children that are summaries, excluding contratada */
+      const parentKids=(contratadaTask.parent.children||[]).filter(t=>
+        t.isSummary&&t.children&&t.children.length>0&&t!==contratadaTask&&!/contratad[ao]/i.test(t.name));
+      if(parentKids.length){
+        parentKids.sort((a,b)=>(b.children?b.children.length:0)-(a.children?a.children.length:0));
+        obraTask=parentKids[0];
+      }
+    }
+    /* Strategy C: if still nothing, pick the sibling with the latest finish */
+    if(!obraTask&&siblings.length){
+      obraTask=siblings.sort((a,b)=>b.finish-a.finish)[0];
+    }
+  }
+  const finObra=obraTask?.finish||ts.reduce((mx,t)=>t.finish&&t.finish>mx?t.finish:mx,new Date(0));
 
   /* 3. Standby detection — tasks with "standby" / "stand by" / "stand-by" */
   const standbyTasks=allTasks.filter(t=>/stand[\s\-]?by/i.test(t.name)&&!t.isSummary);
