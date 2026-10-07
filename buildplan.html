@@ -361,6 +361,22 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .mat-status.no-link{background:var(--bg-2);color:var(--c2)}
 .mat-empty{padding:40px 20px;text-align:center;color:var(--c2);font-size:13px}
 .mat-scroll{max-height:60vh;overflow-y:auto}
+/* ═══════ Vencidas por responsable ═══════ */
+.rv-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.rv-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.rv-card{background:var(--bg-el);border:1px solid var(--b1);border-left:3px solid var(--err);border-radius:var(--r-s);padding:10px 12px;cursor:pointer}
+.rv-card:hover{border-color:var(--ac)}.rv-card.on{border-color:var(--ac);background:var(--ac-bg)}
+.rv-card.area{border-left-color:var(--c2);opacity:.75}
+.rv-name{font-size:13px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rv-role{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:1px 5px;border-radius:2px}
+.rv-role.r{background:var(--ac-bg);color:var(--ac)}.rv-role.c{background:var(--bg-2);color:var(--c1)}
+.rv-ov{font-size:24px;font-weight:700;font-family:var(--fm);line-height:1}
+.rv-meta{font-size:10px;color:var(--c2);font-family:var(--fm);margin-top:4px}
+.rv-mx-wrap{overflow-x:auto;border:1px solid var(--b1);border-radius:var(--r-m)}
+.rv-mx{margin:0;border:none;width:auto;min-width:100%}
+.rv-mx th{vertical-align:bottom;padding:6px 4px}
+.rv-mx td{padding:5px 8px}
+.rv-vh{writing-mode:vertical-rl;transform:rotate(180deg);max-height:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;margin:0 auto}
 </style>
 </head>
 <body>
@@ -1050,8 +1066,220 @@ function DemorasView({data}){
   </div>;
 }
 
-/* ═══════ Portfolio cross-project ═══════ */
-function Portfolio({projList,projData}){
+/* ═══════ Vencidas por responsable (recursos + contratistas, todas las obras) ═══════ */
+/* Unifica variantes del mismo nombre entre XMLs. Clave: nombre normalizado → nombre a mostrar */
+const PERSON_ALIAS={
+  'mariana v':'Mariana Valdez',
+  'maximiliano euguaras':'Maximiliano Eguaras',
+  'leo subias':'Leopoldo Subias',
+};
+/* Recursos genéricos (áreas, no personas) — se muestran aparte */
+const NON_PERSON=new Set(['proyectos','posventa','obras','externo','a definir','geotecnia','enas','sin asignar']);
+function normName(s){return(s||'').trim().replace(/\s+/g,' ').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
+function daysLate(t,now){return t.finish?Math.max(0,Math.floor((now-t.finish)/86400000)):0}
+function taskPath(t){const p=[];let x=t.parent;while(x){p.unshift(x.name);x=x.parent}return p.slice(-2).join(' › ')}
+
+function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
+  const[scope,setScope]=useState('activas');   /* activas | todas */
+  const[tipo,setTipo]=useState('all');         /* all | Recurso | Contratista */
+  const[q,setQ]=useState('');
+  const[sel,setSel]=useState(null);
+  const[withSoon,setWithSoon]=useState(false);
+  const[maxAge,setMaxAge]=useState(0);          /* 0 = sin límite; si no, solo vencidas hace ≤ N días */
+  const detailRef=useRef(null);
+
+  const projsInScope=useMemo(()=>(projList||[]).filter(p=>{
+    if(!projData[p.key])return false;
+    if(scope==='todas')return true;
+    const e=(matchMeta(p.name,metaList)?.estado||'').trim();
+    return e!=='Finalizado'&&e!=='Cancelada'&&e!=='Cancelado';
+  }),[projList,projData,metaList,scope]);
+
+  const model=useMemo(()=>{
+    const now=new Date();const soonLim=new Date(now);soonLim.setDate(soonLim.getDate()+7);
+    /* 1. Variantes de nombre → nombre canónico */
+    const freq={};
+    for(const p of projsInScope)for(const t of projData[p.key].tasks){
+      if(t.isSummary)continue;
+      for(const r of t.resources){const n=normName(r);if(n){freq[n]=freq[n]||{};freq[n][r.trim()]=(freq[n][r.trim()]||0)+1}}
+      const c=entV(t,'Contratista');if(c){const n=normName(c);freq[n]=freq[n]||{};freq[n][c.trim()]=(freq[n][c.trim()]||0)+1}
+    }
+    const fullNames=Object.keys(freq);
+    const canon={};
+    for(const n of fullNames){
+      if(PERSON_ALIAS[n]){canon[n]=PERSON_ALIAS[n];continue}
+      const m=n.match(/^(\S+) (\S)\.?$/);/* "Mariana V" → única "Mariana V…" */
+      if(m){const c=fullNames.filter(o=>o!==n&&o.startsWith(m[1]+' '+m[2])&&o.length>n.length);
+        if(c.length===1){canon[n]=Object.entries(freq[c[0]]).sort((a,b)=>b[1]-a[1])[0][0];continue}}
+      canon[n]=Object.entries(freq[n]).sort((a,b)=>b[1]-a[1])[0][0];
+    }
+    /* 2. Agregar tareas por persona */
+    const people={};
+    const add=(raw,role,t,p,st)=>{
+      const display=canon[normName(raw)]||raw.trim();const key=normName(display);
+      if(!people[key])people[key]={key,display,roles:new Set(),area:NON_PERSON.has(key),rows:[],ov:0,soon:0,projs:new Set(),ovProjs:new Set(),maxLate:0,sumLate:0,tot:0};
+      const P=people[key];P.roles.add(role);P.tot++;P.projs.add(p.key);
+      if(st==='ov'){P.ov++;P.ovProjs.add(p.key);const dl=daysLate(t,now);P.sumLate+=dl;if(dl>P.maxLate)P.maxLate=dl}
+      if(st==='soon')P.soon++;
+      if(st)P.rows.push({t,p,role,raw,st,late:st==='ov'?daysLate(t,now):0});
+    };
+    for(const p of projsInScope)for(const t of projData[p.key].tasks){
+      if(t.isSummary)continue;
+      const st=isOv(t)?((maxAge&&daysLate(t,now)>maxAge)?null:'ov'):(t.finish&&t.percentComplete<100&&t.finish>=now&&t.finish<=soonLim)?'soon':null;
+      const seen=new Set();
+      for(const r of t.resources){const k=normName(canon[normName(r)]||r);if(seen.has(k))continue;seen.add(k);add(r,'Recurso',t,p,st)}
+      const c=entV(t,'Contratista');
+      if(c){const k=normName(canon[normName(c)]||c);if(!seen.has(k)){seen.add(k);add(c,'Contratista',t,p,st)}}
+      if(!t.resources.length&&!c)add('Sin asignar','Recurso',t,p,st);
+    }
+    const list=Object.values(people).sort((a,b)=>b.ov-a.ov||b.soon-a.soon||a.display.localeCompare(b.display));
+    return{list,people};
+  },[projsInScope,projData,maxAge]);
+
+  const shown=useMemo(()=>{
+    const lq=normName(q);
+    return model.list.filter(P=>{
+      if(tipo!=='all'&&!P.roles.has(tipo))return false;
+      if(lq&&!normName(P.display).includes(lq))return false;
+      return P.ov>0||P.soon>0||lq;
+    });
+  },[model,tipo,q]);
+
+  const selP=sel?model.people[sel]:null;
+  const pName=k=>(projList||[]).find(p=>p.key===k)?.name||k;
+
+  /* Matriz responsable × obra (solo con vencidas) */
+  const matrix=useMemo(()=>{
+    const rows=shown.filter(P=>P.ov>0&&!P.area);
+    const colSet=new Set();for(const P of rows)for(const k of P.ovProjs)colSet.add(k);
+    const cols=[...colSet].map(k=>({k,n:pName(k),tot:rows.reduce((s,P)=>s+P.rows.filter(r=>r.st==='ov'&&r.p.key===k).length,0)})).sort((a,b)=>b.tot-a.tot);
+    const cell=(P,k)=>P.rows.filter(r=>r.st==='ov'&&r.p.key===k).length;
+    return{rows,cols,cell};
+  },[shown]);
+
+  const detail=useMemo(()=>{
+    if(!selP)return[];
+    const g={};
+    for(const r of selP.rows){if(r.st==='soon'&&!withSoon)continue;(g[r.p.key]=g[r.p.key]||[]).push(r)}
+    return Object.entries(g).map(([k,rows])=>({k,name:pName(k),rows:rows.sort((a,b)=>b.late-a.late||(a.t.finish||0)-(b.t.finish||0)),ov:rows.filter(r=>r.st==='ov').length})).sort((a,b)=>b.ov-a.ov);
+  },[selP,withSoon]);
+
+  const pick=k=>{setSel(k);setTimeout(()=>detailRef.current?.scrollIntoView({behavior:'smooth',block:'start'}),50)};
+
+  const exportXls=()=>{
+    if(!selP)return;
+    const rows=[];
+    for(const g of detail)for(const r of g.rows)rows.push({'Responsable':selP.display,'Rol':r.role,'Obra':g.name,'WBS':r.t.wbs,'Tarea':r.t.name,'Grupo':taskPath(r.t),'Inicio':fD(r.t.start),'Fin':fD(r.t.finish),'Días de atraso':r.st==='ov'?r.late:'','Estado':r.st==='ov'?'Vencida':'Vence en 7 días','% avance':r.t.percentComplete,'Rubro':entV(r.t,'Rubro'),'N° Item':entV(r.t,'N° Item')});
+    const ws=XLSX.utils.json_to_sheet(rows);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Vencidas');
+    XLSX.writeFile(wb,`Vencidas_${selP.display.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.xlsx`);
+  };
+
+  const totalOv=shown.filter(P=>!P.area).reduce((s,P)=>s+P.ov,0);
+  const loaded=(projList||[]).filter(p=>projData[p.key]).length,total=(projList||[]).filter(p=>!p.local).length;
+  const hc=k=>{const h=healthMap?.[k];return h?<span className={`health-badge ${h.color}`}>{h.label}</span>:null};
+
+  return <div className="dash">
+    <div style={{display:'flex',alignItems:'baseline',gap:10,flexWrap:'wrap',marginBottom:12}}>
+      <div style={{fontSize:16,fontWeight:700}}>Vencidas por responsable</div>
+      <div style={{fontSize:12,color:'var(--c1)'}}>Recursos de MS Project + campo Contratista, cruzando {projsInScope.length} obras{loaded<total&&<span style={{color:'var(--warn)'}}> · cargando {loaded}/{total}…</span>}</div>
+    </div>
+
+    <div className="rv-ctrl">
+      <div className="seg">
+        <button className={scope==='activas'?'on':''} onClick={()=>setScope('activas')}>Obras activas</button>
+        <button className={scope==='todas'?'on':''} onClick={()=>setScope('todas')}>Todas</button>
+      </div>
+      <div className="seg">
+        <button className={tipo==='all'?'on':''} onClick={()=>setTipo('all')}>Todos</button>
+        <button className={tipo==='Recurso'?'on':''} onClick={()=>setTipo('Recurso')}>Equipo (recursos)</button>
+        <button className={tipo==='Contratista'?'on':''} onClick={()=>setTipo('Contratista')}>Contratistas</button>
+      </div>
+      <span className="fl">Vencidas hace</span>
+      <select className="fsel" value={maxAge} onChange={e=>setMaxAge(parseInt(e.target.value))}><option value="0">Cualquier fecha</option><option value="30">≤ 30 días</option><option value="90">≤ 90 días</option><option value="180">≤ 180 días</option></select>
+      <input className="fin" style={{width:180}} placeholder="Buscar persona…" value={q} onChange={e=>setQ(e.target.value)}/>
+      <span style={{marginLeft:'auto',fontSize:12,fontFamily:'var(--fm)',color:'var(--err)',fontWeight:600}}>{totalOv} asignaciones vencidas</span>
+    </div>
+
+    <div className="rv-cards">
+      {shown.map(P=><div key={P.key} className={`rv-card ${sel===P.key?'on':''} ${P.area?'area':''}`} onClick={()=>sel===P.key?setSel(null):pick(P.key)}>
+        <div style={{display:'flex',alignItems:'center',gap:6}}>
+          <span className="rv-name" title={P.display}>{P.display}</span>
+          {[...P.roles].map(r=><span key={r} className={`rv-role ${r==='Contratista'?'c':'r'}`}>{r==='Contratista'?'Contr.':P.area?'Área':'Equipo'}</span>)}
+        </div>
+        <div style={{display:'flex',alignItems:'baseline',gap:8,marginTop:6}}>
+          <span className="rv-ov" style={{color:P.ov?'var(--err)':'var(--c2)'}}>{P.ov}</span>
+          <span style={{fontSize:11,color:'var(--c1)'}}>vencidas</span>
+          {P.soon>0&&<span style={{fontSize:11,color:'var(--warn)',marginLeft:'auto',fontFamily:'var(--fm)'}}>+{P.soon} en 7d</span>}
+        </div>
+        <div className="rv-meta">{P.ovProjs.size} obra{P.ovProjs.size!==1?'s':''}{P.ov>0&&<Fragment> · máx {P.maxLate}d · prom {Math.round(P.sumLate/P.ov)}d</Fragment>}</div>
+      </div>)}
+      {!shown.length&&<div style={{color:'var(--c2)',fontSize:12,padding:20}}>{loaded<total?'Analizando obras…':'Nadie tiene tareas vencidas con estos filtros.'}</div>}
+    </div>
+
+    {!selP&&matrix.rows.length>0&&matrix.cols.length>0&&<div style={{marginTop:20}}>
+      <div className="dst">Mapa de vencidas — responsable × obra <span style={{fontWeight:400,color:'var(--c2)'}}>(clic en una celda para ver el detalle)</span></div>
+      <div className="rv-mx-wrap"><table className="dt rv-mx">
+        <thead><tr><th style={{position:'sticky',left:0,zIndex:2,background:'var(--bg-1)'}}>Responsable</th>{matrix.cols.map(c=><th key={c.k} title={c.n}><div className="rv-vh">{c.n}</div></th>)}<th>Total</th></tr></thead>
+        <tbody>{matrix.rows.map(P=><tr key={P.key}>
+          <td style={{fontWeight:600,position:'sticky',left:0,background:'var(--bg-el)',whiteSpace:'nowrap'}}>{P.display}</td>
+          {matrix.cols.map(c=>{const v=matrix.cell(P,c.k);const a=Math.min(1,v/15);return <td key={c.k} className="mono" onClick={v?()=>pick(P.key):undefined}
+            style={{textAlign:'center',cursor:v?'pointer':'default',background:v?`rgba(239,68,68,${.08+a*.5})`:'transparent',color:v?(a>.6?'#fff':'var(--c0)'):'var(--c2)',fontWeight:v?600:400}}>{v||'·'}</td>})}
+          <td className="mono" style={{fontWeight:700,color:'var(--err)',textAlign:'center'}}>{P.ov}</td>
+        </tr>)}</tbody>
+      </table></div>
+    </div>}
+
+    {selP&&<div ref={detailRef} style={{marginTop:20}}>
+      <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',marginBottom:12}}>
+        <div style={{fontSize:15,fontWeight:700}}>{selP.display}</div>
+        <span style={{fontSize:11,color:'var(--c2)'}}>{[...selP.roles].join(' · ')}</span>
+        <label style={{fontSize:12,color:'var(--c1)',display:'flex',alignItems:'center',gap:4,marginLeft:'auto',cursor:'pointer'}}><input type="checkbox" checked={withSoon} onChange={e=>setWithSoon(e.target.checked)}/> Incluir las que vencen en 7 días</label>
+        <button className="btn" onClick={exportXls}>↓ Excel</button>
+        <button className="btn btn-g" onClick={()=>setSel(null)}>× Cerrar</button>
+      </div>
+      <div className="dgrid">
+        <div className="kpi err"><div className="kpi-v" style={{color:'var(--err)'}}>{selP.ov}</div><div className="kpi-l">Vencidas</div></div>
+        <div className="kpi"><div className="kpi-v">{selP.ovProjs.size}</div><div className="kpi-l">Obras afectadas</div></div>
+        <div className="kpi warn"><div className="kpi-v">{selP.ov?Math.round(selP.sumLate/selP.ov):0}d</div><div className="kpi-l">Atraso promedio</div></div>
+        <div className="kpi err"><div className="kpi-v">{selP.maxLate}d</div><div className="kpi-l">Atraso máximo</div></div>
+        <div className="kpi warn"><div className="kpi-v" style={{color:'var(--warn)'}}>{selP.soon}</div><div className="kpi-l">Vencen en 7 días</div></div>
+      </div>
+      {detail.map(g=><div key={g.k} style={{marginBottom:16}}>
+        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
+          <span style={{fontSize:13,fontWeight:700,color:'var(--ac)'}}>{g.name}</span>
+          {hc(g.k)}
+          <span className="mono" style={{color:'var(--err)'}}>{g.ov} vencidas</span>
+          <button className="btn btn-g" style={{marginLeft:'auto'}} onClick={()=>{const r=g.rows[0];onOpen&&onOpen(g.k,r.raw,r.role)}}>Abrir en Gantt →</button>
+        </div>
+        <table className="dt"><thead><tr><th>Tarea</th><th style={{width:85}}>Fin</th><th style={{width:70}}>Atraso</th><th style={{width:45}}>%</th><th style={{width:85}}>Rol</th><th style={{width:90}}>Rubro</th><th style={{width:60}}>N° Item</th></tr></thead>
+        <tbody>{g.rows.map(r=><tr key={r.t.uid+r.role}>
+          <td><div style={{fontWeight:500}}>{r.t.name}</div>{taskPath(r.t)&&<div style={{fontSize:10,color:'var(--c2)'}}>{taskPath(r.t)}</div>}</td>
+          <td className="mono">{fD(r.t.finish)}</td>
+          <td className="mono" style={{fontWeight:600,color:r.st==='ov'?(r.late>15?'var(--err)':'var(--warn)'):'var(--c2)'}}>{r.st==='ov'?`${r.late}d`:'vence'}</td>
+          <td className="mono">{r.t.percentComplete}%</td>
+          <td style={{fontSize:11,color:'var(--c1)'}}>{r.role}</td>
+          <td style={{fontSize:11,color:'var(--c1)'}}>{entV(r.t,'Rubro')||'—'}</td>
+          <td className="mono">{entV(r.t,'N° Item')||'—'}</td>
+        </tr>)}</tbody></table>
+      </div>)}
+      {!detail.length&&<div style={{color:'var(--c2)',fontSize:12}}>Sin tareas vencidas en el alcance elegido.</div>}
+    </div>}
+  </div>;
+}
+
+function Portfolio({projList,projData,metaList,healthMap,onOpen}){
+  const[mode,setMode]=useState('resp');
+  return <Fragment>
+    <div className="stbar">
+      <button className={`st ${mode==='resp'?'on':''}`} onClick={()=>setMode('resp')}>Vencidas por responsable</button>
+      <button className={`st ${mode==='obras'?'on':''}`} onClick={()=>setMode('obras')}>Obras y contratistas</button>
+    </div>
+    {mode==='resp'?<ResponsablesView projList={projList} projData={projData} metaList={metaList} healthMap={healthMap} onOpen={onOpen}/>:<PortfolioObras projList={projList} projData={projData}/>}
+  </Fragment>;
+}
+
+/* ═══════ Portfolio cross-project (obras + contratistas) ═══════ */
+function PortfolioObras({projList,projData}){
   const[selC,setSelC]=useState(null);
   const all=useMemo(()=>{
     const cs={};const ps=[];
@@ -2032,7 +2260,7 @@ function App(){
           {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);return p?<button key={k} className="tab" onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>:null})}
         </div>
         <div className="acts">
-          {totalOv>0&&<span style={{fontSize:11,color:'var(--err)',fontWeight:600,fontFamily:'var(--fm)'}}>{totalOv} vencidas</span>}
+          {totalOv>0&&<button className="btn btn-g" onClick={()=>{setActive('__pf');setSub('portfolio')}} title="Ver vencidas por responsable" style={{fontSize:11,color:'var(--err)',fontWeight:600,fontFamily:'var(--fm)'}}>{totalOv} vencidas →</button>}
           <button className="btn btn-g btn-i" onClick={()=>setShowSrch(true)} title="Ctrl+K">{I.srch()}</button>
           <button className="btn btn-g btn-i" onClick={togTh}>{th==='light'?I.moon():I.sun()}</button>
         </div>
@@ -2126,7 +2354,7 @@ function App(){
         </div>
         <div className="acts"><button className="btn btn-g btn-i" onClick={togTh}>{th==='light'?I.moon():I.sun()}</button></div>
       </div>
-      <Portfolio projList={pList} projData={pData}/>
+      <Portfolio projList={pList} projData={pData} metaList={metaList} healthMap={healthMap} onOpen={async(k,raw,role)=>{const p=(pList||[]).find(x=>x.key===k);if(!p)return;await openProj(p);setSub('gantt');setFSt('ov');if(role==='Contratista'){setFRes('all');setFCon(raw)}else{setFCon('all');setFRes(raw==='Sin asignar'?'none':raw)}}}/>
     </Fragment>;
   }
 
