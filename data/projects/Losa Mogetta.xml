@@ -6,7 +6,7 @@
 	<GUID>FE32FAB1-F0B9-F111-96CD-0045E2C8A982</GUID>
 	<Title>Vivienda RC</Title>
 	<CreationDate>2025-06-12T09:00:00</CreationDate>
-	<LastSaved>2026-09-26T18:57:00</LastSaved>
+	<LastSaved>2026-10-07T16:43:00</LastSaved>
 	<ScheduleFromStart>1</ScheduleFromStart>
 	<StartDate>2026-02-05T09:00:00</StartDate>
 	<FinishDate>2026-08-07T19:00:00</FinishDate>
@@ -47,7 +47,7 @@
 	<MoveCompletedEndsForward>0</MoveCompletedEndsForward>
 	<BaselineForEarnedValue>0</BaselineForEarnedValue>
 	<AutoAddNewResourcesAndTasks>1</AutoAddNewResourcesAndTasks>
-	<CurrentDate>2026-09-26T08:00:00</CurrentDate>
+	<CurrentDate>2026-10-07T08:00:00</CurrentDate>
 	<MicrosoftProjectServerURL>1</MicrosoftProjectServerURL>
 	<Autolink>0</Autolink>
 	<NewTaskStartDate>0</NewTaskStartDate>
@@ -749,6 +749,13 @@
 			<SecondaryGuid>000039B7-8BBE-4CEB-82C4-FA8C0F404066</SecondaryGuid>
 		</ExtendedAttribute>
 		<ExtendedAttribute>
+			<FieldID>188743740</FieldID>
+			<FieldName>Texto4</FieldName>
+			<Guid>000039B7-8BBE-4CEB-82C4-FA8C0B40003C</Guid>
+			<SecondaryPID>255869031</SecondaryPID>
+			<SecondaryGuid>000039B7-8BBE-4CEB-82C4-FA8C0F404067</SecondaryGuid>
+		</ExtendedAttribute>
+		<ExtendedAttribute>
 			<FieldID>188776449</FieldID>
 			<FieldName>Salud</FieldName>
 			<Ltuid>0000A4AA-160E-499A-905F-D498472DFB35</Ltuid>
@@ -942,14 +949,6 @@
 		</ExtendedAttribute>
 	</ExtendedAttributes>
 	<Calendars>
-		<Calendar>
-			<UID>12</UID>
-			<GUID>7E686D23-8810-F011-9294-00155D104B21</GUID>
-			<Name>Mariana V</Name>
-			<IsBaseCalendar>0</IsBaseCalendar>
-			<IsBaselineCalendar>0</IsBaselineCalendar>
-			<BaseCalendarUID>1</BaseCalendarUID>
-		</Calendar>
 		<Calendar>
 			<UID>1</UID>
 			<GUID>B6635B2E-E747-4771-A78B-24F7509629D0</GUID>
@@ -3897,6 +3896,14 @@
 					<WeekDays/>
 				</WorkWeek>
 			</WorkWeeks>
+		</Calendar>
+		<Calendar>
+			<UID>12</UID>
+			<GUID>7E686D23-8810-F011-9294-00155D104B21</GUID>
+			<Name>Mariana V</Name>
+			<IsBaseCalendar>0</IsBaseCalendar>
+			<IsBaselineCalendar>0</IsBaselineCalendar>
+			<BaseCalendarUID>1</BaseCalendarUID>
 		</Calendar>
 	</Calendars>
 	<Tasks>
@@ -27148,6 +27155,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-05T09:00:00</Start>
@@ -27337,6 +27348,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.01</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -27592,6 +27607,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.02</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-05T09:00:00</Start>
@@ -27845,6 +27864,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.03</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -28100,6 +28123,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.04</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-05T09:00:00</Start>
@@ -28353,6 +28380,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.05</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -28608,6 +28639,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.06</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-05T09:00:00</Start>
@@ -28861,6 +28896,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.07</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -29116,6 +29155,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.08</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-05T09:00:00</Start>
@@ -29369,6 +29412,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.09</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -29624,6 +29671,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.10</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-05T09:00:00</Start>
@@ -29878,6 +29929,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.11</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-05T09:00:00</Start>
@@ -30098,6 +30153,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-11T09:00:00</Start>
@@ -30652,6 +30711,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.01</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -31649,11 +31712,10 @@
 			<BCWP>0.00</BCWP>
 			<IsGeneric>0</IsGeneric>
 			<IsInactive>0</IsInactive>
-			<IsEnterprise>1</IsEnterprise>
+			<IsEnterprise>0</IsEnterprise>
 			<BookingType>0</BookingType>
 			<CreationDate>2026-09-26T18:24:00</CreationDate>
 			<IsCostResource>0</IsCostResource>
-			<AssnOwner>Mariana V</AssnOwner>
 			<AssnOwnerGuid>7E686D23-8810-F011-9294-00155D104B21</AssnOwnerGuid>
 			<IsBudget>0</IsBudget>
 			<c408001></c408001>
