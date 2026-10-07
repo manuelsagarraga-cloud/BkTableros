@@ -364,6 +364,10 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .mat-status.no-link{background:var(--bg-2);color:var(--c2)}
 .mat-empty{padding:40px 20px;text-align:center;color:var(--c2);font-size:13px}
 .mat-scroll{max-height:60vh;overflow-y:auto}
+.cod{display:inline-flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:10px;font-weight:700;letter-spacing:.5px;padding:1px 5px;border-radius:2px;background:var(--ac);color:#fff;flex-shrink:0;margin-right:5px}
+.cod.lg{font-size:11px;padding:2px 6px;min-width:28px}
+.cod.off{background:var(--bg-2);color:var(--c2)}
+.obra-strip{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--c1);background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);padding:10px 14px;margin-bottom:14px}
 /* ═══════ Vencidas por responsable ═══════ */
 .rv-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .rv-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
@@ -422,6 +426,32 @@ const CITY_COORDS={
   'alta gracia':{lat:-31.660,lng:-64.432,label:'Alta Gracia',dept:'Santa María'},
 };
 
+/* ═══════ Códigos de obra (mismos que las hojas "Obra XX" del Excel de pagos) ═══════
+   Clave: nombre del XML. Vinculan cronograma ↔ Cómputo-Obras ↔ Pagos.
+   Para una obra nueva: agregar una línea acá, o una columna "Código" en Proyectos_Bauvek.xlsx (tiene prioridad). */
+const OBRA_CODES={
+  'Vivienda Hermanos Rossi':{cod:'RR',cliente:'Hnos. Rossi',lote:'Lote 12, Mza 59, Molvento'},
+  'Vivienda Julieta Santiago':{cod:'JS',cliente:'Julieta Santiago - Iván Petrini',lote:'Mza 58, Lote 10, Molvento'},
+  'Vivienda Esteban y Matias':{cod:'EM',cliente:'Esteban y Matías',lote:'Mza 3, Lote 16, Vistas de La Deseada'},
+  'Vivienda Lugon':{cod:'RL',cliente:'Rodrigo Lugón',lote:'Lote 426, Estancia Q2'},
+  'Vivienda Reboni':{cod:'HR',cliente:'Hernán Reboni',lote:'Lote 456, El Terrón'},
+  'Vivienda Lew-Subias':{cod:'LS',cliente:'Rodolfo Subías y Melisa Lew',lote:'Lote 364, El Terrón'},
+  'Vivienda AZ':{cod:'AZ',cliente:'Agustín Zampol',lote:'Mza 7, Lote 4, Vistas de La Deseada'},
+  'Vivienda Venturelli-Bernal':{cod:'VB',cliente:'Venturelli-Bernal',lote:'Mza 49, Lote 8, Las Cañitas'},
+  'Vivienda Casali D':{cod:'DC',cliente:'Diego Casalis',lote:'Lote 494, El Terrón'},
+  'Vivienda Carola Ruda':{cod:'CR',cliente:'Carola Ruda',lote:'Mza 29, Lote 10, Las Delicias'},
+  'Losa Herrera':{cod:'LH',cliente:'Losa Herrera',lote:'Lote 346, El Terrón'},
+  'Losa Mogetta':{cod:'LM',cliente:'Losa Mogetta',lote:'Villa Allende / La Calera'},
+};
+let _obraIdx=null;
+function obraCode(fileOrName){
+  if(!_obraIdx){_obraIdx={};for(const[k,v] of Object.entries(OBRA_CODES))_obraIdx[normalizeForMatch(k)]=v}
+  const n=normalizeForMatch((fileOrName||'').replace(/\.xml$/i,''));
+  return _obraIdx[n]||null;
+}
+/* "RR · Vivienda Hermanos Rossi" */
+function pLabel(p){return p?(p.cod?p.cod+' · ':'')+p.name:''}
+
 function normalizeForMatch(s){
   return(s||'').toLowerCase().replace(/[_\-\s.]+/g,'').replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u').replace(/ñ/g,'n').replace('.xml','');
 }
@@ -450,6 +480,7 @@ async function loadProjectMeta(){
         m2Terreno:row['m² Terreno']||0,
         archivoXML:row['Archivo XML']||'',
         contratista:row['Contratista Principal']||'',
+        codigo:String(row['Código']||row['Codigo']||'').trim().toUpperCase(),
         lat:coordEntry?.lat||null,
         lng:coordEntry?.lng||null,
         cityLabel:coordEntry?.label||row['Ciudad / Localidad']||'',
@@ -912,7 +943,7 @@ function GanttSVG({tasks,minDate,maxDate,zoom,showArr,showBL,scrollRef,onTT}){
   );
 }
 /* ═══════ Dashboard por proyecto ═══════ */
-function ProjDash({data,health}){
+function ProjDash({data,health,proj}){
   if(!data)return null;
   const ts=data.tasks.filter(t=>!t.isSummary);
   const tot=ts.length,done=ts.filter(t=>t.percentComplete>=100).length;
@@ -928,6 +959,12 @@ function ProjDash({data,health}){
   const semaColor=h?{g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'}[h.color]:'var(--c2)';
 
   return <div className="dash">
+    {proj&&(proj.cod||proj.cliente)&&<div className="obra-strip">
+      {proj.cod?<span className="cod lg">{proj.cod}</span>:<span className="cod lg off" title="Sin código asignado">—</span>}
+      <span style={{fontWeight:700}}>{proj.name}</span>
+      {proj.cliente&&<span>👤 {proj.cliente}</span>}
+      {proj.lote&&<span>📌 {proj.lote}</span>}
+    </div>}
     {/* Semáforo banner */}
     {h&&<div style={{marginBottom:20,background:'var(--bg-el)',border:`2px solid ${semaColor}`,borderRadius:'var(--r-m)',padding:16}}>
       <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:h.hasContratada?10:0}}>
@@ -1085,8 +1122,8 @@ function taskPath(t){const p=[];let x=t.parent;while(x){p.unshift(x.name);x=x.pa
 /* Excel: hoja con anchos, filtro y fechas reales */
 function xlsSheet(rows,widths){const ws=XLSX.utils.json_to_sheet(rows,{dateNF:'dd/mm/yyyy'});if(widths)ws['!cols']=widths.map(w=>({wch:w}));if(rows.length&&ws['!ref'])ws['!autofilter']={ref:ws['!ref']};return ws}
 function xlsName(s,used){let n=(s||'Hoja').replace(/[\\\/\?\*\[\]:]/g,'').slice(0,31)||'Hoja';const b=n;let i=2;while(used.has(n.toLowerCase()))n=b.slice(0,27)+' ('+(i++)+')';used.add(n.toLowerCase());return n}
-const XLS_DET_W=[22,12,28,9,50,40,11,11,9,16,9,16,10];
-function xlsDetRow(P,r){return{'Responsable':P.display,'Rol':r.role,'Obra':r.p.name,'WBS':r.t.wbs,'Tarea':r.t.name,'Grupo':taskPath(r.t),'Inicio':r.t.start||'','Fin':r.t.finish||'','Días atraso':r.st==='ov'?r.late:'','Estado':r.st==='ov'?'Vencida':'Vence en 7 días','% avance':r.t.percentComplete,'Rubro':entV(r.t,'Rubro'),'N° Item':entV(r.t,'N° Item')}}
+const XLS_DET_W=[22,12,8,28,9,50,40,11,11,9,16,9,16,10];
+function xlsDetRow(P,r){return{'Responsable':P.display,'Rol':r.role,'Código':r.p.cod||'','Obra':r.p.name,'WBS':r.t.wbs,'Tarea':r.t.name,'Grupo':taskPath(r.t),'Inicio':r.t.start||'','Fin':r.t.finish||'','Días atraso':r.st==='ov'?r.late:'','Estado':r.st==='ov'?'Vencida':'Vence en 7 días','% avance':r.t.percentComplete,'Rubro':entV(r.t,'Rubro'),'N° Item':entV(r.t,'N° Item')}}
 function xlsResRow(P){return{'Responsable':P.display,'Rol':[...P.roles].join(' / '),'Vencidas':P.ov,'Vencen en 7 días':P.soon,'Obras afectadas':P.ovProjs.size,'Atraso promedio (d)':P.ov?Math.round(P.sumLate/P.ov):0,'Atraso máximo (d)':P.maxLate}}
 const XLS_RES_W=[24,22,10,15,15,18,17];
 function personRows(P,withSoon){return P.rows.filter(r=>r.st==='ov'||(withSoon&&r.st==='soon')).sort((a,b)=>a.p.name.localeCompare(b.p.name)||b.late-a.late)}
@@ -1158,7 +1195,7 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
   },[model,tipo,q]);
 
   const selP=sel?model.people[sel]:null;
-  const pName=k=>(projList||[]).find(p=>p.key===k)?.name||k;
+  const pName=k=>pLabel((projList||[]).find(p=>p.key===k))||k;
 
   /* Matriz responsable × obra (solo con vencidas) */
   const matrix=useMemo(()=>{
@@ -1184,10 +1221,10 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
   const exportXls=()=>{
     if(!selP)return;
     const rows=personRows(selP,withSoon);
-    const byObra={};for(const r of rows){const o=byObra[r.p.name]=byObra[r.p.name]||{'Obra':r.p.name,'Vencidas':0,'Vencen en 7 días':0,'Atraso máximo (d)':0};if(r.st==='ov'){o['Vencidas']++;o['Atraso máximo (d)']=Math.max(o['Atraso máximo (d)'],r.late)}else o['Vencen en 7 días']++}
+    const byObra={};for(const r of rows){const o=byObra[r.p.name]=byObra[r.p.name]||{'Código':r.p.cod||'','Obra':r.p.name,'Vencidas':0,'Vencen en 7 días':0,'Atraso máximo (d)':0};if(r.st==='ov'){o['Vencidas']++;o['Atraso máximo (d)']=Math.max(o['Atraso máximo (d)'],r.late)}else o['Vencen en 7 días']++}
     const wb=XLSX.utils.book_new();
-    const res=xlsSheet(Object.values(byObra).sort((a,b)=>b['Vencidas']-a['Vencidas']),[32,10,15,17]);
-    XLSX.utils.sheet_add_aoa(res,[[selP.display+' — '+filtroTxt()]],{origin:'F1'});
+    const res=xlsSheet(Object.values(byObra).sort((a,b)=>b['Vencidas']-a['Vencidas']),[8,32,10,15,17]);
+    XLSX.utils.sheet_add_aoa(res,[[selP.display+' — '+filtroTxt()]],{origin:'G1'});
     XLSX.utils.book_append_sheet(wb,res,'Resumen por obra');
     XLSX.utils.book_append_sheet(wb,xlsSheet(rows.map(r=>xlsDetRow(selP,r)),XLS_DET_W),'Detalle');
     XLSX.writeFile(wb,`Vencidas_${selP.display.replace(/\s+/g,'_')}_${today}.xlsx`,{cellDates:true});
@@ -1320,11 +1357,11 @@ function PortfolioObras({projList,projData}){
     for(const p of projList){
       const d=projData[p.key];if(!d)continue;
       const ns=d.tasks.filter(t=>!t.isSummary);
-      ps.push({name:p.name,key:p.key,tot:ns.length,done:ns.filter(t=>t.percentComplete>=100).length,ov:ns.filter(t=>isOv(t)).length,avg:ns.length?Math.round(ns.reduce((s,t)=>s+t.percentComplete,0)/ns.length):0});
+      ps.push({name:pLabel(p),key:p.key,tot:ns.length,done:ns.filter(t=>t.percentComplete>=100).length,ov:ns.filter(t=>isOv(t)).length,avg:ns.length?Math.round(ns.reduce((s,t)=>s+t.percentComplete,0)/ns.length):0});
       for(const t of ns){
         const c=entV(t,'Contratista')||'Sin contratista';
         if(!cs[c])cs[c]={tasks:[],projs:new Set(),tot:0,done:0,ov:0,ip:0};
-        cs[c].tasks.push({...t,pName:p.name,pKey:p.key});cs[c].projs.add(p.name);cs[c].tot++;
+        cs[c].tasks.push({...t,pName:pLabel(p),pKey:p.key});cs[c].projs.add(p.name);cs[c].tot++;
         if(t.percentComplete>=100)cs[c].done++;if(isOv(t))cs[c].ov++;if(t.percentComplete>0&&t.percentComplete<100)cs[c].ip++;
       }
     }
@@ -2035,9 +2072,9 @@ function App(){
     /* Try to find project code from metadata or N° Item pattern */
     const meta=matchMeta(d.tasks[0]?.name||'',metaList);
     /* Try multiple code sources: meta archivoXML, or first task with N° Item */
-    let code=null;
-    /* Check if the project Excel metadata has a code-like field */
-    if(meta&&meta.proyecto){
+    let code=(pList||[]).find(p=>p.key===active)?.cod||null;
+    /* Fallback histórico: nombre del proyecto */
+    if(!code&&meta&&meta.proyecto){
       /* Try to derive code from project name - check if obras has matching name */
       code=meta.proyecto;
     }
@@ -2065,14 +2102,23 @@ function App(){
   /* Load manifest + project metadata */
   useEffect(()=>{
     fetch('data/manifest.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
-      const list=(d.projects||d||[]).map((p,i)=>{const rawName=p.name||(typeof p.file==='string'?p.file.replace('.xml',''):null)||`Proyecto ${i+1}`;return{key:'srv_'+(p.file||p.name||i),name:rawName.replace(/\.xml$/i,''),file:typeof p==='string'?p:p.file,size:p.size||null,modified:p.modified||null}});
+      const list=(d.projects||d||[]).map((p,i)=>{const rawName=p.name||(typeof p.file==='string'?p.file.replace('.xml',''):null)||`Proyecto ${i+1}`;const file=typeof p==='string'?p:p.file;const oc=obraCode(file||rawName);return{key:'srv_'+(p.file||p.name||i),name:rawName.replace(/\.xml$/i,''),file,size:p.size||null,modified:p.modified||null,cod:oc?.cod||null,cliente:oc?.cliente||null,lote:oc?.lote||null}});
       setPList(list);
     }).catch(()=>setPList([]));
     loadProjectMeta().then(m=>setMetaList(m));
   },[]);
+  /* Si el Excel de proyectos trae columna "Código", pisa al mapa OBRA_CODES */
+  useEffect(()=>{
+    if(!pList||!metaList.length)return;
+    let changed=false;
+    const next=pList.map(p=>{const m=matchMeta(p.name,metaList);if(m?.codigo&&m.codigo!==p.cod){changed=true;return{...p,cod:m.codigo}}return p});
+    if(changed)setPList(next);
+  },[metaList,pList]);
 
   useEffect(()=>{const h=e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();setShowSrch(s=>!s)}};window.addEventListener('keydown',h);return()=>window.removeEventListener('keydown',h)},[]);
 
+  /* Solo cambia cuando cambian las obras (no cuando se les agrega el código) */
+  const pListKeys=useMemo(()=>(pList||[]).map(p=>p.key).join('|'),[pList]);
   /* Auto-load all project XMLs in background for health indicators */
   useEffect(()=>{
     if(!pList||!pList.length)return;
@@ -2100,7 +2146,7 @@ function App(){
       }
     })();
     return()=>{cancelled=true};
-  },[pList]);
+  },[pListKeys]);
 
   /* Recalculate health when project data changes + record trend */
   useEffect(()=>{
@@ -2145,7 +2191,7 @@ function App(){
     reader.onload=e=>{try{
       const d=parseMSPDI(e.target.result);
       const k='loc_'+Date.now();
-      const proj={key:k,name:file.name.replace('.xml',''),file:file.name,size:file.size,local:true};
+      const oc=obraCode(file.name);const proj={key:k,name:file.name.replace('.xml',''),file:file.name,size:file.size,local:true,cod:oc?.cod||null,cliente:oc?.cliente||null,lote:oc?.lote||null};
       setPList(p=>[...(p||[]),proj]);setPData(p=>({...p,[k]:d}));
       const em={};d.tasks.forEach(t=>{if(t.isSummary)em[t.uid]=true});setExpMap(p=>({...p,[k]:em}));
       setOpen(p=>[...p,k]);setActive(k);setSub('gantt');resetF();
@@ -2198,7 +2244,7 @@ function App(){
   const SearchModal=useCallback(({onClose})=>{
     const[q,setQ]=useState('');const ref=useRef(null);
     useEffect(()=>{ref.current?.focus()},[]);
-    const res=useMemo(()=>{if(!q.trim())return[];const lw=q.toLowerCase();const r=[];for(const p of(pList||[])){const d=pData[p.key];if(!d)continue;for(const t of d.tasks){if(t.name.toLowerCase().includes(lw)){r.push({t,pn:p.name});if(r.length>=20)return r}}}return r},[q,pList,pData]);
+    const res=useMemo(()=>{if(!q.trim())return[];const lw=q.toLowerCase();const r=[];for(const p of(pList||[])){const d=pData[p.key];if(!d)continue;for(const t of d.tasks){if(t.name.toLowerCase().includes(lw)){r.push({t,pn:pLabel(p)});if(r.length>=20)return r}}}return r},[q,pList,pData]);
     return <div className="so" onClick={onClose}><div className="sm" onClick={e=>e.stopPropagation()}>
       <input ref={ref} className="si" placeholder="Buscar tareas..." value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>{if(e.key==='Escape')onClose()}}/>
       <div className="sr">{res.map((r,i)=><div key={i} className="sri"><span style={{color:r.t.isMilestone?'var(--bar-ms)':'var(--c2)'}}>{r.t.isMilestone?'♦':'○'}</span><span style={{flex:1}}>{r.t.name}</span><span style={{color:'var(--c2)',fontSize:11}}>{r.pn}</span></div>)}
@@ -2266,7 +2312,7 @@ function App(){
               return <div key={p.key} className={`pcard2 ${hClass}`} onClick={()=>openProj(p)}>
                 <div className="pcard2-top">
                   <span className="pcard2-dot" style={{background:dotColor}}/>
-                  <span className="pcard2-name">{p.name}</span>
+                  {p.cod&&<span className="cod lg">{p.cod}</span>}<span className="pcard2-name">{p.name}</span>
                   {h&&<span className={`health-badge ${h.color}`}>{h.color==='g'?'✓':h.color==='y'?'⚠':h.color==='r'?'✕':'—'} {h.label}{h.desvioBruto!==null&&h.desvioBruto!==0&&<span style={{marginLeft:3,fontSize:10,fontFamily:'var(--fm)'}}>{h.desvioBruto>0?`+${h.desvioBruto}d`:`${h.desvioBruto}d`}</span>}</span>}
                   {!h&&estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
                 </div>
@@ -2274,7 +2320,8 @@ function App(){
                   {m?.ciudad&&<span>📍 {m.cityLabel||m.ciudad}</span>}
                   {m?.dept&&<span style={{color:DEPT_COLORS[m.dept]||'var(--c2)'}}>◆ {m.dept}</span>}
                   {m2t>0&&<span>🏠 {Math.round(m2t)} m² cub</span>}
-                  {m?.comitente&&<span>👤 {m.comitente}</span>}
+                  {(p.cliente||m?.comitente)&&<span>👤 {p.cliente||m.comitente}</span>}
+                  {p.lote&&<span>📌 {p.lote}</span>}
                 </div>
                 {h&&<Fragment>
                   <div className="pcard2-bar"><div className="pcard2-fill" style={{width:`${h.avg}%`,background:dotColor}}/></div>
@@ -2301,7 +2348,7 @@ function App(){
         <div className="tabs">
           <button className="tab on">{I.home(14)} Inicio</button>
           <button className="tab" onClick={()=>{setActive('__pf');setSub('portfolio')}} style={{color:'var(--ac)'}}>{I.usr(14)} Portfolio</button>
-          {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);return p?<button key={k} className="tab" onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>:null})}
+          {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);return p?<button key={k} className="tab" onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.cod&&<b className="cod">{p.cod}</b>}{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>:null})}
         </div>
         <div className="acts">
           {totalOv>0&&<button className="btn btn-g" onClick={()=>{setActive('__pf');setSub('portfolio')}} title="Ver vencidas por responsable" style={{fontSize:11,color:'var(--err)',fontWeight:600,fontFamily:'var(--fm)'}}>{totalOv} vencidas →</button>}
@@ -2394,7 +2441,7 @@ function App(){
         <a href="index.html" style={{color:'var(--c2)',fontSize:11,textDecoration:'none',marginRight:6}}>← BkTableros</a><div className="logo" onClick={()=>setActive(null)}>{I.bld(18)} BuildPlan</div>
         <div className="tabs">
           <button className="tab on">{I.usr()} Portfolio</button>
-          {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);return p?<button key={k} className="tab" onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>:null})}
+          {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);return p?<button key={k} className="tab" onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.cod&&<b className="cod">{p.cod}</b>}{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>:null})}
         </div>
         <div className="acts"><button className="btn btn-g btn-i" onClick={togTh}>{th==='light'?I.moon():I.sun()}</button></div>
       </div>
@@ -2404,14 +2451,14 @@ function App(){
 
   /* ═══ PROJECT VIEW ═══ */
   return <Fragment>
-    <div className="ph"><h1>{aProj?.name}</h1><p>Generado el {new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})} — BuildPlan Viewer · Bauvek</p></div>
+    <div className="ph"><h1>{pLabel(aProj)}</h1><p>Generado el {new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})} — BuildPlan Viewer · Bauvek</p></div>
     <div className="hdr">
       <button onClick={()=>setActive(null)} style={{background:'none',border:'none',color:'var(--c2)',fontSize:11,cursor:'pointer',marginRight:6,padding:0}}>← BuildPlan</button><div className="logo" onClick={()=>setActive(null)}>{I.bld(18)} BuildPlan</div>
       <div className="tabs">
         <a href="index.html" className="tab" style={{textDecoration:'none',color:'var(--c1)',fontWeight:600,fontSize:12,letterSpacing:'.3px'}}>TABLEROS BK</a>
         <button className="tab" onClick={()=>{setActive('__pf');setSub('portfolio')}}>{I.usr()} Portfolio</button>
         {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);if(!p)return null;
-          return <button key={k} className={`tab ${active===k?'on':''}`} onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>})}
+          return <button key={k} className={`tab ${active===k?'on':''}`} onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.cod&&<b className="cod">{p.cod}</b>}{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>})}
       </div>
       <div className="acts">
         <button className="btn btn-g btn-i" onClick={()=>setShowSrch(true)} title="Ctrl+K">{I.srch()}</button>
@@ -2499,7 +2546,7 @@ function App(){
     {!aLoading&&aData&&sub==='semana'&&<WeekView data={aData}/>}
     {!aLoading&&aData&&sub==='compras'&&<ProcurementView data={aData}/>}
     {!aLoading&&aData&&sub==='materiales'&&<MaterialsView data={aData} computoData={computoData[active]||null} visTasks={visTasks}/>}
-    {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData} health={healthMap[active]}/>}
+    {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData} health={healthMap[active]} proj={aProj}/>}
     {!aLoading&&aData&&sub==='demoras'&&<DemorasView data={aData}/>}
 
     <Tooltip info={ttInfo} computoData={computoData[active]||null}/>
