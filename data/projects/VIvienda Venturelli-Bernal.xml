@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Project xmlns="http://schemas.microsoft.com/project">
 	<SaveVersion>14</SaveVersion>
-	<BuildNumber>16.0.20430.20092</BuildNumber>
+	<BuildNumber>16.0.14026.20302</BuildNumber>
 	<Name>VIvienda Venturelli-Bernal.xml</Name>
-	<GUID>EE9D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+	<GUID>73B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 	<Title>Vivienda Venturelli - Bernal</Title>
 	<CreationDate>2025-06-12T09:00:00</CreationDate>
-	<LastSaved>2026-09-30T15:28:00</LastSaved>
+	<LastSaved>2026-10-07T16:57:00</LastSaved>
 	<ScheduleFromStart>1</ScheduleFromStart>
 	<StartDate>2026-04-05T09:00:00</StartDate>
 	<FinishDate>2028-03-04T12:12:00</FinishDate>
@@ -47,7 +47,7 @@
 	<MoveCompletedEndsForward>0</MoveCompletedEndsForward>
 	<BaselineForEarnedValue>0</BaselineForEarnedValue>
 	<AutoAddNewResourcesAndTasks>1</AutoAddNewResourcesAndTasks>
-	<CurrentDate>2026-09-30T08:00:00</CurrentDate>
+	<CurrentDate>2026-10-07T08:00:00</CurrentDate>
 	<MicrosoftProjectServerURL>1</MicrosoftProjectServerURL>
 	<Autolink>0</Autolink>
 	<NewTaskStartDate>0</NewTaskStartDate>
@@ -64,14 +64,18 @@
 	<AgileMode>2</AgileMode>
 	<Views>
 		<View>
-			<Name>Gantt &amp;con escala de tiempo</Name>
-		</View>
-		<View>
 			<Name>Diagrama de Gan&amp;tt</Name>
 			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Esca&amp;la de tiempo</Name>
+			<IsCustomized>true</IsCustomized>
+		</View>
+		<View>
+			<Name>Gantt &amp;con escala de tiempo</Name>
+		</View>
+		<View>
+			<Name>MS</Name>
 			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
@@ -105,7 +109,6 @@
 		</View>
 		<View>
 			<Name>H&amp;oja de recursos</Name>
-			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Gráfico de &amp;recursos</Name>
@@ -117,7 +120,6 @@
 		</View>
 		<View>
 			<Name>&amp;Uso de recursos</Name>
-			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Org&amp;anizador de equipo</Name>
@@ -125,7 +127,6 @@
 		</View>
 		<View>
 			<Name>Planeamiento de recursos</Name>
-			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Entrada de tarea</Name>
@@ -135,11 +136,9 @@
 		</View>
 		<View>
 			<Name>Problemas</Name>
-			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Riesgos</Name>
-			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
 			<Name>Panel de tareas</Name>
@@ -197,11 +196,23 @@
 			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
+			<Name>Panel de sprints</Name>
+		</View>
+		<View>
 			<Name>Hoja de panel de tareas</Name>
 			<IsCustomized>true</IsCustomized>
 		</View>
 		<View>
-			<Name>Panel de sprints</Name>
+			<Name>Ecipsa MS</Name>
+			<IsCustomized>true</IsCustomized>
+		</View>
+		<View>
+			<Name>Finanzas</Name>
+			<IsCustomized>true</IsCustomized>
+		</View>
+		<View>
+			<Name>Manuel S</Name>
+			<IsCustomized>true</IsCustomized>
 		</View>
 	</Views>
 	<Filters>
@@ -258,12 +269,6 @@
 		</Filter>
 		<Filter>
 			<Name>Trabajo sobrepresupuestado</Name>
-		</Filter>
-		<Filter>
-			<Name>Tareas del panel de tareas</Name>
-		</Filter>
-		<Filter>
-			<Name>Tareas restantes en panel</Name>
 		</Filter>
 		<Filter>
 			<Name>Grupo de recursos...</Name>
@@ -442,6 +447,12 @@
 		<Filter>
 			<Name>Compromisos &amp;propuestos</Name>
 		</Filter>
+		<Filter>
+			<Name>Tareas del panel de tareas</Name>
+		</Filter>
+		<Filter>
+			<Name>Tareas restantes en panel</Name>
+		</Filter>
 	</Filters>
 	<Groups>
 		<Group>
@@ -593,10 +604,6 @@
 			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
-			<Name>Tareas del panel de tareas</Name>
-			<IsCustomized>true</IsCustomized>
-		</Table>
-		<Table>
 			<Name>&amp;Entrada</Name>
 			<IsCustomized>true</IsCustomized>
 		</Table>
@@ -646,6 +653,28 @@
 		</Table>
 		<Table>
 			<Name>Resumen</Name>
+			<IsCustomized>true</IsCustomized>
+		</Table>
+		<Table>
+			<Name>Tareas del panel de tareas</Name>
+			<IsCustomized>true</IsCustomized>
+		</Table>
+		<Table>
+			<Name>Ecipsa Natania</Name>
+		</Table>
+		<Table>
+			<Name>MS Tabla</Name>
+			<IsCustomized>true</IsCustomized>
+		</Table>
+		<Table>
+			<Name>Finanzas Tabla</Name>
+		</Table>
+		<Table>
+			<Name>Manuel S Tabla</Name>
+			<IsCustomized>true</IsCustomized>
+		</Table>
+		<Table>
+			<Name>Tabla Ecipsa</Name>
 			<IsCustomized>true</IsCustomized>
 		</Table>
 	</Tables>
@@ -704,6 +733,27 @@
 			<Guid>000039B7-8BBE-4CEB-82C4-FA8C0B400033</Guid>
 			<SecondaryPID>255869028</SecondaryPID>
 			<SecondaryGuid>000039B7-8BBE-4CEB-82C4-FA8C0F404064</SecondaryGuid>
+		</ExtendedAttribute>
+		<ExtendedAttribute>
+			<FieldID>188743734</FieldID>
+			<FieldName>Texto2</FieldName>
+			<Guid>000039B7-8BBE-4CEB-82C4-FA8C0B400036</Guid>
+			<SecondaryPID>255869029</SecondaryPID>
+			<SecondaryGuid>000039B7-8BBE-4CEB-82C4-FA8C0F404065</SecondaryGuid>
+		</ExtendedAttribute>
+		<ExtendedAttribute>
+			<FieldID>188743737</FieldID>
+			<FieldName>Texto3</FieldName>
+			<Guid>000039B7-8BBE-4CEB-82C4-FA8C0B400039</Guid>
+			<SecondaryPID>255869030</SecondaryPID>
+			<SecondaryGuid>000039B7-8BBE-4CEB-82C4-FA8C0F404066</SecondaryGuid>
+		</ExtendedAttribute>
+		<ExtendedAttribute>
+			<FieldID>188743740</FieldID>
+			<FieldName>Texto4</FieldName>
+			<Guid>000039B7-8BBE-4CEB-82C4-FA8C0B40003C</Guid>
+			<SecondaryPID>255869031</SecondaryPID>
+			<SecondaryGuid>000039B7-8BBE-4CEB-82C4-FA8C0F404067</SecondaryGuid>
 		</ExtendedAttribute>
 		<ExtendedAttribute>
 			<FieldID>188776449</FieldID>
@@ -899,38 +949,6 @@
 		</ExtendedAttribute>
 	</ExtendedAttributes>
 	<Calendars>
-		<Calendar>
-			<UID>7</UID>
-			<GUID>19B10BFC-7CB8-EF11-BBDC-00155D100D0F</GUID>
-			<Name>Proyectos</Name>
-			<IsBaseCalendar>0</IsBaseCalendar>
-			<IsBaselineCalendar>0</IsBaselineCalendar>
-			<BaseCalendarUID>1</BaseCalendarUID>
-		</Calendar>
-		<Calendar>
-			<UID>6</UID>
-			<GUID>1C4DB712-7DB8-EF11-BBDC-00155D100D0F</GUID>
-			<Name>Posventa</Name>
-			<IsBaseCalendar>0</IsBaseCalendar>
-			<IsBaselineCalendar>0</IsBaselineCalendar>
-			<BaseCalendarUID>1</BaseCalendarUID>
-		</Calendar>
-		<Calendar>
-			<UID>11</UID>
-			<GUID>7E686D23-8810-F011-9294-00155D104B21</GUID>
-			<Name>Mariana V</Name>
-			<IsBaseCalendar>0</IsBaseCalendar>
-			<IsBaselineCalendar>0</IsBaselineCalendar>
-			<BaseCalendarUID>1</BaseCalendarUID>
-		</Calendar>
-		<Calendar>
-			<UID>4</UID>
-			<GUID>500F8C50-2C9D-EF11-BD9B-00155D110704</GUID>
-			<Name>Gabriela Rojo</Name>
-			<IsBaseCalendar>0</IsBaseCalendar>
-			<IsBaselineCalendar>0</IsBaselineCalendar>
-			<BaseCalendarUID>3</BaseCalendarUID>
-		</Calendar>
 		<Calendar>
 			<UID>1</UID>
 			<GUID>B6635B2E-E747-4771-A78B-24F7509629D0</GUID>
@@ -2450,8 +2468,32 @@
 			</WorkWeeks>
 		</Calendar>
 		<Calendar>
+			<UID>4</UID>
+			<GUID>500F8C50-2C9D-EF11-BD9B-00155D110704</GUID>
+			<Name>Gabriela Rojo</Name>
+			<IsBaseCalendar>0</IsBaseCalendar>
+			<IsBaselineCalendar>0</IsBaselineCalendar>
+			<BaseCalendarUID>3</BaseCalendarUID>
+		</Calendar>
+		<Calendar>
+			<UID>6</UID>
+			<GUID>1C4DB712-7DB8-EF11-BBDC-00155D100D0F</GUID>
+			<Name>Posventa</Name>
+			<IsBaseCalendar>0</IsBaseCalendar>
+			<IsBaselineCalendar>0</IsBaselineCalendar>
+			<BaseCalendarUID>1</BaseCalendarUID>
+		</Calendar>
+		<Calendar>
+			<UID>7</UID>
+			<GUID>19B10BFC-7CB8-EF11-BBDC-00155D100D0F</GUID>
+			<Name>Proyectos</Name>
+			<IsBaseCalendar>0</IsBaseCalendar>
+			<IsBaselineCalendar>0</IsBaselineCalendar>
+			<BaseCalendarUID>1</BaseCalendarUID>
+		</Calendar>
+		<Calendar>
 			<UID>8</UID>
-			<GUID>5F9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>E4B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<Name>Para calend. de línea base de Microsoft Project 98</Name>
 			<IsBaseCalendar>1</IsBaseCalendar>
 			<IsBaselineCalendar>1</IsBaselineCalendar>
@@ -3879,11 +3921,19 @@
 				</WorkWeek>
 			</WorkWeeks>
 		</Calendar>
+		<Calendar>
+			<UID>11</UID>
+			<GUID>7E686D23-8810-F011-9294-00155D104B21</GUID>
+			<Name>Mariana V</Name>
+			<IsBaseCalendar>0</IsBaseCalendar>
+			<IsBaselineCalendar>0</IsBaselineCalendar>
+			<BaseCalendarUID>1</BaseCalendarUID>
+		</Calendar>
 	</Calendars>
 	<Tasks>
 		<Task>
 			<UID>0</UID>
-			<GUID>EF9D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>74B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>0</ID>
 			<Name>Vivienda Venturelli - Bernal</Name>
 			<Active>1</Active>
@@ -29504,7 +29554,7 @@
 		</Task>
 		<Task>
 			<UID>795</UID>
-			<GUID>FD9D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>82B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>1</ID>
 			<Name>Vivienda Venturelli - Bernal</Name>
 			<Active>1</Active>
@@ -55125,7 +55175,7 @@
 		</Task>
 		<Task>
 			<UID>793</UID>
-			<GUID>FC9D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>81B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>2</ID>
 			<Name>Obra Vivienda Venturelli - Bernal Contratada</Name>
 			<Active>1</Active>
@@ -55252,6 +55302,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Gerencia</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -55300,7 +55354,7 @@
 		</Task>
 		<Task>
 			<UID>798</UID>
-			<GUID>FE9D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>83B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>3</ID>
 			<Name>Obra Vivienda Venturelli - Bernal</Name>
 			<Active>1</Active>
@@ -55430,6 +55484,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -55456,7 +55514,7 @@
 		</Task>
 		<Task>
 			<UID>725</UID>
-			<GUID>F99D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>7EB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>4</ID>
 			<Name>OBRA VIVIENDA VENTURELLI - BERNAL</Name>
 			<Active>1</Active>
@@ -57094,7 +57152,7 @@
 		</Task>
 		<Task>
 			<UID>53</UID>
-			<GUID>F79D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>7CB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>5</ID>
 			<Name>TAREAS PRELIMINARES</Name>
 			<Active>1</Active>
@@ -57218,6 +57276,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -57338,7 +57400,7 @@
 		</Task>
 		<Task>
 			<UID>52</UID>
-			<GUID>F69D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>7BB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>6</ID>
 			<Name>Estudio de Suelos</Name>
 			<Active>1</Active>
@@ -57448,11 +57510,11 @@
 				<FieldID>188776458</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
-			<b40800c>VB1.01</b40800c>
+			<b40800c>1.01</b40800c>
 			<EnterpriseExtendedAttribute>
 				<FieldIDInHex>b40800c</FieldIDInHex>
 				<FieldID>188776460</FieldID>
-				<Value>VB1.01</Value>
+				<Value>1.01</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -57473,6 +57535,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Externo</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.01</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -57545,7 +57619,7 @@
 		</Task>
 		<Task>
 			<UID>49</UID>
-			<GUID>F49D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>79B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>7</ID>
 			<Name>Calculo Estructural</Name>
 			<Active>1</Active>
@@ -57679,6 +57753,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Externo</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.02</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -57751,7 +57837,7 @@
 		</Task>
 		<Task>
 			<UID>50</UID>
-			<GUID>F59D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>7AB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>8</ID>
 			<Name>Cerco Perimetral</Name>
 			<Active>1</Active>
@@ -57891,6 +57977,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.03</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-02T09:00:00</Start>
@@ -57955,7 +58053,7 @@
 		</Task>
 		<Task>
 			<UID>47</UID>
-			<GUID>F29D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>77B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>9</ID>
 			<Name>Replanteo de Obra</Name>
 			<Active>1</Active>
@@ -58103,6 +58201,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.04</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-04T09:00:00</Start>
@@ -58167,7 +58277,7 @@
 		</Task>
 		<Task>
 			<UID>48</UID>
-			<GUID>F39D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>78B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>10</ID>
 			<Name>CONFORMACIÓN DE TERRENO</Name>
 			<Active>1</Active>
@@ -58300,6 +58410,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Externo</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-02T09:00:00</Start>
@@ -58516,7 +58638,7 @@
 		</Task>
 		<Task>
 			<UID>1002</UID>
-			<GUID>4D9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>D2B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>11</ID>
 			<Name>Extracción de árboles</Name>
 			<Active>1</Active>
@@ -58656,6 +58778,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Externo</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-02T09:00:00</Start>
@@ -58720,7 +58854,7 @@
 		</Task>
 		<Task>
 			<UID>1014</UID>
-			<GUID>579E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>DCB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>12</ID>
 			<Name>Demora por clima</Name>
 			<Active>1</Active>
@@ -58850,6 +58984,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-04T09:00:00</Start>
@@ -58919,7 +59057,7 @@
 		</Task>
 		<Task>
 			<UID>922</UID>
-			<GUID>129E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>97B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>13</ID>
 			<Name>Excavación terreno</Name>
 			<Active>1</Active>
@@ -59071,6 +59209,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Externo</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.01</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-10T09:00:00</Start>
@@ -59143,7 +59297,7 @@
 		</Task>
 		<Task>
 			<UID>923</UID>
-			<GUID>139E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>98B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>14</ID>
 			<Name>Relleno de terreno</Name>
 			<Active>1</Active>
@@ -59291,6 +59445,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Externo</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.02</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -59339,7 +59509,7 @@
 		</Task>
 		<Task>
 			<UID>925</UID>
-			<GUID>149E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>99B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>15</ID>
 			<Name>ESTRUCTURA Y ALBAÑILERIA</Name>
 			<Active>1</Active>
@@ -59467,6 +59637,14 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -60659,7 +60837,7 @@
 		</Task>
 		<Task>
 			<UID>926</UID>
-			<GUID>159E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9AB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>16</ID>
 			<Name>Pilotes de H°</Name>
 			<Active>1</Active>
@@ -60782,6 +60960,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -60958,7 +61140,7 @@
 		</Task>
 		<Task>
 			<UID>927</UID>
-			<GUID>169E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9BB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>17</ID>
 			<Name>EXCAVACIÓN DE PILOTES* (presupuesto prov. por empresa tercerizada) - 41 pilotes con ensanche mecánico p/ campana</Name>
 			<Active>1</Active>
@@ -61110,6 +61292,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Externo</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.01</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-25T09:00:00</Start>
@@ -61270,7 +61468,7 @@
 		</Task>
 		<Task>
 			<UID>1015</UID>
-			<GUID>589E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>DDB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>18</ID>
 			<Name>Demora por conflicto externo con empresa pilotera</Name>
 			<Active>1</Active>
@@ -61400,6 +61598,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-10T09:00:00</Start>
@@ -61541,7 +61743,7 @@
 		</Task>
 		<Task>
 			<UID>929</UID>
-			<GUID>179E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9CB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>19</ID>
 			<Name>Armadura y llenado de H°</Name>
 			<Active>1</Active>
@@ -61687,6 +61889,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-05T15:00:00</Start>
@@ -62055,7 +62269,7 @@
 		</Task>
 		<Task>
 			<UID>1009</UID>
-			<GUID>549E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>D9B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>20</ID>
 			<Name>Hormigón de pozos</Name>
 			<Active>1</Active>
@@ -62201,6 +62415,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-01T12:12:00</Start>
@@ -62257,7 +62483,7 @@
 		</Task>
 		<Task>
 			<UID>1010</UID>
-			<GUID>559E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>DAB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>21</ID>
 			<Name>Hormigón de pozos 2da etapa</Name>
 			<Active>1</Active>
@@ -62403,6 +62629,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-08T09:00:00</Start>
@@ -62459,7 +62697,7 @@
 		</Task>
 		<Task>
 			<UID>933</UID>
-			<GUID>189E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9DB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>22</ID>
 			<Name>Zapata Continua</Name>
 			<Active>1</Active>
@@ -62598,6 +62836,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -62646,7 +62896,7 @@
 		</Task>
 		<Task>
 			<UID>934</UID>
-			<GUID>199E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9EB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>23</ID>
 			<Name>CAB 01 - 60x60</Name>
 			<Active>1</Active>
@@ -62798,6 +63048,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.04</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-14T12:12:00</Start>
@@ -63126,7 +63392,7 @@
 		</Task>
 		<Task>
 			<UID>935</UID>
-			<GUID>1A9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9FB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>24</ID>
 			<Name>CAB 02 - 110x80</Name>
 			<Active>1</Active>
@@ -63278,6 +63544,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.05</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-14T12:12:00</Start>
@@ -63606,7 +63888,7 @@
 		</Task>
 		<Task>
 			<UID>936</UID>
-			<GUID>1B9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>A0B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>25</ID>
 			<Name>CAB 03 - 120x80</Name>
 			<Active>1</Active>
@@ -63758,6 +64040,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.06</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-14T12:12:00</Start>
@@ -64086,7 +64384,7 @@
 		</Task>
 		<Task>
 			<UID>937</UID>
-			<GUID>1C9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>A1B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>26</ID>
 			<Name>Vigas de Fundación y Riostra</Name>
 			<Active>1</Active>
@@ -64225,6 +64523,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -64321,7 +64631,7 @@
 		</Task>
 		<Task>
 			<UID>1008</UID>
-			<GUID>539E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>D8B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>27</ID>
 			<Name>Excavación de vigas</Name>
 			<Active>1</Active>
@@ -64468,6 +64778,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-02T12:12:00</Start>
@@ -64748,7 +65070,7 @@
 		</Task>
 		<Task>
 			<UID>938</UID>
-			<GUID>1D9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>A2B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>28</ID>
 			<Name>Viga de Fundación - VF1 - (25x40)</Name>
 			<Active>1</Active>
@@ -64900,6 +65222,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.07</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-14T12:12:00</Start>
@@ -65172,7 +65510,7 @@
 		</Task>
 		<Task>
 			<UID>939</UID>
-			<GUID>1E9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>A3B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>29</ID>
 			<Name>Viga de Fundación - VF2 - (40x25)</Name>
 			<Active>1</Active>
@@ -65324,6 +65662,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.08</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-14T12:12:00</Start>
@@ -65596,7 +65950,7 @@
 		</Task>
 		<Task>
 			<UID>940</UID>
-			<GUID>1F9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>A4B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>30</ID>
 			<Name>Viga de Fundación - VF3 - (60x25)</Name>
 			<Active>1</Active>
@@ -65748,6 +66102,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.09</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-14T12:12:00</Start>
@@ -66020,7 +66390,7 @@
 		</Task>
 		<Task>
 			<UID>941</UID>
-			<GUID>209E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>A5B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>31</ID>
 			<Name>Viga de Fundación - VF4 - (60x40)</Name>
 			<Active>1</Active>
@@ -66172,6 +66542,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.10</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-14T12:12:00</Start>
@@ -66444,7 +66830,7 @@
 		</Task>
 		<Task>
 			<UID>942</UID>
-			<GUID>219E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>A6B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>32</ID>
 			<Name>Viga Riostra VR01 (25x25)</Name>
 			<Active>1</Active>
@@ -66596,6 +66982,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.11</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-14T12:12:00</Start>
@@ -66868,7 +67270,7 @@
 		</Task>
 		<Task>
 			<UID>1011</UID>
-			<GUID>569E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>DBB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>33</ID>
 			<Name>Hormigón de riostra</Name>
 			<Active>1</Active>
@@ -67014,6 +67416,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-29T12:12:00</Start>
@@ -67086,7 +67500,7 @@
 		</Task>
 		<Task>
 			<UID>943</UID>
-			<GUID>229E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>A7B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>34</ID>
 			<Name>Columnas.</Name>
 			<Active>1</Active>
@@ -67224,6 +67638,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -67272,7 +67698,7 @@
 		</Task>
 		<Task>
 			<UID>945</UID>
-			<GUID>239E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>A8B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>35</ID>
 			<Name>C01 - (0,18x0,25) - 12 unid</Name>
 			<Active>1</Active>
@@ -67423,6 +67849,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.12</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -67511,7 +67953,7 @@
 		</Task>
 		<Task>
 			<UID>946</UID>
-			<GUID>249E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>A9B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>36</ID>
 			<Name>C02 - (0,18x0,76) - 5 unid</Name>
 			<Active>1</Active>
@@ -67662,6 +68104,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.13</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -67750,7 +68208,7 @@
 		</Task>
 		<Task>
 			<UID>947</UID>
-			<GUID>259E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>AAB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>37</ID>
 			<Name>C03 - (0,20x0,20) - 26 unid</Name>
 			<Active>1</Active>
@@ -67901,6 +68359,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.14</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -67989,7 +68463,7 @@
 		</Task>
 		<Task>
 			<UID>948</UID>
-			<GUID>269E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>ABB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>38</ID>
 			<Name>C04 - (0,18x0,38) - 1 unid</Name>
 			<Active>1</Active>
@@ -68140,6 +68614,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.15</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -68228,7 +68718,7 @@
 		</Task>
 		<Task>
 			<UID>954</UID>
-			<GUID>2A9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>AFB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>39</ID>
 			<Name>C05 - (0,18x0,58) - 2 unid</Name>
 			<Active>1</Active>
@@ -68379,6 +68869,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.16</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -68467,7 +68973,7 @@
 		</Task>
 		<Task>
 			<UID>955</UID>
-			<GUID>2B9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>B0B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>40</ID>
 			<Name>C06 - (0,27x0,20) - 2 unid</Name>
 			<Active>1</Active>
@@ -68618,6 +69124,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.17</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -68706,7 +69228,7 @@
 		</Task>
 		<Task>
 			<UID>956</UID>
-			<GUID>2C9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>B1B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>41</ID>
 			<Name>C07 - (0,40x0,40) - 2 unid</Name>
 			<Active>1</Active>
@@ -68857,6 +69379,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.18</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -68945,7 +69483,7 @@
 		</Task>
 		<Task>
 			<UID>957</UID>
-			<GUID>2D9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>B2B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>42</ID>
 			<Name>Encadenado Vertical</Name>
 			<Active>1</Active>
@@ -69080,6 +69618,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -69128,7 +69678,7 @@
 		</Task>
 		<Task>
 			<UID>959</UID>
-			<GUID>2E9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>B3B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>43</ID>
 			<Name>CE1 - (0,18x0,18) - 52 unid</Name>
 			<Active>1</Active>
@@ -69276,6 +69826,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.19</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -69324,7 +69890,7 @@
 		</Task>
 		<Task>
 			<UID>960</UID>
-			<GUID>2F9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>B4B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>44</ID>
 			<Name>Encadenado Horizontal</Name>
 			<Active>1</Active>
@@ -69459,6 +70025,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -69507,7 +70085,7 @@
 		</Task>
 		<Task>
 			<UID>962</UID>
-			<GUID>309E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>B5B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>45</ID>
 			<Name>VE - (0,18x0,20)</Name>
 			<Active>1</Active>
@@ -69655,6 +70233,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.20</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -69703,7 +70297,7 @@
 		</Task>
 		<Task>
 			<UID>963</UID>
-			<GUID>319E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>B6B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>46</ID>
 			<Name>VE2 - (0,20x0,20)</Name>
 			<Active>1</Active>
@@ -69851,6 +70445,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.21</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -69899,7 +70509,7 @@
 		</Task>
 		<Task>
 			<UID>964</UID>
-			<GUID>329E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>B7B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>47</ID>
 			<Name>VE3 - (0,20x0,30)</Name>
 			<Active>1</Active>
@@ -70047,6 +70657,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.22</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -70095,7 +70721,7 @@
 		</Task>
 		<Task>
 			<UID>965</UID>
-			<GUID>339E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>B8B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>48</ID>
 			<Name>Vigas Estructurales</Name>
 			<Active>1</Active>
@@ -70230,6 +70856,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -70310,7 +70948,7 @@
 		</Task>
 		<Task>
 			<UID>967</UID>
-			<GUID>349E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>B9B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>49</ID>
 			<Name>Vigas estructurales - (18x15),(18x21),(18x25),(18x36),(18x40),(18x46),(18x50),(18x54),(18x54),(18x60),(18x68),(18x74)</Name>
 			<Active>1</Active>
@@ -70458,6 +71096,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.23</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-07T12:12:00</Start>
@@ -70506,7 +71160,7 @@
 		</Task>
 		<Task>
 			<UID>968</UID>
-			<GUID>359E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>BAB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>50</ID>
 			<Name>Vigas estructurales - (20x110),(20x150)</Name>
 			<Active>1</Active>
@@ -70654,6 +71308,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.24</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-07T12:12:00</Start>
@@ -70702,7 +71372,7 @@
 		</Task>
 		<Task>
 			<UID>969</UID>
-			<GUID>369E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>BBB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>51</ID>
 			<Name>Vigas estructurales - (27x21),(29x110),(38x20),(50x21)</Name>
 			<Active>1</Active>
@@ -70850,6 +71520,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.25</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-07T12:12:00</Start>
@@ -70898,7 +71584,7 @@
 		</Task>
 		<Task>
 			<UID>971</UID>
-			<GUID>379E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>BCB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>52</ID>
 			<Name>Viga estructural - (18x30)</Name>
 			<Active>1</Active>
@@ -71046,6 +71732,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Cubierta</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.26</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-12-09T12:12:00</Start>
@@ -71094,7 +71796,7 @@
 		</Task>
 		<Task>
 			<UID>972</UID>
-			<GUID>389E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>BDB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>53</ID>
 			<Name>Losas</Name>
 			<Active>1</Active>
@@ -71229,6 +71931,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -71349,7 +72063,7 @@
 		</Task>
 		<Task>
 			<UID>974</UID>
-			<GUID>399E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>BEB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>54</ID>
 			<Name>Losa Vigueta Simple - 21 cm</Name>
 			<Active>1</Active>
@@ -71497,6 +72211,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.27</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-22T12:12:00</Start>
@@ -71545,7 +72275,7 @@
 		</Task>
 		<Task>
 			<UID>975</UID>
-			<GUID>3A9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>BFB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>55</ID>
 			<Name>Losa Maciza - 10 cm</Name>
 			<Active>1</Active>
@@ -71693,6 +72423,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.28</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-22T12:12:00</Start>
@@ -71741,7 +72487,7 @@
 		</Task>
 		<Task>
 			<UID>976</UID>
-			<GUID>3B9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>C0B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>56</ID>
 			<Name>Losa Maciza - 15 cm</Name>
 			<Active>1</Active>
@@ -71889,6 +72635,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.29</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-22T12:12:00</Start>
@@ -71937,7 +72699,7 @@
 		</Task>
 		<Task>
 			<UID>1006</UID>
-			<GUID>519E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>D6B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>57</ID>
 			<Name>Hormigón de losas </Name>
 			<Active>1</Active>
@@ -72079,6 +72841,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-11-23T12:12:00</Start>
@@ -72127,7 +72901,7 @@
 		</Task>
 		<Task>
 			<UID>1007</UID>
-			<GUID>529E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>D7B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>58</ID>
 			<Name>Desencofrados y devoluciones de equipo</Name>
 			<Active>1</Active>
@@ -72269,6 +73043,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-12-16T12:12:00</Start>
@@ -72317,7 +73103,7 @@
 		</Task>
 		<Task>
 			<UID>978</UID>
-			<GUID>3C9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>C1B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>59</ID>
 			<Name>Losa Vigueta Simple - 21 cm - Tanque</Name>
 			<Active>1</Active>
@@ -72465,6 +73251,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.29</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-12-09T12:12:00</Start>
@@ -72513,7 +73315,7 @@
 		</Task>
 		<Task>
 			<UID>979</UID>
-			<GUID>3D9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>C2B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>60</ID>
 			<Name>Mampostería</Name>
 			<Active>1</Active>
@@ -72651,6 +73453,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -72699,7 +73513,7 @@
 		</Task>
 		<Task>
 			<UID>1003</UID>
-			<GUID>4E9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>D3B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>61</ID>
 			<Name>Mampostería de fundación</Name>
 			<Active>1</Active>
@@ -72844,6 +73658,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-30T12:12:00</Start>
@@ -73084,7 +73910,7 @@
 		</Task>
 		<Task>
 			<UID>981</UID>
-			<GUID>3E9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>C3B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>62</ID>
 			<Name>Mamposteria Ladrillo Hueco no Portante 08x18x33 PB</Name>
 			<Active>1</Active>
@@ -73232,6 +74058,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.30</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-02T12:12:00</Start>
@@ -73280,7 +74122,7 @@
 		</Task>
 		<Task>
 			<UID>982</UID>
-			<GUID>3F9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>C4B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>63</ID>
 			<Name>Mamposteria Ladrillo Hueco Portante 12x18x33 PB</Name>
 			<Active>1</Active>
@@ -73428,6 +74270,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.31</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-02T12:12:00</Start>
@@ -73476,7 +74334,7 @@
 		</Task>
 		<Task>
 			<UID>983</UID>
-			<GUID>409E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>C5B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>64</ID>
 			<Name>Mamposteria Ladrillo Hueco Portante 18x18x33 PB</Name>
 			<Active>1</Active>
@@ -73624,6 +74482,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.32</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-02T12:12:00</Start>
@@ -73672,7 +74546,7 @@
 		</Task>
 		<Task>
 			<UID>1005</UID>
-			<GUID>509E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>D5B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>65</ID>
 			<Name>Parapetos + tanque</Name>
 			<Active>1</Active>
@@ -73814,6 +74688,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-11-24T12:12:00</Start>
@@ -73862,7 +74748,7 @@
 		</Task>
 		<Task>
 			<UID>984</UID>
-			<GUID>419E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>C6B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>66</ID>
 			<Name>Tabique de Contención</Name>
 			<Active>1</Active>
@@ -74001,6 +74887,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -74049,7 +74947,7 @@
 		</Task>
 		<Task>
 			<UID>985</UID>
-			<GUID>429E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>C7B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>67</ID>
 			<Name>Muro de contención: Muro Bloque H° armado + llenado de hormigón - esp:20cm</Name>
 			<Active>1</Active>
@@ -74201,6 +75099,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.33</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-08-04T12:12:00</Start>
@@ -74425,7 +75339,7 @@
 		</Task>
 		<Task>
 			<UID>1021</UID>
-			<GUID>5E9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>E3B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>68</ID>
 			<Name>Vigas encadenado sobre muro contención, nivel contrapiso</Name>
 			<Active>1</Active>
@@ -74572,6 +75486,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>2</Number>
 				<Start>2026-09-28T12:12:00</Start>
@@ -74677,7 +75603,7 @@
 		</Task>
 		<Task>
 			<UID>987</UID>
-			<GUID>439E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>C8B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>69</ID>
 			<Name>Aislación en Muros y Contrapiso</Name>
 			<Active>1</Active>
@@ -74815,6 +75741,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -74863,7 +75801,7 @@
 		</Task>
 		<Task>
 			<UID>988</UID>
-			<GUID>449E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>C9B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>70</ID>
 			<Name>Capa Aisladora Horizontal Mampostería</Name>
 			<Active>1</Active>
@@ -75011,6 +75949,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.34</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-02T12:12:00</Start>
@@ -75059,7 +76013,7 @@
 		</Task>
 		<Task>
 			<UID>989</UID>
-			<GUID>459E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>CAB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>71</ID>
 			<Name>Capa Aisladora Horizontal sobre Contrapiso</Name>
 			<Active>1</Active>
@@ -75211,6 +76165,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.35</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-29T12:12:00</Start>
@@ -75267,7 +76237,7 @@
 		</Task>
 		<Task>
 			<UID>990</UID>
-			<GUID>469E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>CBB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>72</ID>
 			<Name>Capa Aisladora Vertical Mampostería - H: 50cm</Name>
 			<Active>1</Active>
@@ -75419,6 +76389,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.36</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-02T12:12:00</Start>
@@ -75547,7 +76533,7 @@
 		</Task>
 		<Task>
 			<UID>949</UID>
-			<GUID>279E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>ACB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>73</ID>
 			<Name>Capa Aisladora Vertical en muro de piedra - Monotop</Name>
 			<Active>1</Active>
@@ -75695,6 +76681,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.37</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-02-23T12:12:00</Start>
@@ -75743,7 +76745,7 @@
 		</Task>
 		<Task>
 			<UID>951</UID>
-			<GUID>289E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>ADB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>74</ID>
 			<Name>Contrapiso</Name>
 			<Active>1</Active>
@@ -75882,6 +76884,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -75930,7 +76944,7 @@
 		</Task>
 		<Task>
 			<UID>953</UID>
-			<GUID>299E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>AEB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>75</ID>
 			<Name>Hormigón p/contrapiso Interior Casa e=10cm (PB)</Name>
 			<Active>1</Active>
@@ -76082,6 +77096,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.38</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-02T12:12:00</Start>
@@ -76250,7 +77280,7 @@
 		</Task>
 		<Task>
 			<UID>1004</UID>
-			<GUID>4F9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>D4B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>76</ID>
 			<Name>Contrapiso 020 </Name>
 			<Active>1</Active>
@@ -76396,6 +77426,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-22T12:12:00</Start>
@@ -76452,7 +77494,7 @@
 		</Task>
 		<Task>
 			<UID>906</UID>
-			<GUID>049E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>89B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>77</ID>
 			<Name>Carpeta de Nivelación</Name>
 			<Active>1</Active>
@@ -76587,6 +77629,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -76635,7 +77689,7 @@
 		</Task>
 		<Task>
 			<UID>908</UID>
-			<GUID>059E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>8AB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>78</ID>
 			<Name>Carpeta de Nivelación Interior Casa e=4cm (PB)</Name>
 			<Active>1</Active>
@@ -76783,6 +77837,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.39</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-03-16T12:12:00</Start>
@@ -76831,7 +77901,7 @@
 		</Task>
 		<Task>
 			<UID>909</UID>
-			<GUID>069E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>8BB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>79</ID>
 			<Name>Carpeta de Nivelación de Cubierta Casa e= 4 cm</Name>
 			<Active>1</Active>
@@ -76979,6 +78049,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.40</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-12-30T12:12:00</Start>
@@ -77027,7 +78113,7 @@
 		</Task>
 		<Task>
 			<UID>910</UID>
-			<GUID>079E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>8CB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>80</ID>
 			<Name>Cubierta</Name>
 			<Active>1</Active>
@@ -77146,6 +78232,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -77194,7 +78284,7 @@
 		</Task>
 		<Task>
 			<UID>911</UID>
-			<GUID>089E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>8DB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>81</ID>
 			<Name>Base de Pintura Asfaltica.</Name>
 			<Active>1</Active>
@@ -77336,6 +78426,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-12-09T12:12:00</Start>
@@ -77384,7 +78486,7 @@
 		</Task>
 		<Task>
 			<UID>912</UID>
-			<GUID>099E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>8EB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>82</ID>
 			<Name>Cubierta común sobre Losa con perlas de Telgopor - Hormigón de Pendiente - 10 cm</Name>
 			<Active>1</Active>
@@ -77532,6 +78634,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.41</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-12-11T12:12:00</Start>
@@ -77580,7 +78698,7 @@
 		</Task>
 		<Task>
 			<UID>913</UID>
-			<GUID>0A9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>8FB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>83</ID>
 			<Name>Impermeabilización en cubierta Casa* (con parapeto-h:20cm)</Name>
 			<Active>1</Active>
@@ -77717,6 +78835,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Externo</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Cubierta</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.42</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-11T12:12:00</Start>
@@ -77765,7 +78895,7 @@
 		</Task>
 		<Task>
 			<UID>915</UID>
-			<GUID>0B9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>90B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>84</ID>
 			<Name>Azotado Hidrófugo + Revoque Grueso exterior</Name>
 			<Active>1</Active>
@@ -77900,6 +79030,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -77948,7 +79090,7 @@
 		</Task>
 		<Task>
 			<UID>916</UID>
-			<GUID>0C9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>91B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>85</ID>
 			<Name>Revoque c/ azotado hidrof. cementicio en mamp.</Name>
 			<Active>1</Active>
@@ -78096,6 +79238,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.43</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-27T12:12:00</Start>
@@ -78144,7 +79302,7 @@
 		</Task>
 		<Task>
 			<UID>917</UID>
-			<GUID>0D9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>92B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>86</ID>
 			<Name>Azotado Cementicio Interior</Name>
 			<Active>1</Active>
@@ -78279,6 +79437,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -78327,7 +79497,7 @@
 		</Task>
 		<Task>
 			<UID>918</UID>
-			<GUID>0E9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>93B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>87</ID>
 			<Name>Azotado Cementicio Interior</Name>
 			<Active>1</Active>
@@ -78475,6 +79645,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.44</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-11T12:12:00</Start>
@@ -78523,7 +79709,7 @@
 		</Task>
 		<Task>
 			<UID>919</UID>
-			<GUID>0F9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>94B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>88</ID>
 			<Name>Escaleras</Name>
 			<Active>1</Active>
@@ -78658,6 +79844,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -78706,7 +79904,7 @@
 		</Task>
 		<Task>
 			<UID>920</UID>
-			<GUID>109E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>95B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>89</ID>
 			<Name>Escalera Int. de Hormigon in situ - ancho: 1,60m</Name>
 			<Active>1</Active>
@@ -78854,6 +80052,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.45</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-02-23T12:12:00</Start>
@@ -78902,7 +80116,7 @@
 		</Task>
 		<Task>
 			<UID>921</UID>
-			<GUID>119E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>96B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>90</ID>
 			<Name>Escalera Int. de Hormigon in situ - ancho 1,35m</Name>
 			<Active>1</Active>
@@ -79050,6 +80264,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.46</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-03-04T12:12:00</Start>
@@ -79098,7 +80328,7 @@
 		</Task>
 		<Task>
 			<UID>898</UID>
-			<GUID>FF9D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>84B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>91</ID>
 			<Name>Asador</Name>
 			<Active>1</Active>
@@ -79233,6 +80463,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -79281,7 +80523,7 @@
 		</Task>
 		<Task>
 			<UID>899</UID>
-			<GUID>009E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>85B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>92</ID>
 			<Name>Asador (1,70 m de largo)</Name>
 			<Active>1</Active>
@@ -79429,6 +80671,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.47</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-11T12:12:00</Start>
@@ -79477,7 +80735,7 @@
 		</Task>
 		<Task>
 			<UID>900</UID>
-			<GUID>019E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>86B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>93</ID>
 			<Name>CARPINTERIAS</Name>
 			<Active>1</Active>
@@ -79602,6 +80860,14 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -79698,7 +80964,7 @@
 		</Task>
 		<Task>
 			<UID>901</UID>
-			<GUID>029E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>87B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>94</ID>
 			<Name>Aberturas</Name>
 			<Active>1</Active>
@@ -79817,6 +81083,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -79865,7 +81135,7 @@
 		</Task>
 		<Task>
 			<UID>902</UID>
-			<GUID>039E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>88B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>95</ID>
 			<Name>Colocación de premarcos</Name>
 			<Active>1</Active>
@@ -80013,6 +81283,22 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Albañileria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.01</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-27T12:12:00</Start>
@@ -80061,7 +81347,7 @@
 		</Task>
 		<Task>
 			<UID>991</UID>
-			<GUID>479E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>CCB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>96</ID>
 			<Name>Puertas de madera*</Name>
 			<Active>1</Active>
@@ -80186,6 +81472,14 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.02</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -80234,7 +81528,7 @@
 		</Task>
 		<Task>
 			<UID>992</UID>
-			<GUID>489E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>CDB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>97</ID>
 			<Name>Aberturas de aluminio*</Name>
 			<Active>1</Active>
@@ -80359,6 +81653,14 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.03</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -80407,7 +81709,7 @@
 		</Task>
 		<Task>
 			<UID>993</UID>
-			<GUID>499E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>CEB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>98</ID>
 			<Name>LIMPIEZA DE OBRA</Name>
 			<Active>1</Active>
@@ -80532,6 +81834,14 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>5</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -80604,7 +81914,7 @@
 		</Task>
 		<Task>
 			<UID>994</UID>
-			<GUID>4A9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>CFB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>99</ID>
 			<Name>Limpieza</Name>
 			<Active>1</Active>
@@ -80723,6 +82033,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -80771,7 +82085,7 @@
 		</Task>
 		<Task>
 			<UID>995</UID>
-			<GUID>4B9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>D0B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>100</ID>
 			<Name>Limpieza periodica</Name>
 			<Active>1</Active>
@@ -80901,6 +82215,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>5.01</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -80949,7 +82275,7 @@
 		</Task>
 		<Task>
 			<UID>996</UID>
-			<GUID>4C9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>D1B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>101</ID>
 			<Name>Limpieza final</Name>
 			<Active>1</Active>
@@ -81079,6 +82405,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>5.02</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -81127,7 +82465,7 @@
 		</Task>
 		<Task>
 			<UID>695</UID>
-			<GUID>F89D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>7DB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>102</ID>
 			<Name>VARIOS</Name>
 			<Active>1</Active>
@@ -81252,6 +82590,14 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>9</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -81468,7 +82814,7 @@
 		</Task>
 		<Task>
 			<UID>746</UID>
-			<GUID>FB9D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>80B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>103</ID>
 			<Name>Muebles</Name>
 			<Active>1</Active>
@@ -81597,6 +82943,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Externo</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -81615,7 +82973,7 @@
 		</Task>
 		<Task>
 			<UID>745</UID>
-			<GUID>FA9D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>7FB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>104</ID>
 			<Name>Mesadas</Name>
 			<Active>1</Active>
@@ -81744,6 +83102,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Externo</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-01T09:00:00</Start>
@@ -81762,7 +83132,7 @@
 		</Task>
 		<Task>
 			<UID>1019</UID>
-			<GUID>5C9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>E1B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>105</ID>
 			<Name>Intalaciones de plomería contrapiso</Name>
 			<Active>1</Active>
@@ -81898,6 +83268,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Plomeria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-07-28T12:12:00</Start>
@@ -81946,7 +83328,7 @@
 		</Task>
 		<Task>
 			<UID>1018</UID>
-			<GUID>5B9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>E0B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>106</ID>
 			<Name>Intalaciones de plomería pared</Name>
 			<Active>1</Active>
@@ -82082,6 +83464,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Plomeria</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-07T12:12:00</Start>
@@ -82130,7 +83524,7 @@
 		</Task>
 		<Task>
 			<UID>1017</UID>
-			<GUID>5A9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>DFB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>107</ID>
 			<Name>Instalaciones de electricidad losa</Name>
 			<Active>1</Active>
@@ -82266,6 +83660,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Electricista</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-11-13T12:12:00</Start>
@@ -82314,7 +83720,7 @@
 		</Task>
 		<Task>
 			<UID>1016</UID>
-			<GUID>599E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>DEB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>108</ID>
 			<Name>Instalaciones de electricidad pared</Name>
 			<Active>1</Active>
@@ -82450,6 +83856,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Electricista</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-07T12:12:00</Start>
@@ -82498,7 +83916,7 @@
 		</Task>
 		<Task>
 			<UID>1020</UID>
-			<GUID>5D9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>E2B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>109</ID>
 			<Name>Instalación de losa radiante </Name>
 			<Active>1</Active>
@@ -82634,6 +84052,18 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743731</FieldID>
+				<Value>Externo</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743734</FieldID>
+				<Value>Planta Baja</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-02-23T12:12:00</Start>
@@ -82682,7 +84112,7 @@
 		</Task>
 		<Task>
 			<UID>27</UID>
-			<GUID>F19D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>76B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>110</ID>
 			<Name>Firma Acta recepcion Provisoria</Name>
 			<Active>1</Active>
@@ -82808,6 +84238,10 @@
 				<FieldID>190873611</FieldID>
 				<Value>Mariana V</Value>
 			</EnterpriseExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743737</FieldID>
+				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-03-31T12:12:00</Start>
@@ -82826,7 +84260,7 @@
 		</Task>
 		<Task>
 			<UID>4</UID>
-			<GUID>F09D53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>75B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>111</ID>
 			<Name>Posventa</Name>
 			<Active>1</Active>
@@ -106993,12 +108427,11 @@
 			<BCWP>0.00</BCWP>
 			<IsGeneric>0</IsGeneric>
 			<IsInactive>0</IsInactive>
-			<IsEnterprise>1</IsEnterprise>
+			<IsEnterprise>0</IsEnterprise>
 			<BookingType>0</BookingType>
 			<ActiveDirectoryGUID>8FC48B49-DCE2-467E-9E6C-2DBB5413CBC5</ActiveDirectoryGUID>
-			<CreationDate>2026-09-30T15:24:00</CreationDate>
+			<CreationDate>2026-09-30T19:30:00</CreationDate>
 			<IsCostResource>0</IsCostResource>
-			<AssnOwner>Gabriela Rojo</AssnOwner>
 			<AssnOwnerGuid>500F8C50-2C9D-EF11-BD9B-00155D110704</AssnOwnerGuid>
 			<IsBudget>0</IsBudget>
 			<c408001></c408001>
@@ -107134,11 +108567,10 @@
 			<BCWP>0.00</BCWP>
 			<IsGeneric>0</IsGeneric>
 			<IsInactive>0</IsInactive>
-			<IsEnterprise>1</IsEnterprise>
+			<IsEnterprise>0</IsEnterprise>
 			<BookingType>0</BookingType>
-			<CreationDate>2026-09-30T15:24:00</CreationDate>
+			<CreationDate>2026-09-30T19:30:00</CreationDate>
 			<IsCostResource>0</IsCostResource>
-			<AssnOwner>Posventa</AssnOwner>
 			<AssnOwnerGuid>1C4DB712-7DB8-EF11-BBDC-00155D100D0F</AssnOwnerGuid>
 			<IsBudget>0</IsBudget>
 			<c408001></c408001>
@@ -131193,11 +132625,10 @@
 			<BCWP>0.00</BCWP>
 			<IsGeneric>0</IsGeneric>
 			<IsInactive>0</IsInactive>
-			<IsEnterprise>1</IsEnterprise>
+			<IsEnterprise>0</IsEnterprise>
 			<BookingType>0</BookingType>
-			<CreationDate>2026-09-30T15:24:00</CreationDate>
+			<CreationDate>2026-09-30T19:30:00</CreationDate>
 			<IsCostResource>0</IsCostResource>
-			<AssnOwner>Proyectos</AssnOwner>
 			<AssnOwnerGuid>19B10BFC-7CB8-EF11-BBDC-00155D100D0F</AssnOwnerGuid>
 			<IsBudget>0</IsBudget>
 			<c408001></c408001>
@@ -131305,11 +132736,10 @@
 			<BCWP>0.00</BCWP>
 			<IsGeneric>0</IsGeneric>
 			<IsInactive>0</IsInactive>
-			<IsEnterprise>1</IsEnterprise>
+			<IsEnterprise>0</IsEnterprise>
 			<BookingType>0</BookingType>
-			<CreationDate>2026-09-30T15:24:00</CreationDate>
+			<CreationDate>2026-09-30T19:30:00</CreationDate>
 			<IsCostResource>0</IsCostResource>
-			<AssnOwner>Mariana V</AssnOwner>
 			<AssnOwnerGuid>7E686D23-8810-F011-9294-00155D104B21</AssnOwnerGuid>
 			<IsBudget>0</IsBudget>
 			<c408001></c408001>
@@ -132838,7 +134268,7 @@
 	<Assignments>
 		<Assignment>
 			<UID>4</UID>
-			<GUID>609E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>E5B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>4</TaskUID>
 			<ResourceUID>3</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -159730,7 +161160,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>49</UID>
-			<GUID>619E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>E6B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>49</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -159858,7 +161288,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>50</UID>
-			<GUID>629E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>E7B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>50</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -159978,7 +161408,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>52</UID>
-			<GUID>639E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>E8B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>52</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -160106,7 +161536,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1481</UID>
-			<GUID>649E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>E9B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>47</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -160226,7 +161656,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1482</UID>
-			<GUID>659E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>EAB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>48</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>22</PercentWorkComplete>
@@ -161081,7 +162511,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1657</UID>
-			<GUID>669E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>EBB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>695</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -163013,7 +164443,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1667</UID>
-			<GUID>679E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>ECB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>746</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -163086,7 +164516,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1668</UID>
-			<GUID>689E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>EDB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>745</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -163159,7 +164589,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1669</UID>
-			<GUID>699E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>EEB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>27</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -163232,7 +164662,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1720</UID>
-			<GUID>6A9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>EFB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>798</TaskUID>
 			<ResourceUID>-65535</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -163307,7 +164737,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1733</UID>
-			<GUID>6B9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>F0B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>793</TaskUID>
 			<ResourceUID>1</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -165487,7 +166917,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1929</UID>
-			<GUID>6C9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>F1B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>991</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -165595,7 +167025,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1930</UID>
-			<GUID>6D9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>F2B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>992</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -165703,7 +167133,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1931</UID>
-			<GUID>6E9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>F3B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>993</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -165835,7 +167265,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1932</UID>
-			<GUID>6F9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>F4B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>994</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -165967,7 +167397,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1933</UID>
-			<GUID>709E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>F5B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>995</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -166075,7 +167505,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>1934</UID>
-			<GUID>719E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>F6B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>996</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -166207,7 +167637,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2025</UID>
-			<GUID>729E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>F7B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>922</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -166335,7 +167765,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2026</UID>
-			<GUID>739E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>F8B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>923</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -166515,7 +167945,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2027</UID>
-			<GUID>749E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>F9B6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>925</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>5</PercentWorkComplete>
@@ -168546,7 +169976,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2028</UID>
-			<GUID>759E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>FAB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>926</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -168882,7 +170312,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2029</UID>
-			<GUID>769E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>FBB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>927</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -169082,7 +170512,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2031</UID>
-			<GUID>779E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>FCB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>929</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -169322,7 +170752,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2034</UID>
-			<GUID>789E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>FDB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>933</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -169530,7 +170960,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2035</UID>
-			<GUID>799E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>FEB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>934</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -169738,7 +171168,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2036</UID>
-			<GUID>7A9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>FFB6C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>935</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -169946,7 +171376,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2037</UID>
-			<GUID>7B9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>00B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>936</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -170154,7 +171584,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2038</UID>
-			<GUID>7C9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>01B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>937</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -170546,7 +171976,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2039</UID>
-			<GUID>7D9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>02B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>938</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -170706,7 +172136,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2040</UID>
-			<GUID>7E9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>03B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>939</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -170866,7 +172296,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2041</UID>
-			<GUID>7F9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>04B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>940</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -171026,7 +172456,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2042</UID>
-			<GUID>809E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>05B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>941</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -171186,7 +172616,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2043</UID>
-			<GUID>819E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>06B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>942</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -171346,7 +172776,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2044</UID>
-			<GUID>829E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>07B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>943</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>30</PercentWorkComplete>
@@ -171545,7 +172975,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2046</UID>
-			<GUID>839E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>08B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>945</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>30</PercentWorkComplete>
@@ -171744,7 +173174,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2047</UID>
-			<GUID>849E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>09B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>946</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>30</PercentWorkComplete>
@@ -171943,7 +173373,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2048</UID>
-			<GUID>859E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>0AB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>947</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>30</PercentWorkComplete>
@@ -172142,7 +173572,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2049</UID>
-			<GUID>869E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>0BB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>948</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>30</PercentWorkComplete>
@@ -172341,7 +173771,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2050</UID>
-			<GUID>879E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>0CB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>954</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>30</PercentWorkComplete>
@@ -172540,7 +173970,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2051</UID>
-			<GUID>889E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>0DB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>955</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>30</PercentWorkComplete>
@@ -172739,7 +174169,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2052</UID>
-			<GUID>899E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>0EB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>956</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>30</PercentWorkComplete>
@@ -172938,7 +174368,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2053</UID>
-			<GUID>8A9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>0FB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>957</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -173126,7 +174556,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2055</UID>
-			<GUID>8B9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>10B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>959</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -173314,7 +174744,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2056</UID>
-			<GUID>8C9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>11B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>960</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -173502,7 +174932,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2058</UID>
-			<GUID>8D9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>12B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>962</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -173690,7 +175120,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2059</UID>
-			<GUID>8E9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>13B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>963</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -173878,7 +175308,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2060</UID>
-			<GUID>8F9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>14B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>964</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -174066,7 +175496,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2061</UID>
-			<GUID>909E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>15B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>965</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -174566,7 +175996,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2063</UID>
-			<GUID>919E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>16B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>967</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -174746,7 +176176,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2064</UID>
-			<GUID>929E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>17B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>968</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -174926,7 +176356,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2065</UID>
-			<GUID>939E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>18B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>969</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -175106,7 +176536,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2067</UID>
-			<GUID>949E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>19B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>971</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -175262,7 +176692,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2068</UID>
-			<GUID>959E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>1AB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>972</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -175794,7 +177224,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2070</UID>
-			<GUID>969E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>1BB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>974</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -176126,7 +177556,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2071</UID>
-			<GUID>979E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>1CB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>975</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -176458,7 +177888,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2072</UID>
-			<GUID>989E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>1DB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>976</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -176790,7 +178220,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2074</UID>
-			<GUID>999E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>1EB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>978</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -176930,7 +178360,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2075</UID>
-			<GUID>9A9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>1FB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>979</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>2</PercentWorkComplete>
@@ -176945,7 +178375,7 @@
 			<CostRateTable>0</CostRateTable>
 			<RateScale>0</RateScale>
 			<CostVariance>0</CostVariance>
-			<CV>-0.00</CV>
+			<CV>0.00</CV>
 			<Delay>0</Delay>
 			<Finish>2026-12-30T12:12:00</Finish>
 			<FinishVariance>697920</FinishVariance>
@@ -176975,7 +178405,7 @@
 			<Work>PT480H0M0S</Work>
 			<WorkContour>0</WorkContour>
 			<BCWS>0.00</BCWS>
-			<BCWP>-0.00</BCWP>
+			<BCWP>0.00</BCWP>
 			<BookingType>0</BookingType>
 			<CreationDate>2026-06-04T15:25:00</CreationDate>
 			<AssnOwner>Mariana V</AssnOwner>
@@ -177665,7 +179095,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2077</UID>
-			<GUID>9B9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>20B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>981</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -177813,7 +179243,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2078</UID>
-			<GUID>9C9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>21B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>982</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -177985,7 +179415,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2079</UID>
-			<GUID>9D9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>22B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>983</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -178269,7 +179699,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2080</UID>
-			<GUID>9E9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>23B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>984</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -178813,7 +180243,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2081</UID>
-			<GUID>9F9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>24B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>985</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -179077,7 +180507,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2082</UID>
-			<GUID>A09E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>25B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>987</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>35</PercentWorkComplete>
@@ -180532,7 +181962,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2083</UID>
-			<GUID>A19E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>26B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>988</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -180696,7 +182126,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2084</UID>
-			<GUID>A29E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>27B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>989</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -180808,7 +182238,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2085</UID>
-			<GUID>A39E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>28B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>990</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -180992,7 +182422,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2086</UID>
-			<GUID>A49E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>29B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>949</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -181180,7 +182610,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2087</UID>
-			<GUID>A59E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>2AB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>951</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -181412,7 +182842,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2089</UID>
-			<GUID>A69E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>2BB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>953</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -181628,7 +183058,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2090</UID>
-			<GUID>A79E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>2CB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>906</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -182128,7 +183558,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2092</UID>
-			<GUID>A89E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>2DB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>908</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -182332,7 +183762,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2093</UID>
-			<GUID>A99E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>2EB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>909</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -182504,7 +183934,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2094</UID>
-			<GUID>AA9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>2FB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>910</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -182828,7 +184258,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2095</UID>
-			<GUID>AB9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>30B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>911</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -182936,7 +184366,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2096</UID>
-			<GUID>AC9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>31B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>912</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -183116,7 +184546,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2097</UID>
-			<GUID>AD9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>32B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>913</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -183296,7 +184726,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2098</UID>
-			<GUID>AE9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>33B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>915</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -183556,7 +184986,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2099</UID>
-			<GUID>AF9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>34B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>916</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -183816,7 +185246,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2100</UID>
-			<GUID>B09E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>35B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>917</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -184020,7 +185450,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2101</UID>
-			<GUID>B19E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>36B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>918</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -184224,7 +185654,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2102</UID>
-			<GUID>B29E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>37B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>919</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -184388,7 +185818,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2103</UID>
-			<GUID>B39E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>38B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>920</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -184552,7 +185982,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2104</UID>
-			<GUID>B49E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>39B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>921</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -184716,7 +186146,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2105</UID>
-			<GUID>B59E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>3AB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>898</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -184872,7 +186302,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2106</UID>
-			<GUID>B69E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>3BB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>899</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -185028,7 +186458,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2107</UID>
-			<GUID>B79E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>3CB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>900</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -186880,7 +188310,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2108</UID>
-			<GUID>B89E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>3DB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>901</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -188732,7 +190162,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2109</UID>
-			<GUID>B99E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>3EB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>902</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -188896,7 +190326,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2110</UID>
-			<GUID>BA9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>3FB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1002</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -189016,7 +190446,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2111</UID>
-			<GUID>BB9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>40B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1003</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>30</PercentWorkComplete>
@@ -189031,7 +190461,7 @@
 			<CostRateTable>0</CostRateTable>
 			<RateScale>0</RateScale>
 			<CostVariance>0</CostVariance>
-			<CV>-0.00</CV>
+			<CV>0.00</CV>
 			<Delay>0</Delay>
 			<Finish>2026-10-06T12:12:00</Finish>
 			<FinishVariance>211200</FinishVariance>
@@ -189061,7 +190491,7 @@
 			<Work>PT24H0M0S</Work>
 			<WorkContour>0</WorkContour>
 			<BCWS>0.00</BCWS>
-			<BCWP>-0.00</BCWP>
+			<BCWP>0.00</BCWP>
 			<BookingType>0</BookingType>
 			<CreationDate>2026-06-25T15:03:00</CreationDate>
 			<AssnOwner>Mariana V</AssnOwner>
@@ -189159,7 +190589,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2112</UID>
-			<GUID>BC9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>41B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1004</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -189271,7 +190701,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2113</UID>
-			<GUID>BD9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>42B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1005</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -189427,7 +190857,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2114</UID>
-			<GUID>BE9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>43B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1006</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -189535,7 +190965,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2115</UID>
-			<GUID>BF9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>44B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1007</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -189691,7 +191121,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2116</UID>
-			<GUID>C09E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>45B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1008</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -190003,7 +191433,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2117</UID>
-			<GUID>C19E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>46B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1009</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -190115,7 +191545,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2118</UID>
-			<GUID>C29E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>47B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1010</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -190227,7 +191657,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2119</UID>
-			<GUID>C39E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>48B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1011</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -190355,7 +191785,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2122</UID>
-			<GUID>C49E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>49B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1014</TaskUID>
 			<ResourceUID>-65535</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -190470,7 +191900,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2123</UID>
-			<GUID>C59E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>4AB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1015</TaskUID>
 			<ResourceUID>-65535</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -190649,7 +192079,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2124</UID>
-			<GUID>C69E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>4BB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1016</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -190909,7 +192339,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2125</UID>
-			<GUID>C79E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>4CB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1017</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -191025,7 +192455,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2126</UID>
-			<GUID>C89E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>4DB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1018</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -191285,7 +192715,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2127</UID>
-			<GUID>C99E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>4EB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1019</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -191593,7 +193023,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2128</UID>
-			<GUID>CA9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>4FB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1020</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>0</PercentWorkComplete>
@@ -191781,7 +193211,7 @@
 		</Assignment>
 		<Assignment>
 			<UID>2129</UID>
-			<GUID>CB9E53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>50B7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<TaskUID>1021</TaskUID>
 			<ResourceUID>7</ResourceUID>
 			<PercentWorkComplete>100</PercentWorkComplete>
@@ -191945,25 +193375,25 @@
 	<BoardColumns>
 		<BoardColumn>
 			<UID>1</UID>
-			<GUID>159F53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9AB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>0</ID>
 			<Name>Sin comenzar</Name>
 		</BoardColumn>
 		<BoardColumn>
 			<UID>2</UID>
-			<GUID>169F53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9BB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>1</ID>
 			<Name>Próximamente</Name>
 		</BoardColumn>
 		<BoardColumn>
 			<UID>3</UID>
-			<GUID>179F53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9CB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>2</ID>
 			<Name>En curso</Name>
 		</BoardColumn>
 		<BoardColumn>
 			<UID>4</UID>
-			<GUID>189F53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9DB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>3</ID>
 			<Name>Listo</Name>
 		</BoardColumn>
@@ -191971,7 +193401,7 @@
 	<Sprints>
 		<Sprint>
 			<UID>1</UID>
-			<GUID>199F53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9EB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>0</ID>
 			<Name>No hay ningún sprint</Name>
 			<DurationUnits>39</DurationUnits>
@@ -191979,7 +193409,7 @@
 		</Sprint>
 		<Sprint>
 			<UID>2</UID>
-			<GUID>1A9F53B3-FCBC-F111-AB09-C82158A5B4F4</GUID>
+			<GUID>9FB7C61A-1FBD-F111-96CF-0245E2C8A981</GUID>
 			<ID>1</ID>
 			<Name>Sprint 1</Name>
 			<Start>2026-04-05T09:00:00</Start>
