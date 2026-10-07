@@ -6,7 +6,7 @@
 	<GUID>8E9C993F-F1B9-F111-96CD-0045E2C8A982</GUID>
 	<Title>VIvienda Hermanos Rossi</Title>
 	<CreationDate>2025-06-12T09:00:00</CreationDate>
-	<LastSaved>2026-09-26T19:06:00</LastSaved>
+	<LastSaved>2026-10-07T16:51:00</LastSaved>
 	<ScheduleFromStart>1</ScheduleFromStart>
 	<StartDate>2025-06-12T09:00:00</StartDate>
 	<FinishDate>2028-04-10T19:00:00</FinishDate>
@@ -47,7 +47,7 @@
 	<MoveCompletedEndsForward>0</MoveCompletedEndsForward>
 	<BaselineForEarnedValue>0</BaselineForEarnedValue>
 	<AutoAddNewResourcesAndTasks>1</AutoAddNewResourcesAndTasks>
-	<CurrentDate>2026-09-26T08:00:00</CurrentDate>
+	<CurrentDate>2026-10-07T08:00:00</CurrentDate>
 	<MicrosoftProjectServerURL>1</MicrosoftProjectServerURL>
 	<Autolink>0</Autolink>
 	<NewTaskStartDate>0</NewTaskStartDate>
@@ -752,7 +752,9 @@
 			<FieldID>188743740</FieldID>
 			<FieldName>Texto4</FieldName>
 			<Alias>ru</Alias>
-			<Guid>00000000-0000-0000-0000-000000000000</Guid>
+			<Guid>000039B7-8BBE-4CEB-82C4-FA8C0B40003C</Guid>
+			<SecondaryPID>255869031</SecondaryPID>
+			<SecondaryGuid>000039B7-8BBE-4CEB-82C4-FA8C0F404067</SecondaryGuid>
 		</ExtendedAttribute>
 		<ExtendedAttribute>
 			<FieldID>188776449</FieldID>
@@ -51371,6 +51373,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.03</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-09-22T09:00:00</Start>
@@ -51562,6 +51568,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.04</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-10-08T09:00:00</Start>
@@ -51740,6 +51750,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>1.05</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -53738,6 +53752,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.01</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-15T09:00:00</Start>
@@ -54044,6 +54062,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.02</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -54415,6 +54437,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.03</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-12T09:00:00</Start>
@@ -54772,6 +54798,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.96</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -55767,6 +55797,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.04</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-11-03T09:00:00</Start>
@@ -56088,6 +56122,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.06</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -56411,6 +56449,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.08</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-11-03T09:00:00</Start>
@@ -56733,6 +56775,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.05</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-19T09:00:00</Start>
@@ -57054,6 +57100,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.07</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -57557,6 +57607,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.11</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-12-02T09:00:00</Start>
@@ -57966,6 +58020,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.12</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -58377,6 +58435,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.13</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-12-02T09:00:00</Start>
@@ -58786,6 +58848,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.14</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -59197,6 +59263,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.15</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-12-02T09:00:00</Start>
@@ -59607,6 +59677,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.16</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-12T09:00:00</Start>
@@ -59880,6 +59954,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.17</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -60155,6 +60233,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.18</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-12T09:00:00</Start>
@@ -60428,6 +60510,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.19</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -60927,6 +61013,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.20</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-03-25T09:00:00</Start>
@@ -61312,6 +61402,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.21</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -61699,6 +61793,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.22</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-03-25T09:00:00</Start>
@@ -62084,6 +62182,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.23</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -62471,6 +62573,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.09</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-12T09:00:00</Start>
@@ -62744,6 +62850,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.10</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -63319,6 +63429,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.24</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-11-20T09:00:00</Start>
@@ -63811,6 +63925,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.25</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-12-31T09:00:00</Start>
@@ -64094,6 +64212,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.26</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -65156,6 +65278,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.29</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-23T09:00:00</Start>
@@ -65421,6 +65547,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.30</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -65688,6 +65818,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.31</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-23T09:00:00</Start>
@@ -65953,6 +66087,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.32</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -66220,6 +66358,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.33</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-23T09:00:00</Start>
@@ -66485,6 +66627,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.34</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -66752,6 +66898,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.35</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-23T09:00:00</Start>
@@ -67018,6 +67168,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.36</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-23T09:00:00</Start>
@@ -67283,6 +67437,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.37</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -68062,6 +68220,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.38</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-15T09:00:00</Start>
@@ -68839,6 +69001,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.39</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -69618,6 +69784,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.40</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-15T09:00:00</Start>
@@ -70395,6 +70565,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.41</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -71174,6 +71348,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.42</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-15T09:00:00</Start>
@@ -71951,6 +72129,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.43</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -72730,6 +72912,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.27</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-15T09:00:00</Start>
@@ -73364,6 +73550,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.28</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-05-15T09:00:00</Start>
@@ -73668,6 +73858,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.44</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-05-08T09:00:00</Start>
@@ -73947,6 +74141,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.45</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -74228,6 +74426,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.46</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-05-08T09:00:00</Start>
@@ -74493,6 +74695,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.47</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -74808,6 +75014,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.48</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-05-15T09:00:00</Start>
@@ -75121,6 +75331,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.49</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -75661,6 +75875,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.50</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-12-01T09:00:00</Start>
@@ -76120,6 +76338,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.51</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-12-01T09:00:00</Start>
@@ -76577,6 +76799,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.52</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -77108,6 +77334,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.53</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-09T09:00:00</Start>
@@ -77638,6 +77868,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.54</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-09T09:00:00</Start>
@@ -78167,6 +78401,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.55</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -80083,6 +80321,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.56</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-12-02T09:00:00</Start>
@@ -80509,6 +80751,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.57</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-12-02T09:00:00</Start>
@@ -80934,6 +81180,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.58</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -81553,6 +81803,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.59</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-12T09:00:00</Start>
@@ -82074,6 +82328,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.60</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -82597,6 +82855,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.61</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-03-25T09:00:00</Start>
@@ -83031,6 +83293,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.62</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-03-25T09:00:00</Start>
@@ -83464,6 +83730,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.63</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -84074,6 +84344,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.65</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-07T09:00:00</Start>
@@ -84537,6 +84811,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.66</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-16T09:00:00</Start>
@@ -84993,6 +85271,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.67</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-12T09:00:00</Start>
@@ -85252,6 +85534,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.68</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -85765,6 +86051,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.69</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-11-04T09:00:00</Start>
@@ -85954,6 +86244,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.70</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -86145,6 +86439,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.71</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-11-04T09:00:00</Start>
@@ -86334,6 +86632,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.72</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -86525,6 +86827,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.73</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -87330,6 +87636,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.74</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-15T09:00:00</Start>
@@ -87519,6 +87829,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.75</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -87921,6 +88235,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.77</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -88844,6 +89162,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.78</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-12-24T09:00:00</Start>
@@ -89765,6 +90087,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.82</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2025-12-24T09:00:00</Start>
@@ -90648,6 +90974,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.85</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-08-28T09:00:00</Start>
@@ -91000,6 +91330,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.79</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -91594,6 +91928,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.80</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-09T09:00:00</Start>
@@ -91922,6 +92260,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.83</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -92505,6 +92847,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.86</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-08-28T09:00:00</Start>
@@ -92695,6 +93041,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.81</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-05-08T09:00:00</Start>
@@ -92884,6 +93234,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.84</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -93448,6 +93802,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.87</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-08T09:00:00</Start>
@@ -93638,6 +93996,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.88</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-08T09:00:00</Start>
@@ -93827,6 +94189,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.89</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -94141,6 +94507,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.90</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-09-29T09:00:00</Start>
@@ -94315,6 +94685,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.91</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -94795,6 +95169,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.94</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-09T09:00:00</Start>
@@ -95250,6 +95628,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>2.95</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-19T09:00:00</Start>
@@ -95663,6 +96045,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.01</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-21T09:00:00</Start>
@@ -95977,6 +96363,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.02</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-21T09:00:00</Start>
@@ -96285,6 +96675,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.03</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-04-06T09:00:00</Start>
@@ -96538,6 +96932,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.04</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-21T09:00:00</Start>
@@ -96725,6 +97123,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.06</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -97091,6 +97493,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.05</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-01-21T09:00:00</Start>
@@ -97278,6 +97684,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.07</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -97635,6 +98045,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.08</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-04-06T09:00:00</Start>
@@ -97987,6 +98401,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.09</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-03-25T09:00:00</Start>
@@ -98170,6 +98588,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.10</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -98509,6 +98931,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.11</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-02-09T09:00:00</Start>
@@ -98692,6 +99118,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.12</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -99021,6 +99451,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.13</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -99535,6 +99969,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.14</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-11T09:00:00</Start>
@@ -99857,6 +100295,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>3.15</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-21T09:00:00</Start>
@@ -100175,6 +100617,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.01</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -102001,6 +102447,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.02</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-05-08T09:00:00</Start>
@@ -102468,6 +102918,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.03</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-15T09:00:00</Start>
@@ -102866,6 +103320,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.05</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -103266,6 +103724,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.06</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-15T09:00:00</Start>
@@ -103441,6 +103903,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.07</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-06-15T09:00:00</Start>
@@ -103615,6 +104081,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.08</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -104002,6 +104472,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.09</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -104528,6 +105002,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.10</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-03-25T09:00:00</Start>
@@ -104702,6 +105180,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.11</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -104878,6 +105360,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.12</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-05-11T09:00:00</Start>
@@ -105053,6 +105539,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.13</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-04-20T09:00:00</Start>
@@ -105227,6 +105717,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.14</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -105557,6 +106051,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.15</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-03-29T09:00:00</Start>
@@ -105732,6 +106230,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.16</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-03-29T09:00:00</Start>
@@ -105900,6 +106402,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.17</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -106397,6 +106903,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>5.01</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -107108,6 +107618,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>5.02</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -108157,6 +108671,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>5.03</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-09T09:00:00</Start>
@@ -108348,6 +108866,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>5.04</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-28T09:00:00</Start>
@@ -108522,6 +109044,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>5.05</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -108698,6 +109224,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>5.06</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-02-26T09:00:00</Start>
@@ -108873,6 +109403,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>5.07</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-03-12T09:00:00</Start>
@@ -109047,6 +109581,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>5.08</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -109376,6 +109914,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.01</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-11-25T09:00:00</Start>
@@ -109565,6 +110107,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.02</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -109756,6 +110302,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.03</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-11-25T09:00:00</Start>
@@ -109945,6 +110495,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.04</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -110321,6 +110875,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.16</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-12-30T09:00:00</Start>
@@ -110511,6 +111069,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.17</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-08-19T09:00:00</Start>
@@ -110691,6 +111253,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.18</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -110882,6 +111448,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.19</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-08-19T09:00:00</Start>
@@ -111062,6 +111632,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.20</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -111253,6 +111827,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.21</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-28T09:00:00</Start>
@@ -111433,6 +112011,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.22</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -111623,6 +112205,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.23</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -111959,6 +112545,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.05</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-11T09:00:00</Start>
@@ -112139,6 +112729,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.06</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -112321,6 +112915,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.07</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-11T09:00:00</Start>
@@ -112501,6 +113099,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.08</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -112845,6 +113447,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.09</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-28T09:00:00</Start>
@@ -113025,6 +113631,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.10</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -113207,6 +113817,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.11</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-28T09:00:00</Start>
@@ -113387,6 +114001,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.12</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -113569,6 +114187,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.13</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-28T09:00:00</Start>
@@ -113750,6 +114372,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.14</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-28T09:00:00</Start>
@@ -113930,6 +114556,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>6.15</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -114266,6 +114896,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>7.01</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-12-30T09:00:00</Start>
@@ -114446,6 +115080,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>7.02</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -114628,6 +115266,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>7.03</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-12-30T09:00:00</Start>
@@ -114808,6 +115450,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>7.04</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -114990,6 +115636,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>7.05</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-12-30T09:00:00</Start>
@@ -115170,6 +115820,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>7.06</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -115505,6 +116159,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>7.07</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -115849,6 +116507,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>8.01</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-11T09:00:00</Start>
@@ -116030,6 +116692,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>8.02</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-01-11T09:00:00</Start>
@@ -116210,6 +116876,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>8.03</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -116899,6 +117569,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>9.01</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2027-02-12T09:00:00</Start>
@@ -117237,6 +117911,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>9.03</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
@@ -118282,6 +118960,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.18</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-14T09:00:00</Start>
@@ -118472,6 +119154,10 @@
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
 			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.19</Value>
+			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
 				<Start>2026-10-14T09:00:00</Start>
@@ -118661,6 +119347,10 @@
 			<ExtendedAttribute>
 				<FieldID>188743737</FieldID>
 				<Value>Seguimiento</Value>
+			</ExtendedAttribute>
+			<ExtendedAttribute>
+				<FieldID>188743740</FieldID>
+				<Value>4.20</Value>
 			</ExtendedAttribute>
 			<Baseline>
 				<Number>0</Number>
