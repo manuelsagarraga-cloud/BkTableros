@@ -97,7 +97,10 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .gcc{flex:1;overflow:auto;background:var(--bg-0)}
 .spl{width:5px;cursor:col-resize;background:var(--b1);flex-shrink:0;z-index:10}.spl:hover,.spl.on{background:var(--ac)}
 
-.gt{border-collapse:collapse;min-width:100%;table-layout:fixed}
+.gt{border-collapse:collapse;table-layout:fixed}
+.gt th{position:sticky}
+.col-rs{position:absolute;right:-3px;top:0;bottom:0;width:7px;cursor:col-resize;z-index:6}
+.col-rs:hover,.col-rs.on{background:var(--ac);opacity:.5}
 .gt th{position:sticky;top:0;z-index:5;background:var(--bg-1);font-size:11px;font-weight:600;color:var(--c1);text-align:left;padding:0 5px;height:var(--ghdr);border-bottom:1px solid var(--b0);white-space:nowrap}
 .gt td{padding:0 5px;height:var(--row);border-bottom:1px solid var(--b1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;vertical-align:middle}
 .gt tr:hover td{background:var(--bg-hover)}
@@ -1079,6 +1082,15 @@ function normName(s){return(s||'').trim().replace(/\s+/g,' ').toLowerCase().norm
 function daysLate(t,now){return t.finish?Math.max(0,Math.floor((now-t.finish)/86400000)):0}
 function taskPath(t){const p=[];let x=t.parent;while(x){p.unshift(x.name);x=x.parent}return p.slice(-2).join(' › ')}
 
+/* Excel: hoja con anchos, filtro y fechas reales */
+function xlsSheet(rows,widths){const ws=XLSX.utils.json_to_sheet(rows,{dateNF:'dd/mm/yyyy'});if(widths)ws['!cols']=widths.map(w=>({wch:w}));if(rows.length&&ws['!ref'])ws['!autofilter']={ref:ws['!ref']};return ws}
+function xlsName(s,used){let n=(s||'Hoja').replace(/[\\\/\?\*\[\]:]/g,'').slice(0,31)||'Hoja';const b=n;let i=2;while(used.has(n.toLowerCase()))n=b.slice(0,27)+' ('+(i++)+')';used.add(n.toLowerCase());return n}
+const XLS_DET_W=[22,12,28,9,50,40,11,11,9,16,9,16,10];
+function xlsDetRow(P,r){return{'Responsable':P.display,'Rol':r.role,'Obra':r.p.name,'WBS':r.t.wbs,'Tarea':r.t.name,'Grupo':taskPath(r.t),'Inicio':r.t.start||'','Fin':r.t.finish||'','Días atraso':r.st==='ov'?r.late:'','Estado':r.st==='ov'?'Vencida':'Vence en 7 días','% avance':r.t.percentComplete,'Rubro':entV(r.t,'Rubro'),'N° Item':entV(r.t,'N° Item')}}
+function xlsResRow(P){return{'Responsable':P.display,'Rol':[...P.roles].join(' / '),'Vencidas':P.ov,'Vencen en 7 días':P.soon,'Obras afectadas':P.ovProjs.size,'Atraso promedio (d)':P.ov?Math.round(P.sumLate/P.ov):0,'Atraso máximo (d)':P.maxLate}}
+const XLS_RES_W=[24,22,10,15,15,18,17];
+function personRows(P,withSoon){return P.rows.filter(r=>r.st==='ov'||(withSoon&&r.st==='soon')).sort((a,b)=>a.p.name.localeCompare(b.p.name)||b.late-a.late)}
+
 function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
   const[scope,setScope]=useState('activas');   /* activas | todas */
   const[tipo,setTipo]=useState('all');         /* all | Recurso | Contratista */
@@ -1166,12 +1178,32 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
 
   const pick=k=>{setSel(k);setTimeout(()=>detailRef.current?.scrollIntoView({behavior:'smooth',block:'start'}),50)};
 
+  const today=new Date().toISOString().slice(0,10);
+  const filtroTxt=()=>`Alcance: ${scope==='activas'?'obras activas':'todas las obras'} · Tipo: ${tipo==='all'?'todos':tipo} · Vencidas hace: ${maxAge?'≤ '+maxAge+' días':'cualquier fecha'}${withSoon?' · incluye las que vencen en 7 días':''} · Generado ${new Date().toLocaleDateString('es-AR')}`;
+  /* Reporte de UNA persona: resumen por obra + detalle */
   const exportXls=()=>{
     if(!selP)return;
-    const rows=[];
-    for(const g of detail)for(const r of g.rows)rows.push({'Responsable':selP.display,'Rol':r.role,'Obra':g.name,'WBS':r.t.wbs,'Tarea':r.t.name,'Grupo':taskPath(r.t),'Inicio':fD(r.t.start),'Fin':fD(r.t.finish),'Días de atraso':r.st==='ov'?r.late:'','Estado':r.st==='ov'?'Vencida':'Vence en 7 días','% avance':r.t.percentComplete,'Rubro':entV(r.t,'Rubro'),'N° Item':entV(r.t,'N° Item')});
-    const ws=XLSX.utils.json_to_sheet(rows);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Vencidas');
-    XLSX.writeFile(wb,`Vencidas_${selP.display.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.xlsx`);
+    const rows=personRows(selP,withSoon);
+    const byObra={};for(const r of rows){const o=byObra[r.p.name]=byObra[r.p.name]||{'Obra':r.p.name,'Vencidas':0,'Vencen en 7 días':0,'Atraso máximo (d)':0};if(r.st==='ov'){o['Vencidas']++;o['Atraso máximo (d)']=Math.max(o['Atraso máximo (d)'],r.late)}else o['Vencen en 7 días']++}
+    const wb=XLSX.utils.book_new();
+    const res=xlsSheet(Object.values(byObra).sort((a,b)=>b['Vencidas']-a['Vencidas']),[32,10,15,17]);
+    XLSX.utils.sheet_add_aoa(res,[[selP.display+' — '+filtroTxt()]],{origin:'F1'});
+    XLSX.utils.book_append_sheet(wb,res,'Resumen por obra');
+    XLSX.utils.book_append_sheet(wb,xlsSheet(rows.map(r=>xlsDetRow(selP,r)),XLS_DET_W),'Detalle');
+    XLSX.writeFile(wb,`Vencidas_${selP.display.replace(/\s+/g,'_')}_${today}.xlsx`,{cellDates:true});
+  };
+  /* Reporte de TODAS las personas visibles: resumen + detalle + una hoja por persona */
+  const exportAll=()=>{
+    const ppl=shown.filter(P=>P.ov>0||(withSoon&&P.soon>0));
+    if(!ppl.length)return;
+    const wb=XLSX.utils.book_new();const used=new Set(['resumen','detalle']);
+    const res=xlsSheet(ppl.map(xlsResRow),XLS_RES_W);
+    XLSX.utils.sheet_add_aoa(res,[[filtroTxt()]],{origin:'I1'});
+    XLSX.utils.book_append_sheet(wb,res,'Resumen');
+    const all=[];for(const P of ppl)for(const r of personRows(P,withSoon))all.push(xlsDetRow(P,r));
+    XLSX.utils.book_append_sheet(wb,xlsSheet(all,XLS_DET_W),'Detalle');
+    for(const P of ppl){const rr=personRows(P,withSoon);if(rr.length)XLSX.utils.book_append_sheet(wb,xlsSheet(rr.map(r=>xlsDetRow(P,r)),XLS_DET_W),xlsName(P.display,used))}
+    XLSX.writeFile(wb,`Vencidas_por_responsable_${today}.xlsx`,{cellDates:true});
   };
 
   const totalOv=shown.filter(P=>!P.area).reduce((s,P)=>s+P.ov,0);
@@ -1197,6 +1229,8 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
       <span className="fl">Vencidas hace</span>
       <select className="fsel" value={maxAge} onChange={e=>setMaxAge(parseInt(e.target.value))}><option value="0">Cualquier fecha</option><option value="30">≤ 30 días</option><option value="90">≤ 90 días</option><option value="180">≤ 180 días</option></select>
       <input className="fin" style={{width:180}} placeholder="Buscar persona…" value={q} onChange={e=>setQ(e.target.value)}/>
+      <label style={{fontSize:12,color:'var(--c1)',display:'flex',alignItems:'center',gap:4,cursor:'pointer'}}><input type="checkbox" checked={withSoon} onChange={e=>setWithSoon(e.target.checked)}/> + vencen en 7 días</label>
+      <button className="btn" onClick={exportAll} title="Un Excel con resumen, detalle y una hoja por persona (respeta los filtros)">↓ Excel todos</button>
       <span style={{marginLeft:'auto',fontSize:12,fontFamily:'var(--fm)',color:'var(--err)',fontWeight:600}}>{totalOv} asignaciones vencidas</span>
     </div>
 
@@ -1234,7 +1268,7 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
         <div style={{fontSize:15,fontWeight:700}}>{selP.display}</div>
         <span style={{fontSize:11,color:'var(--c2)'}}>{[...selP.roles].join(' · ')}</span>
         <label style={{fontSize:12,color:'var(--c1)',display:'flex',alignItems:'center',gap:4,marginLeft:'auto',cursor:'pointer'}}><input type="checkbox" checked={withSoon} onChange={e=>setWithSoon(e.target.checked)}/> Incluir las que vencen en 7 días</label>
-        <button className="btn" onClick={exportXls}>↓ Excel</button>
+        <button className="btn" onClick={exportXls}>↓ Excel de {selP.display.split(' ')[0]}</button>
         <button className="btn btn-g" onClick={()=>setSel(null)}>× Cerrar</button>
       </div>
       <div className="dgrid">
@@ -1967,6 +2001,16 @@ function App(){
   const[fWbs,setFWbs]=useState(99);
   const[fDf,setFDf]=useState('');
   const[fDt,setFDt]=useState('');
+  /* Anchos de columna del Gantt — arrastrables, se recuerdan por navegador */
+  const COLW_DEF=[58,260,62,62,40,64,95,100,80,65,65,60];
+  const[colW,setColW]=useState(()=>{try{const v=JSON.parse(localStorage.getItem('bp360_colw_v2')||'null');if(Array.isArray(v)&&v.length===12)return v}catch(e){}return COLW_DEF});
+  useEffect(()=>{try{localStorage.setItem('bp360_colw_v2',JSON.stringify(colW))}catch(e){}},[colW]);
+  const colDrag=useRef(null);
+  const startColDrag=useCallback((i,e)=>{e.preventDefault();e.stopPropagation();colDrag.current={i,x:e.clientX,w:colW[i]};
+    const mv=ev=>{const d=colDrag.current;if(!d)return;const nw=Math.max(28,Math.min(700,d.w+ev.clientX-d.x));setColW(c=>{const n=[...c];n[d.i]=nw;return n})};
+    const up=()=>{colDrag.current=null;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);document.body.style.cursor=''};
+    document.body.style.cursor='col-resize';document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up)},[colW]);
+  const resetCol=useCallback(i=>setColW(c=>{const n=[...c];n[i]=COLW_DEF[i];return n}),[]);
   const[expMap,setExpMap]=useState({});
   const[dragO,setDragO]=useState(false);
   const[metaList,setMetaList]=useState([]);
@@ -2385,6 +2429,7 @@ function App(){
       {sub==='gantt'&&aData&&<div className="str">
         <button className="btn btn-g btn-i" onClick={()=>expAll(active,aData.tasks)} title="Expandir">{I.exp()}</button>
         <button className="btn btn-g btn-i" onClick={()=>colAll(active,aData.tasks)} title="Colapsar">{I.col()}</button>
+        <button className="btn btn-g" onClick={()=>setColW(COLW_DEF)} title="Restablecer anchos de columna">↔ Columnas</button>
         <div className="seg">{Object.entries(ZM).map(([k,v])=><button key={k} className={zoom===k?'on':''} onClick={()=>setZoom(k)}>{v.l}</button>)}</div>
         <button className="btn btn-g btn-i" onClick={()=>setShowArr(a=>!a)} title="Flechas" style={{color:showArr?'var(--ac)':'var(--c2)'}}>{I.lnk()}</button>
         {aData.hasBL&&<button className="btn btn-g btn-i" onClick={()=>setShowBL(b=>!b)} title="Línea base" style={{color:showBL?'var(--ac)':'var(--c2)'}}>{I.bl()}</button>}
@@ -2421,11 +2466,9 @@ function App(){
 
     {!aLoading&&aData&&sub==='gantt'&&<div className="gw" style={{userSelect:splOn?'none':'auto'}}>
       <div className="gtc" ref={tblRef} style={{width:tblW}} onScroll={onTblScroll}>
-        <table className="gt">
-          <colgroup>
-            <col style={{width:35}}/><col style={{width:170}}/><col style={{width:62}}/><col style={{width:62}}/><col style={{width:38}}/><col style={{width:48}}/><col style={{width:70}}/><col style={{width:75}}/><col style={{width:65}}/><col style={{width:55}}/><col style={{width:55}}/><col style={{width:45}}/>
-          </colgroup>
-          <thead><tr><th>WBS</th><th>Tarea</th><th>Inicio</th><th>Fin</th><th>Dur.</th><th>%</th><th>Recurso</th><th>Contratista</th><th>Rubro</th><th>Nivel</th><th>Fase</th><th>N° Item</th></tr></thead>
+        <table className="gt" style={{width:colW.reduce((a,b)=>a+b,0)}}>
+          <colgroup>{colW.map((w,i)=><col key={i} style={{width:w}}/>)}</colgroup>
+          <thead><tr>{['WBS','Tarea','Inicio','Fin','Dur.','%','Recurso','Contratista','Rubro','Nivel','Fase','N° Item'].map((h,i)=><th key={h} title="Arrastrá el borde derecho para ajustar · doble clic restablece">{h}<span className="col-rs" onMouseDown={e=>startColDrag(i,e)} onDoubleClick={()=>resetCol(i)}/></th>)}</tr></thead>
           <tbody>{visTasks.map(t=>{
             const em=expMap[active]||{};const ov=isOv(t);const ind=t.depth*14;
             return <tr key={t.uid} className={t.isSummary?'sum':''}>
