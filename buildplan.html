@@ -407,6 +407,7 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .pg-opt-e{font-size:9px;color:var(--c2);text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
 .pg-solo{font-size:10px;font-family:var(--ff);border:none;background:none;color:var(--c2);cursor:pointer;padding:2px 4px;border-radius:2px;opacity:0}
 .pg-opt:hover .pg-solo{opacity:1}.pg-solo:hover{color:var(--ac);background:var(--ac-bg)}
+.pg-pop-sep{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--c2);padding:8px 12px 4px;border-top:1px solid var(--b1);margin-top:4px}
 .pg-hdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .pg-scroll{flex:1;min-height:120px;overflow:auto;background:var(--bg-0)}
 .pg-grid{display:grid;grid-template-columns:var(--pgl) auto;min-width:100%}
@@ -1400,7 +1401,7 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
 /* ═══════ Portfolio — Gantt multi-obra (seguimiento de todas las obras en una pantalla) ═══════ */
 const PG_ZOOM={week:{l:'Semana',w:9},month:{l:'Mes',w:3},qtr:{l:'Trim.',w:1}};
 const PG_ROW=32,PG_HDR=46;
-const PG_SEL_KEY='bp360_pfgantt_sel',PG_UI_KEY='bp360_pfgantt_ui';
+const PG_SEL_KEY='bp360_pfgantt_sel_v2',PG_UI_KEY='bp360_pfgantt_ui';
 const PG_EST={all:'Todas',falta:'Falta terminar',ok:'Terminadas',ip:'En curso',ov:'Vencidas'};
 function pgEstOk(t,f){const s=gSt(t);if(f==='all')return true;if(f==='falta')return s!=='ok';return s===f}
 function pgLoad(k,def){try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?def:v}catch(e){return def}}
@@ -1413,7 +1414,7 @@ function ObraPicker({opts,sel,onChange,healthMap}){
   useEffect(()=>{if(!open)return;const h=e=>{if(ref.current&&!ref.current.contains(e.target))setOpen(false)};document.addEventListener('mousedown',h);return()=>document.removeEventListener('mousedown',h)},[open]);
   const selSet=new Set(sel);
   const lq=normName(q);
-  const shown=opts.filter(o=>!lq||normName(o.label).includes(lq));
+  const shown=opts.filter(o=>!lq||normName(o.label).includes(lq)).sort((a,b)=>(b.activa-a.activa)||a.name.localeCompare(b.name));
   const tog=k=>onChange(selSet.has(k)?sel.filter(x=>x!==k):[...sel,k]);
   const label=!sel.length?'Ninguna obra':sel.length===1?(opts.find(o=>o.key===sel[0])?.label||'1 obra'):sel.length===opts.length?`Todas las obras (${sel.length})`:`${sel.length} obras seleccionadas`;
   const hcol={g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'};
@@ -1427,14 +1428,14 @@ function ObraPicker({opts,sel,onChange,healthMap}){
         <button onClick={()=>onChange([])}>Ninguna</button>
       </div>
       <div className="pg-pop-list">
-        {shown.map(o=>{const h=healthMap?.[o.key];return <label key={o.key} className="pg-opt">
+        {shown.map((o,i)=>{const h=healthMap?.[o.key];return <Fragment key={o.key}>{!o.activa&&(i===0||shown[i-1].activa)&&<div className="pg-pop-sep">Finalizadas / canceladas</div>}<label className="pg-opt">
           <input type="checkbox" checked={selSet.has(o.key)} onChange={()=>tog(o.key)}/>
           {o.cod?<span className="cod">{o.cod}</span>:<span className="cod off">—</span>}
           <span className="pg-opt-n" title={o.name}>{o.name}</span>
           {o.estado&&<span className="pg-opt-e">{o.estado}</span>}
           <span className="pg-hdot" style={{background:h?hcol[h.color]:'var(--b0)'}} title={h?h.label:'Sin analizar'}/>
           <button className="pg-solo" onClick={e=>{e.preventDefault();e.stopPropagation();onChange([o.key]);setOpen(false)}} title="Ver solo esta obra">solo</button>
-        </label>})}
+        </label></Fragment>})}
         {!shown.length&&<div style={{padding:12,fontSize:12,color:'var(--c2)'}}>Sin coincidencias</div>}
       </div>
     </div>}
@@ -1461,7 +1462,7 @@ function PortfolioGantt({projList,projData,metaList,healthMap,onOpenObra}){
   /* Obras disponibles */
   const opts=useMemo(()=>(projList||[]).map(p=>{const m=matchMeta(p.name,metaList);const estado=(m?.estado||'').trim();
     return{key:p.key,name:p.name,cod:p.cod,label:pLabel(p),estado,activa:pgIsActive(estado),p}}),[projList,metaList]);
-  const sel=useMemo(()=>{const keys=new Set(opts.map(o=>o.key));return selRaw?selRaw.filter(k=>keys.has(k)):opts.filter(o=>o.activa).map(o=>o.key)},[selRaw,opts]);
+  const sel=useMemo(()=>{const keys=new Set(opts.map(o=>o.key));if(selRaw)return selRaw.filter(k=>keys.has(k));const first=opts.find(o=>o.activa&&o.p&&!o.p.local)||opts[0];return first?[first.key]:[]},[selRaw,opts]);
   const setSel=v=>{setSelRaw(v);pgSave(PG_SEL_KEY,v)};
 
   /* Filas: cabecera de obra + tareas */
