@@ -390,6 +390,10 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 <div id="root"></div>
 <script type="text/babel">
 const {useState,useEffect,useRef,useCallback,useMemo,Fragment}=React;
+/* ═══════ N° Item = Texto4 (MS Project) ═══════
+   Desde oct-2026 el N° Item vive en Texto4 (texto libre: admite letras y ceros, ej. "2.01", "A2.10").
+   Tiene prioridad sobre el campo enterprise "N° Item". Se compara SIEMPRE como texto: "2.10" ≠ "2.1" ≠ "2.100". */
+const FID_TEXTO4='188743740';
 /* ═══════ Enterprise field mapping ═══════ */
 const ENT={
   'b408001':{n:'Salud',t:'guid'},'b408007':{n:'Tableros',t:'guid'},'b408008':{n:'Nivel',t:'guid'},
@@ -682,7 +686,10 @@ function ProjectInfo({meta}){
 
 /* ═══════ PARSER MSPDI ═══════ */
 function parseMSPDI(xmlText){
+  /* MS Project deja caracteres de control en Notas (ej. \x0B) → XML inválido. Se reemplazan por espacio. */
+  xmlText=String(xmlText).replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,' ');
   const p=new DOMParser(),doc=p.parseFromString(xmlText,'text/xml');
+  if(doc.getElementsByTagName('parsererror').length)console.warn('XML con errores de formato: puede faltar información');
   const ns=doc.documentElement.namespaceURI;
   const g=(el,tag)=>{const e=ns?el.getElementsByTagNameNS(ns,tag)[0]:el.getElementsByTagName(tag)[0];return e?e.textContent.trim():''};
   const ga=(el,tag)=>ns?el.getElementsByTagNameNS(ns,tag):el.getElementsByTagName(tag);
@@ -748,8 +755,10 @@ function parseMSPDI(xmlText){
     }
     /* Standard ExtendedAttribute — with fallback for Text1/2/3 */
     const textFieldMap={'188743731':'Rubro','188743732':'Nivel','188743733':'Tableros'};
+    let texto4='';
     for(const ea of ga(t,'ExtendedAttribute')){
       const fid=g(ea,'FieldID'),val=g(ea,'Value');
+      if(fid===FID_TEXTO4){texto4=(val||'').trim();continue}
       if(fid&&val){
         const d=eaDefs[fid];
         let label=d?(d.al||d.fn):`F${fid}`;
@@ -758,6 +767,7 @@ function parseMSPDI(xmlText){
         ent[label]={value:val,guid:false};
       }
     }
+    if(texto4)ent['N° Item']={value:texto4,guid:false};
 
     tasks.push({
       uid,name:nm,start:st?new Date(st):null,finish:fn?new Date(fn):null,
@@ -1783,8 +1793,51 @@ function ProcurementView({data}){
 /* ═══════ COMPUTO-OBRAS INTEGRATION ═══════ */
 const COMPUTO_URL='https://beuzmwrhqlmjoplsillf.supabase.co';
 const COMPUTO_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldXptd3JocWxtam9wbHNpbGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc1NDcsImV4cCI6MjA5NTA2MzU0N30.Rw82cnyzp2S2Alc6lWiBCDxVL8u_8wAfCTConDGpYFE';
-let _csb=null;
-function getComputoSb(){if(!_csb)_csb=window.supabase.createClient(COMPUTO_URL,COMPUTO_KEY);return _csb}
+/* ── Sesión de Cómputo ──
+   Cómputo-Obras y BkTableros viven en el mismo dominio (manuelsagarraga-cloud.github.io), así que comparten
+   localStorage: si ya entraste a Cómputo en este navegador, el tablero usa esa misma sesión (sb_access_token).
+   Sin sesión no se puede leer nada: las tablas de Cómputo están protegidas por empresa (RLS). */
+function _jwtExp(t){try{return JSON.parse(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))).exp*1000}catch(e){return 0}}
+function _guardarSesionComputo(d){
+  localStorage.setItem('sb_access_token',d.access_token);
+  localStorage.setItem('sb_refresh_token',d.refresh_token||'');
+  if(d.user)localStorage.setItem('sb_user',JSON.stringify(d.user));
+}
+async function computoToken(){
+  let at='',rt='';
+  try{at=localStorage.getItem('sb_access_token')||'';rt=localStorage.getItem('sb_refresh_token')||''}catch(e){return null}
+  if(at&&_jwtExp(at)>Date.now()+60000)return at;
+  if(!rt)return null;
+  try{
+    const r=await fetch(COMPUTO_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{'Content-Type':'application/json',apikey:COMPUTO_KEY},body:JSON.stringify({refresh_token:rt})});
+    if(!r.ok)return null;
+    const d=await r.json();_guardarSesionComputo(d);return d.access_token;
+  }catch(e){return null}
+}
+async function computoLogin(email,pass){
+  const r=await fetch(COMPUTO_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json',apikey:COMPUTO_KEY},body:JSON.stringify({email,password:pass})});
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok){const m=(d.error_description||d.msg||d.error||'').toLowerCase();throw new Error(m.includes('invalid')||m.includes('credentials')?'Email o contraseña incorrectos.':(d.error_description||d.msg||'No se pudo ingresar'))}
+  _guardarSesionComputo(d);
+  for(const k of Object.keys(_computoCache))delete _computoCache[k];
+}
+let _csb=null,_csbTok='';
+async function getComputoSb(){
+  const tok=await computoToken();
+  if(!tok)return null;
+  if(!_csb||_csbTok!==tok){_csbTok=tok;_csb=window.supabase.createClient(COMPUTO_URL,COMPUTO_KEY,{global:{headers:{Authorization:'Bearer '+tok}},auth:{persistSession:false,autoRefreshToken:false}})}
+  return _csb;
+}
+/* N° de ítem → parte numérica, igual que Cómputo: "[JS 2.35*]" → "2.35" */
+function nItemNum(raw){
+  let t=String(raw==null?'':raw).trim().replace(/^\[|\]$/g,'').replace(/\s+/g,'').replace(/\*+$/,'');
+  if(!t)return'';
+  t=t.replace(/,/g,'.').toUpperCase().replace(/^([A-Z]+)[.\-_]+(?=\d)/,'$1');
+  const m=t.match(/^([A-Z]{0,4})(\d+\.\d+)$/);return m?m[2]:'';
+}
+/* "10.01" y "10.1" → "10.1" (segundo intento, solo si no hay ambigüedad) */
+const canonNum=n=>n?n.split('.').map(x=>String(parseInt(x,10))).join('.'):'';
+const _vacioComputo={coefs:[],coefMap:{},materiales:[],matByName:{},mediciones:[],medByCoef:{},medByItem:{},medByCanon:{},coefById:{},hasItems:false,obra:null};
 
 /* Cache computo data per project code */
 const _computoCache={};
@@ -1792,10 +1845,12 @@ async function fetchComputoForProject(projectCode){
   if(!projectCode)return null;
   if(_computoCache[projectCode])return _computoCache[projectCode];
   try{
-    const sb=getComputoSb();
+    const sb=await getComputoSb();
+    if(!sb)return{..._vacioComputo,loaded:false,needLogin:true};
     /* Fetch coeficientes (task recipes - shared, read-only) */
     const{data:coefs,error:e1}=await sb.from('coeficientes').select('id,cod,nombre,rubro,unidad,mats');
-    if(e1)throw e1;
+    if(e1){if(/JWT|401|expired/i.test(e1.message||''))return{..._vacioComputo,loaded:false,needLogin:true};throw e1}
+    if(!coefs||!coefs.length)return{..._vacioComputo,loaded:false,needLogin:true};
     /* Fetch materiales (base materials - shared, read-only) */
     const{data:mats,error:e2}=await sb.from('materiales').select('id,cod,nombre,unidad,cat,precio');
     if(e2)throw e2;
@@ -1805,26 +1860,61 @@ async function fetchComputoForProject(projectCode){
     if(obras&&obras.length){
       obra=obras[0];
       const{data:meds}=await sb.from('mediciones').select('*').eq('obra_id',obra.id);
-      if(meds)mediciones=meds;
+      if(meds&&meds.length){
+        /* Si hay varias revisiones se usa la que tiene más mediciones (igual que Cómputo), para no sumar dos veces */
+        const cnt={};for(const m of meds){const r=m.revision||'Rev00';cnt[r]=(cnt[r]||0)+1}
+        const rev=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0];
+        mediciones=meds.filter(m=>(m.revision||'Rev00')===rev);obra={...obra,_rev:rev};
+      }
     }
     /* Build lookup maps */
-    const coefMap={};for(const c of(coefs||[]))coefMap[c.cod]=c;
+    const coefMap={},coefById={};for(const c of(coefs||[])){coefMap[c.cod]=c;coefById[String(c.id)]=c}
     const matByName={};for(const m of(mats||[]))matByName[m.nombre]=m;
     /* Build medicion lookup by coef_id */
     const medByCoef={};for(const m of mediciones){if(!medByCoef[m.coef_id])medByCoef[m.coef_id]=[];medByCoef[m.coef_id].push(m)}
-    const result={obra,coefs:coefs||[],coefMap,materiales:mats||[],matByName,mediciones,medByCoef,loaded:true};
+    /* Ítem de presupuesto de la obra (mediciones.item_cod) ↔ N° Item del cronograma */
+    /* El N° viene en item_cod o al inicio de la descripción: "[2.34] ..." */
+    const medByItem={},medByCanon={};
+    for(const m of mediciones){
+      const k=nItemNum(m.item_cod)||nItemNum(((m.descripcion||'').match(/^\s*\[([^\]]+)\]/)||[])[1]);
+      if(!k)continue;
+      (medByItem[k]=medByItem[k]||[]).push(m);
+      const c=canonNum(k);(medByCanon[c]=medByCanon[c]||{keys:new Set(),meds:[]});medByCanon[c].keys.add(k);medByCanon[c].meds.push(m);
+    }
+    const result={obra,coefs:coefs||[],coefMap,coefById,materiales:mats||[],matByName,mediciones,medByCoef,medByItem,medByCanon,hasItems:Object.keys(medByItem).length>0,loaded:true};
     _computoCache[projectCode]=result;
     return result;
   }catch(err){
     console.warn('Computo fetch error:',err);
-    return{loaded:false,error:err.message||'Error de conexión',coefs:[],coefMap:{},materiales:[],matByName:{},mediciones:[],medByCoef:{},obra:null};
+    return{..._vacioComputo,loaded:false,error:err.message||'Error de conexión'};
   }
 }
 
 /* Get materials for a task by its N° Item code */
 function getTaskMaterials(computoData,nItem){
-  if(!computoData||!nItem||!computoData.coefMap[nItem])return null;
-  const coef=computoData.coefMap[nItem];
+  if(!computoData||!nItem)return null;
+  const key=nItemNum(nItem)||String(nItem).trim();
+  /* 1) Vínculo principal: N° Item (Texto4) = ítem del presupuesto de ESA obra */
+  let iMeds=computoData.medByItem&&computoData.medByItem[key];
+  if(!(iMeds&&iMeds.length)){const c=computoData.medByCanon&&computoData.medByCanon[canonNum(key)];if(c&&c.keys.size===1)iMeds=c.meds}
+  if(iMeds&&iMeds.length){
+    const agg={};let tot=0,coef0=null;
+    for(const med of iMeds){
+      const c=computoData.coefById[String(med.coef_id)];if(!c)continue;
+      coef0=coef0||c;const q=Number(med.cantidad)||0;tot+=q;
+      for(const m of(c.mats||[])){
+        const k=m.matRef+'|'+(m.un||'');
+        if(!agg[k])agg[k]={...m,materialInfo:computoData.matByName[m.matRef],_need:0};
+        agg[k]._need+=q*(Number(m.coef)||0);
+      }
+    }
+    if(!coef0)return null;
+    const items=Object.values(agg).map(m=>({...m,cantidadNecesaria:m._need.toFixed(2),cantidadComercial:m.divisor&&m.divisor>1?Math.ceil(m._need/m.divisor):m._need,totalMedido:tot}));
+    return{coef:coef0,items,mediciones:iMeds,totalMedido:tot,via:'item'};
+  }
+  /* 2) Fallback histórico (código de catálogo) — solo si la obra no tiene ítems cargados */
+  if(computoData.hasItems||!computoData.coefMap[key])return null;
+  const coef=computoData.coefMap[key];
   if(!coef.mats||!coef.mats.length)return{coef,items:[],mediciones:[]};
   const meds=computoData.medByCoef[coef.id]||[];
   const totalQty=meds.reduce((s,m)=>s+(m.cantidad||0),0);
@@ -1854,14 +1944,30 @@ function MatTooltipSection({computoData,nItem}){
 }
 
 /* ═══════ Materials View (full tab) ═══════ */
-function MaterialsView({data,computoData,visTasks}){
+function ComputoLogin({onOk}){
+  const[email,setEmail]=useState('');const[pass,setPass]=useState('');const[err,setErr]=useState('');const[busy,setBusy]=useState(false);
+  const go=async e=>{e.preventDefault();if(!email||!pass){setErr('Ingresá email y contraseña.');return}
+    setBusy(true);setErr('');try{await computoLogin(email.trim(),pass);onOk&&onOk()}catch(x){setErr(x.message||'Error de conexión')}finally{setBusy(false)}};
+  return <div className="mat-empty"><form onSubmit={go} style={{maxWidth:320,margin:'0 auto',display:'flex',flexDirection:'column',gap:8,textAlign:'left'}}>
+    <div style={{fontSize:15,fontWeight:700,color:'var(--c0)'}}>Ingresá con tu usuario de Cómputo</div>
+    <div style={{fontSize:12}}>Los cómputos están protegidos por empresa. Usá el mismo email y contraseña de la app Cómputo de Obras (si ya entraste ahí en este navegador, no hace falta).</div>
+    <input className="fin" style={{width:'100%'}} type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} autoComplete="username"/>
+    <input className="fin" style={{width:'100%'}} type="password" placeholder="Contraseña" value={pass} onChange={e=>setPass(e.target.value)} autoComplete="current-password"/>
+    {err&&<div style={{color:'var(--err)',fontSize:12}}>{err}</div>}
+    <button className="btn" type="submit" disabled={busy} style={{background:'var(--ac)',color:'#fff',borderColor:'var(--ac)'}}>{busy?'Ingresando…':'Ingresar'}</button>
+  </form></div>;
+}
+
+function MaterialsView({data,computoData,visTasks,onLogin}){
   const[viewMode,setViewMode]=useState('gantt');/*gantt|list|period*/
   const[periodMode,setPeriodMode]=useState('month');/*week|month*/
   const[selTask,setSelTask]=useState(null);
   const[fRubro,setFRubro]=useState('all');
   const[fMat,setFMat]=useState('');
 
-  if(!computoData||!computoData.loaded)return <div className="mat-empty">
+  if(computoData&&computoData.needLogin)return <ComputoLogin onOk={onLogin}/>;
+  if(!computoData)return <div className="ld"><div className="sp"/><span>Conectando con Cómputo…</span></div>;
+  if(!computoData.loaded)return <div className="mat-empty">
     <div style={{fontSize:16,marginBottom:8}}>⚠️ No se pudo conectar con Cómputo de Obras</div>
     <div>{computoData?.error||'Verificá la conexión a internet e intentá de nuevo.'}</div>
   </div>;
@@ -1871,6 +1977,7 @@ function MaterialsView({data,computoData,visTasks}){
     const matMap={};
     const taskMats=[];
     for(const t of(visTasks||data.tasks)){
+      if(t.isSummary)continue;
       const nItem=entV(t,'N° Item');
       if(!nItem)continue;
       const info=getTaskMaterials(computoData,nItem);
@@ -2060,6 +2167,7 @@ function App(){
   const clientProj=useMemo(()=>{const p=new URLSearchParams(window.location.search);return p.get('proyecto')||p.get('project')||null},[]);
 
   const[computoData,setComputoData]=useState({});
+  const[computoAuth,setComputoAuth]=useState(0);
 
   const scrollRef=useRef({v:0,src:null});
   const tblRef=useRef(null);
@@ -2084,8 +2192,7 @@ function App(){
       if(r)setComputoData(prev=>({...prev,[active]:r}));
       /* If code didn't work, try matching by name */
       if((!r||!r.obra)&&projName){
-        const sb=getComputoSb();
-        sb.from('obras').select('*').then(({data:allObras})=>{
+        getComputoSb().then(sb=>sb?sb.from('obras').select('*'):{data:null}).then(({data:allObras})=>{
           if(!allObras)return;
           const norm=normalizeForMatch(projName);
           const match=allObras.find(o=>normalizeForMatch(o.nombre).includes(norm)||norm.includes(normalizeForMatch(o.nombre)));
@@ -2097,7 +2204,7 @@ function App(){
         });
       }
     });
-  },[active,pData,metaList,pList]);
+  },[active,pData,metaList,pList,computoAuth]);
 
   /* Load manifest + project metadata */
   useEffect(()=>{
@@ -2534,7 +2641,7 @@ function App(){
               <td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Rubro')||'—'}</td>
               <td style={{fontSize:11,color:'var(--c1)'}}>{entV(t,'Nivel')||'—'}</td>
               <td style={{fontSize:10,color:'var(--c2)'}}>{entV(t,'Tableros')||'—'}</td>
-              <td className="mono" style={{fontSize:10}}>{entV(t,'N° Item')||'—'}{entV(t,'N° Item')&&computoData[active]?.coefMap?.[entV(t,'N° Item')]&&<span className="mat-badge" title="Tiene materiales en cómputo">⬡</span>}</td>
+              <td className="mono" style={{fontSize:10}}>{entV(t,'N° Item')||'—'}{!t.isSummary&&entV(t,'N° Item')&&getTaskMaterials(computoData[active],entV(t,'N° Item'))?.items?.length>0&&<span className="mat-badge" title="Tiene materiales en cómputo">⬡</span>}</td>
             </tr>
           })}</tbody>
         </table>
@@ -2545,7 +2652,7 @@ function App(){
 
     {!aLoading&&aData&&sub==='semana'&&<WeekView data={aData}/>}
     {!aLoading&&aData&&sub==='compras'&&<ProcurementView data={aData}/>}
-    {!aLoading&&aData&&sub==='materiales'&&<MaterialsView data={aData} computoData={computoData[active]||null} visTasks={visTasks}/>}
+    {!aLoading&&aData&&sub==='materiales'&&<MaterialsView key={active+(computoData[active]?.loaded?':ok':computoData[active]?.needLogin?':login':':x')} data={aData} computoData={computoData[active]||null} visTasks={visTasks} onLogin={()=>{setComputoData({});setComputoAuth(n=>n+1)}}/>}
     {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData} health={healthMap[active]} proj={aProj}/>}
     {!aLoading&&aData&&sub==='demoras'&&<DemorasView data={aData}/>}
 
