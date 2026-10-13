@@ -384,6 +384,55 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .rv-mx th{vertical-align:bottom;padding:6px 4px}
 .rv-mx td{padding:5px 8px}
 .rv-vh{writing-mode:vertical-rl;transform:rotate(180deg);max-height:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;margin:0 auto}
+
+/* ═══════ Portfolio — Gantt multi-obra ═══════ */
+.pg-root{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;--pgl:340px}
+.pg-ctrl{gap:8px}
+.pg-chk{font-size:11px;color:var(--c1);display:flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap}
+.pg-legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:5px 16px;font-size:10px;color:var(--c1);background:var(--bg-el);border-bottom:1px solid var(--b1);flex-shrink:0}
+.pg-legend span{display:inline-flex;align-items:center;gap:5px}
+.pg-legend i{display:inline-block;width:14px;height:8px;border-radius:2px}
+.pg-legend i.hatch{background:repeating-linear-gradient(45deg,rgba(158,1,1,.45) 0 2px,var(--bar-bg) 2px 5px)}
+.pg-pick{position:relative}
+.pg-pick-btn{min-width:200px;max-width:280px;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:5px 26px 5px 10px;font-size:12px;font-weight:600}
+.pg-pop{position:absolute;top:calc(100% + 4px);left:0;z-index:500;width:380px;max-width:92vw;background:var(--bg-el);border:1px solid var(--b0);border-radius:var(--r-m);box-shadow:var(--sh-l);overflow:hidden}
+.pg-pop .si{font-size:13px;padding:10px 12px}
+.pg-pop-q{display:flex;gap:4px;padding:6px 10px;border-bottom:1px solid var(--b1);background:var(--bg-1)}
+.pg-pop-q button{font-size:11px;font-family:var(--ff);font-weight:600;border:1px solid var(--b0);background:var(--bg-el);color:var(--c1);border-radius:var(--r-s);padding:3px 10px;cursor:pointer}
+.pg-pop-q button:hover{color:var(--ac);border-color:var(--ac)}
+.pg-pop-list{max-height:340px;overflow-y:auto;padding:4px 0}
+.pg-opt{display:flex;align-items:center;gap:6px;padding:6px 12px;font-size:12px;cursor:pointer}
+.pg-opt:hover{background:var(--bg-hover)}
+.pg-opt-n{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pg-opt-e{font-size:9px;color:var(--c2);text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+.pg-solo{font-size:10px;font-family:var(--ff);border:none;background:none;color:var(--c2);cursor:pointer;padding:2px 4px;border-radius:2px;opacity:0}
+.pg-opt:hover .pg-solo{opacity:1}.pg-solo:hover{color:var(--ac);background:var(--ac-bg)}
+.pg-hdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pg-scroll{flex:1;min-height:120px;overflow:auto;background:var(--bg-0)}
+.pg-grid{display:grid;grid-template-columns:var(--pgl) auto;min-width:100%}
+.pg-corner{position:sticky;top:0;left:0;z-index:6;height:46px;display:flex;align-items:center;gap:6px;padding:0 8px 0 12px;background:var(--bg-1);border-bottom:1px solid var(--b0);border-right:1px solid var(--b0);font-size:11px;font-weight:700;color:var(--c1);text-transform:uppercase;letter-spacing:.4px}
+.pg-thead{position:sticky;top:0;z-index:5}
+.pg-names{position:sticky;left:0;z-index:4;background:var(--bg-el);border-right:1px solid var(--b0)}
+.pg-n{height:32px;display:flex;align-items:center;gap:6px;padding:0 10px 0 6px;border-bottom:1px solid var(--b1);font-size:12px;cursor:pointer;white-space:nowrap}
+.pg-n:hover{background:var(--bg-hover)}
+.pg-n.hl{background:var(--ac-bg);box-shadow:inset 3px 0 0 var(--ac)}
+.pg-n-obra{background:var(--bg-sum);font-weight:700;font-size:13px}
+.pg-n-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.pg-n-m{font-family:var(--fm);font-size:10px;color:var(--c2);flex-shrink:0;font-weight:500}
+.pg-tog{width:16px;display:flex;align-items:center;justify-content:center;color:var(--c2);flex-shrink:0}
+.pg-sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.pg-body{position:relative}
+.pg-split{height:7px;flex-shrink:0;cursor:row-resize;background:var(--bg-1);border-top:1px solid var(--b0);border-bottom:1px solid var(--b0);display:flex;align-items:center;justify-content:center}
+.pg-split span{width:40px;height:3px;border-radius:2px;background:var(--b0)}
+.pg-split:hover span{background:var(--ac)}
+.pg-det{flex-shrink:0;display:flex;flex-direction:column;background:var(--bg-el);min-height:36px}
+.pg-det-hdr{display:flex;align-items:center;gap:10px;padding:4px 16px;height:36px;flex-shrink:0;border-bottom:1px solid var(--b1)}
+.pg-det-scroll{flex:1;overflow:auto;min-height:0}
+.pg-dt{margin:0;border:none;border-radius:0}
+.pg-dt thead th{position:sticky;top:0;z-index:1;white-space:nowrap;user-select:none}
+.pg-dt tfoot td{position:sticky;bottom:0;background:var(--bg-1);border-top:1px solid var(--b0);font-size:12px}
+.pg-dt tr{cursor:pointer}.pg-dt tr.hl td{background:var(--ac-bg)}
+@media(max-width:768px){.pg-root{--pgl:170px}.pg-pick-btn{min-width:140px}.pg-legend{display:none}}
 </style>
 </head>
 <body>
@@ -1348,14 +1397,356 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
   </div>;
 }
 
-function Portfolio({projList,projData,metaList,healthMap,onOpen}){
-  const[mode,setMode]=useState('resp');
+/* ═══════ Portfolio — Gantt multi-obra (seguimiento de todas las obras en una pantalla) ═══════ */
+const PG_ZOOM={week:{l:'Semana',w:9},month:{l:'Mes',w:3},qtr:{l:'Trim.',w:1}};
+const PG_ROW=32,PG_HDR=46;
+const PG_SEL_KEY='bp360_pfgantt_sel',PG_UI_KEY='bp360_pfgantt_ui';
+const PG_EST={all:'Todas',falta:'Falta terminar',ok:'Terminadas',ip:'En curso',ov:'Vencidas'};
+function pgEstOk(t,f){const s=gSt(t);if(f==='all')return true;if(f==='falta')return s!=='ok';return s===f}
+function pgLoad(k,def){try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?def:v}catch(e){return def}}
+function pgSave(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function pgIsActive(estado){const e=(estado||'').trim();return e!=='Finalizado'&&e!=='Cancelada'&&e!=='Cancelado'}
+
+/* Selector desplegable de obras con casillas */
+function ObraPicker({opts,sel,onChange,healthMap}){
+  const[open,setOpen]=useState(false);const[q,setQ]=useState('');const ref=useRef(null);
+  useEffect(()=>{if(!open)return;const h=e=>{if(ref.current&&!ref.current.contains(e.target))setOpen(false)};document.addEventListener('mousedown',h);return()=>document.removeEventListener('mousedown',h)},[open]);
+  const selSet=new Set(sel);
+  const lq=normName(q);
+  const shown=opts.filter(o=>!lq||normName(o.label).includes(lq));
+  const tog=k=>onChange(selSet.has(k)?sel.filter(x=>x!==k):[...sel,k]);
+  const label=!sel.length?'Ninguna obra':sel.length===1?(opts.find(o=>o.key===sel[0])?.label||'1 obra'):sel.length===opts.length?`Todas las obras (${sel.length})`:`${sel.length} obras seleccionadas`;
+  const hcol={g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'};
+  return <div className="pg-pick" ref={ref}>
+    <button className="fsel pg-pick-btn" onClick={()=>setOpen(o=>!o)} title="Elegir obras">{label}</button>
+    {open&&<div className="pg-pop">
+      <input className="si" autoFocus placeholder="Buscar obra…" value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>{if(e.key==='Escape')setOpen(false)}}/>
+      <div className="pg-pop-q">
+        <button onClick={()=>onChange(opts.filter(o=>o.activa).map(o=>o.key))}>Activas</button>
+        <button onClick={()=>onChange(opts.map(o=>o.key))}>Todas</button>
+        <button onClick={()=>onChange([])}>Ninguna</button>
+      </div>
+      <div className="pg-pop-list">
+        {shown.map(o=>{const h=healthMap?.[o.key];return <label key={o.key} className="pg-opt">
+          <input type="checkbox" checked={selSet.has(o.key)} onChange={()=>tog(o.key)}/>
+          {o.cod?<span className="cod">{o.cod}</span>:<span className="cod off">—</span>}
+          <span className="pg-opt-n" title={o.name}>{o.name}</span>
+          {o.estado&&<span className="pg-opt-e">{o.estado}</span>}
+          <span className="pg-hdot" style={{background:h?hcol[h.color]:'var(--b0)'}} title={h?h.label:'Sin analizar'}/>
+          <button className="pg-solo" onClick={e=>{e.preventDefault();e.stopPropagation();onChange([o.key]);setOpen(false)}} title="Ver solo esta obra">solo</button>
+        </label>})}
+        {!shown.length&&<div style={{padding:12,fontSize:12,color:'var(--c2)'}}>Sin coincidencias</div>}
+      </div>
+    </div>}
+  </div>;
+}
+
+function PortfolioGantt({projList,projData,metaList,healthMap,onOpenObra}){
+  const ui0=pgLoad(PG_UI_KEY,{});
+  const[selRaw,setSelRaw]=useState(()=>pgLoad(PG_SEL_KEY,null));
+  const[zoom,setZoom]=useState(PG_ZOOM[ui0.zoom]?ui0.zoom:'month');
+  const[nivel,setNivel]=useState(ui0.nivel||'tareas');   /* fases | tareas | todo */
+  const[fEst,setFEst]=useState(ui0.fEst||'all');
+  const[showBL,setShowBL]=useState(ui0.showBL!==false);
+  const[showLbl,setShowLbl]=useState(ui0.showLbl!==false);
+  const[q,setQ]=useState('');
+  const[collapsed,setCollapsed]=useState({});
+  const[hl,setHl]=useState(null);
+  const[sort,setSort]=useState({col:'start',dir:1});
+  const[detH,setDetH]=useState(()=>pgLoad('bp360_pfgantt_det',240));
+  const[ttInfo,setTT]=useState(null);
+  const scRef=useRef(null),detRef=useRef(null),scrolledFor=useRef('');
+  useEffect(()=>{pgSave(PG_UI_KEY,{zoom,nivel,fEst,showBL,showLbl})},[zoom,nivel,fEst,showBL,showLbl]);
+
+  /* Obras disponibles */
+  const opts=useMemo(()=>(projList||[]).map(p=>{const m=matchMeta(p.name,metaList);const estado=(m?.estado||'').trim();
+    return{key:p.key,name:p.name,cod:p.cod,label:pLabel(p),estado,activa:pgIsActive(estado),p}}),[projList,metaList]);
+  const sel=useMemo(()=>{const keys=new Set(opts.map(o=>o.key));return selRaw?selRaw.filter(k=>keys.has(k)):opts.filter(o=>o.activa).map(o=>o.key)},[selRaw,opts]);
+  const setSel=v=>{setSelRaw(v);pgSave(PG_SEL_KEY,v)};
+
+  /* Filas: cabecera de obra + tareas */
+  const rows=useMemo(()=>{
+    const out=[];const selSet=new Set(sel);const lq=normName(q);
+    for(const o of opts){
+      if(!selSet.has(o.key))continue;
+      const d=projData[o.key];
+      if(!d){out.push({type:'load',key:'L|'+o.key,o});continue}
+      const leaves=d.tasks.filter(t=>!t.isSummary);
+      const sum={start:null,finish:null,blS:null,blF:null,done:0,ov:0,tot:leaves.length,avg:0};
+      let acc=0;
+      for(const t of leaves){
+        if(t.start&&(!sum.start||t.start<sum.start))sum.start=t.start;
+        if(t.finish&&(!sum.finish||t.finish>sum.finish))sum.finish=t.finish;
+        const b=t.baselines[0];
+        if(b){if(b.start&&(!sum.blS||b.start<sum.blS))sum.blS=b.start;if(b.finish&&(!sum.blF||b.finish>sum.blF))sum.blF=b.finish}
+        if(t.percentComplete>=100)sum.done++;if(isOv(t))sum.ov++;acc+=t.percentComplete;
+      }
+      sum.avg=leaves.length?Math.round(acc/leaves.length):0;
+      const ts=d.tasks.filter(t=>{
+        if(nivel==='tareas'&&t.isSummary)return false;
+        if(nivel==='fases'&&!((t.isSummary&&t.depth<=1)||t.isMilestone))return false;
+        if(!pgEstOk(t,fEst))return false;
+        if(lq&&!normName(t.name).includes(lq))return false;
+        return true;
+      });
+      if(lq&&!ts.length)continue;
+      out.push({type:'obra',key:'O|'+o.key,o,sum,count:ts.length});
+      if(!collapsed[o.key])for(const t of ts)out.push({type:'task',key:o.key+'|'+t.uid,pk:o.key,o,t});
+    }
+    return out;
+  },[opts,sel,projData,nivel,fEst,q,collapsed]);
+
+  const taskRows=useMemo(()=>rows.filter(r=>r.type==='task'),[rows]);
+  const rowIdx=useMemo(()=>{const m={};rows.forEach((r,i)=>m[r.key]=i);return m},[rows]);
+
+  /* Rango del eje temporal */
+  const w=PG_ZOOM[zoom].w;
+  const[cStart,cEnd]=useMemo(()=>{
+    let mn=null,mx=null;const upd=d=>{if(!d)return;if(!mn||d<mn)mn=d;if(!mx||d>mx)mx=d};
+    for(const r of rows){if(r.type==='obra'){upd(r.sum.start);upd(r.sum.finish);if(showBL){upd(r.sum.blS);upd(r.sum.blF)}}}
+    const now=new Date();if(!mn)mn=now;if(!mx)mx=now;
+    const a=new Date(mn.getFullYear(),mn.getMonth(),1);const b=new Date(mx.getFullYear(),mx.getMonth()+2,0);
+    return[a,b];
+  },[rows,showBL]);
+  const d2x=useCallback(d=>d?((d-cStart)/86400000)*w:0,[cStart,w]);
+  const totW=Math.max(Math.ceil(((cEnd-cStart)/86400000)*w),600);
+  const totH=Math.max(rows.length*PG_ROW,PG_ROW);
+  const now=new Date();const nowX=d2x(now);
+
+  /* Encabezado: años arriba, meses/semanas/trimestres abajo */
+  const hdr=useMemo(()=>{
+    const top=[],bot=[],lines=[],bands=[];
+    if(zoom==='week'){
+      const d=new Date(cStart);let lm=-1;
+      while(d<=cEnd){const x=d2x(d);
+        if(d.getMonth()!==lm){top.push({x,l:d.toLocaleDateString('es-AR',{month:'short',year:'numeric'}).replace('.','')});lines.push({x,mj:true});lm=d.getMonth()}
+        else if(d.getDay()===1)lines.push({x,mj:false});
+        if(d.getDay()===1)bot.push({x,w:7*w,l:String(d.getDate())});
+        d.setDate(d.getDate()+1)}
+    }else{
+      const step=zoom==='qtr'?3:1;let m=new Date(cStart.getFullYear(),zoom==='qtr'?Math.floor(cStart.getMonth()/3)*3:cStart.getMonth(),1);let ly=-1,i=0;
+      while(m<=cEnd){const nx=new Date(m.getFullYear(),m.getMonth()+step,1);const x=d2x(m),wd=d2x(nx)-x;
+        bot.push({x,w:wd,l:zoom==='qtr'?`T${Math.floor(m.getMonth()/3)+1}`:m.toLocaleDateString('es-AR',{month:'short'}).replace('.','')});
+        if(m.getFullYear()!==ly){top.push({x,l:String(m.getFullYear())});ly=m.getFullYear()}
+        lines.push({x,mj:m.getMonth()===0});if(i%2)bands.push({x,w:wd});
+        m=nx;i++}
+    }
+    return{top,bot,lines,bands};
+  },[zoom,cStart,cEnd,d2x,w]);
+
+  /* Al abrir (o cambiar zoom) llevar la vista a "hoy" */
+  useEffect(()=>{
+    const el=scRef.current;if(!el||!rows.length)return;
+    const sig=zoom+'|'+cStart.getTime();if(scrolledFor.current===sig)return;scrolledFor.current=sig;
+    if(now>=cStart&&now<=cEnd)el.scrollLeft=Math.max(0,nowX-(el.clientWidth-300)*0.45);
+  },[rows.length,zoom,cStart,cEnd]);
+
+  const goToday=()=>{const el=scRef.current;if(el)el.scrollTo({left:Math.max(0,nowX-(el.clientWidth-300)*0.45),behavior:'smooth'})};
+  const focusRow=(key,fromTable)=>{
+    setHl(key);
+    const i=rowIdx[key];const el=scRef.current;
+    if(fromTable&&el&&i!=null){const r=rows[i];const x=r.t?.start?d2x(r.t.start):0;el.scrollTo({top:Math.max(0,i*PG_ROW-el.clientHeight/3),left:Math.max(0,x-200),behavior:'smooth'})}
+    if(!fromTable&&detRef.current){const tr=detRef.current.querySelector(`[data-k="${CSS.escape(key)}"]`);if(tr)tr.scrollIntoView({block:'nearest',behavior:'smooth'})}
+  };
+  const togObra=k=>setCollapsed(c=>({...c,[k]:!c[k]}));
+  const expAll=()=>setCollapsed({});
+  const colAll=()=>{const c={};for(const k of sel)c[k]=true;setCollapsed(c)};
+
+  /* Tabla de detalle */
+  const detRows=useMemo(()=>{
+    const r=taskRows.map(x=>{const b=x.t.baselines[0]||null;return{...x,blS:b?.start||null,blF:b?.finish||null,dev:b?.finish&&x.t.finish?dB(b.finish,x.t.finish):null,st:gSt(x.t)}});
+    const{col,dir}=sort;const val=x=>col==='obra'?x.o.label:col==='name'?x.t.name:col==='start'?x.t.start:col==='finish'?x.t.finish:col==='blS'?x.blS:col==='blF'?x.blF:col==='dev'?x.dev:col==='pct'?x.t.percentComplete:x.st;
+    return r.sort((a,b)=>{let va=val(a),vb=val(b);if(va==null&&vb==null)return 0;if(va==null)return 1;if(vb==null)return-1;
+      if(typeof va==='string')return dir*va.localeCompare(vb);return dir*((va>vb)-(va<vb))});
+  },[taskRows,sort]);
+  const detTot=useMemo(()=>{let s=null,f=null,done=0;for(const x of taskRows){if(x.t.start&&(!s||x.t.start<s))s=x.t.start;if(x.t.finish&&(!f||x.t.finish>f))f=x.t.finish;if(x.t.percentComplete>=100)done++}return{s,f,done,n:taskRows.length}},[taskRows]);
+  const th=(col,lbl,w)=><th style={{width:w,cursor:'pointer'}} onClick={()=>setSort(s=>({col,dir:s.col===col?-s.dir:1}))}>{lbl}{sort.col===col?(sort.dir>0?' ▲':' ▼'):''}</th>;
+  const exportXls=()=>{
+    const data=detRows.map(x=>({'Código':x.o.cod||'','Obra':x.o.name,'WBS':x.t.wbs,'Tarea':x.t.name,'Inicio':x.t.start||'','Fin':x.t.finish||'','Inicio LB':x.blS||'','Fin LB':x.blF||'','Desvío fin (d)':x.dev==null?'':x.dev,'% avance':x.t.percentComplete,'Estado':stL(x.st),'Contratista':entV(x.t,'Contratista'),'Rubro':entV(x.t,'Rubro')}));
+    const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,xlsSheet(data,[8,30,9,50,11,11,11,11,13,9,12,20,16]),'Gantt de obras');
+    XLSX.writeFile(wb,`Gantt_obras_${new Date().toISOString().slice(0,10)}.xlsx`,{cellDates:true});
+  };
+
+  /* Divisor arrastrable entre Gantt y detalle */
+  const startSplit=e=>{e.preventDefault();const y0=e.clientY,h0=detH;
+    const mv=ev=>{const h=Math.max(36,Math.min(window.innerHeight*0.7,h0-(ev.clientY-y0)));setDetH(h)};
+    const up=()=>{document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);document.body.style.cursor='';setDetH(h=>{pgSave('bp360_pfgantt_det',h);return h})};
+    document.body.style.cursor='row-resize';document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up)};
+
+  const hasBL=rows.some(r=>r.type==='obra'&&r.sum.blF);
+  const loadingN=rows.filter(r=>r.type==='load').length;
+  const hcol={g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'};
+  const tEnter=(e,t)=>{const r=e.currentTarget.getBoundingClientRect();setTT({task:t,x:r.left+Math.min(r.width,200)/2,y:r.top-4})};
+  const tLeave=()=>setTT(null);
+
+  /* Barra de una fila */
+  const renderBar=(r,i)=>{
+    const top=i*PG_ROW,cy=top+PG_ROW/2-3;
+    if(r.type==='load')return <text key={r.key} x={Math.max(8,nowX-60)} y={cy+4} fontSize="11" fill="var(--c2)" fontFamily="var(--ff)">Cargando cronograma…</text>;
+    if(r.type==='obra'){
+      const s=r.sum;if(!s.start||!s.finish)return null;
+      const x=d2x(s.start),bw=Math.max(d2x(s.finish)-x,2);const h=r.o.key&&healthMap?.[r.o.key];
+      return <g key={r.key}>
+        {showBL&&s.blS&&s.blF&&<rect x={d2x(s.blS)} y={cy+8} width={Math.max(d2x(s.blF)-d2x(s.blS),2)} height={4} rx="1" fill="var(--bar-bl)" opacity=".8"/>}
+        <rect x={x} y={cy-5} width={bw} height={10} rx="2" fill="var(--bar-sum)" opacity=".25"/>
+        <rect x={x} y={cy-5} width={bw*s.avg/100} height={10} rx="2" fill="var(--bar-sum)"/>
+        <path d={`M${x},${cy-5} L${x},${cy+9} M${x+bw},${cy-5} L${x+bw},${cy+9}`} stroke="var(--bar-sum)" strokeWidth="2"/>
+        {showLbl&&<text x={x+bw+8} y={cy+4} fontSize="11" fontWeight="700" fill="var(--c0)" fontFamily="var(--ff)">{r.o.label} · {s.avg}%{h&&h.desvioBruto!=null&&h.desvioBruto!==0?` · ${h.desvioBruto>0?'+':''}${h.desvioBruto}d`:''}</text>}
+      </g>;
+    }
+    const t=r.t;const st=gSt(t);
+    const b=t.baselines[0];
+    const blEl=showBL&&b&&b.start&&b.finish?<rect x={d2x(b.start)} y={cy+9} width={Math.max(d2x(b.finish)-d2x(b.start),2)} height={4} rx="1" fill="var(--bar-bl)" opacity=".8"/>:null;
+    const lbl=showLbl?<text x={0} y={cy+4} fontSize="11" fill={st==='ov'?'var(--err)':'var(--c1)'} fontFamily="var(--ff)" fontWeight={st==='ok'?600:400}>{st==='ok'&&!/^[✓✔]/.test(t.name)?'✓ ':''}{t.name}</text>:null;
+    if(t.isMilestone||(!t.isSummary&&t.start&&t.finish&&t.finish-t.start<3600000&&t.durDays===0)){
+      const mx=d2x(t.finish||t.start),sz=6,c=st==='ok'?'var(--bar-ok)':st==='ov'?'var(--bar-ov)':'var(--bar-ms)';
+      return <g key={r.key} onMouseEnter={e=>tEnter(e,t)} onMouseLeave={tLeave} onClick={()=>focusRow(r.key)} style={{cursor:'pointer'}}>{blEl}
+        <polygon points={`${mx},${cy-sz} ${mx+sz},${cy} ${mx},${cy+sz} ${mx-sz},${cy}`} fill={c}/>
+        {lbl&&React.cloneElement(lbl,{x:mx+10})}</g>;
+    }
+    if(!t.start||!t.finish)return blEl?<g key={r.key}>{blEl}</g>:null;
+    const x=d2x(t.start),bw=Math.max(d2x(t.finish)-x,3),p=Math.min(100,t.percentComplete||0);
+    const bh=t.isSummary?8:14,by=cy-bh/2;
+    let bg='var(--bar-bg)',fg='var(--bar)';if(st==='ov'){bg='var(--bar-ov-bg)';fg='var(--bar-ov)'}else if(st==='ok'){bg='var(--bar-ok-bg)';fg='var(--bar-ok)'}
+    if(t.isSummary){bg='rgba(58,63,75,.2)';fg='var(--bar-sum)'}
+    return <g key={r.key} onMouseEnter={e=>tEnter(e,t)} onMouseLeave={tLeave} onClick={()=>focusRow(r.key)} style={{cursor:'pointer'}}>
+      {blEl}
+      <rect x={x} y={by} width={bw} height={bh} rx="2" fill={bg}/>
+      {p<100&&<rect x={x+bw*p/100} y={by} width={bw*(100-p)/100} height={bh} rx="2" fill={`url(#${t.isSummary?'pg-h-s':st==='ov'?'pg-h-ov':'pg-h-a'})`}/>}
+      {p>0&&<rect x={x} y={by} width={bw*p/100} height={bh} rx="2" fill={fg}/>}
+      {!t.isSummary&&bw>34&&p>0&&p<100&&<text x={x+4} y={cy+4} fontSize="9" fontWeight="700" fill="#fff" fontFamily="var(--fm)">{p}%</text>}
+      {lbl&&React.cloneElement(lbl,{x:x+bw+6})}
+    </g>;
+  };
+
+  return <div className="pg-root">
+    <div className="fbar pg-ctrl">
+      <span className="fl">Obras</span>
+      <ObraPicker opts={opts} sel={sel} onChange={setSel} healthMap={healthMap}/>
+      <span className="fl">Detalle</span>
+      <div className="seg">{[['fases','Fases'],['tareas','Tareas'],['todo','Todo']].map(([k,l])=><button key={k} className={nivel===k?'on':''} onClick={()=>setNivel(k)}>{l}</button>)}</div>
+      <span className="fl">Estado</span>
+      <select className="fsel" value={fEst} onChange={e=>setFEst(e.target.value)}>{Object.entries(PG_EST).map(([k,l])=><option key={k} value={k}>{l}</option>)}</select>
+      <input className="fin" style={{width:150}} placeholder="Buscar tarea…" value={q} onChange={e=>setQ(e.target.value)}/>
+      <div className="seg">{Object.entries(PG_ZOOM).map(([k,v])=><button key={k} className={zoom===k?'on':''} onClick={()=>setZoom(k)}>{v.l}</button>)}</div>
+      <button className="btn btn-g" onClick={goToday}>Hoy</button>
+      <label className="pg-chk"><input type="checkbox" checked={showBL} onChange={e=>setShowBL(e.target.checked)}/> Línea base</label>
+      <label className="pg-chk"><input type="checkbox" checked={showLbl} onChange={e=>setShowLbl(e.target.checked)}/> Nombres</label>
+      <span style={{marginLeft:'auto',fontSize:11,color:'var(--c2)',fontFamily:'var(--fm)'}}>{sel.length} obras · {taskRows.length} tareas{loadingN?` · cargando ${loadingN}…`:''}</span>
+    </div>
+    <div className="pg-legend">
+      <span><i style={{background:'var(--bar-ok)'}}/>Terminado</span>
+      <span><i style={{background:'var(--bar)'}}/>Avance</span>
+      <span><i className="hatch"/>Falta</span>
+      <span><i style={{background:'var(--bar-ov)'}}/>Vencida</span>
+      <span><i style={{background:'var(--bar-bl)',height:4}}/>Línea base</span>
+      <span><i style={{background:'var(--bar-ms)',transform:'rotate(45deg)',width:8,height:8}}/>Hito</span>
+      <span><i style={{background:'var(--today)',width:2,height:12}}/>Hoy</span>
+      {!hasBL&&rows.length>0&&<span style={{color:'var(--warn)'}}>Las obras elegidas no tienen línea base guardada en el XML</span>}
+    </div>
+
+    <div className="pg-scroll" ref={scRef}>
+      {!sel.length?<div className="week-empty">Elegí una o más obras en el desplegable de arriba.</div>:
+      <div className="pg-grid" style={{width:'calc(var(--pgl) + '+totW+'px)'}}>
+        <div className="pg-corner">
+          <span>Obra / tarea</span>
+          <span style={{marginLeft:'auto',display:'flex',gap:2}}>
+            <button className="btn btn-g btn-i" onClick={expAll} title="Expandir todo">{I.exp()}</button>
+            <button className="btn btn-g btn-i" onClick={colAll} title="Colapsar todo">{I.col()}</button>
+          </span>
+        </div>
+        <div className="pg-thead">
+          <svg width={totW} height={PG_HDR} style={{display:'block'}}>
+            <rect width={totW} height={PG_HDR} fill="var(--bg-1)"/>
+            {hdr.top.map((h,i)=><text key={i} x={h.x+5} y={16} fontSize="11" fontWeight="700" fill="var(--c0)" fontFamily="var(--ff)">{h.l}</text>)}
+            {hdr.bot.map((h,i)=><text key={i} x={h.x+h.w/2} y={37} fontSize="10" fill="var(--c1)" fontFamily="var(--fm)" textAnchor="middle">{h.w>14?h.l:''}</text>)}
+            {hdr.lines.map((l,i)=><line key={i} x1={l.x} y1={l.mj?0:22} x2={l.x} y2={PG_HDR} stroke="var(--b0)"/>)}
+            <line x1="0" y1={PG_HDR-.5} x2={totW} y2={PG_HDR-.5} stroke="var(--b0)"/>
+            {nowX>=0&&nowX<=totW&&<g><rect x={nowX-17} y={PG_HDR-14} width="34" height="13" rx="2" fill="var(--today)"/><text x={nowX} y={PG_HDR-4.5} textAnchor="middle" fontSize="9" fontWeight="700" fill="#fff" fontFamily="var(--ff)">HOY</text></g>}
+          </svg>
+        </div>
+        <div className="pg-names">
+          {rows.map(r=>{
+            if(r.type==='load')return <div key={r.key} className="pg-n pg-n-obra" style={{opacity:.6}}>{r.o.cod&&<span className="cod">{r.o.cod}</span>}<span className="pg-n-t">{r.o.name}</span><div className="mini-sp" style={{width:10,height:10,border:'1.5px solid var(--b0)',borderTopColor:'var(--ac)',borderRadius:'50%',animation:'spin .6s linear infinite'}}/></div>;
+            if(r.type==='obra'){const h=healthMap?.[r.o.key];return <div key={r.key} className={`pg-n pg-n-obra ${hl===r.key?'hl':''}`} onClick={()=>togObra(r.o.key)} onDoubleClick={()=>onOpenObra&&onOpenObra(r.o.p)} title="Clic: expandir/colapsar · Doble clic: abrir la obra">
+              <span className="pg-tog">{collapsed[r.o.key]?I.chR():I.chD()}</span>
+              {r.o.cod?<span className="cod">{r.o.cod}</span>:null}
+              <span className="pg-n-t">{r.o.name}</span>
+              {h&&<span className="pg-hdot" style={{background:hcol[h.color]}} title={h.label}/>}
+              <span className="pg-n-m">{r.sum.done}/{r.sum.tot} · {r.sum.avg}%</span>
+            </div>}
+            const t=r.t,st=gSt(t);const ind=nivel==='todo'?Math.max(0,t.depth)*12:nivel==='fases'?Math.max(0,t.depth)*12:0;
+            return <div key={r.key} className={`pg-n ${hl===r.key?'hl':''}`} onClick={()=>focusRow(r.key)} title={taskPath(t)?taskPath(t)+' › '+t.name:t.name}>
+              <span style={{width:22+ind,flexShrink:0}}/>
+              <span className="pg-sdot" style={{background:stC(st)}}/>
+              <span className="pg-n-t" style={{fontWeight:t.isSummary?700:st==='ok'?500:400,color:st==='ov'?'var(--err)':st==='ok'?'var(--c1)':'var(--c0)'}}>{st==='ok'&&!/^[✓✔]/.test(t.name)&&<span style={{color:'var(--ok)'}}>✓ </span>}{t.isMilestone&&<span style={{color:'var(--bar-ms)'}}>♦ </span>}{t.name}</span>
+              <span className="pg-n-m">{t.percentComplete}%</span>
+            </div>;
+          })}
+        </div>
+        <div className="pg-body">
+          <svg width={totW} height={totH} style={{display:'block'}}>
+            <defs>{[['pg-h-a','var(--bar)'],['pg-h-ov','var(--bar-ov)'],['pg-h-s','var(--bar-sum)']].map(([id,c])=><pattern key={id} id={id} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke={c} strokeWidth="2.2" opacity=".45"/></pattern>)}</defs>
+            {hdr.bands.map((b,i)=><rect key={i} x={b.x} y={0} width={b.w} height={totH} fill="var(--bg-alt)"/>)}
+            {rows.map((r,i)=>r.type==='obra'?<rect key={r.key} x={0} y={i*PG_ROW} width={totW} height={PG_ROW} fill="var(--bg-sum)"/>:null)}
+            {hl!=null&&rowIdx[hl]!=null&&<rect x={0} y={rowIdx[hl]*PG_ROW} width={totW} height={PG_ROW} fill="var(--ac-bg)"/>}
+            {hdr.lines.map((l,i)=><line key={i} x1={l.x} y1={0} x2={l.x} y2={totH} stroke={l.mj?'var(--b0)':'var(--b1)'} strokeWidth={l.mj?1:.6}/>)}
+            {rows.map((_,i)=><line key={i} x1="0" y1={(i+1)*PG_ROW-.5} x2={totW} y2={(i+1)*PG_ROW-.5} stroke="var(--b1)" strokeWidth=".6"/>)}
+            {nowX>=0&&nowX<=totW&&<line x1={nowX} y1={0} x2={nowX} y2={totH} stroke="var(--today)" strokeWidth="1.5" strokeDasharray="4,3"/>}
+            {rows.map(renderBar)}
+          </svg>
+        </div>
+      </div>}
+    </div>
+
+    <div className="pg-split" onMouseDown={startSplit} title="Arrastrá para cambiar el alto del detalle"><span/></div>
+    <div className="pg-det" style={{height:detH}}>
+      <div className="pg-det-hdr">
+        <span style={{fontWeight:700,fontSize:12}}>Detalle de tareas</span>
+        <span style={{fontSize:11,color:'var(--c2)'}}>Clic en una fila para ubicarla en el Gantt</span>
+        <button className="btn btn-g" style={{marginLeft:'auto'}} onClick={exportXls} disabled={!detRows.length}>↓ Excel</button>
+        <button className="btn btn-g" onClick={()=>{const h=detH>60?36:240;setDetH(h);pgSave('bp360_pfgantt_det',h)}}>{detH>60?'▾ Minimizar':'▴ Mostrar'}</button>
+      </div>
+      <div className="pg-det-scroll" ref={detRef}>
+        <table className="dt pg-dt">
+          <thead><tr>{th('obra','Obra',170)}{th('name','Tarea')}{th('start','Fecha inicio',92)}{th('finish','Fecha fin',92)}{th('blS','Inicio LB',86)}{th('blF','Fin LB',86)}{th('dev','Desvío',70)}{th('pct','%',50)}{th('st','Estado',90)}</tr></thead>
+          <tbody>{detRows.map(x=><tr key={x.key} data-k={x.key} className={hl===x.key?'hl':''} onClick={()=>focusRow(x.key,true)}>
+            <td style={{whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',maxWidth:170}} title={x.o.name}>{x.o.cod&&<span className="cod">{x.o.cod}</span>}{x.o.name}</td>
+            <td style={{fontWeight:500}}>{x.st==='ok'&&!/^[✓✔]/.test(x.t.name)&&<span style={{color:'var(--ok)'}}>✓ </span>}{x.t.name}</td>
+            <td className="mono">{fD(x.t.start)}</td>
+            <td className="mono" style={{color:x.st==='ov'?'var(--err)':undefined}}>{fD(x.t.finish)}</td>
+            <td className="mono" style={{color:'var(--c2)'}}>{fD(x.blS)}</td>
+            <td className="mono" style={{color:'var(--c2)'}}>{fD(x.blF)}</td>
+            <td className="mono">{x.dev==null?'—':<span className={x.dev>2?'dev-pos':x.dev<-2?'dev-neg':'dev-zero'}>{x.dev>0?'+':''}{x.dev}d</span>}</td>
+            <td className="mono">{x.t.percentComplete}%</td>
+            <td style={{color:stC(x.st),fontSize:11,fontWeight:600}}>{stL(x.st)}</td>
+          </tr>)}</tbody>
+          {detRows.length>0&&<tfoot><tr>
+            <td style={{fontWeight:700}}>Total</td>
+            <td className="mono" style={{color:'var(--c1)'}}>{detTot.n} tareas · {detTot.done} terminadas · {detTot.n-detTot.done} faltan</td>
+            <td className="mono" style={{fontWeight:700}}>{fD(detTot.s)}</td>
+            <td className="mono" style={{fontWeight:700}}>{fD(detTot.f)}</td>
+            <td colSpan={5}/>
+          </tr></tfoot>}
+        </table>
+        {!detRows.length&&<div style={{padding:16,fontSize:12,color:'var(--c2)'}}>Sin tareas para mostrar con estos filtros.</div>}
+      </div>
+    </div>
+    <Tooltip info={ttInfo} computoData={null}/>
+  </div>;
+}
+
+function Portfolio({projList,projData,metaList,healthMap,onOpen,onOpenObra,initialMode}){
+  const[mode,setModeS]=useState(()=>initialMode||pgLoad('bp360_pf_mode','gantt'));
+  const setMode=m=>{setModeS(m);pgSave('bp360_pf_mode',m)};
   return <Fragment>
     <div className="stbar">
+      <button className={`st ${mode==='gantt'?'on':''}`} onClick={()=>setMode('gantt')}>Gantt de obras</button>
       <button className={`st ${mode==='resp'?'on':''}`} onClick={()=>setMode('resp')}>Vencidas por responsable</button>
       <button className={`st ${mode==='obras'?'on':''}`} onClick={()=>setMode('obras')}>Obras y contratistas</button>
     </div>
-    {mode==='resp'?<ResponsablesView projList={projList} projData={projData} metaList={metaList} healthMap={healthMap} onOpen={onOpen}/>:<PortfolioObras projList={projList} projData={projData}/>}
+    {mode==='gantt'?<PortfolioGantt projList={projList} projData={projData} metaList={metaList} healthMap={healthMap} onOpenObra={onOpenObra}/>
+    :mode==='resp'?<ResponsablesView projList={projList} projData={projData} metaList={metaList} healthMap={healthMap} onOpen={onOpen}/>:<PortfolioObras projList={projList} projData={projData}/>}
   </Fragment>;
 }
 
@@ -2481,7 +2872,7 @@ function App(){
           {openTabs.filter(k=>k!=='__pf').map(k=>{const p=(pList||[]).find(pr=>pr.key===k);return p?<button key={k} className="tab" onClick={()=>{setActive(k);setSub('gantt');resetF()}}><span className="dot" style={{background:'var(--c2)'}}/>{p.cod&&<b className="cod">{p.cod}</b>}{p.name}<span className="x" onClick={e=>closeTab(k,e)}>×</span></button>:null})}
         </div>
         <div className="acts">
-          {totalOv>0&&<button className="btn btn-g" onClick={()=>{setActive('__pf');setSub('portfolio')}} title="Ver vencidas por responsable" style={{fontSize:11,color:'var(--err)',fontWeight:600,fontFamily:'var(--fm)'}}>{totalOv} vencidas →</button>}
+          {totalOv>0&&<button className="btn btn-g" onClick={()=>{setActive('__pf');setSub('portfolio-resp')}} title="Ver vencidas por responsable" style={{fontSize:11,color:'var(--err)',fontWeight:600,fontFamily:'var(--fm)'}}>{totalOv} vencidas →</button>}
           <button className="btn btn-g btn-i" onClick={()=>setShowSrch(true)} title="Ctrl+K">{I.srch()}</button>
           <button className="btn btn-g btn-i" onClick={togTh}>{th==='light'?I.moon():I.sun()}</button>
         </div>
@@ -2575,7 +2966,7 @@ function App(){
         </div>
         <div className="acts"><button className="btn btn-g btn-i" onClick={togTh}>{th==='light'?I.moon():I.sun()}</button></div>
       </div>
-      <Portfolio projList={pList} projData={pData} metaList={metaList} healthMap={healthMap} onOpen={async(k,raw,role)=>{const p=(pList||[]).find(x=>x.key===k);if(!p)return;await openProj(p);setSub('gantt');setFSt('ov');if(role==='Contratista'){setFRes('all');setFCon(raw)}else{setFCon('all');setFRes(raw==='Sin asignar'?'none':raw)}}}/>
+      <Portfolio key={sub} initialMode={sub==='portfolio-resp'?'resp':null} onOpenObra={p=>openProj(p)} projList={pList} projData={pData} metaList={metaList} healthMap={healthMap} onOpen={async(k,raw,role)=>{const p=(pList||[]).find(x=>x.key===k);if(!p)return;await openProj(p);setSub('gantt');setFSt('ov');if(role==='Contratista'){setFRes('all');setFCon(raw)}else{setFCon('all');setFRes(raw==='Sin asignar'?'none':raw)}}}/>
     </Fragment>;
   }
 
