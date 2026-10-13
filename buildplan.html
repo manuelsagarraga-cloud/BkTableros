@@ -1959,7 +1959,9 @@ function ComputoLogin({onOk}){
 }
 
 function MaterialsView({data,computoData,visTasks,onLogin}){
-  const[viewMode,setViewMode]=useState('gantt');/*gantt|list|period*/
+  const[viewMode,setViewMode]=useState('list');/*list|period*/
+  const[openMat,setOpenMat]=useState({});/* filas desplegadas: "lista|Material" o "2026-10|Material" */
+  const togMat=k=>setOpenMat(o=>({...o,[k]:!o[k]}));
   const[periodMode,setPeriodMode]=useState('month');/*week|month*/
   const[selTask,setSelTask]=useState(null);
   const[fRubro,setFRubro]=useState('all');
@@ -1983,16 +1985,16 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
       const info=getTaskMaterials(computoData,nItem);
       if(!info||!info.items.length)continue;
       taskMats.push({task:t,info});
+      const pk=t.start?(periodMode==='week'
+            ?`${t.start.getFullYear()}-S${String(Math.ceil((t.start.getDate()+new Date(t.start.getFullYear(),t.start.getMonth(),1).getDay())/7)).padStart(2,'0')}-${String(t.start.getMonth()+1).padStart(2,'0')}`
+            :`${t.start.getFullYear()}-${String(t.start.getMonth()+1).padStart(2,'0')}`):null;
       for(const m of info.items){
         const key=m.matRef;
         if(!matMap[key])matMap[key]={matRef:m.matRef,un:m.un,unComercial:m.unComercial||m.un,cat:m.materialInfo?.cat||'',precio:m.materialInfo?.precio||0,totalNeeded:0,tasks:[],byPeriod:{}};
         matMap[key].totalNeeded+=parseFloat(m.cantidadNecesaria)||0;
-        matMap[key].tasks.push({task:t,qty:parseFloat(m.cantidadNecesaria)||0});
+        matMap[key].tasks.push({task:t,qty:parseFloat(m.cantidadNecesaria)||0,pk,nItem});
         /* Group by period */
-        if(t.start){
-          const pk=periodMode==='week'
-            ?`${t.start.getFullYear()}-S${String(Math.ceil((t.start.getDate()+new Date(t.start.getFullYear(),t.start.getMonth(),1).getDay())/7)).padStart(2,'0')}-${String(t.start.getMonth()+1).padStart(2,'0')}`
-            :`${t.start.getFullYear()}-${String(t.start.getMonth()+1).padStart(2,'0')}`;
+        if(pk){
           if(!matMap[key].byPeriod[pk])matMap[key].byPeriod[pk]=0;
           matMap[key].byPeriod[pk]+=parseFloat(m.cantidadNecesaria)||0;
         }
@@ -2036,7 +2038,12 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
     const ws=XLSX.utils.json_to_sheet(rows);
     const wb=XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb,ws,'Materiales');
-    XLSX.writeFile(wb,`Materiales_${data.tasks[0]?.name||'obra'}_${new Date().toISOString().slice(0,10)}.xlsx`);
+    /* Para qué se necesita cada material: una fila por material × tarea */
+    const det=[];for(const m of filtered)for(const x of m.tasks.slice().sort((a,b)=>(a.task.start||0)-(b.task.start||0)))
+      det.push({'Material':m.matRef,'N° Item':x.nItem,'Tarea':x.task.name,'Grupo':taskPath(x.task),'Inicio':x.task.start||'','Fin':x.task.finish||'','Cantidad':Math.round(x.qty*100)/100,'Unidad':m.un,'Avance %':x.task.percentComplete});
+    const wd=XLSX.utils.json_to_sheet(det,{dateNF:'dd/mm/yyyy'});wd['!cols']=[{wch:38},{wch:8},{wch:46},{wch:36},{wch:11},{wch:11},{wch:10},{wch:8},{wch:9}];
+    XLSX.utils.book_append_sheet(wb,wd,'Detalle por tarea');
+    XLSX.writeFile(wb,`Materiales_${data.tasks[0]?.name||'obra'}_${new Date().toISOString().slice(0,10)}.xlsx`,{cellDates:true});
   },[filtered,data]);
 
   /* Format period label */
@@ -2044,6 +2051,21 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
     if(periodMode==='week'){const[y,sw,mo]=pk.split('-');const mn=new Date(parseInt(y),parseInt(mo)-1).toLocaleDateString('es-AR',{month:'short'});return`${mn} ${sw}`}
     const[y,mo]=pk.split('-');return new Date(parseInt(y),parseInt(mo)-1).toLocaleDateString('es-AR',{month:'long',year:'numeric'});
   };
+
+  /* "Para qué": resumen corto en la fila + detalle desplegable con las tareas */
+  const paraQue=rows=>{const ns=[...new Set(rows.map(x=>x.task.name))];return ns.slice(0,2).join(' · ')+(ns.length>2?` +${ns.length-2}`:'')};
+  const detalle=(rows,un,cols)=><tr className="mat-det"><td colSpan={cols} style={{padding:0,background:'var(--bg-0)'}}>
+    <table className="mat-table" style={{margin:'2px 0 6px 18px',width:'calc(100% - 18px)'}}>
+      <thead><tr><th style={{width:70}}>N° Item</th><th>Tarea</th><th style={{width:85}}>Inicio</th><th style={{width:45}}>%</th><th style={{width:110,textAlign:'right'}}>Cantidad</th></tr></thead>
+      <tbody>{rows.slice().sort((a,b)=>(a.task.start||0)-(b.task.start||0)).map((x,i)=><tr key={x.task.uid+'_'+i}>
+        <td className="mono">{x.nItem}</td>
+        <td><div style={{fontWeight:500}}>{x.task.name}</div>{taskPath(x.task)&&<div style={{fontSize:10,color:'var(--c2)'}}>{taskPath(x.task)}</div>}</td>
+        <td className="mono">{fD(x.task.start)}</td>
+        <td className="mono">{x.task.percentComplete}%</td>
+        <td className="mono" style={{textAlign:'right'}}>{Math.round(x.qty*100)/100} {un}</td>
+      </tr>)}</tbody>
+    </table></td></tr>;
+  const flecha=k=><span style={{display:'inline-block',width:12,color:'var(--c2)'}}>{openMat[k]?'▾':'▸'}</span>;
 
   return <div>
     {/* KPIs */}
@@ -2076,17 +2098,17 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
     {viewMode==='list'&&<div className="mat-panel">
       <div className="mat-scroll">
         <table className="mat-table">
-          <thead><tr><th>Material</th><th>Cantidad</th><th>Unidad</th><th>U. Comercial</th><th>Categoría</th><th>Precio</th><th>Subtotal</th><th>Tareas</th></tr></thead>
-          <tbody>{filtered.map(m=><tr key={m.matRef}>
-            <td style={{fontWeight:500,maxWidth:250,overflow:'hidden',textOverflow:'ellipsis'}}>{m.matRef}</td>
+          <thead><tr><th>Material</th><th>Para qué (tareas)</th><th>Cantidad</th><th>Unidad</th><th>U. Comercial</th><th>Categoría</th><th>Precio</th><th>Subtotal</th></tr></thead>
+          <tbody>{filtered.map(m=>{const k='lista|'+m.matRef;return <Fragment key={m.matRef}><tr onClick={()=>togMat(k)} style={{cursor:'pointer'}} title="Clic para ver en qué tareas se usa">
+            <td style={{fontWeight:500,maxWidth:250,overflow:'hidden',textOverflow:'ellipsis'}}>{flecha(k)}{m.matRef}</td>
+            <td style={{fontSize:11,color:'var(--c1)',maxWidth:280,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{paraQue(m.tasks)}</td>
             <td className="mono">{Math.round(m.totalNeeded*100)/100}</td>
             <td>{m.un}</td>
             <td>{m.unComercial}</td>
             <td style={{fontSize:11,color:'var(--c1)'}}>{m.cat||'—'}</td>
             <td className="mono">{m.precio?`$${m.precio.toLocaleString('es-AR')}`:' —'}</td>
             <td className="mono" style={{fontWeight:600}}>{m.precio?`$${Math.round(m.totalNeeded*m.precio).toLocaleString('es-AR')}`:' —'}</td>
-            <td className="mono">{m.tasks.length}</td>
-          </tr>)}</tbody>
+          </tr>{openMat[k]&&detalle(m.tasks,m.un,8)}</Fragment>})}</tbody>
         </table>
       </div>
       {filtered.length===0&&<div className="mat-empty">No se encontraron materiales con los filtros actuales.</div>}
@@ -2096,7 +2118,7 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
     {viewMode==='period'&&<div className="mat-panel">
       {periods.length===0&&<div className="mat-empty">No hay materiales con fecha de inicio para agrupar por período.</div>}
       {periods.map(pk=>{
-        const periodMats=filtered.filter(m=>m.byPeriod[pk]>0).map(m=>({...m,periodQty:m.byPeriod[pk]})).sort((a,b)=>b.periodQty-a.periodQty);
+        const periodMats=filtered.filter(m=>m.byPeriod[pk]>0).map(m=>({...m,periodQty:m.byPeriod[pk],periodTasks:m.tasks.filter(x=>x.pk===pk)})).sort((a,b)=>b.periodQty-a.periodQty);
         if(!periodMats.length)return null;
         return <div key={pk}>
           <div style={{padding:'10px 16px',background:'var(--bg-0)',borderBottom:'1px solid var(--b1)',fontWeight:600,fontSize:13,display:'flex',justifyContent:'space-between'}}>
@@ -2104,14 +2126,15 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
             <span style={{fontSize:11,color:'var(--c1)',fontWeight:400}}>{periodMats.length} materiales</span>
           </div>
           <table className="mat-table">
-            <thead><tr><th>Material</th><th>Cantidad</th><th>Unidad</th><th>Categoría</th><th>Subtotal</th></tr></thead>
-            <tbody>{periodMats.map(m=><tr key={m.matRef}>
-              <td style={{fontWeight:500}}>{m.matRef}</td>
+            <thead><tr><th>Material</th><th>Para qué (tareas)</th><th>Cantidad</th><th>Unidad</th><th>Categoría</th><th>Subtotal</th></tr></thead>
+            <tbody>{periodMats.map(m=>{const k=pk+'|'+m.matRef;return <Fragment key={m.matRef}><tr onClick={()=>togMat(k)} style={{cursor:'pointer'}} title="Clic para ver en qué tareas se usa">
+              <td style={{fontWeight:500}}>{flecha(k)}{m.matRef}</td>
+              <td style={{fontSize:11,color:'var(--c1)',maxWidth:280,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{paraQue(m.periodTasks)}</td>
               <td className="mono">{Math.round(m.periodQty*100)/100}</td>
               <td>{m.un}</td>
               <td style={{fontSize:11,color:'var(--c1)'}}>{m.cat||'—'}</td>
               <td className="mono" style={{fontWeight:600}}>{m.precio?`$${Math.round(m.periodQty*m.precio).toLocaleString('es-AR')}`:' —'}</td>
-            </tr>)}</tbody>
+            </tr>{openMat[k]&&detalle(m.periodTasks,m.un,6)}</Fragment>})}</tbody>
           </table>
         </div>;
       })}
