@@ -417,6 +417,8 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .pg-grid{display:grid;grid-template-columns:var(--pgl) auto;min-width:100%}
 .pg-corner{position:sticky;top:0;left:0;z-index:6;height:46px;display:flex;align-items:center;gap:6px;padding:0 8px 0 12px;background:var(--bg-1);border-bottom:1px solid var(--b0);border-right:1px solid var(--b0);font-size:11px;font-weight:700;color:var(--c1);text-transform:uppercase;letter-spacing:.4px}
 .pg-thead{position:sticky;top:0;z-index:5}
+.pg-rs{position:absolute;top:0;right:-4px;bottom:0;width:8px;cursor:col-resize;z-index:7}
+.pg-rs:hover,.pg-rs:active{background:var(--ac);opacity:.45}
 .pg-names{position:sticky;left:0;z-index:4;background:var(--bg-el);border-right:1px solid var(--b0)}
 .pg-n{height:32px;display:flex;align-items:center;gap:6px;padding:0 10px 0 6px;border-bottom:1px solid var(--b1);font-size:12px;cursor:pointer;white-space:nowrap}
 .pg-n:hover{background:var(--bg-hover)}
@@ -1527,6 +1529,13 @@ function PortfolioGantt({projList,projData,metaList,healthMap,onOpenObra}){
   const[hl,setHl]=useState(null);
   const[sort,setSort]=useState({col:'start',dir:1});
   const[detH,setDetH]=useState(()=>pgLoad('bp360_pfgantt_det',240));
+  /* Ancho de la columna de nombres: arrastrable, se recuerda por navegador; doble clic vuelve a 340 */
+  const[nameW,setNameW]=useState(()=>{const v=pgLoad('bp360_pfgantt_namew',0);return v>=160&&v<=900?v:0});
+  const startNameDrag=e=>{e.preventDefault();e.stopPropagation();const x0=e.clientX,w0=nameW||(window.innerWidth<=768?170:340);
+    const mv=ev=>setNameW(Math.max(160,Math.min(Math.round(window.innerWidth*0.7),w0+ev.clientX-x0)));
+    const up=()=>{document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);document.body.style.cursor='';document.body.style.userSelect='';setNameW(w=>{pgSave('bp360_pfgantt_namew',w);return w})};
+    document.body.style.cursor='col-resize';document.body.style.userSelect='none';document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up)};
+  const resetNameW=()=>{setNameW(0);pgSave('bp360_pfgantt_namew',0)};
   const[ttInfo,setTT]=useState(null);
   const scRef=useRef(null),detRef=useRef(null),scrolledFor=useRef('');
   useEffect(()=>{pgSave(PG_UI_KEY,{zoom,nivel,fEst,showBL,showLbl})},[zoom,nivel,fEst,showBL,showLbl]);
@@ -1692,7 +1701,7 @@ function PortfolioGantt({projList,projData,metaList,healthMap,onOpenObra}){
     </g>;
   };
 
-  return <div className="pg-root">
+  return <div className="pg-root" style={nameW?{'--pgl':nameW+'px'}:undefined}>
     <div className="fbar pg-ctrl">
       <span className="fl">Obras</span>
       <ObraPicker opts={opts} sel={sel} onChange={setSel} healthMap={healthMap}/>
@@ -1722,6 +1731,7 @@ function PortfolioGantt({projList,projData,metaList,healthMap,onOpenObra}){
       {!sel.length?<div className="week-empty">Elegí una o más obras en el desplegable de arriba.</div>:
       <div className="pg-grid" style={{width:'calc(var(--pgl) + '+totW+'px)'}}>
         <div className="pg-corner">
+          <span className="pg-rs" onMouseDown={startNameDrag} onDoubleClick={resetNameW} title="Arrastrá para ensanchar la columna de tareas · doble clic restablece"/>
           <span>Obra / tarea</span>
           <span style={{marginLeft:'auto',display:'flex',gap:2}}>
             <button className="btn btn-g btn-i" onClick={expAll} title="Expandir todo">{I.exp()}</button>
@@ -1739,6 +1749,7 @@ function PortfolioGantt({projList,projData,metaList,healthMap,onOpenObra}){
           </svg>
         </div>
         <div className="pg-names">
+          <span className="pg-rs" onMouseDown={startNameDrag} onDoubleClick={resetNameW} title="Arrastrá para ensanchar la columna de tareas · doble clic restablece"/>
           {rows.map(r=>{
             if(r.type==='load')return <div key={r.key} className="pg-n pg-n-obra" style={{opacity:.6}}>{r.o.cod&&<span className="cod">{r.o.cod}</span>}<span className="pg-n-t">{r.o.name}</span><div className="mini-sp" style={{width:10,height:10,border:'1.5px solid var(--b0)',borderTopColor:'var(--ac)',borderRadius:'50%',animation:'spin .6s linear infinite'}}/></div>;
             if(r.type==='obra'){const h=healthMap?.[r.o.key];return <div key={r.key} className={`pg-n pg-n-obra ${hl===r.key?'hl':''}`} onClick={()=>togObra(r.o.key)} onDoubleClick={()=>onOpenObra&&onOpenObra(r.o.p)} title="Clic: expandir/colapsar · Doble clic: abrir la obra">
