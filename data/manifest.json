@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-14T19:13:06.720Z",
-  "count": 29,
+  "generated": "2026-10-14T19:15:45.475Z",
+  "count": 28,
   "projects": [
     {
       "file": "Casa en Blanco.xml",
@@ -64,16 +64,6 @@
       "sizeKB": 1033,
       "tareas": 52,
       "avisos": []
-    },
-    {
-      "file": "VIvienda Hermanos Rossi.xml",
-      "name": "VIvienda Hermanos Rossi.xml",
-      "hash": "e4ee21d1e4e6",
-      "sizeKB": 6637,
-      "tareas": 213,
-      "avisos": [
-        "el nombre del archivo empieza con \"VI\" mayúscula"
-      ]
     },
     {
       "file": "VIvienda Venturelli-Bernal.xml",
