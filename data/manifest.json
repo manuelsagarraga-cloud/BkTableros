@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-14T18:48:56.968Z",
+  "generated": "2026-10-14T19:13:06.720Z",
   "count": 29,
   "projects": [
     {
@@ -128,8 +128,8 @@
     {
       "file": "Vivienda Hermanos Rossi.xml",
       "name": "Vivienda Hermanos Rossi.xml",
-      "hash": "8c4f66ac2ae4",
-      "sizeKB": 6631,
+      "hash": "f4de08d309fb",
+      "sizeKB": 6709,
       "tareas": 218,
       "avisos": []
     },
