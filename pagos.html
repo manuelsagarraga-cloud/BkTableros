@@ -105,8 +105,10 @@ body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:13px;l
 const{useState,useEffect,useRef,useCallback,useMemo}=React;
 
 /* ═══════ Supabase Client ═══════ */
-const SUPABASE_URL='https://eilfafwoldclycgpohpy.supabase.co';
-const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpbGZhZndvbGRjbHljZ3BvaHB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxNzYxMjIsImV4cCI6MjEwNTc1MjEyMn0.21N-cXc3QCTn5pyGZ_HTDSHBSyLyaQ1L3w9dCz-Plr4';
+/* Login y almacenamiento: mismo Supabase que Cómputo de Obras (el proyecto propio de Pagos quedó pausado y en desuso).
+   Entran los usuarios de la empresa bauvek y el admin; el resto de las empresas de Cómputo no ve este Excel (RLS de Storage). */
+const SUPABASE_URL='https://beuzmwrhqlmjoplsillf.supabase.co';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldXptd3JocWxtam9wbHNpbGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc1NDcsImV4cCI6MjA5NTA2MzU0N30.Rw82cnyzp2S2Alc6lWiBCDxVL8u_8wAfCTConDGpYFE';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
 /* El Excel de pagos vive en un bucket PRIVADO de Supabase Storage: solo se descarga con sesión iniciada.
    PAGOS_REPO_URL es el archivo viejo del repo público; se usa solo hasta completar la migración. */

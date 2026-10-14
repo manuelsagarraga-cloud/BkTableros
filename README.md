@@ -7,7 +7,7 @@ https://manuelsagarraga-cloud.github.io/BkTableros/
 |---|---|---|
 | `index.html` | Portada con acceso a las herramientas | — |
 | `buildplan.html` | Cronogramas: Gantt por obra, Gantt de obras (portfolio), vencidas por responsable, semáforo, materiales | XML de MS Project en `data/projects/` + `data/Proyectos_Bauvek.xlsx` + Supabase de Cómputo (materiales, con login) |
-| `pagos.html` | Programación de pagos a proveedores | Excel en Supabase Storage, bucket privado `pagos` (con login) |
+| `pagos.html` | Programación de pagos a proveedores | Excel en el Supabase de Cómputo, bucket privado `pagos` (login con usuario de Cómputo: empresa bauvek o admin) |
 
 ## Cómo se actualiza
 
