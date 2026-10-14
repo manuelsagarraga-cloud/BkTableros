@@ -735,6 +735,13 @@ function ProjectInfo({meta}){
 }
 
 /* ═══════ PARSER MSPDI ═══════ */
+/* XML de una obra: primero la copia liviana que arma el deploy (sin TimephasedData, ~4 veces más chica);
+   si no está, el original. ?v=hash deja que el navegador reutilice lo ya descargado hasta que el XML cambie. */
+async function fetchXml(proj){
+  const v=proj.ver?`?v=${proj.ver}`:`?t=${Date.now()}`;
+  try{const r=await fetch(`data/projects-lite/${proj.file}${v}`);if(r.ok)return r}catch(e){}
+  return fetch(`data/projects/${proj.file}${v}`);
+}
 function parseMSPDI(xmlText){
   /* MS Project deja caracteres de control en Notas (ej. \x0B) → XML inválido. Se reemplazan por espacio. */
   xmlText=String(xmlText).replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,' ');
@@ -2624,7 +2631,7 @@ function App(){
   /* Load manifest + project metadata */
   useEffect(()=>{
     fetch('data/manifest.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
-      const list=(d.projects||d||[]).map((p,i)=>{const rawName=p.name||(typeof p.file==='string'?p.file.replace('.xml',''):null)||`Proyecto ${i+1}`;const file=typeof p==='string'?p:p.file;const oc=obraCode(file||rawName);return{key:'srv_'+(p.file||p.name||i),name:rawName.replace(/\.xml$/i,''),file,size:p.size||null,modified:p.modified||null,cod:oc?.cod||null,cliente:oc?.cliente||null,lote:oc?.lote||null}});
+      const list=(d.projects||d||[]).map((p,i)=>{const rawName=p.name||(typeof p.file==='string'?p.file.replace('.xml',''):null)||`Proyecto ${i+1}`;const file=typeof p==='string'?p:p.file;const oc=obraCode(file||rawName);return{key:'srv_'+(p.file||p.name||i),name:rawName.replace(/\.xml$/i,''),file,size:p.size||(p.sizeKB?p.sizeKB*1024:null),modified:p.modified||p.lastModified||null,ver:p.hash||null,avisos:p.avisos||[],cod:oc?.cod||null,cliente:oc?.cliente||null,lote:oc?.lote||null}});
       setPList(list);
     }).catch(()=>setPList([]));
     loadProjectMeta().then(m=>setMetaList(m));
@@ -2646,14 +2653,17 @@ function App(){
     if(!pList||!pList.length)return;
     const serverProjs=pList.filter(p=>!p.local&&p.file);
     let cancelled=false;
-    (async()=>{
-      for(const proj of serverProjs){
+    /* 4 descargas en paralelo: mientras se procesa un XML ya van llegando los siguientes */
+    const queue=[...serverProjs];
+    const worker=async()=>{
+      while(queue.length){
         if(cancelled)break;
+        const proj=queue.shift();
         const k=proj.key;
         if(pData[k])continue; /* already loaded */
         setAutoLoading(p=>({...p,[k]:true}));
         try{
-          const r=await fetch(`data/projects/${proj.file}?t=${Date.now()}`);
+          const r=await fetchXml(proj);
           if(!r.ok)continue;
           const txt=await r.text();
           const d=parseMSPDI(txt);
@@ -2666,7 +2676,8 @@ function App(){
         }catch(e){/* skip failed loads */}
         finally{setAutoLoading(p=>{const n={...p};delete n[k];return n})}
       }
-    })();
+    };
+    for(let i=0;i<4;i++)worker();
     return()=>{cancelled=true};
   },[pListKeys]);
 
@@ -2692,7 +2703,7 @@ function App(){
       setLoading(p=>({...p,[k]:true}));
       setErrors(p=>{const n={...p};delete n[k];return n});
       try{
-        const r=await fetch(`data/projects/${proj.file}?t=${Date.now()}`);
+        const r=await fetchXml(proj);
         if(!r.ok)throw new Error(`HTTP ${r.status}`);
         const txt=await r.text();
         const d=parseMSPDI(txt);
@@ -2844,6 +2855,7 @@ function App(){
                   {m2t>0&&<span>🏠 {Math.round(m2t)} m² cub</span>}
                   {(p.cliente||m?.comitente)&&<span>👤 {p.cliente||m.comitente}</span>}
                   {p.lote&&<span>📌 {p.lote}</span>}
+                  {p.avisos&&p.avisos.length>0&&<span title={'Revisar en MS Project:\n• '+p.avisos.join('\n• ')} style={{color:'var(--warn)',cursor:'help'}}>⚠ {p.avisos.length} aviso{p.avisos.length>1?'s':''} de datos</span>}
                 </div>
                 {h&&<Fragment>
                   <div className="pcard2-bar"><div className="pcard2-fill" style={{width:`${h.avg}%`,background:dotColor}}/></div>

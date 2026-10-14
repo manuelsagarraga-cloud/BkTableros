@@ -92,6 +92,10 @@ body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:13px;l
 .login-btn:disabled{opacity:.6;cursor:not-allowed}
 .login-err{background:rgba(239,68,68,.08);color:var(--err);font-size:11px;padding:8px 10px;border-radius:4px;margin-bottom:14px;text-align:center}
 .logout-btn{font-size:11px;color:var(--c2);border:1px solid var(--b0);background:var(--el);padding:4px 10px;border-radius:4px;cursor:pointer;font-family:var(--ff);font-weight:500;transition:all .15s}
+.origen-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.origen-badge.ok{background:rgba(16,185,129,.12);color:var(--ok)}
+.origen-badge.warn{background:rgba(245,158,11,.14);color:var(--warn)}
+.aviso{padding:8px 16px;font-size:12px;background:var(--acbg,rgba(158,1,1,.07));border-bottom:1px solid var(--b0);cursor:pointer}
 .logout-btn:hover{color:var(--err);border-color:var(--err);background:rgba(239,68,68,.05)}
 </style>
 </head>
@@ -104,6 +108,11 @@ const{useState,useEffect,useRef,useCallback,useMemo}=React;
 const SUPABASE_URL='https://eilfafwoldclycgpohpy.supabase.co';
 const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpbGZhZndvbGRjbHljZ3BvaHB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxNzYxMjIsImV4cCI6MjEwNTc1MjEyMn0.21N-cXc3QCTn5pyGZ_HTDSHBSyLyaQ1L3w9dCz-Plr4';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
+/* El Excel de pagos vive en un bucket PRIVADO de Supabase Storage: solo se descarga con sesión iniciada.
+   PAGOS_REPO_URL es el archivo viejo del repo público; se usa solo hasta completar la migración. */
+const PAGOS_BUCKET='pagos';
+const PAGOS_PATH='programacion-gastos.xlsx';
+const PAGOS_REPO_URL='data/Pagos/Programaci%C3%B2n%20gastos%20de%20obras.xlsx';
 
 /* ═══════ Login Screen ═══════ */
 function Login({onLogin}){
@@ -582,28 +591,42 @@ function App({user,onLogout}){
   const[sortCol,setSortCol]=useState('importePesos');
   const[sortDir,setSortDir]=useState('desc');
   
-  /* Load Excel */
+  /* Origen del Excel: 'privado' (Supabase Storage, requiere sesión) | 'publico' (repo, transitorio) | 'local' */
+  const[origen,setOrigen]=useState(null);
+  const[subiendo,setSubiendo]=useState(false);
+  const[aviso,setAviso]=useState(null);
+
+  /* Load Excel: primero el bucket privado; si todavía no está, el archivo del repo (solo mientras dure la migración) */
   useEffect(()=>{
-    fetch('data/Pagos/Programaci%C3%B2n%20gastos%20de%20obras.xlsx?t='+Date.now())
-      .then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.arrayBuffer()})
-      .then(buf=>{
-        const d=parseExcel(new Uint8Array(buf));
-        setData(d);setLoading(false);
-      })
-      .catch(e=>{
-        setError(e.message);setLoading(false);
-      });
-  },[]);
-  
-  const handleLocalFile=useCallback(file=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
+    (async()=>{
       try{
-        const d=parseExcel(new Uint8Array(e.target.result));
-        setData(d);setError(null);
-      }catch(err){setError(err.message)}
-    };
-    reader.readAsArrayBuffer(file);
+        const{data:blob,error:e}=await sb.storage.from(PAGOS_BUCKET).download(PAGOS_PATH);
+        if(e||!blob)throw e||new Error('sin archivo');
+        setData(parseExcel(new Uint8Array(await blob.arrayBuffer())));setOrigen('privado');
+      }catch(_){
+        try{
+          const r=await fetch(PAGOS_REPO_URL+'?t='+Date.now());
+          if(!r.ok)throw new Error(r.status===404?'todavía no se subió el Excel al almacenamiento privado':`HTTP ${r.status}`);
+          setData(parseExcel(new Uint8Array(await r.arrayBuffer())));setOrigen('publico');
+        }catch(e2){setError(e2.message)}
+      }
+      setLoading(false);
+    })();
+  },[]);
+
+  /* Cargar un Excel: se muestra y se guarda en el bucket privado (reemplaza al anterior) */
+  const handleLocalFile=useCallback(async file=>{
+    let d;
+    try{d=parseExcel(new Uint8Array(await file.arrayBuffer()))}
+    catch(err){setError('El archivo no se pudo leer: '+err.message);return}
+    setData(d);setError(null);setOrigen('local');
+    setSubiendo(true);
+    try{
+      const{error:e}=await sb.storage.from(PAGOS_BUCKET).upload(PAGOS_PATH,file,{upsert:true,contentType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+      if(e)throw e;
+      setOrigen('privado');setAviso('Excel actualizado y guardado en el almacenamiento privado.');
+    }catch(e){setAviso('Se muestra el Excel, pero no se pudo guardar en el almacenamiento privado: '+(e.message||e)+'. Revisá que el bucket "'+PAGOS_BUCKET+'" exista.')}
+    finally{setSubiendo(false)}
   },[]);
   
   const resetFilters=useCallback(()=>{setFObra('all');setFProv('all');setFEstCli('all');setFRubro('all');setFDesde('');setFHasta('')},[]);
@@ -680,6 +703,12 @@ function App({user,onLogout}){
       </div>
       
       <div className="acts">
+        {origen==='publico'&&<span className="origen-badge warn" title="El Excel todavía se lee del repo público. Subilo con 'Actualizar Excel' para pasarlo al almacenamiento privado.">⚠ Excel público</span>}
+        {origen==='privado'&&<span className="origen-badge ok" title="El Excel se lee del almacenamiento privado (requiere sesión)">🔒 Privado</span>}
+        <label className="logout-btn" style={{cursor:subiendo?'wait':'pointer'}} title="Subí el Excel nuevo: reemplaza al anterior para todos">
+          {subiendo?'Subiendo…':'↑ Actualizar Excel'}
+          <input type="file" accept=".xlsx,.xls" style={{display:'none'}} disabled={subiendo} onChange={e=>{const f=e.target.files[0];e.target.value='';if(f)handleLocalFile(f)}}/>
+        </label>
         <span style={{fontSize:11,color:'var(--c2)',fontFamily:'var(--fm)'}}>{filtered.length} facturas</span>
         <button className="btn-i" onClick={togTheme}>{theme==='light'?'🌙':'☀️'}</button>
         <span style={{fontSize:10,color:'var(--c2)',maxWidth:120,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}} title={user.email}>{user.email.split('@')[0]}</span>
@@ -715,16 +744,17 @@ function App({user,onLogout}){
       {fCount>0&&<><span className="fbadge">{fCount}</span><button className="fclr" onClick={resetFilters}>Limpiar</button></>}
     </div>
     
+    {aviso&&<div className="aviso" onClick={()=>setAviso(null)}>{aviso} <span style={{opacity:.6}}>(clic para cerrar)</span></div>}
     <div className="content">
-      {!data&&<div className="drop" onClick={()=>document.getElementById('fi').click()}>
+      {!data&&!error&&<div className="drop" onClick={()=>document.getElementById('fi').click()}>
         <div style={{fontSize:24,marginBottom:8}}>📊</div>
         <div>Arrastrá el Excel de Programación de Gastos aquí, o hacé clic para seleccionar</div>
         <input id="fi" type="file" accept=".xlsx,.xls" onChange={e=>{if(e.target.files[0])handleLocalFile(e.target.files[0])}}/>
       </div>}
       
       {error&&!data&&<div className="drop" onClick={()=>document.getElementById('fi2').click()} style={{borderColor:'var(--err)',color:'var(--err)'}}>
-        <div style={{marginBottom:8}}>No se encontró el archivo en el servidor ({error})</div>
-        <div style={{color:'var(--c1)'}}>Hacé clic para cargar el Excel manualmente</div>
+        <div style={{marginBottom:8}}>No se pudo cargar el Excel ({error})</div>
+        <div style={{color:'var(--c1)'}}>Hacé clic para subir el Excel de Programación de Gastos: queda guardado en el almacenamiento privado</div>
         <input id="fi2" type="file" accept=".xlsx,.xls" onChange={e=>{if(e.target.files[0])handleLocalFile(e.target.files[0])}}/>
       </div>}
       
