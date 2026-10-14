@@ -364,6 +364,10 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:13px
 .mat-status.no-link{background:var(--bg-2);color:var(--c2)}
 .mat-empty{padding:40px 20px;text-align:center;color:var(--c2);font-size:13px}
 .mat-scroll{max-height:60vh;overflow-y:auto}
+.alc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.alc-card{background:var(--bg-el);border:1px solid var(--b1);border-top:3px solid;border-radius:var(--r-m);padding:12px 14px}
+.alc-hd{display:flex;justify-content:space-between;align-items:baseline;font-size:13px}
+.alc-row{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--c1);margin-top:8px}
 .cod{display:inline-flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:10px;font-weight:700;letter-spacing:.5px;padding:1px 5px;border-radius:2px;background:var(--ac);color:#fff;flex-shrink:0;margin-right:5px}
 .cod.lg{font-size:11px;padding:2px 6px;min-width:28px}
 .cod.off{background:var(--bg-2);color:var(--c2)}
@@ -845,6 +849,7 @@ function parseMSPDI(xmlText){
   function flat(list,d=0){const r=[];for(const t of list){t.depth=d;r.push(t);if(t.children.length)r.push(...flat(t.children,d+1))}return r}
   const allTasks=flat(roots);
   const uidMap={};for(const t of allTasks)uidMap[t.uid]=t;
+  const alcInfo=classifyAlcance(allTasks);
 
   let minD=null,maxD=null;
   for(const t of allTasks){
@@ -871,7 +876,48 @@ function parseMSPDI(xmlText){
 
   return{tasks:allTasks,roots,uidMap,resources:resList,rawRes:Object.values(res),
     minDate:minD,maxDate:maxD,hasBL,contractors:[...contractors].sort(),
-    rubros:[...rubros].sort(),niveles:[...niveles].sort(),tableros:[...tableros].sort()};
+    rubros:[...rubros].sort(),niveles:[...niveles].sort(),tableros:[...tableros].sort(),
+    hasAlcance:alcInfo.ok,obraRootName:alcInfo.root?alcInfo.root.name:null};
+}
+
+/* ═══════ Alcance: Obra base vs Adicional ═══════
+   Solo se clasifican tareas (no resumen) que cuelgan del resumen "Obra …" del cronograma.
+   - Obra base: tiene N° Item (Texto4), propio o heredado del resumen padre, sin "*".
+   - Adicional: sin N° Item, o con "*" en el N° Item o al final del nombre.
+   - Quedan sin clasificar (t.alc=null): todo lo que está fuera de la fase Obra, hitos y standby.
+   - Si la fase Obra no tiene NINGÚN N° Item cargado, no se clasifica (si no, todo saldría Adicional). */
+function countItems(t){let n=entV(t,'N° Item')?1:0;for(const c of t.children)n+=countItems(c);return n}
+function findObraRoot(tasks){
+  /* Candidatos: resúmenes llamados "Obra …" o "Cronograma …". Gana el que tiene más N° Item cargados
+     (en algunas obras "Obra - X" solo agrupa Contratada/barra del semáforo y el trabajo real está en "CRONOGRAMA X"). */
+  const cands=tasks.filter(t=>t.isSummary&&t.children.length&&/^[\s✔✓\-]*(obra|cronograma)\b/i.test(t.name))
+    .map(t=>({t,n:countItems(t)})).filter(x=>x.n>0);
+  if(!cands.length){
+    /* Obras chicas sin resumen "Obra…" (ej. Losa Mogetta): todo el cronograma es obra → resumen principal (nivel 1) */
+    const top=tasks.filter(t=>t.isSummary&&t.outlineLevel===1&&countItems(t)>0).sort((a,b)=>countItems(b)-countItems(a))[0];
+    return top||null;
+  }
+  cands.sort((a,b)=>b.n-a.n||a.t.outlineLevel-b.t.outlineLevel);
+  /* Si el ganador está dentro de otro candidato (ej. "Obra" > "Cronograma"), usar el exterior solo si suma los mismos ítems */
+  let r=cands[0].t;
+  for(let p=r.parent;p;p=p.parent){const c=cands.find(x=>x.t===p);if(c&&c.n===cands[0].n)r=p}
+  return r;
+}
+function classifyAlcance(tasks){
+  for(const t of tasks)t.alc=null;
+  const root=findObraRoot(tasks);
+  if(!root)return{ok:false,root:null};
+  const visit=(t,inherited)=>{
+    const own=entV(t,'N° Item');
+    const item=own||inherited;
+    if(t.isSummary){for(const c of t.children)visit(c,item);return}
+    /* fuera: hitos, standby y las barras del semáforo ("… Contratada" / "Obra …") */
+    if(t.isMilestone||/stand[\s\-]?by/i.test(t.name)||/contratad[ao]/i.test(t.name)||/^[\s✔✓\-]*obra\b/i.test(t.name))return;
+    const star=item.includes('*')||/\*\s*$/.test(t.name);
+    t.alc=item&&!star?'base':'adic';
+  };
+  for(const c of root.children)visit(c,entV(root,'N° Item'));
+  return{ok:true,root};
 }
 
 /* ═══════ Utilities ═══════ */
@@ -1022,6 +1068,11 @@ function ProjDash({data,health,proj}){
   ts.forEach(t=>{const c=entV(t,'Contratista')||'Sin contratista';if(!cMap[c])cMap[c]={tot:0,done:0,ov:0};cMap[c].tot++;if(t.percentComplete>=100)cMap[c].done++;if(isOv(t))cMap[c].ov++});
 
   const upcoming=ts.filter(t=>t.finish&&t.finish>=new Date()&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish).slice(0,10);
+  const alcStats=k=>{const g=ts.filter(t=>t.alc===k);const n=g.length;
+    return{n,done:g.filter(t=>t.percentComplete>=100).length,ip:g.filter(t=>t.percentComplete>0&&t.percentComplete<100).length,
+      ov:g.filter(t=>isOv(t)).length,avg:n?Math.round(g.reduce((s,t)=>s+t.percentComplete,0)/n):0,
+      fin:g.reduce((m,t)=>t.finish&&(!m||t.finish>m)?t.finish:m,null)}};
+  const alc=data.hasAlcance?{base:alcStats('base'),adic:alcStats('adic')}:null;
   const h=health;
   const semaColor=h?{g:'var(--ok)',y:'var(--warn)',r:'var(--err)',x:'var(--c2)'}[h.color]:'var(--c2)';
 
@@ -1068,6 +1119,20 @@ function ProjDash({data,health,proj}){
       <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}><span style={{fontSize:12,fontWeight:600}}>Avance general</span><span style={{fontSize:12,fontFamily:'var(--fm)',color:'var(--ac)',fontWeight:600}}>{avg}%</span></div>
       <div style={{height:8,borderRadius:4,background:'var(--bg-2)',overflow:'hidden'}}><div style={{height:'100%',borderRadius:4,width:`${avg}%`,background:'var(--ac)'}}/></div>
     </div>
+    {alc&&(alc.base.n+alc.adic.n)>0&&<div style={{marginBottom:20}}>
+      <div className="dst" title={'Tareas dentro de "'+data.obraRootName+'". Obra base = con N° Item; Adicional = sin N° Item o con *'}>Obra base vs Adicionales</div>
+      <div className="alc-grid">
+        {[['base','Obra base','var(--ac)'],['adic','Adicionales','var(--warn)']].map(([k,l,col])=>{const g=alc[k];const pctT=Math.round(g.n*100/(alc.base.n+alc.adic.n));
+          return <div key={k} className="alc-card" style={{borderTopColor:col}}>
+            <div className="alc-hd"><span style={{fontWeight:700}}>{l}</span><span className="mono" style={{color:'var(--c2)',fontSize:11}}>{g.n} tareas · {pctT}%</span></div>
+            <div style={{display:'flex',justifyContent:'space-between',fontSize:11,margin:'8px 0 4px'}}><span style={{color:'var(--c2)'}}>Avance</span><span className="mono" style={{fontWeight:700,color:col}}>{g.avg}%</span></div>
+            <div style={{height:6,borderRadius:3,background:'var(--bg-2)',overflow:'hidden'}}><div style={{height:'100%',width:`${g.avg}%`,background:col}}/></div>
+            <div className="alc-row"><span>Completadas <b className="mono" style={{color:'var(--ok)'}}>{g.done}</b></span><span>En curso <b className="mono" style={{color:'var(--warn)'}}>{g.ip}</b></span><span>Vencidas <b className="mono" style={{color:g.ov?'var(--err)':'var(--c2)'}}>{g.ov}</b></span></div>
+            <div className="alc-row"><span>Termina <b className="mono">{fD(g.fin)}</b></span></div>
+          </div>})}
+      </div>
+      {alc.adic.fin&&alc.base.fin&&alc.adic.fin>alc.base.fin&&<div style={{fontSize:11,color:'var(--warn)',marginTop:6}}>Los adicionales terminan {dB(alc.base.fin,alc.adic.fin)}d después que la obra base: parte del desvío se explica por ellos.</div>}
+    </div>}
     {Object.keys(cMap).length>1&&<div style={{marginBottom:20}}>
       <div className="dst">Carga por contratista</div>
       <table className="dt"><thead><tr><th>Contratista</th><th style={{width:60}}>Total</th><th style={{width:80}}>Hechas</th><th style={{width:70}}>Vencidas</th></tr></thead>
@@ -2563,6 +2628,7 @@ function App(){
   const[fCon,setFCon]=useState('all');
   const[fRub,setFRub]=useState('all');
   const[fTab,setFTab]=useState('all');
+  const[fAlc,setFAlc]=useState('all');   /* all | base | adic */
   const[fNiv,setFNiv]=useState('all');
   const[fWbs,setFWbs]=useState(99);
   const[fDf,setFDf]=useState('');
@@ -2694,7 +2760,7 @@ function App(){
     }
   },[pData]);
 
-  const resetF=useCallback(()=>{setFSt('all');setFRes('all');setFCon('all');setFRub('all');setFTab('all');setFNiv('all');setFWbs(99);setFDf('');setFDt('')},[]);
+  const resetF=useCallback(()=>{setFSt('all');setFRes('all');setFCon('all');setFRub('all');setFTab('all');setFAlc('all');setFNiv('all');setFWbs(99);setFDf('');setFDt('')},[]);
 
   const openProj=useCallback(async(proj)=>{
     const k=proj.key;
@@ -2736,7 +2802,7 @@ function App(){
   const expAll=useCallback((k,ts)=>{const m={};ts.forEach(t=>{if(t.isSummary)m[t.uid]=true});setExpMap(p=>({...p,[k]:m}))},[]);
   const colAll=useCallback((k,ts)=>{const m={};ts.forEach(t=>{if(t.isSummary)m[t.uid]=false});setExpMap(p=>({...p,[k]:m}))},[]);
 
-  const fCount=useMemo(()=>{let c=0;if(fSt!=='all')c++;if(fRes!=='all')c++;if(fCon!=='all')c++;if(fRub!=='all')c++;if(fTab!=='all')c++;if(fNiv!=='all')c++;if(fWbs<99)c++;if(fDf||fDt)c++;return c},[fSt,fRes,fCon,fRub,fTab,fNiv,fWbs,fDf,fDt]);
+  const fCount=useMemo(()=>{let c=0;if(fSt!=='all')c++;if(fRes!=='all')c++;if(fCon!=='all')c++;if(fRub!=='all')c++;if(fTab!=='all')c++;if(fAlc!=='all')c++;if(fNiv!=='all')c++;if(fWbs<99)c++;if(fDf||fDt)c++;return c},[fSt,fRes,fCon,fRub,fTab,fAlc,fNiv,fWbs,fDf,fDt]);
 
   const aProj=useMemo(()=>(pList||[]).find(p=>p.key===active),[pList,active]);
   const aData=active?pData[active]:null;
@@ -2753,6 +2819,7 @@ function App(){
       if(fCon!=='all'){const cv=entV(t,'Contratista');if(fCon==='none'){if(cv)return false}else{if(cv!==fCon)return false}}
       if(fRub!=='all'){const rv=entV(t,'Rubro');if(fRub==='none'){if(rv)return false}else{if(rv!==fRub)return false}}
       if(fTab!=='all'){const tv=entV(t,'Tableros');if(fTab==='none'){if(tv)return false}else{if(tv!==fTab)return false}}
+      if(fAlc!=='all'&&t.alc!==fAlc)return false;
       if(fNiv!=='all'){const nv=entV(t,'Nivel');if(fNiv==='none'){if(nv)return false}else{if(nv!==fNiv)return false}}
       if(t.outlineLevel>fWbs)return false;
       if(fDf){const f=new Date(fDf);if(t.finish&&t.finish<f)return false}
@@ -2764,7 +2831,7 @@ function App(){
     const proc=t=>{if(t.isSummary){if(!hm(t))return}else{if(!mf(t))return};res.push(t);if(t.isSummary&&em[t.uid]){for(const c of t.children)proc(c)}};
     for(const t of aData.roots||[])proc(t);
     return res;
-  },[aData,active,expMap,fSt,fRes,fCon,fRub,fTab,fNiv,fWbs,fDf,fDt]);
+  },[aData,active,expMap,fSt,fRes,fCon,fRub,fTab,fAlc,fNiv,fWbs,fDf,fDt]);
 
   /* Splitter */
   useEffect(()=>{if(!splOn)return;const mv=e=>setTblW(Math.max(300,Math.min(e.clientX,window.innerWidth-200)));const up=()=>setSplOn(false);document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);return()=>{document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up)}},[splOn]);
@@ -3032,6 +3099,8 @@ function App(){
       <select className="fsel" value={fRub} onChange={e=>setFRub(e.target.value)}><option value="all">Todos</option><option value="none">Sin rubro</option>{aData.rubros.map(r=><option key={r} value={r}>{r}</option>)}</select></Fragment>}
       {aData.tableros.length>0&&<Fragment><span className="fl">Fase</span>
       <select className="fsel" value={fTab} onChange={e=>setFTab(e.target.value)}><option value="all">Todas</option>{aData.tableros.map(t=><option key={t} value={t}>{t}</option>)}</select></Fragment>}
+      {aData.hasAlcance&&<Fragment><span className="fl" title={'Clasifica las tareas dentro de "'+aData.obraRootName+'". Obra base = con N° Item; Adicional = sin N° Item o con *'}>Alcance</span>
+      <select className="fsel" value={fAlc} onChange={e=>setFAlc(e.target.value)}><option value="all">Todo</option><option value="base">Obra base</option><option value="adic">Adicionales</option></select></Fragment>}
       {aData.niveles.length>0&&<Fragment><span className="fl">Nivel obra</span>
       <select className="fsel" value={fNiv} onChange={e=>setFNiv(e.target.value)}><option value="all">Todos</option>{aData.niveles.map(n=><option key={n} value={n}>{n}</option>)}</select></Fragment>}
       <span className="fl">Prof. WBS</span>
