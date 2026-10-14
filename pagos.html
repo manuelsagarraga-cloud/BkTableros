@@ -608,7 +608,7 @@ function App({user,onLogout}){
       }catch(_){
         try{
           const r=await fetch(PAGOS_REPO_URL+'?t='+Date.now());
-          if(!r.ok)throw new Error(r.status===404?'todavía no se subió el Excel al almacenamiento privado':`HTTP ${r.status}`);
+          if(!r.ok)throw new Error(r.status===404?'tu usuario no tiene acceso al Excel de pagos, o todavía no se subió':`HTTP ${r.status}`);
           setData(parseExcel(new Uint8Array(await r.arrayBuffer())));setOrigen('publico');
         }catch(e2){setError(e2.message)}
       }
