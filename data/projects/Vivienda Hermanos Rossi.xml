@@ -6,7 +6,7 @@
 	<GUID>8E9C993F-F1B9-F111-96CD-0045E2C8A982</GUID>
 	<Title>VIvienda Hermanos Rossi</Title>
 	<CreationDate>2025-06-12T09:00:00</CreationDate>
-	<LastSaved>2026-10-14T15:38:00</LastSaved>
+	<LastSaved>2026-10-14T16:11:00</LastSaved>
 	<ScheduleFromStart>1</ScheduleFromStart>
 	<StartDate>2025-06-12T09:00:00</StartDate>
 	<FinishDate>2028-05-07T19:00:00</FinishDate>
@@ -525,108 +525,142 @@
 	<Tables>
 		<Table>
 			<Name>&amp;Variación</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Valor acumulado</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Línea base</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Seguimiento</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Programación</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Trabajo</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Costo</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Resumen</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Fechas de restricción</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Retraso</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Uso</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Hipervínculo</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Indicadores de programación del valor acumulado</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Indicadores de costo del valor acumulado</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Exportación</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Tabla de informe</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Planeación de sprints</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Sprint actual</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Trabajo pendiente</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Entrada</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Uso</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Costo</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Trabajo</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Resumen</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Hipervínculo</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Exportación</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>V&amp;alor acumulado</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Entrada - Recursos de &amp;trabajo</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Entrada - Recursos &amp;materiales</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Planeamiento de recursos</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Resumen</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Resumen</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Tareas del panel de tareas</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Ecipsa Natania</Name>
 		</Table>
 		<Table>
 			<Name>MS Tabla</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>&amp;Entrada</Name>
@@ -637,9 +671,11 @@
 		</Table>
 		<Table>
 			<Name>Manuel S Tabla</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 		<Table>
 			<Name>Tabla Ecipsa</Name>
+			<IsCustomized>true</IsCustomized>
 		</Table>
 	</Tables>
 	<Maps>
@@ -51408,6 +51444,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR1.03</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR1.03</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -51581,6 +51629,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR1.04</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR1.04</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -51748,6 +51808,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR1.05</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR1.05</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -51911,6 +51983,12 @@
 			<EnterpriseExtendedAttribute>
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
@@ -52984,6 +53062,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -53175,6 +53259,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -53333,6 +53423,12 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -53697,6 +53793,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.01</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.01</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -53981,6 +54089,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.02</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.02</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -54334,6 +54454,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.03</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.03</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -54680,6 +54812,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR.2.96</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR.2.96</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -54992,6 +55136,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias </b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias </Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -55209,6 +55359,12 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -55632,6 +55788,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.04</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.04</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -55935,6 +56103,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.06</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.06</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -56240,6 +56420,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.08</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.08</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -56543,6 +56735,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.05</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.05</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -56848,6 +57052,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.07</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.07</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -57130,6 +57346,12 @@
 			<b408007></b408007>
 			<b408008></b408008>
 			<b40800a></b40800a>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -57325,6 +57547,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.11</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.11</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -57718,6 +57952,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.12</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.12</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -58109,6 +58355,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.13</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.13</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -58502,6 +58760,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.14</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.14</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -58893,6 +59163,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.15</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.15</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -59286,6 +59568,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.16</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.16</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -59541,6 +59835,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.17</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.17</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -59798,6 +60104,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.18</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.18</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -60053,6 +60371,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.19</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.19</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -60534,6 +60864,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.20</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.20</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -60901,6 +61243,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.21</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.21</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -61270,6 +61624,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.22</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.22</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -61637,6 +62003,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.23</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.23</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -62006,6 +62384,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.09</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.09</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -62261,6 +62651,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.10</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.10</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -62603,6 +63005,12 @@
 			<b408007></b408007>
 			<b408008></b408008>
 			<b40800a></b40800a>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -62812,6 +63220,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.24</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.24</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -63293,6 +63713,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.25</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.25</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -63564,6 +63996,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.26</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.26</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -64858,6 +65302,12 @@
 			<b408007></b408007>
 			<b408008></b408008>
 			<b40800a></b40800a>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -65069,6 +65519,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.29</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.29</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -65318,6 +65780,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.30</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.30</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -65565,6 +66039,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.31</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.31</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -65814,6 +66300,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.32</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.32</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -66061,6 +66559,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.33</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.33</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -66310,6 +66820,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.34</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.34</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -66557,6 +67079,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.35</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.35</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -66806,6 +67340,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.36</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.36</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -67053,6 +67599,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.37</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.37</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -67814,6 +68372,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.38</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.38</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -68573,6 +69143,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.39</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.39</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -69334,6 +69916,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.40</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.40</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -70093,6 +70687,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.41</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.41</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -70854,6 +71460,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.42</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.42</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -71613,6 +72231,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.43</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.43</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -72374,6 +73004,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.27</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.27</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -72990,6 +73632,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.28</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.28</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -73276,6 +73930,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.44</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.44</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -73537,6 +74203,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.45</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.45</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -73800,6 +74478,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.46</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.46</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -74047,6 +74737,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.47</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.47</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -74344,6 +75046,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.48</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.48</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -74640,6 +75354,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.49</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.49</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -74919,6 +75645,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -75155,6 +75887,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.50</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.50</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -75597,6 +76341,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.51</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.51</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -76036,6 +76792,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.52</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.52</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -76549,6 +77317,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.53</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.53</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -77060,6 +77840,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.54</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.54</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -77573,6 +78365,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.55</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.55</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -77912,6 +78716,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -78119,6 +78929,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -78325,6 +79141,12 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -78549,6 +79371,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -78771,6 +79599,12 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -78995,6 +79829,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -79196,6 +80036,12 @@
 			<b408007></b408007>
 			<b408008></b408008>
 			<b40800a></b40800a>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -79391,6 +80237,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.56</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.56</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -79800,6 +80658,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.57</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.57</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -80207,6 +81077,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.58</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.58</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -80808,6 +81690,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.59</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.59</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -81311,6 +82205,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.60</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.60</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -81816,6 +82722,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.61</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.61</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -82231,6 +83149,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.62</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.62</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -82648,6 +83578,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.63</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.63</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -83037,6 +83979,12 @@
 			<b408007></b408007>
 			<b408008></b408008>
 			<b40800a></b40800a>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -83232,6 +84180,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.65</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.65</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -83449,6 +84409,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -83665,6 +84631,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.66</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.66</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -83911,6 +84889,12 @@
 			<b408007></b408007>
 			<b408008></b408008>
 			<b40800a></b40800a>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -84097,6 +85081,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.67</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.67</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -84339,6 +85335,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.68</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.68</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -84837,6 +85845,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.69</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.69</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -85008,6 +86028,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.70</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.70</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -85181,6 +86213,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.71</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.71</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -85353,6 +86397,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.72</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.72</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -85522,6 +86578,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.73</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.73</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -86075,6 +87143,12 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -86718,6 +87792,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.74</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.74</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -87002,6 +88088,18 @@
 			<EnterpriseExtendedAttribute>
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.75</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.75</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
@@ -87387,6 +88485,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.77</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.77</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -88292,6 +89402,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.78</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.78</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -89195,6 +90317,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.82</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.82</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -90060,6 +91194,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.85</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.85</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -90394,6 +91540,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.79</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.79</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -90970,6 +92128,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.80</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.80</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -91280,6 +92450,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.83</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.83</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -91845,6 +93027,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.86</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.86</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -92020,6 +93214,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.81</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.81</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -92460,6 +93666,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.84</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.84</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -92920,6 +94138,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -93282,6 +94506,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Yesero</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.87</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.87</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -93454,6 +94690,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Yesero</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.88</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.88</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -93625,6 +94873,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Yesero</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.89</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.89</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -93931,6 +95191,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Durlero</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.90</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.90</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -94093,6 +95365,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Durlero</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.91</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.91</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -94391,6 +95675,12 @@
 			<b408007></b408007>
 			<b408008></b408008>
 			<b40800a></b40800a>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -94552,6 +95842,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.94</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.94</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -94697,6 +95999,12 @@
 			<b408007></b408007>
 			<b408008></b408008>
 			<b40800a></b40800a>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -94976,6 +96284,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR2.95</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR2.95</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -95129,6 +96449,12 @@
 			<b408007></b408007>
 			<b408008></b408008>
 			<b40800a></b40800a>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -95364,6 +96690,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.01</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.01</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -95661,6 +96999,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.02</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.02</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -95957,6 +97307,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.03</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.03</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -96195,6 +97557,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.04</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.04</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -96515,6 +97889,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.06</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.06</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -96867,6 +98253,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.05</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.05</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -97186,6 +98584,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.07</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.07</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -97531,6 +98941,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.08</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.08</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -97871,6 +99293,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.09</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.09</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -98042,6 +99476,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.10</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.10</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -98379,6 +99825,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.11</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.11</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -98557,6 +100015,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.12</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.12</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -98875,6 +100345,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.13</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.13</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -99437,6 +100919,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Herrería</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.14</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.14</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>A definir</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>A definir</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -99745,6 +101239,18 @@
 			<EnterpriseExtendedAttribute>
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR3.15</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR3.15</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
@@ -100058,6 +101564,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.01</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.01</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -102206,6 +103724,12 @@
 			<b408007></b408007>
 			<b408008></b408008>
 			<b40800a></b40800a>
+			<b40800c>RR4.02</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.02</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -102339,6 +103863,12 @@
 			<b408007></b408007>
 			<b408008></b408008>
 			<b40800a></b40800a>
+			<b40800c>RR4.03</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.03</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -102529,6 +104059,12 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -102985,6 +104521,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -103372,6 +104914,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.05</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.05</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -104116,6 +105670,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.06</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.06</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -104329,6 +105895,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.07</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.07</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -104515,6 +106093,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.08</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.08</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -104886,6 +106476,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.09</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.09</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -105526,6 +107128,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.10</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.10</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -106073,6 +107687,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.11</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.11</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -106235,6 +107861,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.12</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.12</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -106399,6 +108037,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.13</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.13</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -106561,6 +108211,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.14</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.14</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -106879,6 +108541,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.15</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.15</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -107040,6 +108714,18 @@
 			<EnterpriseExtendedAttribute>
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.16</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.16</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
@@ -107205,6 +108891,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.17</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.17</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -107687,6 +109385,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR5.01</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR5.01</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -107902,6 +109612,12 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -108134,6 +109850,12 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -108373,6 +110095,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR5.02</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR5.02</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -108728,6 +110462,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -109055,6 +110795,12 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -109571,6 +111317,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR5.03</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR5.03</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -109744,6 +111502,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR5.04</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR5.04</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -109906,6 +111676,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR5.05</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR5.05</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -110070,6 +111852,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR5.06</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR5.06</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -110233,6 +112027,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR5.07</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR5.07</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -110395,6 +112201,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR5.08</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR5.08</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -110702,6 +112520,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.01</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.01</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -110873,6 +112703,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.02</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.02</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -111046,6 +112888,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.03</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.03</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -111217,6 +113071,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.04</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.04</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -111579,6 +113445,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.16</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.16</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -111747,6 +113625,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.17</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.17</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -111913,6 +113803,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.18</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.18</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -112082,6 +113984,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.19</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.19</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -112248,6 +114162,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.20</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.20</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -112417,6 +114343,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.21</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.21</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -112583,6 +114521,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.22</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.22</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -112751,6 +114701,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.23</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.23</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -113073,6 +115035,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.05</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.05</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -113239,6 +115213,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.06</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.06</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -113407,6 +115393,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.07</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.07</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -113573,6 +115571,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.08</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.08</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -113903,6 +115913,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.09</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.09</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -114065,6 +116087,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.10</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.10</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -114229,6 +116263,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.11</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.11</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -114391,6 +116437,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.12</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.12</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -114555,6 +116613,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.13</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.13</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -114718,6 +116788,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.14</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.14</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -114880,6 +116962,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Albañileria</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR6.15</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR6.15</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Elvin Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Elvin Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -115198,6 +117292,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Pintura</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR7.01</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR7.01</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Alejandro Herrera</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Alejandro Herrera</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -115360,6 +117466,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Pintura</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR7.02</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR7.02</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Alejandro Herrera</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Alejandro Herrera</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -115524,6 +117642,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Pintura</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR7.03</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR7.03</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Alejandro Herrera</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Alejandro Herrera</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -115686,6 +117816,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Pintura</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR7.04</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR7.04</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Alejandro Herrera</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Alejandro Herrera</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -115850,6 +117992,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Pintura</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR7.05</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR7.05</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Alejandro Herrera</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Alejandro Herrera</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -116012,6 +118166,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Pintura</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR7.06</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR7.06</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Alejandro Herrera</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Alejandro Herrera</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -116329,6 +118495,18 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Pintura</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR7.07</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR7.07</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Alejandro Herrera</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Alejandro Herrera</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -116658,6 +118836,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR8.01</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR8.01</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -116821,6 +119011,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR8.02</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR8.02</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -116982,6 +119184,18 @@
 			<EnterpriseExtendedAttribute>
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR8.03</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR8.03</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
@@ -117686,6 +119900,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR9.01</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR9.01</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -117842,6 +120068,12 @@
 			<EnterpriseExtendedAttribute>
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
@@ -118007,6 +120239,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR9.03</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR9.03</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -118169,6 +120413,12 @@
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
 				<Value>Electricista</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Leo Subias</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Leo Subias</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
@@ -118333,6 +120583,12 @@
 				<FieldID>188776458</FieldID>
 				<Value>Plomeria</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800e>David Bustamante</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>David Bustamante</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -118494,6 +120750,12 @@
 			<EnterpriseExtendedAttribute>
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
@@ -118661,6 +120923,12 @@
 			<EnterpriseExtendedAttribute>
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
@@ -119005,6 +121273,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.18</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.18</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -119178,6 +121458,18 @@
 				<FieldID>188776458</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.19</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.19</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
 			<b608003></b608003>
 			<EnterpriseExtendedAttribute>
@@ -119342,6 +121634,18 @@
 			<EnterpriseExtendedAttribute>
 				<FieldIDInHex>b40800a</FieldIDInHex>
 				<FieldID>188776458</FieldID>
+				<Value>Externo</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800c>RR4.20</b40800c>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800c</FieldIDInHex>
+				<FieldID>188776460</FieldID>
+				<Value>RR4.20</Value>
+			</EnterpriseExtendedAttribute>
+			<b40800e>Externo</b40800e>
+			<EnterpriseExtendedAttribute>
+				<FieldIDInHex>b40800e</FieldIDInHex>
+				<FieldID>188776462</FieldID>
 				<Value>Externo</Value>
 			</EnterpriseExtendedAttribute>
 			<b608000></b608000>
