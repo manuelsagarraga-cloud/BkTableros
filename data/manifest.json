@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-14T00:36:12.817Z",
-  "count": 28,
+  "generated": "2026-10-14T18:39:34.053Z",
+  "count": 29,
   "projects": [
     {
       "file": "Casa en Blanco.xml",
@@ -126,6 +126,14 @@
       "avisos": []
     },
     {
+      "file": "Vivienda Hermanos Rossi.xml",
+      "name": "Vivienda Hermanos Rossi.xml",
+      "hash": "8c4f66ac2ae4",
+      "sizeKB": 6631,
+      "tareas": 218,
+      "avisos": []
+    },
+    {
       "file": "Vivienda Jardin Ingles.xml",
       "name": "Vivienda Jardin Ingles.xml",
       "hash": "d9cf7901a4f0",
@@ -136,9 +144,9 @@
     {
       "file": "Vivienda Julieta Santiago.xml",
       "name": "Vivienda Julieta Santiago.xml",
-      "hash": "197ef60865a3",
-      "sizeKB": 8619,
-      "tareas": 205,
+      "hash": "86d9bbb7e99b",
+      "sizeKB": 8912,
+      "tareas": 207,
       "avisos": [
         "1 carácter(es) inválido(s) en el XML (se limpian al leer)"
       ]
