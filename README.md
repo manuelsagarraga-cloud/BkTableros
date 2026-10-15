@@ -8,6 +8,7 @@ https://manuelsagarraga-cloud.github.io/BkTableros/
 | `index.html` | Portada con acceso a las herramientas | — |
 | `buildplan.html` | Cronogramas: Gantt por obra, Gantt de obras (portfolio), vencidas por responsable, semáforo, materiales | XML de MS Project en `data/projects/` + `data/Proyectos_Bauvek.xlsx` + Supabase de Cómputo (materiales, con login) |
 | `pagos.html` | Programación de pagos a proveedores | Excel en el Supabase de Cómputo, bucket privado `pagos` (login con usuario de Cómputo: empresa bauvek o admin) |
+| `normativa.html` | Normativa urbana y cabida máxima por lote en Córdoba capital; índice de ordenanzas | En vivo: capas WFS/WMS de IDECOR (Municipalidad y Catastro), Georef. Estático: `data/normativa/digesto.json` (índice del Digesto municipal) |
 
 ## Cómo se actualiza
 
@@ -19,6 +20,9 @@ https://manuelsagarraga-cloud.github.io/BkTableros/
 
 **Datos de las obras (estado, comitente, ubicación, código)**
 Editar `data/Proyectos_Bauvek.xlsx`. La columna `Archivo XML` vincula cada fila con su cronograma; la columna `Código` (RR, JS, LM…) tiene prioridad sobre los códigos cargados en el código.
+
+**Índice de ordenanzas (normativa.html)**
+Editar `data/normativa/digesto.json`: `docs` mapea cada norma a su número interno del Digesto (`Nro=`) y PDF; `marco` arma la sección "Marco normativo" de la pestaña Ordenanzas. Los parámetros de cada zona no se cargan acá: se leen en vivo de la capa oficial.
 
 **Excel de pagos**
 Entrar a `pagos.html` → **↑ Actualizar Excel** → elegir el archivo. Reemplaza al anterior para todos. El Excel ya no se sube al repo: el repo es público.
