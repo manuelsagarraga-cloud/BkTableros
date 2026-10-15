@@ -182,7 +182,7 @@
         { "k": "Ord. 10998", "est": "Vigente", "q": "Portal del Abasto: renovación urbana de un sector pericentral." },
         { "k": "Ord. 12399", "est": "Vigente", "q": "Requisitos funcionales para emprendimientos comerciales y administrativos. Aplica según el uso." },
         { "k": "Ord. 12803", "est": "Vigente", "q": "Antenas y estaciones radioeléctricas." },
-        { "k": "Ord. 12869", "est": "Vigente", "q": "Plan Especial Distrito Abasto. Verificar si el lote está dentro del distrito." },
+        { "k": "Ord. 12869", "est": "Vigente", "q": "Plan Especial Distrito Abasto (Bv. Los Andes, Av. Maipú, Av. Sarmiento–Humberto Primo y Av. General Paz). Área de Promoción Urbana: FOS 100% en parcelas de hasta 200 m² y 80% en las mayores; centro de manzana ocupable al 100% hasta 8 m con cubierta verde; Proyectos Edilicios Especiales en perímetro libre hasta 66 m (PB + 20) con compensaciones.", "poly": [[-64.1868, -31.4036], [-64.1748, -31.4048], [-64.1762, -31.4122], [-64.1852, -31.4104]], "aviso": "El lote parece estar dentro del Plan Especial Distrito Abasto (Ord. 12869/18). Ahí rige FOS 100% en parcelas de hasta 200 m² y 80% en las mayores, el centro de manzana se puede ocupar al 100% hasta 8 m con cubierta verde y se admiten Proyectos Edilicios Especiales en perímetro libre hasta 66 m (PB + 20), con retiro a 12 m del eje, 6 m a medianeras, 10% de superficie no residencial, 10% de espacio público y compensación económica. El cálculo de abajo usa la zona base: verificá el límite en el gráfico 1 de la ordenanza." },
         { "k": "Ord. 12077", "est": "Derogada", "q": "Convenios urbanísticos. La derogó la Ord. 13557/25; los convenios firmados bajo su régimen siguen vigentes. El índice V8 todavía la lista." }
       ]
     },

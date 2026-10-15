@@ -1257,6 +1257,7 @@ function CabidaCard({ M, normaSel, setNormaSel }) {
         {r.warns.map(function (t, i) { return <div key={'w' + i} className="alert">{t}</div>; })}
         {r.notes.map(function (t, i) { return <div key={'n' + i} className="alert info">{t}</div>; })}
       </Fragment>}
+      {N && /CENTRO HIST/i.test(N.otras || '') && M.D.app.some(function (f) { return /CENTRO HIST/i.test(S_(f.properties.nombre_app)); }) && <div className="alert">Manzana del Centro Histórico: las alturas máximas las fija la Dirección de Planeamiento Urbano, así que esta cabida es indicativa hasta tener esa consulta.</div>}
       {det.suquia && <div className="alert">Manzana con retiro obligatorio de <b>{det.suquia} m</b> en los frentes al Río Suquía o a la Av. Costanera (Art. 9 bis, Ord. 12483). {num(v.leExtra) >= det.suquia ? 'Ya está aplicado en el cálculo.' : <button className="btn" style={{ marginLeft: 6 }} onClick={function () { setV(function (o) { return Object.assign({}, o, { leExtra: det.suquia }); }); }}>Aplicar {det.suquia} m</button>}</div>}
       {M.convenioSinParam && <div className="alert">Esta parcela está alcanzada por un convenio urbanístico ({M.convenioSinParam.ordModif}). La cabida real la fija ese convenio: el cálculo de arriba usa la zona base como referencia.</div>}
       <p className="small muted" style={{ marginTop: 10 }}>Estimación preliminar. No descuenta patios reglamentarios, núcleos ni circulaciones; los subsuelos de cocheras no computan. No reemplaza la visación ni el certificado de uso del suelo.</p>
@@ -1324,7 +1325,7 @@ function FraccCard({ M }) {
       ['Plan de vivienda', fr.planSup ? nf(fr.planSup) + ' m² · frente ' + nf(fr.planFrente) + ' m' : null, true],
       ['Antecedentes', fr.antecedentes], ['Observaciones', fr.obs], ['Excepciones', fr.excepciones]
     ]} />
-    {fr.bajoMinimo && <div className="alert">El lote ({nf(M.det.S)} m²) es menor al mínimo de la zona. En G1 y G2 eso habilita FOS 80%.</div>}
+    {fr.bajoMinimo && <div className="alert">El lote ({nf(M.det.S)} m²) es menor al mínimo de fraccionamiento de la zona.{M.normas.some(function (n) { return n.fuente === '8256' && (n.perfil === 'G1' || n.perfil === 'G2'); }) ? ' En G1 y G2 eso habilita FOS 80%.' : ''}</div>}
     {fr.subdiv >= 2 && <div className="alert info">Por superficie y frente, el lote admitiría una subdivisión en hasta {fr.subdiv} parcelas. Requiere verificar trazado y aprobación.</div>}
   </Card>;
 }
@@ -1421,12 +1422,17 @@ function OrdLoteCard({ M }) {
 // Avisos de normas que cambiaron la zonificación y que la capa oficial todavía no cita
 function AvisosNorma({ M }) {
   const dg = React.useContext(DigCtx);
-  if (!dg || !M.pp) return null;
-  const muni = nomMuni(M.pp.Nomenclatura);
+  if (!dg) return null;
+  const muni = M.pp ? nomMuni(M.pp.Nomenclatura) : '';
   const out = [];
   dg.marco.forEach(function (g) {
     g.items.forEach(function (it) {
-      if (!it.mz) return;
+      if (it.poly && E.inside([M.D.lon, M.D.lat], it.poly)) {
+        const d0 = digDoc(dg, it.k);
+        out.push(<div key={it.k + 'p'} className="alert info">{it.aviso || ('El lote parece estar dentro del ámbito de la ' + it.k + '.')} {d0 && <DocLinks d={d0} small />}</div>);
+        return;
+      }
+      if (!it.mz || !muni) return;
       if (it.mz.some(function (m) { return muni.indexOf(m) === 0; })) {
         const d = digDoc(dg, it.k);
         out.push(<div key={it.k} className="alert">La <b>{it.k}/{d ? String(d.anio).slice(-2) : ''}</b> cambió la zonificación de esta manzana y la capa oficial todavía no la cita: los parámetros de abajo pueden estar desactualizados. {d && <DocLinks d={d} small />}</div>);
