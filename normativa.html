@@ -940,7 +940,7 @@ const DigCtx = React.createContext(null);
 function useDigesto() {
   const [dg, setDg] = useState(null);
   useEffect(function () {
-    fetch('data/normativa/digesto.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { if (j) setDg(j); }).catch(function () { });
+    fetch('data/normativa/digesto.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { if (j) setDg(j); }).catch(function () { });
   }, []);
   return dg;
 }
@@ -1487,7 +1487,7 @@ function resumen(M) {
 }
 
 /* ═══════ Mapa ═══════ */
-function MapView({ onPick, M, overlay, active }) {
+function MapView({ onPick, M, overlay, active, focus }) {
   const el = useRef(null), mapRef = useRef(null), grp = useRef(null), ovl = useRef(null), pickRef = useRef(onPick);
   pickRef.current = onPick;
   useEffect(function () {
@@ -1511,6 +1511,7 @@ function MapView({ onPick, M, overlay, active }) {
     return function () { map.remove(); };
   }, []);
   useEffect(function () { if (active && mapRef.current) setTimeout(function () { mapRef.current.invalidateSize(); }, 50); }, [active]);
+  useEffect(function () { if (focus && mapRef.current) mapRef.current.setView([focus.lat, focus.lon], 18); }, [focus]);
   useEffect(function () {
     const map = mapRef.current, g = grp.current;
     if (!map || !g) return;
@@ -1562,23 +1563,59 @@ async function buscar(q) {
     if (!fs.length) return { error: 'No encontré la cuenta ' + q + '.' };
     const p = interiorPoint(fs[0].geometry); return { go: { lat: p[1], lon: p[0] } };
   }
-  // dirección: Georef (datos.gob.ar) y, si no responde, OpenStreetMap
+  // dirección: Georef (datos.gob.ar); si no encuentra, reintenta sin las primeras palabras del nombre
+  // (Georef guarda algunos nombres recortados, p. ej. "OSPO TREJO Y SANABRIA") y, al final, OpenStreetMap
   const out = [];
-  try {
-    const u = 'https://apis.datos.gob.ar/georef/api/direcciones?direccion=' + encodeURIComponent(q) + '&provincia=' + encodeURIComponent('Córdoba') + '&departamento=Capital&max=6';
-    const j = await (await fetch(u)).json();
-    (j.direcciones || []).forEach(function (d) { if (d.ubicacion && d.ubicacion.lat != null) out.push({ label: d.nomenclatura, lat: d.ubicacion.lat, lon: d.ubicacion.lon }); });
-  } catch (e) { }
+  async function georef(txt) {
+    try {
+      const u = 'https://apis.datos.gob.ar/georef/api/direcciones?direccion=' + encodeURIComponent(txt) + '&provincia=' + encodeURIComponent('Córdoba') + '&departamento=Capital&max=6';
+      const j = await (await fetch(u)).json();
+      (j.direcciones || []).forEach(function (d) { if (d.ubicacion && d.ubicacion.lat != null) out.push({ label: d.nomenclatura, lat: d.ubicacion.lat, lon: d.ubicacion.lon, addr: true }); });
+    } catch (e) { }
+  }
+  await georef(q);
+  const mNum = q.match(/^(.*?)[\s,]+(\d{1,5})\s*$/);
+  if (!out.length && mNum) {
+    const words = mNum[1].replace(/^(av(enida)?|bv|bulevar|calle|pje|pasaje)\.?\s+/i, '').split(/\s+/).filter(Boolean);
+    for (let k = 1; k < words.length && !out.length; k++) await georef(words.slice(k).join(' ') + ' ' + mNum[2]);
+  }
   if (!out.length) {
     try {
       const u = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&countrycodes=ar&viewbox=-64.36,-31.28,-64.04,-31.56&bounded=1&q=' + encodeURIComponent(q);
       const j = await (await fetch(u)).json();
-      j.forEach(function (d) { out.push({ label: d.display_name.split(', Pedanía')[0], lat: parseFloat(d.lat), lon: parseFloat(d.lon) }); });
+      j.forEach(function (d) {
+        const house = d.type === 'house' || d.addresstype === 'building' || d.category === 'building';
+        out.push({ label: d.display_name.split(', Pedanía')[0] + (mNum && !house ? ' · sin altura' : ''), lat: parseFloat(d.lat), lon: parseFloat(d.lon), approx: !!mNum && !house });
+      });
     } catch (e) { }
   }
   if (!out.length) return { error: 'No encontré "' + q + '". Probá con calle y altura (ej. "Obispo Trejo 300"), nomenclatura (04-02-065-002) o cuenta.' };
   if (out.length === 1) return { go: out[0] };
   return { list: out };
+}
+
+// Georef ubica la altura sobre el eje de la calle: se toma la parcela más cercana a ese punto
+async function snapParcela(lat, lon) {
+  try {
+    const fs = await wfs('parcelas', 'DWITHIN(geom,SRID=4326;POINT(' + lon + ' ' + lat + '),35,meters)', { props: 'Nomenclatura,geom', count: 30, timeout: 12000 });
+    if (!fs.length) return null;
+    const P = E.makeProj(lon, lat);
+    let best = null, bd = Infinity;
+    fs.forEach(function (f) {
+      const r = E.outerRing(f.geometry); if (!r) return;
+      const R = r.map(P.f);
+      let d = E.inside([0, 0], R) ? 0 : Infinity;
+      for (let i = 0; i < R.length && d > 0; i++) {
+        const a = R[i], b = R[(i + 1) % R.length], vx = b[0] - a[0], vy = b[1] - a[1];
+        const t = Math.max(0, Math.min(1, -(a[0] * vx + a[1] * vy) / (vx * vx + vy * vy || 1)));
+        d = Math.min(d, Math.hypot(a[0] + t * vx, a[1] + t * vy));
+      }
+      if (d < bd) { bd = d; best = f; }
+    });
+    if (!best) return null;
+    const ip = interiorPoint(best.geometry);
+    return ip ? { lat: ip[1], lon: ip[0] } : null;
+  } catch (e) { return null; }
 }
 
 /* ═══════ Ordenanzas (índice general) ═══════ */
@@ -1767,6 +1804,7 @@ function App() {
   const [opts, setOpts] = useState(null);
   const [normaSel, setNormaSel] = useState(null);
   const [overlay, setOverlay] = useState(null);
+  const [focus, setFocus] = useState(null);
   const [saved, setSaved] = useState(loadSaved);
   const [toast, setToast] = useState('');
   const reqId = useRef(0);
@@ -1796,6 +1834,11 @@ function App() {
     if (m) pick(parseFloat(m[1]), parseFloat(m[2]));
   }, []);
 
+  const goTo = async function (o) {
+    if (o.approx) { setFocus({ lat: o.lat, lon: o.lon, t: Date.now() }); setBusy(false); setErr('Encontré la calle pero no la altura exacta: tocá el lote en el mapa.'); return; }
+    if (o.addr) { setBusy(true); const sp = await snapParcela(o.lat, o.lon); pick(sp ? sp.lat : o.lat, sp ? sp.lon : o.lon); return; }
+    pick(o.lat, o.lon);
+  };
   const doSearch = async function (e) {
     e && e.preventDefault();
     if (!q.trim()) return;
@@ -1804,7 +1847,7 @@ function App() {
       const r = await buscar(q);
       if (r.error) { setErr(r.error); setBusy(false); }
       else if (r.list) { setOpts(r.list); setBusy(false); }
-      else pick(r.go.lat, r.go.lon);
+      else goTo(r.go);
     } catch (e2) { setErr('La búsqueda falló: ' + (e2.message || e2)); setBusy(false); }
   };
 
@@ -1856,10 +1899,10 @@ function App() {
         <button className="btn pri" type="submit" disabled={busy}>{busy ? 'Consultando…' : 'Buscar'}</button>
         {overlay && <span className="tag tag-ac" style={{ cursor: 'pointer' }} onClick={function () { setOverlay(null); }} title="Quitar resaltado">{overlay.label} en el mapa ✕</span>}
         <span className="shint">o tocá el lote en el mapa</span>
-        {opts && <div className="sres">{opts.map(function (o, i) { return <button key={i} type="button" onClick={function () { setOpts(null); pick(o.lat, o.lon); }}>{o.label}</button>; })}</div>}
+        {opts && <div className="sres">{opts.map(function (o, i) { return <button key={i} type="button" onClick={function () { setOpts(null); goTo(o); }}>{o.label}</button>; })}</div>}
       </form>
       <div className="main">
-        <MapView onPick={pick} M={M} overlay={overlay} active={tab === 'lote'} />
+        <MapView onPick={pick} M={M} overlay={overlay} active={tab === 'lote'} focus={focus} />
         <div className="panel">
           {err && <div className="alert" style={{ marginTop: 0, marginBottom: 10 }}>{err}</div>}
           {busy && <div className="ld"><div className="sp" /><span>Consultando 23 capas de IDECOR para este punto…</span></div>}
