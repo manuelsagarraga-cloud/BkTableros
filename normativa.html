@@ -873,37 +873,43 @@ async function consultar(lat, lon) {
   const d = 0.0012;
   const bb = 'BBOX(geom,' + (lon - d) + ',' + (lat - d) + ',' + (lon + d) + ',' + (lat + d) + ",'EPSG:4326')";
   const jobs = {
-    parcela: wfs('parcelas', I, { count: 1 }),
-    manzana: wfs('manzana', I, { count: 1 }),
-    zona: wfs('CBA_Ordenanza_8256', I, { props: P8256 }),
-    cm: wfs('CBA_Centro_de_Manzana_8256', I, { props: 'nomenclatura,centro_manzana,caracteristica,ordenanza' }),
-    uso: wfs('CBA_Ordenanza_8133', I, { props: 'patron,descripcion,localizacion,informacion_adicional,antecedentes,observaciones,anexo' }),
-    fracc: wfs('CBA_Ordenanza_8060_Modificaciones', I, { props: 'zonificacion,sector,descripcion,frente,superficie,plan_vivienda_frente,plan_vivienda_superficie,antecedentes,observaciones,excepciones' }),
-    o13131: wfs('ord_13131', I, { props: 'patron,descripcion,digesto_municipal' }),
-    franja: wfs('franja_ecoprod_13131', I, { props: 'franja_eco' }),
-    resguardo: wfs('buffer_13131', I, { props: 'layer' }),
-    apu: wfs('CBA_Areas_Promocion_Urbana_8256', I, { props: 'id' }),
-    app: wfs('cba_area_de_proteccion_patrimonial', I, { props: 'nombre_app' }),
-    arq: wfs('cba_area_arqueologica_de_riesgo', I, { props: 'escalas,observacio' }),
-    loteoA: wfs('loteos_muni_aprobados', I, { props: PLOTEO }),
-    loteoU: wfs('loteos_muni_autorizados', I),
-    vt: wfs('valor_tierra_urbana_2025', I, { props: 'nomenclatura,vut_pesos,superficie_terreno' }),
-    alq: wfs('alquileres_parcela_urbano_2026', I, { props: 'nomenclatura,estado,vua,vua_comercial' }),
-    cat: wfs('cba_inmuebles_catalogados', dw(45)),
-    sitios: wfs('cba_sitios_de_interes', dw(80)),
-    elem: wfs('cba_elemento_urbano_ambiental', dw(40), { props: 'nombre,tipo,categoria,app,mhnac,mhpcial,dmunicipal,observacio' }),
-    gal: wfs('cba_galerias_comerciales', dw(40)),
-    vial: wfs('CBA_Red_Vial_8060', dw(45), { props: 'tipo,nombre,descripcion,antecedentes_legales' }),
-    v9089: wfs('CBA_Red_Vial_9089', dw(520), { props: 'detalle' }),
-    vecinas: wfs('manzana', bb, { props: 'nomenclatura,geom' })
+    parcela: () => wfs('parcelas', I, { count: 1 }),
+    manzana: () => wfs('manzana', I, { count: 1 }),
+    zona: () => wfs('CBA_Ordenanza_8256', I, { props: P8256 }),
+    cm: () => wfs('CBA_Centro_de_Manzana_8256', I, { props: 'nomenclatura,centro_manzana,caracteristica,ordenanza' }),
+    uso: () => wfs('CBA_Ordenanza_8133', I, { props: 'patron,descripcion,localizacion,informacion_adicional,antecedentes,observaciones,anexo' }),
+    fracc: () => wfs('CBA_Ordenanza_8060_Modificaciones', I, { props: 'zonificacion,sector,descripcion,frente,superficie,plan_vivienda_frente,plan_vivienda_superficie,antecedentes,observaciones,excepciones' }),
+    o13131: () => wfs('ord_13131', I, { props: 'patron,descripcion,digesto_municipal' }),
+    franja: () => wfs('franja_ecoprod_13131', I, { props: 'franja_eco' }),
+    resguardo: () => wfs('buffer_13131', I, { props: 'layer' }),
+    apu: () => wfs('CBA_Areas_Promocion_Urbana_8256', I, { props: 'id' }),
+    app: () => wfs('cba_area_de_proteccion_patrimonial', I, { props: 'nombre_app' }),
+    arq: () => wfs('cba_area_arqueologica_de_riesgo', I, { props: 'escalas,observacio' }),
+    loteoA: () => wfs('loteos_muni_aprobados', I, { props: PLOTEO }),
+    loteoU: () => wfs('loteos_muni_autorizados', I),
+    vt: () => wfs('valor_tierra_urbana_2025', I, { props: 'nomenclatura,vut_pesos,superficie_terreno' }),
+    alq: () => wfs('alquileres_parcela_urbano_2026', I, { props: 'nomenclatura,estado,vua,vua_comercial' }),
+    cat: () => wfs('cba_inmuebles_catalogados', dw(45)),
+    sitios: () => wfs('cba_sitios_de_interes', dw(80)),
+    elem: () => wfs('cba_elemento_urbano_ambiental', dw(40), { props: 'nombre,tipo,categoria,app,mhnac,mhpcial,dmunicipal,observacio' }),
+    gal: () => wfs('cba_galerias_comerciales', dw(40)),
+    vial: () => wfs('CBA_Red_Vial_8060', dw(45), { props: 'tipo,nombre,descripcion,antecedentes_legales' }),
+    v9089: () => wfs('CBA_Red_Vial_9089', dw(520), { props: 'detalle' }),
+    vecinas: () => wfs('manzana', bb, { props: 'nomenclatura,geom' })
   };
   const keys = Object.keys(jobs);
-  const res = await Promise.allSettled(keys.map(function (k) { return jobs[k]; }));
   const D = { lat: lat, lon: lon, errors: {}, t: Date.now() };
-  keys.forEach(function (k, i) {
-    if (res[i].status === 'fulfilled') D[k] = res[i].value;
-    else { D[k] = []; D.errors[k] = String(res[i].reason && res[i].reason.message || res[i].reason); }
-  });
+  const run = async function (ks) {
+    const res = await Promise.allSettled(ks.map(function (k) { return jobs[k](); }));
+    ks.forEach(function (k, i) {
+      if (res[i].status === 'fulfilled') { D[k] = res[i].value; delete D.errors[k]; }
+      else { D[k] = []; D.errors[k] = String(res[i].reason && res[i].reason.message || res[i].reason); }
+    });
+  };
+  await run(keys);
+  // IDECOR a veces se satura con tantas consultas juntas: un reintento de las que fallaron
+  const failed = Object.keys(D.errors);
+  if (failed.length) await run(failed);
   return D;
 }
 
