@@ -97,6 +97,47 @@ body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:13px;l
 .origen-badge.warn{background:rgba(245,158,11,.14);color:var(--warn)}
 .aviso{padding:8px 16px;font-size:12px;background:var(--acbg,rgba(158,1,1,.07));border-bottom:1px solid var(--b0);cursor:pointer}
 .logout-btn:hover{color:var(--err);border-color:var(--err);background:rgba(239,68,68,.05)}
+/* ── Saldos por destino + gráficos clicables ── */
+:root{--prov:#9E0101;--bvk:#d97706;--sin:#a3aab8}
+:root[data-theme="dark"]{--prov:#e0444b;--bvk:#f59e0b;--sin:#5e6882}
+.kpi.prov{border-left-color:var(--prov)}.kpi.bvk{border-left-color:var(--bvk)}.kpi.sin{border-left-color:var(--sin)}
+.kpi.click{cursor:pointer;transition:background .12s}.kpi.click:hover{background:var(--bg1)}
+.kpi.sel{box-shadow:inset 0 0 0 2px var(--ac)}
+.kpi-s{font-size:10px;color:var(--c2);margin-top:2px;font-family:var(--fm)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:-4px 0 12px;font-size:11px;color:var(--c2)}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:3px;background:var(--acbg);color:var(--ac);font-weight:700;cursor:pointer}
+.chip:hover{background:var(--ac);color:#fff}
+.tgl{padding:4px 10px;font-size:11px;font-family:var(--ff);font-weight:600;border:1px solid var(--b0);border-radius:4px;background:var(--el);color:var(--c1);cursor:pointer}
+.tgl.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.donut-wrap{display:flex;align-items:center;gap:14px}
+.donut-empty{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--c2);min-height:60px}
+.donut-c1{font-size:13px;font-weight:700;font-family:var(--fm);fill:var(--c0)}
+.donut-c2{font-size:9px;fill:var(--c2);text-transform:uppercase;letter-spacing:.4px}
+.seg-arc{cursor:pointer;transition:opacity .15s,stroke-width .15s}
+.leg{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+.leg-row{display:flex;align-items:center;gap:6px;font-size:11px;line-height:1.3;cursor:pointer;padding:3px 5px;border-radius:3px}
+.leg-row:hover{background:var(--bg1)}.leg-row.dim{opacity:.4}.leg-row.sel{background:var(--acbg);font-weight:700}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.leg-l{color:var(--c0);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.leg-v{color:var(--c1);font-family:var(--fm);font-size:10px;flex-shrink:0}
+.leg-p{color:var(--c2);font-family:var(--fm);font-size:10px;flex-shrink:0;width:30px;text-align:right}
+.charts2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.hb-row{display:grid;grid-template-columns:minmax(80px,170px) 1fr 70px;gap:8px;align-items:center;padding:3px 5px;border-radius:3px;cursor:pointer;font-size:11px}
+.hb-row:hover{background:var(--bg1)}.hb-row.dim{opacity:.35}.hb-row.sel{background:var(--acbg);font-weight:700}
+.hb-l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb-track{height:12px;display:flex;background:var(--bg1);border-radius:2px;overflow:hidden}
+.hb-track span{height:100%}
+.hb-v{font-family:var(--fm);font-size:10px;text-align:right;color:var(--c1)}
+.leg-inline{display:flex;gap:10px;font-size:10px;color:var(--c2);text-transform:none;letter-spacing:0;font-weight:500}
+.leg-inline i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.tbl th.num,.tbl td.num{text-align:right}
+.fsel{max-width:200px;text-overflow:ellipsis}
+:root[data-theme="dark"] .hdr-title,:root[data-theme="dark"] .fclr{color:#e0444b}
+.tag-prov{background:rgba(158,1,1,.09);color:var(--prov)}
+.tag-bvk{background:rgba(217,119,6,.12);color:var(--bvk)}
+.cell-link{cursor:pointer}.cell-link:hover{color:var(--ac);text-decoration:underline}
+@media(max-width:1000px){.donuts,.charts2{grid-template-columns:1fr}}
+@media(max-width:700px){.hdr{flex-wrap:wrap;height:auto;padding:8px 16px}.content{padding:12px 16px}.kpis{grid-template-columns:1fr 1fr}.kpi{padding:10px;min-width:0}.kpi-v{font-size:14px;overflow-wrap:anywhere}.donut-wrap{flex-wrap:wrap}.donut-card{min-width:0}.hb-row{grid-template-columns:90px 1fr 56px}}
 </style>
 </head>
 <body>
@@ -340,230 +381,261 @@ function normalizeRubro(raw){
   return result;
 }
 
+
 /* ═══════ Parse Excel ═══════ */
+/* Soporta los dos formatos de hoja que conviven en el Excel:
+   · NUEVO  → Importe | Observaciones | PAGO PROVEEDOR(ES) | PAGO BAUVEK | TOTAL PAGADO | SALDO PENDIENTE | ESTADO
+   · VIEJO  → Importe | Observaciones | Estado Factura Cliente | Estado Factura Bauvek
+   En ambos, "Observaciones" dice a cuenta de quién va el saldo: "A proveedor" o "A Bauvek". */
+const HDR_ALIASES={
+  'obra':'obra','fecha de fc':'fecha','condición':'condicion','condicion':'condicion','razón social':'razon','razon social':'razon',
+  'descripción':'desc','descripcion':'desc','proveedor':'prov','rubro':'rubro',
+  'importe final pesos (iva incluido)':'impPesos','importe final usd (iva incluido)':'impUSD',
+  'observaciones':'obs','estado factura cliente':'estCli','estado factura bauvek':'estBvk','estado material':'estMat',
+  'resarcimiento bauvek':'resarc','nº remito':'remito','n° remito':'remito','encargado':'encargado',
+  'pago proveedor':'pagoProv','pago proveedores':'pagoProv','pago bauvek':'pagoBvk',
+  'total pagado':'totPagado','saldo pendiente':'saldo','estado':'estado'
+};
+const _hk=v=>String(v).trim().replace(/\s+/g,' ').toLowerCase();
+const _num=v=>typeof v==='number'&&isFinite(v)?v:0;
+const _isNum=v=>typeof v==='number'&&isFinite(v);
+const _str=v=>v==null?'':(v instanceof Date?v.toLocaleDateString('es-AR'):String(v).trim());
+
+/* "A proveedor" / "A Bauvek" → destino del saldo */
+function destinoDe(obs){
+  const o=_str(obs).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  if(/proveedor/.test(o)) return 'Proveedor';
+  if(/bauvek/.test(o)) return 'Bauvek';
+  return 'Sin asignar';
+}
+/* Formato viejo: ¿la factura está pendiente según los estados? */
+function pendienteViejo(estCli,estBvk){
+  const chk=s=>{const l=_str(s).toLowerCase();if(!l)return null;
+    if(l.includes('no pagado')||l.includes('cuenta corriente'))return true;
+    if(l.includes('pagado'))return false;return null};
+  const a=chk(estCli);if(a!==null)return a;
+  const b=chk(estBvk);if(b!==null)return b;
+  return true; /* sin estado → se cuenta como pendiente */
+}
+
 function parseExcel(data){
   const wb=XLSX.read(data,{type:'array',cellDates:true});
 
-  /* ── 1. Filtro de hojas robusto (case-insensitive, parcial) ── */
-  const skipPatterns=[/proveedor/i,/calendario/i,/resumen/i,/consulta/i];
-  const obraSheets=wb.SheetNames.filter(s=>!skipPatterns.some(rx=>rx.test(s)));
+  /* ── 1. Hojas: excluir auxiliares; si existe "X (Nuevo/Nueva)" se ignora "X" / "X (Original)" ── */
+  const skipPatterns=[/proveedor/i,/calendario/i,/resumen/i,/consulta/i,/deuda/i];
+  const baseOf=s=>s.replace(/\(.*?\)/g,'').trim().toLowerCase().replace(/\s+/g,' ');
+  const isNueva=s=>/\(\s*nuev[oa]\s*\)/i.test(s);
+  const candidatas=wb.SheetNames.filter(s=>!skipPatterns.some(rx=>rx.test(s)));
+  const basesNuevas=new Set(candidatas.filter(isNueva).map(baseOf));
+  const reemplazadas=candidatas.filter(s=>!isNueva(s)&&basesNuevas.has(baseOf(s)));
+  const obraSheets=candidatas.filter(s=>!reemplazadas.includes(s));
 
-  const invoices=[];
-  const obras=new Set();
-  const proveedores=new Set();
-  const rubros=new Set();
-
-  /* ── 2. Mapa de nombres canónicos por hoja (E3) ── */
-  /* Primero pasamos por todas las hojas para armar el mapa E3 → nombre real,
-     así podemos resolver cuando E3 devuelve solo iniciales (ej: "JS") */
-  const e3Map={};            /* sheetName → valor de E3 */
-  const namesByE3={};        /* e3Lower → nombre más largo encontrado */
-  for(const sn of obraSheets){
-    const ws=wb.Sheets[sn];
-    if(!ws) continue;
-    const cell=ws[XLSX.utils.encode_cell({r:2,c:4})];
-    const raw=cell&&cell.v?String(cell.v).trim():'';
-    e3Map[sn]=raw;
-    if(raw){
-      const key=raw.toLowerCase();
-      if(!namesByE3[key]||raw.length>namesByE3[key].length) namesByE3[key]=raw;
-    }
-  }
-
-  /* Construir un mapa de alias: si dos hojas tienen el mismo E3 (o vacío),
-     usamos el nombre más largo. Si E3 está vacío, usamos el nombre de hoja limpio. */
-  function resolveObraName(sheetName){
-    const raw=e3Map[sheetName]||'';
-    if(raw){
-      /* Buscar si hay otro E3 que sea la versión larga de este */
-      const key=raw.toLowerCase();
-      return namesByE3[key]||raw;
-    }
-    /* Fallback: limpiar nombre de hoja */
-    return sheetName.replace(/^Obra\s*/i,'').replace(/^Casa\s*/i,'').replace(/^Proyecto\s*/i,'').trim();
-  }
-
-  /* ── 3. Parseo por hoja ── */
-  const knownCols=['OBRA','Fecha de FC','Condición','Razón social','Descripción','Proveedor','Rubro',
-    'Importe final Pesos (Iva incluido)','Importe final USD (Iva incluido)',
-    'Observaciones','Estado Factura Cliente','Estado Factura Bauvek','Estado material',
-    'Resarcimiento Bauvek','Nº Remito','Encargado'];
-
-  for(const sn of obraSheets){
-    const ws=wb.Sheets[sn];
-    if(!ws) continue;
-
-    const obraName=resolveObraName(sn);
-
-    /* Find header row */
-    let headerRow=-1;
-    const colMap={};
-    for(let r=0;r<15;r++){
-      let matchesThisRow=0;
-      for(let c=0;c<20;c++){
+  /* ── 2. Header y nombre de cliente de cada hoja (incluye las reemplazadas, para heredar el nombre) ── */
+  const info={};
+  for(const sn of candidatas){
+    const ws=wb.Sheets[sn];if(!ws||!ws['!ref'])continue;
+    const range=XLSX.utils.decode_range(ws['!ref']);
+    let headerRow=-1,colMap={};
+    for(let r=0;r<=Math.min(20,range.e.r)&&headerRow<0;r++){
+      const m={};let n=0;
+      for(let c=0;c<=Math.min(40,range.e.c);c++){
         const cell=ws[XLSX.utils.encode_cell({r,c})];
-        if(cell&&typeof cell.v==='string'){
-          const idx=knownCols.findIndex(h=>cell.v.trim().toLowerCase()===h.toLowerCase());
-          if(idx>=0){colMap[knownCols[idx]]=c;matchesThisRow++;headerRow=r}
+        if(cell&&typeof cell.v==='string'){const k=HDR_ALIASES[_hk(cell.v)];if(k&&m[k]===undefined){m[k]=c;n++}}
+      }
+      if(n>=5){headerRow=r;colMap=m}
+    }
+    /* "Cliente:" en las filas de arriba del header */
+    let cliente='';
+    for(let r=0;r<Math.max(headerRow,0)&&!cliente;r++){
+      for(let c=0;c<12&&!cliente;c++){
+        const cell=ws[XLSX.utils.encode_cell({r,c})];
+        if(cell&&typeof cell.v==='string'&&/^cliente:?$/i.test(cell.v.trim())){
+          for(let c2=c+1;c2<c+5;c2++){const v=ws[XLSX.utils.encode_cell({r,c:c2})];if(v&&_str(v.v)){cliente=_str(v.v);break}}
         }
       }
-      if(matchesThisRow>=5) break;
     }
+    info[sn]={ws,range,headerRow,colMap,cliente};
+  }
+  const clientePorBase={};
+  for(const sn of candidatas){const i=info[sn];if(i&&i.cliente){const b=baseOf(sn);if(!clientePorBase[b]||i.cliente.length>clientePorBase[b].length)clientePorBase[b]=i.cliente}}
+  const resolveObraName=sn=>{
+    const i=info[sn];
+    if(i&&i.cliente) return clientePorBase[baseOf(sn)]||i.cliente;
+    if(clientePorBase[baseOf(sn)]) return clientePorBase[baseOf(sn)];
+    return sn.replace(/\(.*?\)/g,'').replace(/^Obra\s*/i,'').replace(/^Casa\s*/i,'').replace(/^Proyecto\s*/i,'').trim();
+  };
 
-    if(headerRow<0) continue;
+  /* ── 3. Filas ── */
+  const invoices=[],obras=new Set(),proveedores=new Set(),rubros=new Set();
+  const formatos={};
+  for(const sn of obraSheets){
+    const i=info[sn];if(!i||i.headerRow<0)continue;
+    const{ws,range,headerRow,colMap}=i;
+    const nuevo=colMap.pagoProv!==undefined||colMap.pagoBvk!==undefined||colMap.saldo!==undefined;
+    formatos[sn]=nuevo?'nuevo':'viejo';
+    const obraName=resolveObraName(sn);
+    obras.add(obraName);
 
-    const range=XLSX.utils.decode_range(ws['!ref']||'A1');
     for(let r=headerRow+1;r<=range.e.r;r++){
-      const getV=(col)=>{
-        if(colMap[col]===undefined) return null;
-        const cell=ws[XLSX.utils.encode_cell({r,c:colMap[col]})];
-        return cell?cell.v:null;
-      };
-
-      const desc=getV('Descripción');
-      const prov=getV('Proveedor');
-      const impPesos=getV('Importe final Pesos (Iva incluido)');
-      const impUSD=getV('Importe final USD (Iva incluido)');
-
-      const hasText=(desc&&String(desc).trim().length>1)||(prov&&String(prov).trim().length>1);
+      const getV=k=>{if(colMap[k]===undefined)return null;const cell=ws[XLSX.utils.encode_cell({r,c:colMap[k]})];return cell?cell.v:null};
+      const desc=getV('desc'),prov=getV('prov');
+      const impPesos=getV('impPesos'),impUSD=getV('impUSD');
+      const hasText=_str(desc).length>1||_str(prov).length>1;
       if(!hasText) continue;
-
-      const rubro=getV('Rubro');
-      const isTotal=[prov,desc,rubro].some(v=>typeof v==='string'&&v.trim().toUpperCase()==='TOTAL');
+      const rubroRaw=getV('rubro'),obsRaw=getV('obs');
+      const isTotal=[prov,desc,rubroRaw,obsRaw].some(v=>typeof v==='string'&&/^(total|pagos|deuda|total importe|deuda total)$/i.test(v.trim()));
       if(isTotal) continue;
+      if(impPesos!=null&&impPesos!==''&&!_isNum(impPesos)) continue; /* basura en columnas equivocadas */
 
-      if(impPesos&&typeof impPesos!=='number') continue;
-
-      let fechaFC=getV('Fecha de FC');
-      if(fechaFC instanceof Date&&!isNaN(fechaFC)){/* ok */}
+      let fechaFC=getV('fecha');
+      if(fechaFC instanceof Date&&!isNaN(fechaFC)){}
       else if(typeof fechaFC==='number'){fechaFC=new Date((fechaFC-25569)*86400000)}
-      else if(typeof fechaFC==='string'&&fechaFC){try{fechaFC=new Date(fechaFC)}catch(e){fechaFC=null}}
+      else if(typeof fechaFC==='string'&&fechaFC){const d=new Date(fechaFC);fechaFC=isNaN(d)?null:d}
       else fechaFC=null;
 
-      const inv={
-        obra:obraName,
-        sheetName:sn,
-        fechaFC,
-        condicion:getV('Condición')||'',
-        razonSocial:getV('Razón social')||'',
-        descripcion:String(desc||'').trim(),
-        proveedor:String(prov||'').trim(),
-        rubro:normalizeRubro(rubro),
-        importePesos:typeof impPesos==='number'?impPesos:0,
-        importeUSD:typeof impUSD==='number'?impUSD:0,
-        observaciones:getV('Observaciones')||'',
-        estadoCliente:getV('Estado Factura Cliente')||'',
-        estadoBauvek:getV('Estado Factura Bauvek')||'',
-        estadoMaterial:getV('Estado material')||'',
-        resarcimiento:getV('Resarcimiento Bauvek')||'',
-        remito:getV('Nº Remito')||'',
-        encargado:getV('Encargado')||''
-      };
+      const imp=_num(impPesos),usd=_num(impUSD);
+      const destino=destinoDe(obsRaw);
+      let pagoProv=0,pagoBvk=0,pagado,saldo,estadoPago;
+      if(nuevo){
+        pagoProv=_num(getV('pagoProv'));pagoBvk=_num(getV('pagoBvk'));
+        const tp=getV('totPagado'),sp=getV('saldo');
+        pagado=_isNum(tp)?tp:pagoProv+pagoBvk;
+        saldo=_isNum(sp)?sp:imp-pagado;
+        const est=_str(getV('estado')).toLowerCase();
+        if(Math.abs(saldo)<1&&imp!==0) estadoPago='Pagado';
+        else if(Math.abs(saldo)>=1&&Math.abs(pagado)>=1) estadoPago='Parcial';
+        else if(Math.abs(saldo)>=1) estadoPago='No pagado';
+        else estadoPago=est.includes('no pagado')||!est?'No pagado':'Pagado'; /* importe vacío: manda la columna ESTADO */
+      }else{
+        const pend=pendienteViejo(getV('estCli'),getV('estBvk'));
+        estadoPago=pend?'No pagado':'Pagado';
+        pagado=pend?0:imp;saldo=pend?imp:0;
+      }
+      /* USD: el sheet no registra pagos en dólares → se prorratea con la proporción pendiente en pesos */
+      const ratio=imp?Math.max(0,Math.min(1,saldo/imp)):(estadoPago==='Pagado'?0:1);
+      const saldoUSD=usd*ratio;
 
+      const inv={
+        obra:obraName,sheetName:sn,formato:nuevo?'nuevo':'viejo',fechaFC,
+        condicion:_str(getV('condicion')),razonSocial:_str(getV('razon')),
+        descripcion:_str(desc),proveedor:_str(prov),rubro:normalizeRubro(rubroRaw),
+        importePesos:imp,importeUSD:usd,
+        pagadoPesos:pagado,saldoPesos:saldo,pagadoUSD:usd-saldoUSD,saldoUSD,
+        pagoProv,pagoBvk,destino,estadoPago,
+        observaciones:_str(obsRaw),
+        estadoCliente:_str(getV('estCli')),estadoBauvek:_str(getV('estBvk')),estadoOrig:_str(getV('estado')),
+        estadoMaterial:_str(getV('estMat'))||'Sin dato',
+        resarcimiento:_str(getV('resarc')),remito:_str(getV('remito')),encargado:_str(getV('encargado'))
+      };
       invoices.push(inv);
       if(inv.proveedor) proveedores.add(inv.proveedor);
-      if(inv.rubro&&typeof inv.rubro==='string'&&inv.rubro.length>1) rubros.add(inv.rubro);
+      if(inv.rubro&&inv.rubro.length>1) rubros.add(inv.rubro);
     }
-
-    obras.add(obraName);
   }
 
-  /* ── 4. Deduplicación por clave compuesta ── */
-  /* Si la misma factura aparece en más de una hoja (ej: Resumens que se coló,
-     o dos hojas con el mismo cliente), nos quedamos con la primera aparición */
-  const seen=new Set();
-  const unique=[];
+  /* ── 4. Deduplicación SOLO entre hojas distintas (la misma factura copiada en dos hojas del mismo cliente).
+        Dentro de una hoja no se toca nada: dos fletes iguales el mismo día son dos fletes. ── */
+  const seen=new Map(),unique=[],_dups=[];
   for(const inv of invoices){
     const dateKey=inv.fechaFC?inv.fechaFC.toISOString().slice(0,10):'';
-    const key=[inv.proveedor.toLowerCase(), inv.importePesos, inv.importeUSD, dateKey, inv.descripcion.toLowerCase().slice(0,60)].join('|');
-    if(seen.has(key)) continue;
-    seen.add(key);
+    const key=[inv.obra,inv.proveedor.toLowerCase(),inv.importePesos,inv.importeUSD,dateKey,inv.descripcion.toLowerCase().slice(0,60),inv.condicion].join('|');
+    const prev=seen.get(key);
+    if(prev&&prev!==inv.sheetName){_dups.push(inv);continue}
+    if(!prev) seen.set(key,inv.sheetName);
     unique.push(inv);
   }
+  if(_dups.length) console.warn(`[Pagos] ${_dups.length} filas repetidas entre hojas distintas (se cuentan una sola vez)`,_dups.map(i=>i.sheetName+' · '+i.proveedor+' · '+i.importePesos));
+  console.info(`[Pagos] Hojas: ${obraSheets.map(s=>s+' ('+(formatos[s]||'sin header')+')').join(', ')}`);
+  if(reemplazadas.length) console.info(`[Pagos] Hojas ignoradas por tener versión nueva: ${reemplazadas.join(', ')}`);
 
-  /* Log para debug (visible en consola del navegador) */
-  if(invoices.length!==unique.length){
-    console.warn(`[Pagos] Dedup: ${invoices.length} → ${unique.length} facturas (${invoices.length-unique.length} duplicadas eliminadas)`);
-  }
-  console.info(`[Pagos] Hojas parseadas: ${obraSheets.join(', ')} | Hojas saltadas: ${wb.SheetNames.filter(s=>skipPatterns.some(rx=>rx.test(s))).join(', ')}`);
-
-  /* Log de normalización de rubros */
-  const normEntries=Object.entries(_rubroNormLog);
-  if(normEntries.length){
-    console.groupCollapsed(`[Pagos] Rubros normalizados (${normEntries.length} variantes unificadas)`);
-    normEntries.sort((a,b)=>a[1].localeCompare(b[1])).forEach(([orig,norm])=>console.log(`  "${orig}" → "${norm}"`));
-    console.groupEnd();
-  }
-  console.info(`[Pagos] Rubros finales (${[...rubros].length}): ${[...rubros].sort().join(', ')}`);
-
-  return{
-    invoices:unique,
-    obras:[...obras].sort(),
-    proveedores:[...proveedores].sort(),
-    rubros:[...rubros].sort(),
-    sheetCount:obraSheets.length
-  };
-}
-
-/* ═══════ Donut SVG con leyenda ═══════ */
-function Donut({segments,size=110}){
-  const total=segments.reduce((s,seg)=>s+seg.value,0);
-  if(!total) return <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12}}>
-    <svg width={size} height={size}><circle cx={size/2} cy={size/2} r={size/2-4} fill="none" stroke="var(--bg2)" strokeWidth="8"/></svg>
-    <span style={{fontSize:11,color:'var(--c2)'}}>Sin datos</span>
-  </div>;
-
-  const r=size/2-4;
-  const circ=2*Math.PI*r;
-  let offset=0;
-
-  return <div style={{display:'flex',alignItems:'center',gap:14}}>
-    <svg width={size} height={size} style={{transform:'rotate(-90deg)',flexShrink:0}}>
-      {segments.map((seg,i)=>{
-        const pct=seg.value/total;
-        const dash=pct*circ;
-        const el=<circle key={i} cx={size/2} cy={size/2} r={r} fill="none" stroke={seg.color} strokeWidth="8"
-          strokeDasharray={`${dash} ${circ-dash}`} strokeDashoffset={-offset}
-          style={{transition:'stroke-dasharray .3s,stroke-dashoffset .3s'}}/>;
-        offset+=dash;
-        return el;
-      })}
-      <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="central"
-        style={{transform:'rotate(90deg)',transformOrigin:'center',fontSize:16,fontWeight:700,fontFamily:'var(--fm)',fill:'var(--c0)'}}>
-        {total}
-      </text>
-    </svg>
-    <div style={{display:'flex',flexDirection:'column',gap:3,minWidth:0,flex:1}}>
-      {segments.map((seg,i)=>{
-        const pct=((seg.value/total)*100).toFixed(0);
-        return <div key={i} style={{display:'flex',alignItems:'center',gap:6,fontSize:11,lineHeight:1.3}}>
-          <span style={{width:8,height:8,borderRadius:2,background:seg.color,flexShrink:0}}/>
-          <span style={{color:'var(--c0)',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',flex:1}} title={seg.label}>{seg.label}</span>
-          <span style={{color:'var(--c2)',fontFamily:'var(--fm)',fontSize:10,flexShrink:0}}>{seg.value}</span>
-          <span style={{color:'var(--c2)',fontFamily:'var(--fm)',fontSize:10,flexShrink:0,width:30,textAlign:'right'}}>{pct}%</span>
-        </div>;
-      })}
-    </div>
-  </div>;
+  return{invoices:unique,obras:[...obras].sort(),proveedores:[...proveedores].sort((a,b)=>a.localeCompare(b)),rubros:[...rubros].sort(),
+    sheetCount:obraSheets.length,reemplazadas,formatos};
 }
 
 /* ═══════ Format helpers ═══════ */
 function fmtMoney(v,currency){
-  if(!v||v===0) return currency==='USD'?'USD 0':'$0';
+  if(!v) return currency==='USD'?'USD 0':'$0';
   const prefix=currency==='USD'?'USD ':'$';
-  return prefix+v.toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return (v<0?'−':'')+prefix+Math.abs(v).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function fmtShort(v,currency){
+  const p=currency==='USD'?'USD ':'$';const a=Math.abs(v),s=v<0?'−':'';
+  if(a>=1e6) return s+p+(a/1e6).toLocaleString('es-AR',{maximumFractionDigits:a>=1e8?0:1})+'M';
+  if(a>=1e3) return s+p+(a/1e3).toLocaleString('es-AR',{maximumFractionDigits:0})+'k';
+  return s+p+Math.round(a).toLocaleString('es-AR');
 }
 function fmtDate(d){
   if(!d||!(d instanceof Date)||isNaN(d)) return '—';
   return d.toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'2-digit'});
 }
-function tagClass(estado){
-  if(!estado) return 'tag-grey';
-  const l=estado.toLowerCase();
-  if(l.includes('pagado')&&!l.includes('no ')) return 'tag-ok';
-  if(l.includes('no pagado')||l.includes('cuenta corriente')) return 'tag-err';
-  if(l.includes('recibido')) return 'tag-ok';
-  return 'tag-warn';
+function tagEstado(e){return e==='Pagado'?'tag-ok':e==='Parcial'?'tag-warn':'tag-err'}
+function tagDestino(d){return d==='Proveedor'?'tag-prov':d==='Bauvek'?'tag-bvk':'tag-grey'}
+
+const COL_DESTINO={'Proveedor':'var(--prov)','Bauvek':'var(--bvk)','Sin asignar':'var(--sin)'};
+const COL_ESTADO={'Pagado':'var(--ok)','Parcial':'var(--warn)','No pagado':'var(--err)'};
+const PALETA=['var(--ac)','#64748b','var(--ok)','var(--warn)','#8b5cf6','#0ea5e9','#ec4899'];
+
+/* ═══════ Donut clicable ═══════ */
+/* segments: [{key,label,value,color}] · selected: key | 'all' · onSelect(key) — clic de nuevo deselecciona */
+function Donut({segments,selected,onSelect,fmt,centerLabel,size=118}){
+  const segs=segments.filter(s=>s.value>0);
+  const total=segs.reduce((s,seg)=>s+seg.value,0);
+  const[hover,setHover]=useState(null);
+  if(!total) return <div className="donut-empty">
+    <svg width={size} height={size}><circle cx={size/2} cy={size/2} r={size/2-8} fill="none" stroke="var(--bg2)" strokeWidth="14"/></svg>
+    <span>Sin saldo / sin datos</span>
+  </div>;
+  const r=size/2-8,circ=2*Math.PI*r;let offset=0;
+  const isSel=k=>selected!=='all'&&selected===k;
+  const dim=k=>selected!=='all'&&selected!==k;
+  const center=hover?segs.find(s=>s.key===hover):null;
+  return <div className="donut-wrap">
+    <svg width={size} height={size} style={{flexShrink:0}}>
+      <g transform={`rotate(-90 ${size/2} ${size/2})`}>
+        {segs.map(seg=>{
+          const dash=seg.value/total*circ;
+          const el=<circle key={seg.key} className="seg-arc" cx={size/2} cy={size/2} r={r} fill="none" stroke={seg.color}
+            strokeWidth={isSel(seg.key)||hover===seg.key?18:14}
+            strokeDasharray={`${Math.max(dash-1.5,0.5)} ${circ-Math.max(dash-1.5,0.5)}`} strokeDashoffset={-offset}
+            opacity={dim(seg.key)?.25:1}
+            onMouseEnter={()=>setHover(seg.key)} onMouseLeave={()=>setHover(null)}
+            onClick={()=>onSelect(seg.key)}><title>{seg.label}: {fmt(seg.value)}</title></circle>;
+          offset+=dash;return el;
+        })}
+      </g>
+      <text x={size/2} y={size/2-6} textAnchor="middle" className="donut-c1">{fmt(center?center.value:total,true)}</text>
+      <text x={size/2} y={size/2+10} textAnchor="middle" className="donut-c2">{center?(center.value/total*100).toFixed(0)+'%':centerLabel}</text>
+    </svg>
+    <div className="leg">
+      {segs.map(seg=><div key={seg.key} className={`leg-row${isSel(seg.key)?' sel':''}${dim(seg.key)?' dim':''}`}
+        onClick={()=>onSelect(seg.key)} onMouseEnter={()=>setHover(seg.key)} onMouseLeave={()=>setHover(null)} title="Clic para filtrar">
+        <span className="leg-dot" style={{background:seg.color}}/>
+        <span className="leg-l" title={seg.label}>{seg.label}</span>
+        <span className="leg-v">{fmt(seg.value,true)}</span>
+        <span className="leg-p">{(seg.value/total*100).toFixed(0)}%</span>
+      </div>)}
+    </div>
+  </div>;
+}
+
+/* ═══════ Barras horizontales apiladas (saldo Proveedor / Bauvek / Sin asignar) ═══════ */
+function HBars({rows,selected,onSelect,fmt,limit=10}){
+  const[all,setAll]=useState(false);
+  const list=rows.filter(r=>Math.abs(r.total)>=1).sort((a,b)=>b.total-a.total);
+  if(!list.length) return <div className="donut-empty"><span>Sin saldo pendiente con estos filtros</span></div>;
+  const shown=all?list:list.slice(0,limit);
+  const max=Math.max(...list.map(r=>Math.max(r.parts.reduce((s,p)=>s+Math.max(p.value,0),0),0)),1);
+  return <div>
+    {shown.map(r=>{
+      const sel=selected===r.key,dim=selected!=='all'&&!sel;
+      return <div key={r.key} className={`hb-row${sel?' sel':''}${dim?' dim':''}`} onClick={()=>onSelect(r.key)} title={`${r.key}\n`+r.parts.filter(p=>p.value).map(p=>`${p.label}: ${fmt(p.value)}`).join('\n')}>
+        <span className="hb-l">{r.key}</span>
+        <span className="hb-track">{r.parts.map(p=>p.value>0&&<span key={p.label} style={{width:(p.value/max*100)+'%',background:p.color}}/>)}</span>
+        <span className="hb-v">{fmt(r.total,true)}</span>
+      </div>;
+    })}
+    {list.length>limit&&<button className="fclr" style={{marginTop:4}} onClick={()=>setAll(v=>!v)}>{all?'Ver menos':`Ver los ${list.length}`}</button>}
+  </div>;
 }
 
 /* ═══════ Theme ═══════ */
@@ -574,25 +646,24 @@ function useTheme(){
 }
 
 /* ═══════ APP ═══════ */
+const FILTROS_VACIOS={obra:'all',prov:'all',destino:'all',estado:'all',rubro:'all',material:'all',desde:'',hasta:'',pend:false};
+const NOMBRE_FILTRO={obra:'Obra',prov:'Proveedor',destino:'Saldo a cuenta de',estado:'Estado de pago',rubro:'Rubro',material:'Material'};
+
 function App({user,onLogout}){
   const[theme,togTheme]=useTheme();
   const[data,setData]=useState(null);
   const[loading,setLoading]=useState(true);
   const[error,setError]=useState(null);
-  
-  /* Filters */
+
   const[moneda,setMoneda]=useState('pesos');
-  const[fObra,setFObra]=useState('all');
-  const[fProv,setFProv]=useState('all');
-  const[fEstCli,setFEstCli]=useState('all');
-  const[fRubro,setFRubro]=useState('all');
-  const[fDesde,setFDesde]=useState('');
-  const[fHasta,setFHasta]=useState('');
-  
-  /* Sort */
-  const[sortCol,setSortCol]=useState('importePesos');
+  const[F,setF]=useState(FILTROS_VACIOS);
+  const setFil=useCallback((k,v)=>setF(f=>({...f,[k]:v})),[]);
+  /* Clic en gráfico: selecciona, y si ya estaba seleccionado lo suelta */
+  const toggle=useCallback((k,v)=>setF(f=>({...f,[k]:f[k]===v?'all':v})),[]);
+
+  const[sortCol,setSortCol]=useState('saldoPesos');
   const[sortDir,setSortDir]=useState('desc');
-  
+
   /* Origen del Excel: 'privado' (Supabase Storage, requiere sesión) | 'publico' (repo, transitorio) | 'local' */
   const[origen,setOrigen]=useState(null);
   const[subiendo,setSubiendo]=useState(false);
@@ -621,75 +692,111 @@ function App({user,onLogout}){
     let d;
     try{d=parseExcel(new Uint8Array(await file.arrayBuffer()))}
     catch(err){setError('El archivo no se pudo leer: '+err.message);return}
-    setData(d);setError(null);setOrigen('local');
+    setData(d);setError(null);setOrigen('local');setF(FILTROS_VACIOS);
     setSubiendo(true);
     try{
       const{error:e}=await sb.storage.from(PAGOS_BUCKET).upload(PAGOS_PATH,file,{upsert:true,contentType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
       if(e)throw e;
-      setOrigen('privado');setAviso('Excel actualizado y guardado en el almacenamiento privado.');
+      setOrigen('privado');setAviso('Excel actualizado y guardado en el almacenamiento privado.'+(d.reemplazadas.length?` Se usan las hojas nuevas e ignoran: ${d.reemplazadas.join(', ')}.`:''));
     }catch(e){setAviso('Se muestra el Excel, pero no se pudo guardar en el almacenamiento privado: '+(e.message||e)+'. Revisá que el bucket "'+PAGOS_BUCKET+'" exista.')}
     finally{setSubiendo(false)}
   },[]);
-  
-  const resetFilters=useCallback(()=>{setFObra('all');setFProv('all');setFEstCli('all');setFRubro('all');setFDesde('');setFHasta('')},[]);
-  const fCount=useMemo(()=>{let c=0;if(fObra!=='all')c++;if(fProv!=='all')c++;if(fEstCli!=='all')c++;if(fRubro!=='all')c++;if(fDesde||fHasta)c++;return c},[fObra,fProv,fEstCli,fRubro,fDesde,fHasta]);
-  
-  /* Filtered invoices */
-  const filtered=useMemo(()=>{
-    if(!data) return[];
-    return data.invoices.filter(inv=>{
-      /* Moneda: only show rows that have value in selected currency */
-      if(moneda==='pesos'&&!inv.importePesos) return false;
-      if(moneda==='usd'&&!inv.importeUSD) return false;
-      if(fObra!=='all'&&inv.obra!==fObra) return false;
-      if(fProv!=='all'&&inv.proveedor!==fProv) return false;
-      if(fEstCli!=='all'&&inv.estadoCliente!==fEstCli) return false;
-      if(fRubro!=='all'){if(!inv.rubro)return false;if(inv.rubro!==fRubro)return false}
-      if(fDesde){const d=new Date(fDesde);if(!inv.fechaFC||inv.fechaFC<d)return false}
-      if(fHasta){const d=new Date(fHasta);if(!inv.fechaFC||inv.fechaFC>d)return false}
-      return true;
-    });
-  },[data,moneda,fObra,fProv,fEstCli,fRubro,fDesde,fHasta]);
-  
-  /* Sorted */
+
+  const resetFilters=useCallback(()=>setF(FILTROS_VACIOS),[]);
+  const fCount=Object.keys(FILTROS_VACIOS).filter(k=>k!=='hasta'&&(k==='desde'?(F.desde||F.hasta):F[k]!==FILTROS_VACIOS[k])).length;
+
+  /* Montos según moneda */
+  const usd=moneda==='usd';
+  const curr=usd?'USD':'ARS';
+  const kImp=usd?'importeUSD':'importePesos',kPag=usd?'pagadoUSD':'pagadoPesos',kSal=usd?'saldoUSD':'saldoPesos';
+  const fmt=useCallback((v,short)=>short?fmtShort(v,curr):fmtMoney(v,curr),[curr]);
+
+  /* Filtro cruzado: cada gráfico se calcula con todos los filtros MENOS el suyo,
+     así el segmento elegido queda resaltado y se ven los demás atenuados */
+  const pasa=useCallback((inv,except)=>{
+    if(usd?!inv.importeUSD:!inv.importePesos&&!inv.saldoPesos) return false;
+    if(except!=='obra'&&F.obra!=='all'&&inv.obra!==F.obra) return false;
+    if(except!=='prov'&&F.prov!=='all'&&inv.proveedor!==F.prov) return false;
+    if(except!=='destino'&&F.destino!=='all'&&inv.destino!==F.destino) return false;
+    if(except!=='estado'&&F.estado!=='all'&&inv.estadoPago!==F.estado) return false;
+    if(except!=='rubro'&&F.rubro!=='all'&&inv.rubro!==F.rubro) return false;
+    if(except!=='material'&&F.material!=='all'&&inv.estadoMaterial!==F.material) return false;
+    if(F.pend&&Math.abs(inv[kSal])<1) return false;
+    if(F.desde){const d=new Date(F.desde+'T00:00:00');if(!inv.fechaFC||inv.fechaFC<d)return false}
+    if(F.hasta){const d=new Date(F.hasta+'T23:59:59');if(!inv.fechaFC||inv.fechaFC>d)return false}
+    return true;
+  },[F,usd,kSal]);
+
+  const rows=data?data.invoices:[];
+  const filtered=useMemo(()=>rows.filter(i=>pasa(i,null)),[rows,pasa]);
+  const sub=useCallback(dim=>rows.filter(i=>pasa(i,dim)),[rows,pasa]);
+
+  /* KPIs */
+  const sum=(arr,k)=>arr.reduce((s,i)=>s+i[k],0);
+  const total=sum(filtered,kImp),pagado=sum(filtered,kPag),saldo=sum(filtered,kSal);
+  const pend=filtered.filter(i=>Math.abs(i[kSal])>=1);
+  const saldoDe=d=>sum(pend.filter(i=>i.destino===d),kSal);
+  /* Las tarjetas de destino ignoran el filtro de destino para que se puedan comparar entre sí */
+  const pendSinDest=useMemo(()=>sub('destino').filter(i=>Math.abs(i[kSal])>=1),[sub,kSal]);
+  const saldoDest=d=>sum(pendSinDest.filter(i=>i.destino===d),kSal);
+  const nDest=d=>pendSinDest.filter(i=>i.destino===d).length;
+
+  /* Datos de gráficos */
+  const agrupar=(arr,keyFn,valFn)=>{const m={};arr.forEach(i=>{const k=keyFn(i);m[k]=(m[k]||0)+valFn(i)});return m};
+  const donutDestino=useMemo(()=>{
+    const m=agrupar(sub('destino').filter(i=>Math.abs(i[kSal])>=1),i=>i.destino,i=>i[kSal]);
+    return['Proveedor','Bauvek','Sin asignar'].map(k=>({key:k,label:k==='Sin asignar'?'Sin asignar (Observ. vacía)':'A cuenta de '+k,value:m[k]||0,color:COL_DESTINO[k]}));
+  },[sub,kSal]);
+  const donutEstado=useMemo(()=>{
+    const m=agrupar(sub('estado'),i=>i.estadoPago,i=>i[kImp]);
+    return['Pagado','Parcial','No pagado'].map(k=>({key:k,label:k,value:m[k]||0,color:COL_ESTADO[k]}));
+  },[sub,kImp]);
+  const donutMaterial=useMemo(()=>{
+    const m=agrupar(sub('material'),i=>i.estadoMaterial,i=>i[kImp]);
+    return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>({key:k,label:k,value:v,color:k==='Sin dato'?'var(--sin)':PALETA[i%PALETA.length]}));
+  },[sub,kImp]);
+  const barras=(dim,keyFn)=>{
+    const m={};
+    sub(dim).filter(i=>Math.abs(i[kSal])>=1).forEach(i=>{const k=keyFn(i)||'(sin dato)';const a=m[k]||(m[k]={Proveedor:0,Bauvek:0,'Sin asignar':0});a[i.destino]+=i[kSal]});
+    return Object.entries(m).map(([k,a])=>({key:k,total:a.Proveedor+a.Bauvek+a['Sin asignar'],
+      parts:['Proveedor','Bauvek','Sin asignar'].map(d=>({label:'A cuenta de '+d,value:a[d],color:COL_DESTINO[d]}))}));
+  };
+  const barObra=useMemo(()=>barras('obra',i=>i.obra),[sub,kSal]);
+  const barProv=useMemo(()=>barras('prov',i=>i.proveedor),[sub,kSal]);
+
+  /* Orden de tabla */
+  const sortKey=sortCol==='importe'?kImp:sortCol==='pagado'?kPag:sortCol==='saldo'||sortCol==='saldoPesos'?kSal:sortCol;
   const sorted=useMemo(()=>{
     const arr=[...filtered];
     arr.sort((a,b)=>{
-      let va=a[sortCol],vb=b[sortCol];
+      let va=a[sortKey],vb=b[sortKey];
       if(typeof va==='string') va=va.toLowerCase();
       if(typeof vb==='string') vb=vb.toLowerCase();
-      if(va==null) va=sortDir==='desc'?'':'\uffff';
-      if(vb==null) vb=sortDir==='desc'?'':'\uffff';
+      if(va==null) va=sortDir==='desc'?-Infinity:Infinity;
+      if(vb==null) vb=sortDir==='desc'?-Infinity:Infinity;
       if(va<vb) return sortDir==='asc'?-1:1;
       if(va>vb) return sortDir==='asc'?1:-1;
       return 0;
     });
     return arr;
-  },[filtered,sortCol,sortDir]);
-  
+  },[filtered,sortKey,sortDir]);
   const doSort=col=>{if(sortCol===col)setSortDir(d=>d==='desc'?'asc':'desc');else{setSortCol(col);setSortDir('desc')}};
-  
-  /* KPIs */
-  const impKey=moneda==='usd'?'importeUSD':'importePesos';
-  const curr=moneda==='usd'?'USD':'ARS';
-  const total=filtered.reduce((s,i)=>s+i[impKey],0);
-  const noPagCli=filtered.filter(i=>!i.estadoCliente||i.estadoCliente.toLowerCase().includes('no pagado')||i.estadoCliente.toLowerCase().includes('cuenta corriente')).reduce((s,i)=>s+i[impKey],0);
-  const noPagBvk=filtered.filter(i=>!i.estadoBauvek||i.estadoBauvek.toLowerCase().includes('no pagado')||i.estadoBauvek.toLowerCase().includes('cuenta corriente')).reduce((s,i)=>s+i[impKey],0);
-  const ctaCte=filtered.filter(i=>i.estadoCliente&&i.estadoCliente.toLowerCase().includes('cuenta corriente')).reduce((s,i)=>s+i[impKey],0);
-  
-  /* Donut data */
-  const estCliMap={};filtered.forEach(i=>{const e=i.estadoCliente||'(Vacío)';estCliMap[e]=(estCliMap[e]||0)+1});
-  const estBvkMap={};filtered.forEach(i=>{const e=i.estadoBauvek||'(Vacío)';estBvkMap[e]=(estBvkMap[e]||0)+1});
-  const estMatMap={};filtered.forEach(i=>{const e=i.estadoMaterial||'(Vacío)';estMatMap[e]=(estMatMap[e]||0)+1});
-  
-  const donutColors=['var(--ac)','var(--ok)','var(--err)','var(--warn)','var(--c2)','#8b5cf6','#ec4899'];
-  const toDonut=map=>Object.entries(map).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>({label:k,value:v,color:donutColors[i%donutColors.length]}));
-  
-  /* Unique estados for filter */
-  const estadosCli=useMemo(()=>{if(!data)return[];return[...new Set(data.invoices.map(i=>i.estadoCliente).filter(Boolean))].sort()},[data]);
-  
+  const arrow=col=>sortCol===col||(col==='saldo'&&sortCol==='saldoPesos')?(sortDir==='asc'?' ↑':' ↓'):'';
+
+  const estadosMat=useMemo(()=>data?[...new Set(data.invoices.map(i=>i.estadoMaterial))].sort():[],[data]);
+  const activos=Object.keys(NOMBRE_FILTRO).filter(k=>F[k]!=='all');
+
   if(loading) return <div style={{height:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}><div className="ld"><div className="sp"/><span>Cargando Excel...</span></div></div>;
-  
+
+  const KpiDest=({d,cls})=>{
+    const sel=F.destino===d;
+    return <div className={`kpi click ${cls}${sel?' sel':''}`} onClick={()=>toggle('destino',d)} title="Clic para filtrar">
+      <div className="kpi-v" style={{color:COL_DESTINO[d]}}>{fmtMoney(saldoDest(d),curr)}</div>
+      <div className="kpi-l">{d==="Sin asignar"?"Saldo sin asignar (Observ. vacía)":"Saldo a cuenta de "+d}</div>
+      <div className="kpi-s">{nDest(d)} ítems · {(()=>{const t=sum(pendSinDest,kSal);return t?(saldoDest(d)/t*100).toFixed(0):0})()}% del saldo</div>
+    </div>;
+  };
+
   return <>
     <div className="hdr">
       <a href="index.html" className="logo">
@@ -698,12 +805,12 @@ function App({user,onLogout}){
       </a>
       <span style={{color:'var(--b0)'}}>|</span>
       <span className="hdr-title">Programación de Pagos</span>
-      
+
       <div className="seg">
         <button className={moneda==='pesos'?'on':''} onClick={()=>setMoneda('pesos')}>$ Pesos</button>
         <button className={moneda==='usd'?'on':''} onClick={()=>setMoneda('usd')}>USD Dólares</button>
       </div>
-      
+
       <div className="acts">
         {origen==='publico'&&<span className="origen-badge warn" title="El Excel todavía se lee del repo público. Subilo con 'Actualizar Excel' para pasarlo al almacenamiento privado.">⚠ Excel público</span>}
         {origen==='privado'&&<span className="origen-badge ok" title="El Excel se lee del almacenamiento privado (requiere sesión)">🔒 Privado</span>}
@@ -711,41 +818,56 @@ function App({user,onLogout}){
           {subiendo?'Subiendo…':'↑ Actualizar Excel'}
           <input type="file" accept=".xlsx,.xls" style={{display:'none'}} disabled={subiendo} onChange={e=>{const f=e.target.files[0];e.target.value='';if(f)handleLocalFile(f)}}/>
         </label>
-        <span style={{fontSize:11,color:'var(--c2)',fontFamily:'var(--fm)'}}>{filtered.length} facturas</span>
+        <span style={{fontSize:11,color:'var(--c2)',fontFamily:'var(--fm)'}}>{filtered.length} ítems</span>
         <button className="btn-i" onClick={togTheme}>{theme==='light'?'🌙':'☀️'}</button>
         <span style={{fontSize:10,color:'var(--c2)',maxWidth:120,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}} title={user.email}>{user.email.split('@')[0]}</span>
         <button className="logout-btn" onClick={onLogout}>Salir</button>
       </div>
     </div>
-    
+
     <div className="filters">
       <span className="fl">Obra</span>
-      <select className="fsel" value={fObra} onChange={e=>setFObra(e.target.value)}>
+      <select className="fsel" value={F.obra} onChange={e=>setFil('obra',e.target.value)}>
         <option value="all">Todas</option>
         {data&&data.obras.map(o=><option key={o} value={o}>{o}</option>)}
       </select>
       <span className="fl">Proveedor</span>
-      <select className="fsel" value={fProv} onChange={e=>setFProv(e.target.value)}>
+      <select className="fsel" value={F.prov} onChange={e=>setFil('prov',e.target.value)}>
         <option value="all">Todos</option>
         {data&&data.proveedores.map(p=><option key={p} value={p}>{p}</option>)}
       </select>
-      <span className="fl">Estado FC Cliente</span>
-      <select className="fsel" value={fEstCli} onChange={e=>setFEstCli(e.target.value)}>
+      <span className="fl">Saldo a cuenta de</span>
+      <select className="fsel" value={F.destino} onChange={e=>setFil('destino',e.target.value)}>
         <option value="all">Todos</option>
-        {estadosCli.map(e=><option key={e} value={e}>{e}</option>)}
+        <option value="Proveedor">Proveedor</option>
+        <option value="Bauvek">Bauvek</option>
+        <option value="Sin asignar">Sin asignar</option>
+      </select>
+      <span className="fl">Estado</span>
+      <select className="fsel" value={F.estado} onChange={e=>setFil('estado',e.target.value)}>
+        <option value="all">Todos</option>
+        <option value="Pagado">Pagado</option>
+        <option value="Parcial">Parcial</option>
+        <option value="No pagado">No pagado</option>
       </select>
       <span className="fl">Rubro</span>
-      <select className="fsel" value={fRubro} onChange={e=>setFRubro(e.target.value)}>
+      <select className="fsel" value={F.rubro} onChange={e=>setFil('rubro',e.target.value)}>
         <option value="all">Todos</option>
         {data&&data.rubros.map(r=><option key={r} value={r}>{r}</option>)}
       </select>
+      <span className="fl">Material</span>
+      <select className="fsel" value={F.material} onChange={e=>setFil('material',e.target.value)}>
+        <option value="all">Todos</option>
+        {estadosMat.map(m=><option key={m} value={m}>{m}</option>)}
+      </select>
       <span className="fl">Fecha FC</span>
-      <input type="date" className="fin" value={fDesde} onChange={e=>setFDesde(e.target.value)}/>
+      <input type="date" className="fin" value={F.desde} onChange={e=>setFil('desde',e.target.value)}/>
       <span className="fl">a</span>
-      <input type="date" className="fin" value={fHasta} onChange={e=>setFHasta(e.target.value)}/>
+      <input type="date" className="fin" value={F.hasta} onChange={e=>setFil('hasta',e.target.value)}/>
+      <button className={`tgl${F.pend?' on':''}`} onClick={()=>setFil('pend',!F.pend)} title="Mostrar solo lo que tiene saldo pendiente">Solo pendientes</button>
       {fCount>0&&<><span className="fbadge">{fCount}</span><button className="fclr" onClick={resetFilters}>Limpiar</button></>}
     </div>
-    
+
     {aviso&&<div className="aviso" onClick={()=>setAviso(null)}>{aviso} <span style={{opacity:.6}}>(clic para cerrar)</span></div>}
     <div className="content">
       {!data&&!error&&<div className="drop" onClick={()=>document.getElementById('fi').click()}>
@@ -753,76 +875,109 @@ function App({user,onLogout}){
         <div>Arrastrá el Excel de Programación de Gastos aquí, o hacé clic para seleccionar</div>
         <input id="fi" type="file" accept=".xlsx,.xls" onChange={e=>{if(e.target.files[0])handleLocalFile(e.target.files[0])}}/>
       </div>}
-      
+
       {error&&!data&&<div className="drop" onClick={()=>document.getElementById('fi2').click()} style={{borderColor:'var(--err)',color:'var(--err)'}}>
         <div style={{marginBottom:8}}>No se pudo cargar el Excel ({error})</div>
         <div style={{color:'var(--c1)'}}>Hacé clic para subir el Excel de Programación de Gastos: queda guardado en el almacenamiento privado</div>
         <input id="fi2" type="file" accept=".xlsx,.xls" onChange={e=>{if(e.target.files[0])handleLocalFile(e.target.files[0])}}/>
       </div>}
-      
+
       {data&&<>
         {/* KPIs */}
         <div className="kpis">
-          <div className="kpi"><div className="kpi-v">{fmtMoney(total,curr)}</div><div className="kpi-l">Total</div></div>
-          <div className="kpi err"><div className="kpi-v" style={{color:'var(--err)'}}>{fmtMoney(noPagCli,curr)}</div><div className="kpi-l">No pagado Cliente</div></div>
-          <div className="kpi warn"><div className="kpi-v" style={{color:'var(--warn)'}}>{fmtMoney(noPagBvk,curr)}</div><div className="kpi-l">No pagado Bauvek</div></div>
-          <div className="kpi"><div className="kpi-v">{fmtMoney(ctaCte,curr)}</div><div className="kpi-l">Cuenta Corriente</div></div>
+          <div className="kpi"><div className="kpi-v">{fmtMoney(total,curr)}</div><div className="kpi-l">Total facturado</div><div className="kpi-s">{filtered.length} ítems</div></div>
+          <div className={`kpi click ok${F.estado==='Pagado'?' sel':''}`} onClick={()=>toggle('estado','Pagado')} title="Clic para filtrar"><div className="kpi-v" style={{color:'var(--ok)'}}>{fmtMoney(pagado,curr)}</div><div className="kpi-l">Pagado</div><div className="kpi-s">{total?(pagado/total*100).toFixed(1):0}% del total</div></div>
+          <div className={`kpi click err${F.pend?' sel':''}`} onClick={()=>setFil('pend',!F.pend)} title="Clic para ver solo pendientes"><div className="kpi-v" style={{color:'var(--err)'}}>{fmtMoney(saldo,curr)}</div><div className="kpi-l">Saldo pendiente (todo lo no pagado)</div><div className="kpi-s">{pend.length} ítems</div></div>
+          <KpiDest d="Proveedor" cls="prov"/>
+          <KpiDest d="Bauvek" cls="bvk"/>
+          {Math.abs(saldoDest('Sin asignar'))>=1&&<KpiDest d="Sin asignar" cls="sin"/>}
         </div>
-        
+
+        <div className="chips">
+          <span>Clic en cualquier gráfico, barra o tarjeta para filtrar · clic de nuevo para soltar</span>
+          {activos.map(k=><span key={k} className="chip" onClick={()=>setFil(k,'all')} title="Quitar filtro">{NOMBRE_FILTRO[k]}: {F[k]} ✕</span>)}
+          {F.pend&&<span className="chip" onClick={()=>setFil('pend',false)}>Solo pendientes ✕</span>}
+        </div>
+
         {/* Donuts */}
         <div className="donuts">
           <div className="donut-card">
-            <div className="donut-title">Estado Facturas Cliente</div>
-            <Donut segments={toDonut(estCliMap)}/>
+            <div className="donut-title">Saldo pendiente · a cuenta de</div>
+            <Donut segments={donutDestino} selected={F.destino} onSelect={k=>toggle('destino',k)} fmt={fmt} centerLabel="saldo"/>
           </div>
           <div className="donut-card">
-            <div className="donut-title">Estado Facturas Bauvek</div>
-            <Donut segments={toDonut(estBvkMap)}/>
+            <div className="donut-title">Estado de pago (importe)</div>
+            <Donut segments={donutEstado} selected={F.estado} onSelect={k=>toggle('estado',k)} fmt={fmt} centerLabel="facturado"/>
           </div>
           <div className="donut-card">
-            <div className="donut-title">Estado de Material</div>
-            <Donut segments={toDonut(estMatMap)}/>
+            <div className="donut-title">Estado de material (importe)</div>
+            <Donut segments={donutMaterial} selected={F.material} onSelect={k=>toggle('material',k)} fmt={fmt} centerLabel="facturado"/>
           </div>
         </div>
-        
+
+        {/* Barras */}
+        <div className="charts2">
+          <div className="donut-card">
+            <div className="donut-title" style={{display:'flex',justifyContent:'space-between',gap:8,flexWrap:'wrap'}}>
+              <span>Saldo pendiente por obra</span>
+              <span className="leg-inline">{['Proveedor','Bauvek','Sin asignar'].map(d=><span key={d}><i style={{background:COL_DESTINO[d]}}/>{d}</span>)}</span>
+            </div>
+            <HBars rows={barObra} selected={F.obra} onSelect={k=>toggle('obra',k)} fmt={fmt}/>
+          </div>
+          <div className="donut-card">
+            <div className="donut-title" style={{display:'flex',justifyContent:'space-between',gap:8,flexWrap:'wrap'}}>
+              <span>Saldo pendiente por proveedor</span>
+              <span className="leg-inline">{['Proveedor','Bauvek','Sin asignar'].map(d=><span key={d}><i style={{background:COL_DESTINO[d]}}/>{d}</span>)}</span>
+            </div>
+            <HBars rows={barProv} selected={F.prov} onSelect={k=>toggle('prov',k)} fmt={fmt}/>
+          </div>
+        </div>
+
         {/* Table */}
         <div style={{overflowX:'auto'}}>
           <table className="tbl">
             <thead><tr>
-              <th onClick={()=>doSort('obra')}>Obra {sortCol==='obra'?(sortDir==='asc'?'↑':'↓'):''}</th>
-              <th onClick={()=>doSort('proveedor')}>Proveedor</th>
-              <th onClick={()=>doSort(impKey)}>{moneda==='usd'?'Importe USD':'Importe $'} {sortCol===impKey?(sortDir==='asc'?'↑':'↓'):''}</th>
-              <th onClick={()=>doSort('fechaFC')}>Fecha FC</th>
-              <th>Condición</th>
-              <th>Razón social</th>
-              <th onClick={()=>doSort('descripcion')}>Descripción</th>
-              <th onClick={()=>doSort('rubro')}>Rubro</th>
+              <th onClick={()=>doSort('obra')}>Obra{arrow('obra')}</th>
+              <th onClick={()=>doSort('proveedor')}>Proveedor{arrow('proveedor')}</th>
+              <th onClick={()=>doSort('fechaFC')}>Fecha FC{arrow('fechaFC')}</th>
+              <th onClick={()=>doSort('condicion')}>Condición{arrow('condicion')}</th>
+              <th onClick={()=>doSort('descripcion')}>Descripción{arrow('descripcion')}</th>
+              <th onClick={()=>doSort('rubro')}>Rubro{arrow('rubro')}</th>
+              <th className="num" onClick={()=>doSort('importe')}>Importe{arrow('importe')}</th>
+              <th className="num" onClick={()=>doSort('pagado')}>Pagado{arrow('pagado')}</th>
+              <th className="num" onClick={()=>doSort('saldo')}>Saldo{arrow('saldo')}</th>
+              <th onClick={()=>doSort('destino')}>A cuenta de{arrow('destino')}</th>
+              <th onClick={()=>doSort('estadoPago')}>Estado{arrow('estadoPago')}</th>
               <th>Observaciones</th>
-              <th onClick={()=>doSort('estadoCliente')}>Estado FC Cliente</th>
             </tr></thead>
             <tbody>
               {sorted.map((inv,i)=>(
                 <tr key={i}>
-                  <td style={{fontWeight:500}}>{inv.obra}</td>
-                  <td>{inv.proveedor}</td>
-                  <td className="mono" style={{textAlign:'right'}}>{fmtMoney(inv[impKey],curr)}</td>
+                  <td style={{fontWeight:500}} title={inv.sheetName}><span className="cell-link" onClick={()=>toggle('obra',inv.obra)}>{inv.obra}</span></td>
+                  <td><span className="cell-link" onClick={()=>toggle('prov',inv.proveedor)}>{inv.proveedor}</span></td>
                   <td className="mono">{fmtDate(inv.fechaFC)}</td>
                   <td className="mono" style={{fontSize:10}}>{inv.condicion}</td>
-                  <td style={{fontSize:11,color:'var(--c1)'}}>{inv.razonSocial}</td>
                   <td title={inv.descripcion}>{inv.descripcion}</td>
                   <td style={{fontSize:11}}>{inv.rubro||'—'}</td>
+                  <td className="mono num">{fmtMoney(inv[kImp],curr)}</td>
+                  <td className="mono num" title={inv.formato==='nuevo'?`Pago proveedor: ${fmtMoney(inv.pagoProv,'ARS')}\nPago Bauvek: ${fmtMoney(inv.pagoBvk,'ARS')}`:'Hoja con formato viejo: se deduce del Estado Factura'}>{fmtMoney(inv[kPag],curr)}</td>
+                  <td className="mono num" style={{color:Math.abs(inv[kSal])>=1?'var(--err)':'var(--c2)',fontWeight:Math.abs(inv[kSal])>=1?600:400}}>{fmtMoney(inv[kSal],curr)}</td>
+                  <td><span className={`tag ${tagDestino(inv.destino)}`} style={{cursor:'pointer'}} onClick={()=>toggle('destino',inv.destino)}>{inv.destino}</span></td>
+                  <td><span className={`tag ${tagEstado(inv.estadoPago)}`} title={inv.formato==='nuevo'?`ESTADO en Excel: ${inv.estadoOrig||'—'}`:`Estado FC Cliente: ${inv.estadoCliente||'—'} · Estado FC Bauvek: ${inv.estadoBauvek||'—'}`}>{inv.estadoPago}</span></td>
                   <td style={{fontSize:11,color:'var(--c2)'}} title={inv.observaciones}>{inv.observaciones}</td>
-                  <td><span className={`tag ${tagClass(inv.estadoCliente)}`}>{inv.estadoCliente||'—'}</span></td>
                 </tr>
               ))}
               <tr className="total-row">
-                <td colSpan="2" style={{textAlign:'right'}}>Total ({filtered.length} facturas)</td>
-                <td className="mono" style={{textAlign:'right'}}>{fmtMoney(total,curr)}</td>
-                <td colSpan="7"></td>
+                <td colSpan="6" style={{textAlign:'right'}}>Total ({filtered.length} ítems)</td>
+                <td className="mono num">{fmtMoney(total,curr)}</td>
+                <td className="mono num">{fmtMoney(pagado,curr)}</td>
+                <td className="mono num" style={{color:'var(--err)'}}>{fmtMoney(saldo,curr)}</td>
+                <td colSpan="3" style={{fontSize:10,fontWeight:500,color:'var(--c1)'}}>Prov. {fmtShort(saldoDe('Proveedor'),curr)} · Bauvek {fmtShort(saldoDe('Bauvek'),curr)}{Math.abs(saldoDe('Sin asignar'))>=1?` · Sin asignar ${fmtShort(saldoDe('Sin asignar'),curr)}`:''}</td>
               </tr>
             </tbody>
           </table>
         </div>
+        {usd&&<div style={{fontSize:10,color:'var(--c2)',marginTop:8}}>En dólares el Excel no registra pagos: el saldo USD se estima con la misma proporción pendiente que en pesos (o el importe completo si la fila está "No pagado").</div>}
       </>}
     </div>
   </>;
