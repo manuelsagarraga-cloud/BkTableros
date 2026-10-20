@@ -146,6 +146,36 @@ body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:14px;l
   .btn-i{width:44px;height:44px}
   .tbl td,.tbl th{padding:10px 8px}
 }
+
+/* Vencimientos */
+.venc-band{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid var(--b0);border-radius:4px;background:var(--el);margin-bottom:10px;overflow:hidden}
+.venc-cell{display:flex;flex-direction:column;gap:2px;align-items:flex-start;padding:10px 14px;border:none;border-right:1px solid var(--b1);border-top:3px solid transparent;background:none;font-family:var(--ff);color:var(--c0);cursor:pointer;text-align:left;min-width:0}
+.venc-cell:last-child{border-right:none}
+.venc-cell:hover{background:var(--bg1)}
+.venc-cell.sel{background:var(--acbg);box-shadow:inset 0 0 0 2px var(--ac)}
+.venc-cell b{font-family:var(--fm);font-size:18px;line-height:1.2;font-variant-numeric:tabular-nums}
+.venc-l{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--c1)}
+.venc-s{font-size:11px;color:var(--c2);font-family:var(--fm)}
+.venc-cell.venc{border-top-color:var(--err)}.venc-cell.venc b{color:var(--err)}
+.venc-cell.sem{border-top-color:var(--warn)}.venc-cell.sem b{color:var(--warn)}
+.venc-cell.prox{border-top-color:#d4a72c}
+.venc-cell.mas{border-top-color:var(--ok)}
+.venc-cell.sin{border-top-color:var(--sin)}
+.venc-note{font-size:12px;color:var(--c1);margin:-2px 0 12px}
+.venc-note code{font-family:var(--fm);font-size:11px;background:var(--bg1);padding:1px 5px;border-radius:2px;margin:0 3px}
+.vchip{display:inline-block;font-family:var(--fm);font-size:11px;padding:1px 6px;border-radius:2px;white-space:nowrap}
+.vchip.venc{background:rgba(239,68,68,.1);color:var(--err);font-weight:700}.vchip.sem{background:rgba(245,158,11,.12);color:var(--warn);font-weight:700}
+.vchip.prox{color:var(--c0)}.vchip.mas{color:var(--c1)}.vchip.sin{color:var(--c2)}
+.more{display:flex;align-items:center;gap:10px;justify-content:center;padding:12px;font-size:12px;color:var(--c1)}
+@media(max-width:1000px){.venc-band{grid-template-columns:repeat(2,minmax(0,1fr))}.venc-cell{border-bottom:1px solid var(--b1)}.venc-cell.venc{grid-column:1/-1}}
+
+.ftog{display:none}
+@media(max-width:700px){
+  .ftog{display:block;margin:8px 16px;width:calc(100% - 32px)}
+  .filters{display:none}
+  .filters.open{display:flex}
+  .filters .fsel,.filters .fin{flex:1 1 40%;max-width:none}
+}
 </style>
 </head>
 <body>
@@ -572,6 +602,33 @@ function fmtShort(v,currency){
   if(a>=1e3) return s+p+(a/1e3).toLocaleString('es-AR',{maximumFractionDigits:0})+'k';
   return s+p+Math.round(a).toLocaleString('es-AR');
 }
+/* ═══════ Vencimientos ═══════
+   El Excel no trae fecha de vencimiento: se calcula como Fecha FC + el plazo que se lee en "Condición".
+   Contado / anticipo / efectivo → 0 días. "30 días", "Cheque a 45", "30/60/90" → el primer número (1 a 365).
+   Lo que no se puede leer queda como "Sin plazo" y se lista para corregir la condición en el Excel. */
+function plazoDias(cond){
+  const c=(cond||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+  if(!c)return null;
+  if(/contado|anticip|efectivo|inmediat|contra entrega|contraentrega/.test(c))return 0;
+  const m=c.match(/(\d{1,3})/);
+  if(m){const n=parseInt(m[1],10);if(n>=1&&n<=365)return n}
+  return null;
+}
+const VENC={venc:'Vencido',sem:'Vence esta semana',prox:'Vence la semana próxima',mas:'Vence más adelante',sin:'Sin fecha o sin plazo'};
+const VENC_ORD=['venc','sem','prox','mas','sin'];
+function vencBucket(vence,hoy){
+  if(!vence)return'sin';
+  const fin=new Date(hoy);fin.setHours(23,59,59,999);fin.setDate(fin.getDate()+((7-fin.getDay())%7)); /* domingo de esta semana */
+  const fin2=new Date(fin);fin2.setDate(fin2.getDate()+7);
+  const h0=new Date(hoy);h0.setHours(0,0,0,0);
+  if(vence<h0)return'venc';if(vence<=fin)return'sem';if(vence<=fin2)return'prox';return'mas';
+}
+function addVenc(inv,hoy){
+  const pl=plazoDias(inv.condicion);
+  const vence=inv.fechaFC&&pl!==null?new Date(inv.fechaFC.getTime()+pl*86400000):null;
+  return{...inv,plazo:pl,vence,venc:vencBucket(vence,hoy),diasVenc:vence?Math.floor((hoy-vence)/86400000):null};
+}
+
 function fmtDate(d){
   if(!d||!(d instanceof Date)||isNaN(d)) return '—';
   return d.toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'2-digit'});
@@ -654,8 +711,9 @@ function useTheme(){
 }
 
 /* ═══════ APP ═══════ */
-const FILTROS_VACIOS={obra:'all',prov:'all',destino:'all',estado:'all',rubro:'all',material:'all',desde:'',hasta:'',pend:false};
-const NOMBRE_FILTRO={obra:'Obra',prov:'Proveedor',destino:'Saldo a cuenta de',estado:'Estado de pago',rubro:'Rubro',material:'Material'};
+const FILTROS_VACIOS={obra:'all',prov:'all',destino:'all',estado:'all',rubro:'all',material:'all',venc:'all',desde:'',hasta:'',pend:false};
+const NOMBRE_FILTRO={obra:'Obra',prov:'Proveedor',destino:'Saldo a cuenta de',estado:'Estado de pago',rubro:'Rubro',material:'Material',venc:'Vencimiento'};
+const PAGE=150;
 
 function App({user,onLogout}){
   const[theme,togTheme]=useTheme();
@@ -729,13 +787,17 @@ function App({user,onLogout}){
     if(except!=='estado'&&F.estado!=='all'&&inv.estadoPago!==F.estado) return false;
     if(except!=='rubro'&&F.rubro!=='all'&&inv.rubro!==F.rubro) return false;
     if(except!=='material'&&F.material!=='all'&&inv.estadoMaterial!==F.material) return false;
+    if(except!=='venc'&&F.venc!=='all'&&(inv.venc!==F.venc||Math.abs(inv[kSal])<1)) return false;
     if(F.pend&&Math.abs(inv[kSal])<1) return false;
     if(F.desde){const d=new Date(F.desde+'T00:00:00');if(!inv.fechaFC||inv.fechaFC<d)return false}
     if(F.hasta){const d=new Date(F.hasta+'T23:59:59');if(!inv.fechaFC||inv.fechaFC>d)return false}
     return true;
   },[F,usd,kSal]);
 
-  const rows=data?data.invoices:[];
+  const rows=useMemo(()=>{const hoy=new Date();return data?data.invoices.map(i=>addVenc(i,hoy)):[]},[data]);
+  const[nShow,setNShow]=useState(PAGE);
+  const[fOpen,setFOpen]=useState(false);
+  useEffect(()=>setNShow(PAGE),[F,moneda,sortCol,sortDir]);
   const filtered=useMemo(()=>rows.filter(i=>pasa(i,null)),[rows,pasa]);
   const sub=useCallback(dim=>rows.filter(i=>pasa(i,dim)),[rows,pasa]);
 
@@ -792,6 +854,26 @@ function App({user,onLogout}){
   const arrow=col=>sortCol===col||(col==='saldo'&&sortCol==='saldoPesos')?(sortDir==='asc'?' ↑':' ↓'):'';
 
   const estadosMat=useMemo(()=>data?[...new Set(data.invoices.map(i=>i.estadoMaterial))].sort():[],[data]);
+  /* Vencimientos del saldo pendiente (con todos los filtros salvo el de vencimiento) */
+  const vencData=useMemo(()=>{
+    const base=sub('venc').filter(i=>Math.abs(i[kSal])>=1);
+    const g={};for(const k of VENC_ORD)g[k]={n:0,v:0};
+    for(const i of base){g[i.venc].n++;g[i.venc].v+=i[kSal]}
+    const vencidas=base.filter(i=>i.venc==='venc');
+    const prom=vencidas.length?Math.round(vencidas.reduce((s,i)=>s+i.diasVenc,0)/vencidas.length):0;
+    const sinPlazo=[...new Set(base.filter(i=>i.fechaFC&&i.plazo===null).map(i=>i.condicion||'(vacía)'))];
+    return{g,prom,sinPlazo};
+  },[sub,kSal]);
+  /* Excel con lo que está filtrado, en el orden de la tabla */
+  const exportXls=useCallback(()=>{
+    const r=sorted.map(i=>({'Obra':i.obra,'Proveedor':i.proveedor,'Fecha FC':i.fechaFC||'','Condición':i.condicion,'Vence':i.vence||'','Días vencida':i.venc==='venc'?i.diasVenc:'','Descripción':i.descripcion,'Rubro':i.rubro,
+      ['Importe '+curr]:Math.round(i[kImp]*100)/100,['Pagado '+curr]:Math.round(i[kPag]*100)/100,['Saldo '+curr]:Math.round(i[kSal]*100)/100,'A cuenta de':i.destino,'Estado':i.estadoPago,'Material':i.estadoMaterial,'Observaciones':i.observaciones}));
+    const ws=XLSX.utils.json_to_sheet(r,{dateNF:'dd/mm/yyyy'});
+    ws['!cols']=[20,24,11,14,11,10,40,16,14,14,14,12,11,14,40].map(w=>({wch:w}));
+    if(ws['!ref'])ws['!autofilter']={ref:ws['!ref']};
+    const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Pagos');
+    XLSX.writeFile(wb,`Pagos_${new Date().toISOString().slice(0,10)}.xlsx`,{cellDates:true});
+  },[sorted,curr,kImp,kPag,kSal]);
   const activos=Object.keys(NOMBRE_FILTRO).filter(k=>F[k]!=='all');
 
   if(loading) return <div style={{height:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}><div className="ld"><div className="sp"/><span>Cargando Excel...</span></div></div>;
@@ -833,7 +915,8 @@ function App({user,onLogout}){
       </div>
     </div>
 
-    <div className="filters">
+    <button className="tgl ftog" onClick={()=>setFOpen(o=>!o)} aria-expanded={fOpen}>Filtros{fCount>0?` (${fCount})`:''} {fOpen?'▲':'▼'}</button>
+    <div className={`filters${fOpen?' open':''}`}>
       <span className="fl">Obra</span>
       <select className="fsel" value={F.obra} onChange={e=>setFil('obra',e.target.value)}>
         <option value="all">Todas</option>
@@ -874,6 +957,7 @@ function App({user,onLogout}){
       <input type="date" className="fin" value={F.hasta} onChange={e=>setFil('hasta',e.target.value)}/>
       <button className={`tgl${F.pend?' on':''}`} onClick={()=>setFil('pend',!F.pend)} title="Mostrar solo lo que tiene saldo pendiente">Solo pendientes</button>
       {fCount>0&&<><span className="fbadge">{fCount}</span><button className="fclr" onClick={resetFilters}>Limpiar</button></>}
+      {data&&<button className="tgl" style={{marginLeft:'auto'}} onClick={exportXls} title="Descarga en Excel lo que se ve en la tabla, con los filtros aplicados">↓ Excel ({filtered.length})</button>}
     </div>
 
     {aviso&&<div className="aviso" onClick={()=>setAviso(null)}>{aviso} <span style={{opacity:.6}}>(clic para cerrar)</span></div>}
@@ -891,6 +975,17 @@ function App({user,onLogout}){
       </div>}
 
       {data&&<>
+        {/* Vencimientos del saldo pendiente */}
+        <div className="venc-band">
+          {VENC_ORD.map(k=>{const x=vencData.g[k];const sel=F.venc===k;
+            return <button key={k} className={`venc-cell ${k}${sel?' sel':''}`} onClick={()=>toggle('venc',k)} title="Clic para filtrar">
+              <span className="venc-l">{VENC[k]}</span>
+              <b>{fmt(x.v,true)}</b>
+              <span className="venc-s">{x.n} ítem{x.n===1?'':'s'}{k==='venc'&&x.n?` · ${vencData.prom} d prom.`:''}</span>
+            </button>})}
+        </div>
+        {vencData.sinPlazo.length>0&&<div className="venc-note">Sin plazo reconocido en "Condición": {vencData.sinPlazo.slice(0,8).map(c=><code key={c}>{c}</code>)}{vencData.sinPlazo.length>8?` y ${vencData.sinPlazo.length-8} más`:''}. Escribí la condición como "30 días" o "Contado" para que entre en los vencimientos.</div>}
+
         {/* KPIs */}
         <div className="kpis">
           <div className="kpi"><div className="kpi-v">{fmtMoney(total,curr)}</div><div className="kpi-l">Total facturado</div><div className="kpi-s">{filtered.length} ítems</div></div>
@@ -949,6 +1044,7 @@ function App({user,onLogout}){
               <th onClick={()=>doSort('proveedor')}>Proveedor{arrow('proveedor')}</th>
               <th onClick={()=>doSort('fechaFC')}>Fecha FC{arrow('fechaFC')}</th>
               <th onClick={()=>doSort('condicion')}>Condición{arrow('condicion')}</th>
+              <th onClick={()=>doSort('vence')} title="Fecha FC + plazo de la condición">Vence{arrow('vence')}</th>
               <th onClick={()=>doSort('descripcion')}>Descripción{arrow('descripcion')}</th>
               <th onClick={()=>doSort('rubro')}>Rubro{arrow('rubro')}</th>
               <th className="num" onClick={()=>doSort('importe')}>Importe{arrow('importe')}</th>
@@ -959,24 +1055,25 @@ function App({user,onLogout}){
               <th>Observaciones</th>
             </tr></thead>
             <tbody>
-              {sorted.map((inv,i)=>(
+              {sorted.slice(0,nShow).map((inv,i)=>(
                 <tr key={i}>
                   <td style={{fontWeight:500}} title={inv.sheetName}><span className="cell-link" onClick={()=>toggle('obra',inv.obra)}>{inv.obra}</span></td>
                   <td><span className="cell-link" onClick={()=>toggle('prov',inv.proveedor)}>{inv.proveedor}</span></td>
                   <td className="mono">{fmtDate(inv.fechaFC)}</td>
                   <td className="mono" style={{fontSize:11}}>{inv.condicion}</td>
+                  <td>{Math.abs(inv[kSal])<1?<span className="mono" style={{color:'var(--c2)'}}>—</span>:<span className={'vchip '+inv.venc} title={inv.vence?(inv.venc==='venc'?`Vencida hace ${inv.diasVenc} días`:`Plazo leído: ${inv.plazo} días`):'Sin fecha de factura o sin plazo en la condición'}>{inv.vence?fmtDate(inv.vence):'Sin plazo'}{inv.venc==='venc'?` · ${inv.diasVenc} d`:''}</span>}</td>
                   <td title={inv.descripcion}>{inv.descripcion}</td>
                   <td style={{fontSize:11}}>{inv.rubro||'—'}</td>
                   <td className="mono num">{fmtMoney(inv[kImp],curr)}</td>
                   <td className="mono num" title={inv.formato==='nuevo'?`Pago proveedor: ${fmtMoney(inv.pagoProv,'ARS')}\nPago Bauvek: ${fmtMoney(inv.pagoBvk,'ARS')}`:'Hoja con formato viejo: se deduce del Estado Factura'}>{fmtMoney(inv[kPag],curr)}</td>
-                  <td className="mono num" style={{color:Math.abs(inv[kSal])>=1?'var(--err)':'var(--c2)',fontWeight:Math.abs(inv[kSal])>=1?600:400}}>{fmtMoney(inv[kSal],curr)}</td>
+                  <td className="mono num" style={{color:Math.abs(inv[kSal])<1?'var(--c2)':inv.venc==='venc'?'var(--err)':'var(--c0)',fontWeight:Math.abs(inv[kSal])>=1?600:400}}>{fmtMoney(inv[kSal],curr)}</td>
                   <td><span className={`tag ${tagDestino(inv.destino)}`} style={{cursor:'pointer'}} onClick={()=>toggle('destino',inv.destino)}>{inv.destino}</span></td>
                   <td><span className={`tag ${tagEstado(inv.estadoPago)}`} title={inv.formato==='nuevo'?`ESTADO en Excel: ${inv.estadoOrig||'—'}`:`Estado FC Cliente: ${inv.estadoCliente||'—'} · Estado FC Bauvek: ${inv.estadoBauvek||'—'}`}>{inv.estadoPago}</span></td>
                   <td style={{fontSize:11,color:'var(--c2)'}} title={inv.observaciones}>{inv.observaciones}</td>
                 </tr>
               ))}
               <tr className="total-row">
-                <td colSpan="6" style={{textAlign:'right'}}>Total ({filtered.length} ítems)</td>
+                <td colSpan="7" style={{textAlign:'right'}}>Total ({filtered.length} ítems)</td>
                 <td className="mono num">{fmtMoney(total,curr)}</td>
                 <td className="mono num">{fmtMoney(pagado,curr)}</td>
                 <td className="mono num" style={{color:'var(--err)'}}>{fmtMoney(saldo,curr)}</td>
@@ -985,6 +1082,7 @@ function App({user,onLogout}){
             </tbody>
           </table>
         </div>
+        {sorted.length>nShow&&<div className="more"><span>Mostrando {nShow} de {sorted.length} ítems</span><button className="tgl" onClick={()=>setNShow(n=>n+PAGE)}>Mostrar {Math.min(PAGE,sorted.length-nShow)} más</button><button className="tgl" onClick={()=>setNShow(sorted.length)}>Mostrar todos</button></div>}
         {usd&&<div style={{fontSize:11,color:'var(--c2)',marginTop:8}}>En dólares el Excel no registra pagos: el saldo USD se estima con la misma proporción pendiente que en pesos (o el importe completo si la fila está "No pagado").</div>}
       </>}
     </div>
