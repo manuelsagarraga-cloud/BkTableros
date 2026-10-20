@@ -11,11 +11,11 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
-:root{--bg:#fafbfc;--bg1:#f1f3f5;--bg2:#e9ecef;--el:#fff;--c0:#1a1f2e;--c1:#5a6178;--c2:#8b92a5;--b0:#e2e5ea;--b1:#eef0f3;--ac:#9E0101;--ac2:#E40000;--acbg:rgba(158,1,1,.07);--ok:#10b981;--err:#ef4444;--warn:#f59e0b;--sh:0 1px 2px rgba(0,0,0,.04);--shm:0 2px 8px rgba(0,0,0,.06);--ff:'Lato','Inter',-apple-system,sans-serif;--fm:'JetBrains Mono',monospace}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1419;--bg1:#1a2030;--bg2:#242d3d;--el:#1e2636;--c0:#e4e8ee;--c1:#8b95a8;--c2:#5e6882;--b0:#2a3344;--b1:#222b3a;--acbg:rgba(158,1,1,.1);--sh:0 1px 2px rgba(0,0,0,.2);--shm:0 2px 8px rgba(0,0,0,.3)}}
-:root[data-theme="dark"]{--bg:#0f1419;--bg1:#1a2030;--bg2:#242d3d;--el:#1e2636;--c0:#e4e8ee;--c1:#8b95a8;--c2:#5e6882;--b0:#2a3344;--b1:#222b3a;--acbg:rgba(158,1,1,.1);--sh:0 1px 2px rgba(0,0,0,.2);--shm:0 2px 8px rgba(0,0,0,.3)}
+:root{--bg:#fafbfc;--bg1:#f1f3f5;--bg2:#e9ecef;--el:#fff;--c0:#1a1f2e;--c1:#5a6178;--c2:#666c80;--b0:#e2e5ea;--b1:#eef0f3;--ac:#9E0101;--ac2:#E40000;--acbg:rgba(158,1,1,.07);--ok:#10b981;--err:#ef4444;--warn:#f59e0b;--sh:0 1px 2px rgba(0,0,0,.04);--shm:0 2px 8px rgba(0,0,0,.06);--ff:'Lato','Inter',-apple-system,sans-serif;--fm:'JetBrains Mono',monospace}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1419;--bg1:#1a2030;--bg2:#242d3d;--el:#1e2636;--c0:#e4e8ee;--c1:#a7afc0;--c2:#8891a6;--b0:#2a3344;--b1:#222b3a;--acbg:rgba(158,1,1,.1);--sh:0 1px 2px rgba(0,0,0,.2);--shm:0 2px 8px rgba(0,0,0,.3)}}
+:root[data-theme="dark"]{--bg:#0f1419;--bg1:#1a2030;--bg2:#242d3d;--el:#1e2636;--c0:#e4e8ee;--c1:#a7afc0;--c2:#8891a6;--b0:#2a3344;--b1:#222b3a;--acbg:rgba(158,1,1,.1);--sh:0 1px 2px rgba(0,0,0,.2);--shm:0 2px 8px rgba(0,0,0,.3)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;height:100vh;overflow:hidden}
+body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;height:100vh;overflow:hidden}
 #root{height:100vh;display:flex;flex-direction:column}
 ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b0);border-radius:3px}
 
@@ -33,7 +33,7 @@ body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:13px;l
 .fl{font-size:11px;color:var(--c2);font-weight:500}
 .fsel{padding:4px 24px 4px 8px;font-size:11px;font-family:var(--ff);font-weight:500;border:1px solid var(--b0);border-radius:4px;background:var(--el);color:var(--c0);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a6178' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center}
 .fin{padding:4px 8px;font-size:11px;font-family:var(--fm);border:1px solid var(--b0);border-radius:4px;background:var(--el);color:var(--c0);width:120px}
-.fbadge{display:inline-flex;align-items:center;min-width:16px;height:16px;border-radius:8px;background:var(--ac);color:white;font-size:10px;font-weight:600;padding:0 4px}
+.fbadge{display:inline-flex;align-items:center;min-width:16px;height:16px;border-radius:8px;background:var(--ac);color:white;font-size:11px;font-weight:600;padding:0 4px}
 .fclr{font-size:11px;color:var(--ac);border:none;background:none;cursor:pointer;font-family:var(--ff);font-weight:500;padding:4px 6px;border-radius:4px}.fclr:hover{background:var(--acbg)}
 
 .content{flex:1;overflow-y:auto;padding:16px 20px}
@@ -54,12 +54,12 @@ body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:13px;l
 .tbl th{position:sticky;top:0;z-index:2;background:var(--bg1);font-weight:600;font-size:11px;color:var(--c1);text-align:left;padding:8px 8px;border-bottom:1px solid var(--b0);cursor:pointer;white-space:nowrap;user-select:none}
 .tbl th:hover{color:var(--c0)}
 .tbl td{padding:6px 8px;border-bottom:1px solid var(--b1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
-.tbl tr:hover td{background:rgba(59,108,245,.04)}
+.tbl tr:hover td{background:var(--acbg)}
 .tbl tr:nth-child(even) td{background:rgba(0,0,0,.015)}
-.tbl tr:nth-child(even):hover td{background:rgba(59,108,245,.04)}
+.tbl tr:nth-child(even):hover td{background:var(--acbg)}
 .tbl .total-row td{font-weight:700;background:var(--bg1);border-top:2px solid var(--b0)}
 .mono{font-family:var(--fm);font-size:11px;color:var(--c1)}
-.tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:500}
+.tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:11px;font-weight:500}
 .tag-ok{background:rgba(16,185,129,.1);color:var(--ok)}
 .tag-err{background:rgba(239,68,68,.1);color:var(--err)}
 .tag-warn{background:rgba(245,158,11,.1);color:var(--warn)}
@@ -92,7 +92,7 @@ body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:13px;l
 .login-btn:disabled{opacity:.6;cursor:not-allowed}
 .login-err{background:rgba(239,68,68,.08);color:var(--err);font-size:11px;padding:8px 10px;border-radius:4px;margin-bottom:14px;text-align:center}
 .logout-btn{font-size:11px;color:var(--c2);border:1px solid var(--b0);background:var(--el);padding:4px 10px;border-radius:4px;cursor:pointer;font-family:var(--ff);font-weight:500;transition:all .15s}
-.origen-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.origen-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
 .origen-badge.ok{background:rgba(16,185,129,.12);color:var(--ok)}
 .origen-badge.warn{background:rgba(245,158,11,.14);color:var(--warn)}
 .aviso{padding:8px 16px;font-size:12px;background:var(--acbg,rgba(158,1,1,.07));border-bottom:1px solid var(--b0);cursor:pointer}
@@ -103,7 +103,7 @@ body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:13px;l
 .kpi.prov{border-left-color:var(--prov)}.kpi.bvk{border-left-color:var(--bvk)}.kpi.sin{border-left-color:var(--sin)}
 .kpi.click{cursor:pointer;transition:background .12s}.kpi.click:hover{background:var(--bg1)}
 .kpi.sel{box-shadow:inset 0 0 0 2px var(--ac)}
-.kpi-s{font-size:10px;color:var(--c2);margin-top:2px;font-family:var(--fm)}
+.kpi-s{font-size:11px;color:var(--c2);margin-top:2px;font-family:var(--fm)}
 .chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:-4px 0 12px;font-size:11px;color:var(--c2)}
 .chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:3px;background:var(--acbg);color:var(--ac);font-weight:700;cursor:pointer}
 .chip:hover{background:var(--ac);color:#fff}
@@ -119,16 +119,16 @@ body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:13px;l
 .leg-row:hover{background:var(--bg1)}.leg-row.dim{opacity:.4}.leg-row.sel{background:var(--acbg);font-weight:700}
 .leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
 .leg-l{color:var(--c0);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
-.leg-v{color:var(--c1);font-family:var(--fm);font-size:10px;flex-shrink:0}
-.leg-p{color:var(--c2);font-family:var(--fm);font-size:10px;flex-shrink:0;width:30px;text-align:right}
+.leg-v{color:var(--c1);font-family:var(--fm);font-size:11px;flex-shrink:0}
+.leg-p{color:var(--c2);font-family:var(--fm);font-size:11px;flex-shrink:0;width:30px;text-align:right}
 .charts2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .hb-row{display:grid;grid-template-columns:minmax(80px,170px) 1fr 70px;gap:8px;align-items:center;padding:3px 5px;border-radius:3px;cursor:pointer;font-size:11px}
 .hb-row:hover{background:var(--bg1)}.hb-row.dim{opacity:.35}.hb-row.sel{background:var(--acbg);font-weight:700}
 .hb-l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hb-track{height:12px;display:flex;background:var(--bg1);border-radius:2px;overflow:hidden}
 .hb-track span{height:100%}
-.hb-v{font-family:var(--fm);font-size:10px;text-align:right;color:var(--c1)}
-.leg-inline{display:flex;gap:10px;font-size:10px;color:var(--c2);text-transform:none;letter-spacing:0;font-weight:500}
+.hb-v{font-family:var(--fm);font-size:11px;text-align:right;color:var(--c1)}
+.leg-inline{display:flex;gap:10px;font-size:11px;color:var(--c2);text-transform:none;letter-spacing:0;font-weight:500}
 .leg-inline i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 .tbl th.num,.tbl td.num{text-align:right}
 .fsel{max-width:200px;text-overflow:ellipsis}
@@ -138,6 +138,14 @@ body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:13px;l
 .cell-link{cursor:pointer}.cell-link:hover{color:var(--ac);text-decoration:underline}
 @media(max-width:1000px){.donuts,.charts2{grid-template-columns:1fr}}
 @media(max-width:700px){.hdr{flex-wrap:wrap;height:auto;padding:8px 16px}.content{padding:12px 16px}.kpis{grid-template-columns:1fr 1fr}.kpi{padding:10px;min-width:0}.kpi-v{font-size:14px;overflow-wrap:anywhere}.donut-wrap{flex-wrap:wrap}.donut-card{min-width:0}.hb-row{grid-template-columns:90px 1fr 56px}}
+
+/* Celular: objetivos táctiles de 44 px */
+@media(max-width:700px){
+  body{font-size:15px}
+  .btn,.fsel,.fin,.tgl,.logout-btn,.seg button{min-height:44px}
+  .btn-i{width:44px;height:44px}
+  .tbl td,.tbl th{padding:10px 8px}
+}
 </style>
 </head>
 <body>
@@ -820,7 +828,7 @@ function App({user,onLogout}){
         </label>
         <span style={{fontSize:11,color:'var(--c2)',fontFamily:'var(--fm)'}}>{filtered.length} ítems</span>
         <button className="btn-i" onClick={togTheme}>{theme==='light'?'🌙':'☀️'}</button>
-        <span style={{fontSize:10,color:'var(--c2)',maxWidth:120,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}} title={user.email}>{user.email.split('@')[0]}</span>
+        <span style={{fontSize:11,color:'var(--c2)',maxWidth:120,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}} title={user.email}>{user.email.split('@')[0]}</span>
         <button className="logout-btn" onClick={onLogout}>Salir</button>
       </div>
     </div>
@@ -956,7 +964,7 @@ function App({user,onLogout}){
                   <td style={{fontWeight:500}} title={inv.sheetName}><span className="cell-link" onClick={()=>toggle('obra',inv.obra)}>{inv.obra}</span></td>
                   <td><span className="cell-link" onClick={()=>toggle('prov',inv.proveedor)}>{inv.proveedor}</span></td>
                   <td className="mono">{fmtDate(inv.fechaFC)}</td>
-                  <td className="mono" style={{fontSize:10}}>{inv.condicion}</td>
+                  <td className="mono" style={{fontSize:11}}>{inv.condicion}</td>
                   <td title={inv.descripcion}>{inv.descripcion}</td>
                   <td style={{fontSize:11}}>{inv.rubro||'—'}</td>
                   <td className="mono num">{fmtMoney(inv[kImp],curr)}</td>
@@ -972,12 +980,12 @@ function App({user,onLogout}){
                 <td className="mono num">{fmtMoney(total,curr)}</td>
                 <td className="mono num">{fmtMoney(pagado,curr)}</td>
                 <td className="mono num" style={{color:'var(--err)'}}>{fmtMoney(saldo,curr)}</td>
-                <td colSpan="3" style={{fontSize:10,fontWeight:500,color:'var(--c1)'}}>Prov. {fmtShort(saldoDe('Proveedor'),curr)} · Bauvek {fmtShort(saldoDe('Bauvek'),curr)}{Math.abs(saldoDe('Sin asignar'))>=1?` · Sin asignar ${fmtShort(saldoDe('Sin asignar'),curr)}`:''}</td>
+                <td colSpan="3" style={{fontSize:11,fontWeight:500,color:'var(--c1)'}}>Prov. {fmtShort(saldoDe('Proveedor'),curr)} · Bauvek {fmtShort(saldoDe('Bauvek'),curr)}{Math.abs(saldoDe('Sin asignar'))>=1?` · Sin asignar ${fmtShort(saldoDe('Sin asignar'),curr)}`:''}</td>
               </tr>
             </tbody>
           </table>
         </div>
-        {usd&&<div style={{fontSize:10,color:'var(--c2)',marginTop:8}}>En dólares el Excel no registra pagos: el saldo USD se estima con la misma proporción pendiente que en pesos (o el importe completo si la fila está "No pagado").</div>}
+        {usd&&<div style={{fontSize:11,color:'var(--c2)',marginTop:8}}>En dólares el Excel no registra pagos: el saldo USD se estima con la misma proporción pendiente que en pesos (o el importe completo si la fila está "No pagado").</div>}
       </>}
     </div>
   </>;
