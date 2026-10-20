@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Programación de Pagos — Bauvek</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+:root{--bg:#f6f5f4;--bg1:#efedeb;--bg2:#e4e1de;--el:#fff;--c0:#141414;--c1:#4d4845;--c2:#6b6561;--b0:#dedad6;--b1:#ebe8e5;--ac:#9E0101;--ac2:#E40000;--acbg:rgba(158,1,1,.07);--ok:#10b981;--err:#ef4444;--warn:#f59e0b;--sh:none;--shm:0 6px 24px rgba(20,20,20,.14);--ff:'Lato',-apple-system,'Segoe UI',Roboto,sans-serif;--fm:'JetBrains Mono',monospace}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121111;--bg1:#1c1b1a;--bg2:#2a2826;--el:#1a1918;--c0:#efecea;--c1:#b9b3ae;--c2:#8f8984;--b0:#34312e;--b1:#262422;--ac:#ee5d62;--acbg:rgba(238,93,98,.12);--sh:none;--shm:0 6px 24px rgba(0,0,0,.5);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121111;--bg1:#1c1b1a;--bg2:#2a2826;--el:#1a1918;--c0:#efecea;--c1:#b9b3ae;--c2:#8f8984;--b0:#34312e;--b1:#262422;--ac:#ee5d62;--acbg:rgba(238,93,98,.12);--sh:none;--shm:0 6px 24px rgba(0,0,0,.5);color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ff);background:var(--bg);color:var(--c0);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;height:100vh;overflow:hidden}
+#root{height:100vh;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b0);border-radius:3px}
+
+.hdr{height:44px;background:var(--el);border-bottom:1px solid var(--b0);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none;color:var(--c0)}
+.logo span{color:var(--c2);font-weight:400;font-size:12px;margin-left:2px}
+.hdr-title{font-size:14px;font-weight:600;color:var(--ac)}
+.acts{margin-left:auto;display:flex;gap:4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:5px 10px;font-size:12px;font-weight:500;font-family:var(--ff);border-radius:4px;border:1px solid var(--b0);background:var(--el);color:var(--c1);cursor:pointer}.btn:hover{background:var(--bg1);color:var(--c0)}
+.btn-i{padding:5px;width:28px;height:28px;border:none;background:none;cursor:pointer;color:var(--c1);border-radius:4px}.btn-i:hover{background:var(--bg1)}
+.seg{display:inline-flex;background:var(--bg1);border-radius:4px;padding:2px;gap:1px;margin:0 8px}
+.seg button{padding:4px 14px;font-size:12px;font-weight:500;font-family:var(--ff);border:none;background:transparent;color:var(--c1);cursor:pointer;border-radius:3px}.seg button:hover{color:var(--c0)}.seg button.on{background:var(--el);color:var(--c0);box-shadow:var(--sh)}
+
+.filters{display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--bg1);border-bottom:1px solid var(--b1);flex-wrap:wrap;flex-shrink:0}
+.fl{font-size:11px;color:var(--c2);font-weight:500}
+.fsel{padding:4px 24px 4px 8px;font-size:11px;font-family:var(--ff);font-weight:500;border:1px solid var(--b0);border-radius:4px;background:var(--el);color:var(--c0);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a6178' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center}
+.fin{padding:4px 8px;font-size:11px;font-family:var(--fm);border:1px solid var(--b0);border-radius:4px;background:var(--el);color:var(--c0);width:120px}
+.fbadge{display:inline-flex;align-items:center;min-width:16px;height:16px;border-radius:8px;background:var(--ac);color:white;font-size:11px;font-weight:600;padding:0 4px}
+.fclr{font-size:11px;color:var(--ac);border:none;background:none;cursor:pointer;font-family:var(--ff);font-weight:500;padding:4px 6px;border-radius:4px}.fclr:hover{background:var(--acbg)}
+
+.content{flex:1;overflow-y:auto;padding:16px 20px}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--el);border:1px solid var(--b1);border-radius:3px;padding:14px;border-left:3px solid var(--ac)}
+.kpi.ok{border-left-color:var(--ok)}.kpi.err{border-left-color:var(--err)}.kpi.warn{border-left-color:var(--warn)}
+.kpi-v{font-size:20px;font-weight:700;font-family:var(--fm);line-height:1.1}
+.kpi-l{font-size:11px;color:var(--c1);margin-top:4px;font-weight:500}
+
+.donuts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.donut-card{background:var(--el);border:1px solid var(--b1);border-radius:3px;padding:14px 16px}
+.donut-title{font-size:11px;font-weight:600;color:var(--c1);margin-bottom:10px;text-transform:uppercase;letter-spacing:.3px}
+.donut-main{font-size:13px;font-weight:600;margin-top:8px}
+.donut-sub{font-size:11px;color:var(--c2);margin-top:2px}
+
+.tbl{width:100%;border-collapse:collapse;font-size:12px;background:var(--el);border:1px solid var(--b1);border-radius:3px;overflow:hidden}
+.tbl th{position:sticky;top:0;z-index:2;background:var(--bg1);font-weight:600;font-size:11px;color:var(--c1);text-align:left;padding:8px 8px;border-bottom:1px solid var(--b0);cursor:pointer;white-space:nowrap;user-select:none}
+.tbl th:hover{color:var(--c0)}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--b1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.tbl tr:hover td{background:var(--acbg)}
+.tbl tr:nth-child(even) td{background:rgba(0,0,0,.015)}
+.tbl tr:nth-child(even):hover td{background:var(--acbg)}
+.tbl .total-row td{font-weight:700;background:var(--bg1);border-top:2px solid var(--b0)}
+.mono{font-family:var(--fm);font-size:11px;color:var(--c1)}
+.tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:11px;font-weight:500}
+.tag-ok{background:rgba(16,185,129,.1);color:var(--ok)}
+.tag-err{background:rgba(239,68,68,.1);color:var(--err)}
+.tag-warn{background:rgba(245,158,11,.1);color:var(--warn)}
+.tag-grey{background:rgba(139,146,165,.1);color:var(--c2)}
+
+.ld{display:flex;align-items:center;justify-content:center;flex:1;gap:8px;color:var(--c2);font-size:13px}
+.sp{width:18px;height:18px;border:2px solid var(--b0);border-top-color:var(--ac);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.drop{max-width:400px;margin:40px auto;padding:24px;border:1.5px dashed var(--b0);border-radius:3px;text-align:center;color:var(--c2);font-size:12px;cursor:pointer}.drop:hover{border-color:var(--ac);background:var(--acbg);color:var(--ac)}
+.drop input{display:none}
+
+@media print{
+  .hdr,.filters{display:none!important}
+  .content{overflow:visible!important}
+  @page{size:landscape;margin:10mm}
+}
+
+/* Login */
+.login-bg{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px}
+.login-box{width:100%;max-width:360px;background:var(--el);border:1px solid var(--b1);border-radius:4px;padding:32px 28px;box-shadow:var(--shm)}
+.login-logo{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;margin-bottom:4px}
+.login-logo svg{color:var(--ac)}
+.login-sub{text-align:center;font-size:12px;color:var(--c2);margin-bottom:24px}
+.login-label{display:block;font-size:11px;font-weight:600;color:var(--c1);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+.login-input{width:100%;padding:9px 12px;font-size:13px;font-family:var(--ff);border:1px solid var(--b0);border-radius:4px;background:var(--bg);color:var(--c0);outline:none;margin-bottom:14px;transition:border-color .15s}
+.login-input:focus{border-color:var(--ac)}
+.login-btn{width:100%;padding:10px;font-size:13px;font-weight:600;font-family:var(--ff);border:none;border-radius:4px;background:var(--ac);color:#fff;cursor:pointer;transition:background .15s;text-transform:uppercase;letter-spacing:.5px}
+.login-btn:hover{background:var(--ac2)}
+.login-btn:disabled{opacity:.6;cursor:not-allowed}
+.login-err{background:rgba(239,68,68,.08);color:var(--err);font-size:11px;padding:8px 10px;border-radius:4px;margin-bottom:14px;text-align:center}
+.logout-btn{font-size:11px;color:var(--c2);border:1px solid var(--b0);background:var(--el);padding:4px 10px;border-radius:4px;cursor:pointer;font-family:var(--ff);font-weight:500;transition:all .15s}
+.origen-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.origen-badge.ok{background:rgba(16,185,129,.12);color:var(--ok)}
+.origen-badge.warn{background:rgba(245,158,11,.14);color:var(--warn)}
+.aviso{padding:8px 16px;font-size:12px;background:var(--acbg,rgba(158,1,1,.07));border-bottom:1px solid var(--b0);cursor:pointer}
+.logout-btn:hover{color:var(--err);border-color:var(--err);background:rgba(239,68,68,.05)}
+/* ── Saldos por destino + gráficos clicables ── */
+:root{--prov:#9E0101;--bvk:#d97706;--sin:#a3aab8}
+:root[data-theme="dark"]{--prov:#ee5d62;--bvk:#f59e0b;--sin:#5e6882}
+.kpi.prov{border-left-color:var(--prov)}.kpi.bvk{border-left-color:var(--bvk)}.kpi.sin{border-left-color:var(--sin)}
+.kpi.click{cursor:pointer;transition:background .12s}.kpi.click:hover{background:var(--bg1)}
+.kpi.sel{box-shadow:inset 0 0 0 2px var(--ac)}
+.kpi-s{font-size:11px;color:var(--c2);margin-top:2px;font-family:var(--fm)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:-4px 0 12px;font-size:11px;color:var(--c2)}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:3px;background:var(--acbg);color:var(--ac);font-weight:700;cursor:pointer}
+.chip:hover{background:var(--ac);color:#fff}
+.tgl{padding:4px 10px;font-size:11px;font-family:var(--ff);font-weight:600;border:1px solid var(--b0);border-radius:4px;background:var(--el);color:var(--c1);cursor:pointer}
+.tgl.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.donut-wrap{display:flex;align-items:center;gap:14px}
+.donut-empty{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--c2);min-height:60px}
+.donut-c1{font-size:13px;font-weight:700;font-family:var(--fm);fill:var(--c0)}
+.donut-c2{font-size:9px;fill:var(--c2);text-transform:uppercase;letter-spacing:.4px}
+.seg-arc{cursor:pointer;transition:opacity .15s,stroke-width .15s}
+.leg{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+.leg-row{display:flex;align-items:center;gap:6px;font-size:11px;line-height:1.3;cursor:pointer;padding:3px 5px;border-radius:3px}
+.leg-row:hover{background:var(--bg1)}.leg-row.dim{opacity:.4}.leg-row.sel{background:var(--acbg);font-weight:700}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.leg-l{color:var(--c0);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.leg-v{color:var(--c1);font-family:var(--fm);font-size:11px;flex-shrink:0}
+.leg-p{color:var(--c2);font-family:var(--fm);font-size:11px;flex-shrink:0;width:30px;text-align:right}
+.charts2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.hb-row{display:grid;grid-template-columns:minmax(80px,170px) 1fr 70px;gap:8px;align-items:center;padding:3px 5px;border-radius:3px;cursor:pointer;font-size:11px}
+.hb-row:hover{background:var(--bg1)}.hb-row.dim{opacity:.35}.hb-row.sel{background:var(--acbg);font-weight:700}
+.hb-l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb-track{height:12px;display:flex;background:var(--bg1);border-radius:2px;overflow:hidden}
+.hb-track span{height:100%}
+.hb-v{font-family:var(--fm);font-size:11px;text-align:right;color:var(--c1)}
+.leg-inline{display:flex;gap:10px;font-size:11px;color:var(--c2);text-transform:none;letter-spacing:0;font-weight:500}
+.leg-inline i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.tbl th.num,.tbl td.num{text-align:right}
+.fsel{max-width:200px;text-overflow:ellipsis}
+:root[data-theme="dark"] .hdr-title,:root[data-theme="dark"] .fclr{color:#ee5d62}
+.tag-prov{background:rgba(158,1,1,.09);color:var(--prov)}
+.tag-bvk{background:rgba(217,119,6,.12);color:var(--bvk)}
+.cell-link{cursor:pointer}.cell-link:hover{color:var(--ac);text-decoration:underline}
+@media(max-width:1000px){.donuts,.charts2{grid-template-columns:1fr}}
+@media(max-width:700px){.hdr{flex-wrap:wrap;height:auto;padding:8px 16px}.content{padding:12px 16px}.kpis{grid-template-columns:1fr 1fr}.kpi{padding:10px;min-width:0}.kpi-v{font-size:14px;overflow-wrap:anywhere}.donut-wrap{flex-wrap:wrap}.donut-card{min-width:0}.hb-row{grid-template-columns:90px 1fr 56px}}
+
+/* Celular: objetivos táctiles de 44 px */
+@media(max-width:700px){
+  body{font-size:15px}
+  .btn,.fsel,.fin,.tgl,.logout-btn,.seg button{min-height:44px}
+  .btn-i{width:44px;height:44px}
+  .tbl td,.tbl th{padding:10px 8px}
+}
+
+/* Vencimientos */
+.venc-band{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid var(--b0);border-radius:4px;background:var(--el);margin-bottom:10px;overflow:hidden}
+.venc-cell{display:flex;flex-direction:column;gap:2px;align-items:flex-start;padding:10px 14px;border:none;border-right:1px solid var(--b1);border-top:3px solid transparent;background:none;font-family:var(--ff);color:var(--c0);cursor:pointer;text-align:left;min-width:0}
+.venc-cell:last-child{border-right:none}
+.venc-cell:hover{background:var(--bg1)}
+.venc-cell.sel{background:var(--acbg);box-shadow:inset 0 0 0 2px var(--ac)}
+.venc-cell b{font-family:var(--fm);font-size:18px;line-height:1.2;font-variant-numeric:tabular-nums}
+.venc-l{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--c1)}
+.venc-s{font-size:11px;color:var(--c2);font-family:var(--fm)}
+.venc-cell.venc{border-top-color:var(--err)}.venc-cell.venc b{color:var(--err)}
+.venc-cell.sem{border-top-color:var(--warn)}.venc-cell.sem b{color:var(--warn)}
+.venc-cell.prox{border-top-color:#d4a72c}
+.venc-cell.mas{border-top-color:var(--ok)}
+.venc-cell.sin{border-top-color:var(--sin)}
+.venc-note{font-size:12px;color:var(--c1);margin:-2px 0 12px}
+.venc-note code{font-family:var(--fm);font-size:11px;background:var(--bg1);padding:1px 5px;border-radius:2px;margin:0 3px}
+.vchip{display:inline-block;font-family:var(--fm);font-size:11px;padding:1px 6px;border-radius:2px;white-space:nowrap}
+.vchip.venc{background:rgba(239,68,68,.1);color:var(--err);font-weight:700}.vchip.sem{background:rgba(245,158,11,.12);color:var(--warn);font-weight:700}
+.vchip.prox{color:var(--c0)}.vchip.mas{color:var(--c1)}.vchip.sin{color:var(--c2)}
+.more{display:flex;align-items:center;gap:10px;justify-content:center;padding:12px;font-size:12px;color:var(--c1)}
+@media(max-width:1000px){.venc-band{grid-template-columns:repeat(2,minmax(0,1fr))}.venc-cell{border-bottom:1px solid var(--b1)}.venc-cell.venc{grid-column:1/-1}}
+
+.ftog{display:none}
+@media(max-width:700px){
+  .ftog{display:block;margin:8px 16px;width:calc(100% - 32px)}
+  .filters{display:none}
+  .filters.open{display:flex}
+  .filters .fsel,.filters .fin{flex:1 1 40%;max-width:none}
+}
+.bv,.logo .bv,.login-logo .bv{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;background:#9E0101;color:#fff;font-weight:900;font-size:11px;letter-spacing:.3px;border-radius:2px;margin:0}
+.logo .bk-crumb{font-size:12px;font-weight:700;color:var(--c1)}
+.logo:hover .bk-crumb{color:var(--ac)}
+@media(max-width:700px){.logo .bk-crumb{display:none}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const{useState,useEffect,useRef,useCallback,useMemo}=React;
+
+/* ═══════ Supabase Client ═══════ */
+/* Login y almacenamiento: mismo Supabase que Cómputo de Obras (el proyecto propio de Pagos quedó pausado y en desuso).
+   Entran los usuarios de la empresa bauvek y el admin; el resto de las empresas de Cómputo no ve este Excel (RLS de Storage). */
+const SUPABASE_URL='https://beuzmwrhqlmjoplsillf.supabase.co';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldXptd3JocWxtam9wbHNpbGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc1NDcsImV4cCI6MjA5NTA2MzU0N30.Rw82cnyzp2S2Alc6lWiBCDxVL8u_8wAfCTConDGpYFE';
+/* Sesión única de BkTableros: la misma que usan la portada, BuildPlan y Cómputo (sb_access_token en este dominio).
+   Se crea un cliente con el token del usuario; sin sesión válida no se muestra nada. */
+let sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON,{auth:{persistSession:false,autoRefreshToken:false}});
+function _jwt(t){try{return JSON.parse(decodeURIComponent(escape(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))))}catch(e){return{}}}
+function _guardarSesion(d){localStorage.setItem('sb_access_token',d.access_token);localStorage.setItem('sb_refresh_token',d.refresh_token||'');if(d.user)localStorage.setItem('sb_user',JSON.stringify(d.user))}
+async function bkToken(){
+  let at='',rt='';try{at=localStorage.getItem('sb_access_token')||'';rt=localStorage.getItem('sb_refresh_token')||''}catch(e){return null}
+  if(at&&(_jwt(at).exp||0)*1000>Date.now()+60000)return at;
+  if(!rt)return null;
+  try{const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_ANON},body:JSON.stringify({refresh_token:rt})});
+    if(!r.ok)return null;const d=await r.json();_guardarSesion(d);return d.access_token}catch(e){return null}
+}
+function usarToken(t){sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON,{global:{headers:{Authorization:'Bearer '+t}},auth:{persistSession:false,autoRefreshToken:false}})}
+function bkLogout(){try{['sb_access_token','sb_refresh_token','sb_user'].forEach(k=>localStorage.removeItem(k))}catch(e){}}
+/* El Excel de pagos vive en un bucket PRIVADO de Supabase Storage: solo se descarga con sesión iniciada.
+   No hay copia pública: sin sesión no se ve nada. */
+const PAGOS_BUCKET='pagos';
+const PAGOS_PATH='programacion-gastos.xlsx';
+
+/* ═══════ Login Screen ═══════ */
+function Login({onLogin}){
+  const[email,setEmail]=useState('');
+  const[pass,setPass]=useState('');
+  const[err,setErr]=useState('');
+  const[loading,setLoading]=useState(false);
+
+  const handleSubmit=async()=>{
+    setErr('');setLoading(true);
+    const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_ANON},body:JSON.stringify({email:email.trim(),password:pass})});
+    const d=await r.json().catch(()=>({}));
+    setLoading(false);
+    if(!r.ok){
+      const m=(d.error_description||d.msg||d.error||'').toLowerCase();
+      if(m.includes('invalid'))setErr('Email o contraseña incorrectos');
+      else if(m.includes('not confirmed'))setErr('Email no confirmado. Revisá tu bandeja de entrada.');
+      else setErr(d.error_description||d.msg||'No se pudo iniciar sesión');
+      return;
+    }
+    _guardarSesion(d);
+    onLogin(d.access_token);
+  };
+
+  const onKey=e=>{if(e.key==='Enter'&&email&&pass) handleSubmit()};
+
+  return <div className="login-bg">
+    <div className="login-box">
+      <div className="login-logo">
+        <span className="bv">BV</span>
+        <span>BkTableros</span>
+      </div>
+      <div className="login-sub">Programación de Pagos · uso interno de Bauvek</div>
+
+      {err&&<div className="login-err">{err}</div>}
+
+      <label className="login-label">Email</label>
+      <input className="login-input" type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={onKey} placeholder="usuario@bauvek.com" autoFocus/>
+
+      <label className="login-label">Contraseña</label>
+      <input className="login-input" type="password" value={pass} onChange={e=>setPass(e.target.value)} onKeyDown={onKey} placeholder="••••••••"/>
+
+      <button className="login-btn" onClick={handleSubmit} disabled={loading||!email||!pass}>
+        {loading?'Ingresando...':'Ingresar'}
+      </button>
+    </div>
+  </div>;
+}
+
+/* ═══════ Auth Wrapper ═══════ */
+function AuthGate(){
+  const[tok,setTok]=useState(undefined); /* undefined=verificando, null=sin sesión */
+  useEffect(()=>{bkToken().then(t=>setTok(t||null))},[]);
+  const handleLogout=()=>{bkLogout();setTok(null)};
+  if(tok===undefined) return <div style={{height:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>
+    <div className="ld"><div className="sp"/><span>Verificando sesión...</span></div>
+  </div>;
+  if(!tok) return <Login onLogin={setTok}/>;
+  const c=_jwt(tok),am=c.app_metadata||{};
+  if(am.empresa!=='bauvek'&&am.role!=='admin') return <div className="login-bg"><div className="login-box">
+    <div className="login-logo"><span className="bv">BV</span><span>BkTableros</span></div>
+    <div className="login-sub">Sin acceso</div>
+    <p style={{fontSize:13,color:'var(--c1)',textAlign:'center',marginBottom:16}}>Programación de Pagos es de uso interno de Bauvek y tu usuario no pertenece a la empresa.</p>
+    <button className="login-btn" onClick={handleLogout}>Salir</button>
+  </div></div>;
+  usarToken(tok);
+  let user={email:c.email||''};try{const u=JSON.parse(localStorage.getItem('sb_user')||'null');if(u&&u.email)user=u}catch(e){}
+  return <App user={user} onLogout={handleLogout}/>;
+}
+
+/* ═══════ Normalización de Rubros ═══════ */
+/* Unifica variantes de escritura sin tocar el Excel original.
+   Reglas: trim → quitar acentos → singular → Title Case → alias manual.
+   Si aparece un rubro nuevo no mapeado, queda en Title Case limpio. */
+const _rubroNormLog={};  /* raw → normalizado, para debug */
+
+function normalizeRubro(raw){
+  if(!raw||typeof raw!=='string') return '';
+  const trimmed=raw.trim();
+  if(!trimmed) return '';
+
+  /* 1. Minúsculas + quitar acentos para comparar */
+  const lower=trimmed.toLowerCase();
+  const stripped=lower.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+
+  /* 2. Plurales → singular (patrones comunes en rubros de obra) */
+  let key=stripped
+    .replace(/\s+/g,' ')           /* espacios múltiples */
+    .replace(/materiales/g,'material')
+    .replace(/aridos/g,'arido')
+    .replace(/electricos/g,'electrico')
+    .replace(/sanitarios/g,'sanitario')
+    .replace(/ceramicos/g,'ceramico')
+    .replace(/metalicos/g,'metalico')
+    .replace(/hidraulicos/g,'hidraulico')
+    .replace(/termicos/g,'termico')
+    .replace(/accesorios/g,'accesorio')
+    .replace(/herramientas/g,'herramienta')
+    .replace(/honorarios/g,'honorario')
+    .replace(/seguros/g,'seguro')
+    .replace(/impuestos/g,'impuesto')
+    .replace(/fletes/g,'flete')
+    .replace(/pinturas/g,'pintura')
+    .replace(/instalaciones/g,'instalacion')
+    .replace(/revestimientos/g,'revestimiento')
+    .replace(/aberturas/g,'abertura')
+    .replace(/carpinterias/g,'carpinteria')
+    .replace(/demoliciones/g,'demolicion')
+    .replace(/excavaciones/g,'excavacion')
+    .replace(/fundaciones/g,'fundacion')
+    .replace(/estructuras/g,'estructura')
+    .replace(/mamposteria[s]?/g,'mamposteria')
+    .replace(/albanileria[s]?/g,'albanileria')
+    .replace(/revoques/g,'revoque')
+    .replace(/pisos/g,'piso')
+    .replace(/techos/g,'techo')
+    .replace(/cielorraso[s]?/g,'cielorraso')
+    .replace(/vidrios/g,'vidrio')
+    .replace(/muebles/g,'mueble');
+
+  /* 3. Alias manuales: variantes conocidas → nombre canónico */
+  const aliases={
+    'albanileria':'Albañilería',
+    'albanileria general':'Albañilería General',
+    'mamposteria':'Mampostería',
+    'carpinteria':'Carpintería',
+    'plomeria':'Plomería',
+    'electricidad':'Electricidad',
+    'electrico':'Eléctrico',
+    'electrica':'Eléctrica',
+    'inst. electrica':'Inst. Eléctrica',
+    'inst electrica':'Inst. Eléctrica',
+    'instalacion electrica':'Inst. Eléctrica',
+    'inst. sanitaria':'Inst. Sanitaria',
+    'inst sanitaria':'Inst. Sanitaria',
+    'instalacion sanitaria':'Inst. Sanitaria',
+    'inst. gas':'Inst. Gas',
+    'inst gas':'Inst. Gas',
+    'instalacion gas':'Inst. Gas',
+    'inst. termomecanica':'Inst. Termomecánica',
+    'inst termomecanica':'Inst. Termomecánica',
+    'hormigon':'Hormigón',
+    'hormigon armado':'Hormigón Armado',
+    'hierro':'Hierro',
+    'acero':'Acero',
+    'arido':'Árido',
+    'ceramico':'Cerámico',
+    'material':'Material',
+    'pintura':'Pintura',
+    'revoque':'Revoque',
+    'piso':'Piso',
+    'techo':'Techo',
+    'cielorraso':'Cielorraso',
+    'vidrio':'Vidrio',
+    'abertura':'Abertura',
+    'mueble':'Mueble',
+    'herramienta':'Herramienta',
+    'honorario':'Honorario',
+    'seguro':'Seguro',
+    'impuesto':'Impuesto',
+    'flete':'Flete',
+    'demolicion':'Demolición',
+    'excavacion':'Excavación',
+    'fundacion':'Fundación',
+    'estructura':'Estructura',
+    'revestimiento':'Revestimiento',
+    'metalico':'Metálico',
+    'hidraulico':'Hidráulico',
+    'termico':'Térmico',
+    'accesorio':'Accesorio',
+    'sanitario':'Sanitario',
+    'mov. de suelo':'Mov. de Suelo',
+    'mov de suelo':'Mov. de Suelo',
+    'movimiento de suelo':'Mov. de Suelo',
+    'mov. de tierra':'Mov. de Tierra',
+    'movimiento de tierra':'Mov. de Tierra',
+    'durlock':'Durlock',
+    'steel framing':'Steel Framing',
+    'steel frame':'Steel Framing',
+    'yeseria':'Yesería',
+    'zingueria':'Zinguería',
+    'calefaccion':'Calefacción',
+    'climatizacion':'Climatización',
+    'aire acondicionado':'Climatización',
+    'aa':'Climatización',
+    'pileta':'Pileta',
+    'piscina':'Pileta',
+    'jardineria':'Jardinería',
+    'paisajismo':'Jardinería',
+    'limpieza':'Limpieza',
+    'seguridad':'Seguridad',
+    'proyecto':'Proyecto',
+    'direccion':'Dirección',
+    'direccion de obra':'Dirección de Obra',
+    'documentacion':'Documentación',
+    'tramites':'Trámites',
+    'varios':'Varios',
+    'otro':'Otros',
+    'otros':'Otros',
+    'mano de obra':'Mano de Obra',
+    'mo':'Mano de Obra',
+    'm.o.':'Mano de Obra',
+    'subcontrato':'Subcontrato',
+    'subcontratos':'Subcontrato'
+  };
+
+  const canonical=aliases[key];
+
+  /* 4. Si no hay alias, Title Case del texto original limpio */
+  let result;
+  if(canonical){
+    result=canonical;
+  } else {
+    /* Title Case: primera letra de cada palabra en mayúscula */
+    result=trimmed.replace(/\s+/g,' ').split(' ')
+      .map(w=>w.charAt(0).toUpperCase()+w.slice(1).toLowerCase())
+      .join(' ');
+  }
+
+  /* Log para debug */
+  if(trimmed!==result) _rubroNormLog[trimmed]=result;
+
+  return result;
+}
+
+
+/* ═══════ Parse Excel ═══════ */
+/* Soporta los dos formatos de hoja que conviven en el Excel:
+   · NUEVO  → Importe | Observaciones | PAGO PROVEEDOR(ES) | PAGO BAUVEK | TOTAL PAGADO | SALDO PENDIENTE | ESTADO
+   · VIEJO  → Importe | Observaciones | Estado Factura Cliente | Estado Factura Bauvek
+   En ambos, "Observaciones" dice a cuenta de quién va el saldo: "A proveedor" o "A Bauvek". */
+const HDR_ALIASES={
+  'obra':'obra','fecha de fc':'fecha','condición':'condicion','condicion':'condicion','razón social':'razon','razon social':'razon',
+  'descripción':'desc','descripcion':'desc','proveedor':'prov','rubro':'rubro',
+  'importe final pesos (iva incluido)':'impPesos','importe final usd (iva incluido)':'impUSD',
+  'observaciones':'obs','estado factura cliente':'estCli','estado factura bauvek':'estBvk','estado material':'estMat',
+  'resarcimiento bauvek':'resarc','nº remito':'remito','n° remito':'remito','encargado':'encargado',
+  'pago proveedor':'pagoProv','pago proveedores':'pagoProv','pago bauvek':'pagoBvk',
+  'total pagado':'totPagado','saldo pendiente':'saldo','estado':'estado'
+};
+const _hk=v=>String(v).trim().replace(/\s+/g,' ').toLowerCase();
+const _num=v=>typeof v==='number'&&isFinite(v)?v:0;
+const _isNum=v=>typeof v==='number'&&isFinite(v);
+const _str=v=>v==null?'':(v instanceof Date?v.toLocaleDateString('es-AR'):String(v).trim());
+
+/* "A proveedor" / "A Bauvek" → destino del saldo */
+function destinoDe(obs){
+  const o=_str(obs).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  if(/proveedor/.test(o)) return 'Proveedor';
+  if(/bauvek/.test(o)) return 'Bauvek';
+  return 'Sin asignar';
+}
+/* Formato viejo: ¿la factura está pendiente según los estados? */
+function pendienteViejo(estCli,estBvk){
+  const chk=s=>{const l=_str(s).toLowerCase();if(!l)return null;
+    if(l.includes('no pagado')||l.includes('cuenta corriente'))return true;
+    if(l.includes('pagado'))return false;return null};
+  const a=chk(estCli);if(a!==null)return a;
+  const b=chk(estBvk);if(b!==null)return b;
+  return true; /* sin estado → se cuenta como pendiente */
+}
+
+function parseExcel(data){
+  const wb=XLSX.read(data,{type:'array',cellDates:true});
+
+  /* ── 1. Hojas: excluir auxiliares; si existe "X (Nuevo/Nueva)" se ignora "X" / "X (Original)" ── */
+  const skipPatterns=[/proveedor/i,/calendario/i,/resumen/i,/consulta/i,/deuda/i];
+  const baseOf=s=>s.replace(/\(.*?\)/g,'').trim().toLowerCase().replace(/\s+/g,' ');
+  const isNueva=s=>/\(\s*nuev[oa]\s*\)/i.test(s);
+  const candidatas=wb.SheetNames.filter(s=>!skipPatterns.some(rx=>rx.test(s)));
+  const basesNuevas=new Set(candidatas.filter(isNueva).map(baseOf));
+  const reemplazadas=candidatas.filter(s=>!isNueva(s)&&basesNuevas.has(baseOf(s)));
+  const obraSheets=candidatas.filter(s=>!reemplazadas.includes(s));
+
+  /* ── 2. Header y nombre de cliente de cada hoja (incluye las reemplazadas, para heredar el nombre) ── */
+  const info={};
+  for(const sn of candidatas){
+    const ws=wb.Sheets[sn];if(!ws||!ws['!ref'])continue;
+    const range=XLSX.utils.decode_range(ws['!ref']);
+    let headerRow=-1,colMap={};
+    for(let r=0;r<=Math.min(20,range.e.r)&&headerRow<0;r++){
+      const m={};let n=0;
+      for(let c=0;c<=Math.min(40,range.e.c);c++){
+        const cell=ws[XLSX.utils.encode_cell({r,c})];
+        if(cell&&typeof cell.v==='string'){const k=HDR_ALIASES[_hk(cell.v)];if(k&&m[k]===undefined){m[k]=c;n++}}
+      }
+      if(n>=5){headerRow=r;colMap=m}
+    }
+    /* "Cliente:" en las filas de arriba del header */
+    let cliente='';
+    for(let r=0;r<Math.max(headerRow,0)&&!cliente;r++){
+      for(let c=0;c<12&&!cliente;c++){
+        const cell=ws[XLSX.utils.encode_cell({r,c})];
+        if(cell&&typeof cell.v==='string'&&/^cliente:?$/i.test(cell.v.trim())){
+          for(let c2=c+1;c2<c+5;c2++){const v=ws[XLSX.utils.encode_cell({r,c:c2})];if(v&&_str(v.v)){cliente=_str(v.v);break}}
+        }
+      }
+    }
+    info[sn]={ws,range,headerRow,colMap,cliente};
+  }
+  const clientePorBase={};
+  for(const sn of candidatas){const i=info[sn];if(i&&i.cliente){const b=baseOf(sn);if(!clientePorBase[b]||i.cliente.length>clientePorBase[b].length)clientePorBase[b]=i.cliente}}
+  const resolveObraName=sn=>{
+    const i=info[sn];
+    if(i&&i.cliente) return clientePorBase[baseOf(sn)]||i.cliente;
+    if(clientePorBase[baseOf(sn)]) return clientePorBase[baseOf(sn)];
+    return sn.replace(/\(.*?\)/g,'').replace(/^Obra\s*/i,'').replace(/^Casa\s*/i,'').replace(/^Proyecto\s*/i,'').trim();
+  };
+
+  /* ── 3. Filas ── */
+  const invoices=[],obras=new Set(),proveedores=new Set(),rubros=new Set();
+  const formatos={};
+  for(const sn of obraSheets){
+    const i=info[sn];if(!i||i.headerRow<0)continue;
+    const{ws,range,headerRow,colMap}=i;
+    const nuevo=colMap.pagoProv!==undefined||colMap.pagoBvk!==undefined||colMap.saldo!==undefined;
+    formatos[sn]=nuevo?'nuevo':'viejo';
+    const obraName=resolveObraName(sn);
+    obras.add(obraName);
+
+    for(let r=headerRow+1;r<=range.e.r;r++){
+      const getV=k=>{if(colMap[k]===undefined)return null;const cell=ws[XLSX.utils.encode_cell({r,c:colMap[k]})];return cell?cell.v:null};
+      const desc=getV('desc'),prov=getV('prov');
+      const impPesos=getV('impPesos'),impUSD=getV('impUSD');
+      const hasText=_str(desc).length>1||_str(prov).length>1;
+      if(!hasText) continue;
+      const rubroRaw=getV('rubro'),obsRaw=getV('obs');
+      const isTotal=[prov,desc,rubroRaw,obsRaw].some(v=>typeof v==='string'&&/^(total|pagos|deuda|total importe|deuda total)$/i.test(v.trim()));
+      if(isTotal) continue;
+      if(impPesos!=null&&impPesos!==''&&!_isNum(impPesos)) continue; /* basura en columnas equivocadas */
+
+      let fechaFC=getV('fecha');
+      if(fechaFC instanceof Date&&!isNaN(fechaFC)){}
+      else if(typeof fechaFC==='number'){fechaFC=new Date((fechaFC-25569)*86400000)}
+      else if(typeof fechaFC==='string'&&fechaFC){const d=new Date(fechaFC);fechaFC=isNaN(d)?null:d}
+      else fechaFC=null;
+
+      const imp=_num(impPesos),usd=_num(impUSD);
+      const destino=destinoDe(obsRaw);
+      let pagoProv=0,pagoBvk=0,pagado,saldo,estadoPago;
+      if(nuevo){
+        pagoProv=_num(getV('pagoProv'));pagoBvk=_num(getV('pagoBvk'));
+        const tp=getV('totPagado'),sp=getV('saldo');
+        pagado=_isNum(tp)?tp:pagoProv+pagoBvk;
+        saldo=_isNum(sp)?sp:imp-pagado;
+        const est=_str(getV('estado')).toLowerCase();
+        if(Math.abs(saldo)<1&&imp!==0) estadoPago='Pagado';
+        else if(Math.abs(saldo)>=1&&Math.abs(pagado)>=1) estadoPago='Parcial';
+        else if(Math.abs(saldo)>=1) estadoPago='No pagado';
+        else estadoPago=est.includes('no pagado')||!est?'No pagado':'Pagado'; /* importe vacío: manda la columna ESTADO */
+      }else{
+        const pend=pendienteViejo(getV('estCli'),getV('estBvk'));
+        estadoPago=pend?'No pagado':'Pagado';
+        pagado=pend?0:imp;saldo=pend?imp:0;
+      }
+      /* USD: el sheet no registra pagos en dólares → se prorratea con la proporción pendiente en pesos */
+      const ratio=imp?Math.max(0,Math.min(1,saldo/imp)):(estadoPago==='Pagado'?0:1);
+      const saldoUSD=usd*ratio;
+
+      const inv={
+        obra:obraName,sheetName:sn,formato:nuevo?'nuevo':'viejo',fechaFC,
+        condicion:_str(getV('condicion')),razonSocial:_str(getV('razon')),
+        descripcion:_str(desc),proveedor:_str(prov),rubro:normalizeRubro(rubroRaw),
+        importePesos:imp,importeUSD:usd,
+        pagadoPesos:pagado,saldoPesos:saldo,pagadoUSD:usd-saldoUSD,saldoUSD,
+        pagoProv,pagoBvk,destino,estadoPago,
+        observaciones:_str(obsRaw),
+        estadoCliente:_str(getV('estCli')),estadoBauvek:_str(getV('estBvk')),estadoOrig:_str(getV('estado')),
+        estadoMaterial:_str(getV('estMat'))||'Sin dato',
+        resarcimiento:_str(getV('resarc')),remito:_str(getV('remito')),encargado:_str(getV('encargado'))
+      };
+      invoices.push(inv);
+      if(inv.proveedor) proveedores.add(inv.proveedor);
+      if(inv.rubro&&inv.rubro.length>1) rubros.add(inv.rubro);
+    }
+  }
+
+  /* ── 4. Deduplicación SOLO entre hojas distintas (la misma factura copiada en dos hojas del mismo cliente).
+        Dentro de una hoja no se toca nada: dos fletes iguales el mismo día son dos fletes. ── */
+  const seen=new Map(),unique=[],_dups=[];
+  for(const inv of invoices){
+    const dateKey=inv.fechaFC?inv.fechaFC.toISOString().slice(0,10):'';
+    const key=[inv.obra,inv.proveedor.toLowerCase(),inv.importePesos,inv.importeUSD,dateKey,inv.descripcion.toLowerCase().slice(0,60),inv.condicion].join('|');
+    const prev=seen.get(key);
+    if(prev&&prev!==inv.sheetName){_dups.push(inv);continue}
+    if(!prev) seen.set(key,inv.sheetName);
+    unique.push(inv);
+  }
+  if(_dups.length) console.warn(`[Pagos] ${_dups.length} filas repetidas entre hojas distintas (se cuentan una sola vez)`,_dups.map(i=>i.sheetName+' · '+i.proveedor+' · '+i.importePesos));
+  console.info(`[Pagos] Hojas: ${obraSheets.map(s=>s+' ('+(formatos[s]||'sin header')+')').join(', ')}`);
+  if(reemplazadas.length) console.info(`[Pagos] Hojas ignoradas por tener versión nueva: ${reemplazadas.join(', ')}`);
+
+  return{invoices:unique,obras:[...obras].sort(),proveedores:[...proveedores].sort((a,b)=>a.localeCompare(b)),rubros:[...rubros].sort(),
+    sheetCount:obraSheets.length,reemplazadas,formatos};
+}
+
+/* ═══════ Format helpers ═══════ */
+function fmtMoney(v,currency){
+  if(!v) return currency==='USD'?'USD 0':'$0';
+  const prefix=currency==='USD'?'USD ':'$';
+  return (v<0?'−':'')+prefix+Math.abs(v).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function fmtShort(v,currency){
+  const p=currency==='USD'?'USD ':'$';const a=Math.abs(v),s=v<0?'−':'';
+  if(a>=1e6) return s+p+(a/1e6).toLocaleString('es-AR',{maximumFractionDigits:a>=1e8?0:1})+'M';
+  if(a>=1e3) return s+p+(a/1e3).toLocaleString('es-AR',{maximumFractionDigits:0})+'k';
+  return s+p+Math.round(a).toLocaleString('es-AR');
+}
+/* ═══════ Vencimientos ═══════
+   El Excel no trae fecha de vencimiento: se calcula como Fecha FC + el plazo que se lee en "Condición".
+   Contado / anticipo / efectivo → 0 días. "30 días", "Cheque a 45", "30/60/90" → el primer número (1 a 365).
+   Lo que no se puede leer queda como "Sin plazo" y se lista para corregir la condición en el Excel. */
+function plazoDias(cond){
+  const c=(cond||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+  if(!c)return null;
+  if(/contado|anticip|efectivo|inmediat|contra entrega|contraentrega/.test(c))return 0;
+  const m=c.match(/(\d{1,3})/);
+  if(m){const n=parseInt(m[1],10);if(n>=1&&n<=365)return n}
+  return null;
+}
+const VENC={venc:'Vencido',sem:'Vence esta semana',prox:'Vence la semana próxima',mas:'Vence más adelante',sin:'Sin fecha o sin plazo'};
+const VENC_ORD=['venc','sem','prox','mas','sin'];
+function vencBucket(vence,hoy){
+  if(!vence)return'sin';
+  const fin=new Date(hoy);fin.setHours(23,59,59,999);fin.setDate(fin.getDate()+((7-fin.getDay())%7)); /* domingo de esta semana */
+  const fin2=new Date(fin);fin2.setDate(fin2.getDate()+7);
+  const h0=new Date(hoy);h0.setHours(0,0,0,0);
+  if(vence<h0)return'venc';if(vence<=fin)return'sem';if(vence<=fin2)return'prox';return'mas';
+}
+function addVenc(inv,hoy){
+  const pl=plazoDias(inv.condicion);
+  const vence=inv.fechaFC&&pl!==null?new Date(inv.fechaFC.getTime()+pl*86400000):null;
+  return{...inv,plazo:pl,vence,venc:vencBucket(vence,hoy),diasVenc:vence?Math.floor((hoy-vence)/86400000):null};
+}
+
+function fmtDate(d){
+  if(!d||!(d instanceof Date)||isNaN(d)) return '—';
+  return d.toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'2-digit'});
+}
+function tagEstado(e){return e==='Pagado'?'tag-ok':e==='Parcial'?'tag-warn':'tag-err'}
+function tagDestino(d){return d==='Proveedor'?'tag-prov':d==='Bauvek'?'tag-bvk':'tag-grey'}
+
+const COL_DESTINO={'Proveedor':'var(--prov)','Bauvek':'var(--bvk)','Sin asignar':'var(--sin)'};
+const COL_ESTADO={'Pagado':'var(--ok)','Parcial':'var(--warn)','No pagado':'var(--err)'};
+const PALETA=['var(--ac)','#64748b','var(--ok)','var(--warn)','#8b5cf6','#0ea5e9','#ec4899'];
+
+/* ═══════ Donut clicable ═══════ */
+/* segments: [{key,label,value,color}] · selected: key | 'all' · onSelect(key) — clic de nuevo deselecciona */
+function Donut({segments,selected,onSelect,fmt,centerLabel,size=118}){
+  const segs=segments.filter(s=>s.value>0);
+  const total=segs.reduce((s,seg)=>s+seg.value,0);
+  const[hover,setHover]=useState(null);
+  if(!total) return <div className="donut-empty">
+    <svg width={size} height={size}><circle cx={size/2} cy={size/2} r={size/2-8} fill="none" stroke="var(--bg2)" strokeWidth="14"/></svg>
+    <span>Sin saldo / sin datos</span>
+  </div>;
+  const r=size/2-8,circ=2*Math.PI*r;let offset=0;
+  const isSel=k=>selected!=='all'&&selected===k;
+  const dim=k=>selected!=='all'&&selected!==k;
+  const center=hover?segs.find(s=>s.key===hover):null;
+  return <div className="donut-wrap">
+    <svg width={size} height={size} style={{flexShrink:0}}>
+      <g transform={`rotate(-90 ${size/2} ${size/2})`}>
+        {segs.map(seg=>{
+          const dash=seg.value/total*circ;
+          const el=<circle key={seg.key} className="seg-arc" cx={size/2} cy={size/2} r={r} fill="none" stroke={seg.color}
+            strokeWidth={isSel(seg.key)||hover===seg.key?18:14}
+            strokeDasharray={`${Math.max(dash-1.5,0.5)} ${circ-Math.max(dash-1.5,0.5)}`} strokeDashoffset={-offset}
+            opacity={dim(seg.key)?.25:1}
+            onMouseEnter={()=>setHover(seg.key)} onMouseLeave={()=>setHover(null)}
+            onClick={()=>onSelect(seg.key)}><title>{seg.label}: {fmt(seg.value)}</title></circle>;
+          offset+=dash;return el;
+        })}
+      </g>
+      <text x={size/2} y={size/2-6} textAnchor="middle" className="donut-c1">{fmt(center?center.value:total,true)}</text>
+      <text x={size/2} y={size/2+10} textAnchor="middle" className="donut-c2">{center?(center.value/total*100).toFixed(0)+'%':centerLabel}</text>
+    </svg>
+    <div className="leg">
+      {segs.map(seg=><div key={seg.key} className={`leg-row${isSel(seg.key)?' sel':''}${dim(seg.key)?' dim':''}`}
+        onClick={()=>onSelect(seg.key)} onMouseEnter={()=>setHover(seg.key)} onMouseLeave={()=>setHover(null)} title="Clic para filtrar">
+        <span className="leg-dot" style={{background:seg.color}}/>
+        <span className="leg-l" title={seg.label}>{seg.label}</span>
+        <span className="leg-v">{fmt(seg.value,true)}</span>
+        <span className="leg-p">{(seg.value/total*100).toFixed(0)}%</span>
+      </div>)}
+    </div>
+  </div>;
+}
+
+/* ═══════ Barras horizontales apiladas (saldo Proveedor / Bauvek / Sin asignar) ═══════ */
+function HBars({rows,selected,onSelect,fmt,limit=10}){
+  const[all,setAll]=useState(false);
+  const list=rows.filter(r=>Math.abs(r.total)>=1).sort((a,b)=>b.total-a.total);
+  if(!list.length) return <div className="donut-empty"><span>Sin saldo pendiente con estos filtros</span></div>;
+  const shown=all?list:list.slice(0,limit);
+  const max=Math.max(...list.map(r=>Math.max(r.parts.reduce((s,p)=>s+Math.max(p.value,0),0),0)),1);
+  return <div>
+    {shown.map(r=>{
+      const sel=selected===r.key,dim=selected!=='all'&&!sel;
+      return <div key={r.key} className={`hb-row${sel?' sel':''}${dim?' dim':''}`} onClick={()=>onSelect(r.key)} title={`${r.key}\n`+r.parts.filter(p=>p.value).map(p=>`${p.label}: ${fmt(p.value)}`).join('\n')}>
+        <span className="hb-l">{r.key}</span>
+        <span className="hb-track">{r.parts.map(p=>p.value>0&&<span key={p.label} style={{width:(p.value/max*100)+'%',background:p.color}}/>)}</span>
+        <span className="hb-v">{fmt(r.total,true)}</span>
+      </div>;
+    })}
+    {list.length>limit&&<button className="fclr" style={{marginTop:4}} onClick={()=>setAll(v=>!v)}>{all?'Ver menos':`Ver los ${list.length}`}</button>}
+  </div>;
+}
+
+/* ═══════ Theme ═══════ */
+function useTheme(){
+  const[t,setT]=useState(()=>window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  useEffect(()=>{document.documentElement.setAttribute('data-theme',t)},[t]);
+  return[t,useCallback(()=>setT(v=>v==='light'?'dark':'light'),[])];
+}
+
+/* ═══════ APP ═══════ */
+const FILTROS_VACIOS={obra:'all',prov:'all',destino:'all',estado:'all',rubro:'all',material:'all',venc:'all',desde:'',hasta:'',pend:false};
+const NOMBRE_FILTRO={obra:'Obra',prov:'Proveedor',destino:'Saldo a cuenta de',estado:'Estado de pago',rubro:'Rubro',material:'Material',venc:'Vencimiento'};
+const PAGE=150;
+
+function App({user,onLogout}){
+  const[theme,togTheme]=useTheme();
+  const[data,setData]=useState(null);
+  const[loading,setLoading]=useState(true);
+  const[error,setError]=useState(null);
+
+  const[moneda,setMoneda]=useState('pesos');
+  const[F,setF]=useState(FILTROS_VACIOS);
+  const setFil=useCallback((k,v)=>setF(f=>({...f,[k]:v})),[]);
+  /* Clic en gráfico: selecciona, y si ya estaba seleccionado lo suelta */
+  const toggle=useCallback((k,v)=>setF(f=>({...f,[k]:f[k]===v?'all':v})),[]);
+
+  const[sortCol,setSortCol]=useState('saldoPesos');
+  const[sortDir,setSortDir]=useState('desc');
+
+  /* Origen del Excel: 'privado' (Supabase Storage, requiere sesión) | 'publico' (repo, transitorio) | 'local' */
+  const[origen,setOrigen]=useState(null);
+  const[subiendo,setSubiendo]=useState(false);
+  const[aviso,setAviso]=useState(null);
+
+  /* Load Excel: primero el bucket privado; si todavía no está, el archivo del repo (solo mientras dure la migración) */
+  useEffect(()=>{
+    (async()=>{
+      try{
+        const{data:blob,error:e}=await sb.storage.from(PAGOS_BUCKET).download(PAGOS_PATH);
+        if(e||!blob)throw e||new Error('sin archivo');
+        setData(parseExcel(new Uint8Array(await blob.arrayBuffer())));setOrigen('privado');
+      }catch(_){setError('todavía no se subió el Excel de pagos, o tu usuario no tiene acceso')}
+      setLoading(false);
+    })();
+  },[]);
+
+  /* Cargar un Excel: se muestra y se guarda en el bucket privado (reemplaza al anterior) */
+  const handleLocalFile=useCallback(async file=>{
+    let d;
+    try{d=parseExcel(new Uint8Array(await file.arrayBuffer()))}
+    catch(err){setError('El archivo no se pudo leer: '+err.message);return}
+    setData(d);setError(null);setOrigen('local');setF(FILTROS_VACIOS);
+    setSubiendo(true);
+    try{
+      const{error:e}=await sb.storage.from(PAGOS_BUCKET).upload(PAGOS_PATH,file,{upsert:true,contentType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+      if(e)throw e;
+      setOrigen('privado');setAviso('Excel actualizado y guardado en el almacenamiento privado.'+(d.reemplazadas.length?` Se usan las hojas nuevas e ignoran: ${d.reemplazadas.join(', ')}.`:''));
+    }catch(e){setAviso('Se muestra el Excel, pero no se pudo guardar en el almacenamiento privado: '+(e.message||e)+'. Revisá que el bucket "'+PAGOS_BUCKET+'" exista.')}
+    finally{setSubiendo(false)}
+  },[]);
+
+  const resetFilters=useCallback(()=>setF(FILTROS_VACIOS),[]);
+  const fCount=Object.keys(FILTROS_VACIOS).filter(k=>k!=='hasta'&&(k==='desde'?(F.desde||F.hasta):F[k]!==FILTROS_VACIOS[k])).length;
+
+  /* Montos según moneda */
+  const usd=moneda==='usd';
+  const curr=usd?'USD':'ARS';
+  const kImp=usd?'importeUSD':'importePesos',kPag=usd?'pagadoUSD':'pagadoPesos',kSal=usd?'saldoUSD':'saldoPesos';
+  const fmt=useCallback((v,short)=>short?fmtShort(v,curr):fmtMoney(v,curr),[curr]);
+
+  /* Filtro cruzado: cada gráfico se calcula con todos los filtros MENOS el suyo,
+     así el segmento elegido queda resaltado y se ven los demás atenuados */
+  const pasa=useCallback((inv,except)=>{
+    if(usd?!inv.importeUSD:!inv.importePesos&&!inv.saldoPesos) return false;
+    if(except!=='obra'&&F.obra!=='all'&&inv.obra!==F.obra) return false;
+    if(except!=='prov'&&F.prov!=='all'&&inv.proveedor!==F.prov) return false;
+    if(except!=='destino'&&F.destino!=='all'&&inv.destino!==F.destino) return false;
+    if(except!=='estado'&&F.estado!=='all'&&inv.estadoPago!==F.estado) return false;
+    if(except!=='rubro'&&F.rubro!=='all'&&inv.rubro!==F.rubro) return false;
+    if(except!=='material'&&F.material!=='all'&&inv.estadoMaterial!==F.material) return false;
+    if(except!=='venc'&&F.venc!=='all'&&(inv.venc!==F.venc||Math.abs(inv[kSal])<1)) return false;
+    if(F.pend&&Math.abs(inv[kSal])<1) return false;
+    if(F.desde){const d=new Date(F.desde+'T00:00:00');if(!inv.fechaFC||inv.fechaFC<d)return false}
+    if(F.hasta){const d=new Date(F.hasta+'T23:59:59');if(!inv.fechaFC||inv.fechaFC>d)return false}
+    return true;
+  },[F,usd,kSal]);
+
+  const rows=useMemo(()=>{const hoy=new Date();return data?data.invoices.map(i=>addVenc(i,hoy)):[]},[data]);
+  const[nShow,setNShow]=useState(PAGE);
+  const[fOpen,setFOpen]=useState(false);
+  useEffect(()=>setNShow(PAGE),[F,moneda,sortCol,sortDir]);
+  const filtered=useMemo(()=>rows.filter(i=>pasa(i,null)),[rows,pasa]);
+  const sub=useCallback(dim=>rows.filter(i=>pasa(i,dim)),[rows,pasa]);
+
+  /* KPIs */
+  const sum=(arr,k)=>arr.reduce((s,i)=>s+i[k],0);
+  const total=sum(filtered,kImp),pagado=sum(filtered,kPag),saldo=sum(filtered,kSal);
+  const pend=filtered.filter(i=>Math.abs(i[kSal])>=1);
+  const saldoDe=d=>sum(pend.filter(i=>i.destino===d),kSal);
+  /* Las tarjetas de destino ignoran el filtro de destino para que se puedan comparar entre sí */
+  const pendSinDest=useMemo(()=>sub('destino').filter(i=>Math.abs(i[kSal])>=1),[sub,kSal]);
+  const saldoDest=d=>sum(pendSinDest.filter(i=>i.destino===d),kSal);
+  const nDest=d=>pendSinDest.filter(i=>i.destino===d).length;
+
+  /* Datos de gráficos */
+  const agrupar=(arr,keyFn,valFn)=>{const m={};arr.forEach(i=>{const k=keyFn(i);m[k]=(m[k]||0)+valFn(i)});return m};
+  const donutDestino=useMemo(()=>{
+    const m=agrupar(sub('destino').filter(i=>Math.abs(i[kSal])>=1),i=>i.destino,i=>i[kSal]);
+    return['Proveedor','Bauvek','Sin asignar'].map(k=>({key:k,label:k==='Sin asignar'?'Sin asignar (Observ. vacía)':'A cuenta de '+k,value:m[k]||0,color:COL_DESTINO[k]}));
+  },[sub,kSal]);
+  const donutEstado=useMemo(()=>{
+    const m=agrupar(sub('estado'),i=>i.estadoPago,i=>i[kImp]);
+    return['Pagado','Parcial','No pagado'].map(k=>({key:k,label:k,value:m[k]||0,color:COL_ESTADO[k]}));
+  },[sub,kImp]);
+  const donutMaterial=useMemo(()=>{
+    const m=agrupar(sub('material'),i=>i.estadoMaterial,i=>i[kImp]);
+    return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>({key:k,label:k,value:v,color:k==='Sin dato'?'var(--sin)':PALETA[i%PALETA.length]}));
+  },[sub,kImp]);
+  const barras=(dim,keyFn)=>{
+    const m={};
+    sub(dim).filter(i=>Math.abs(i[kSal])>=1).forEach(i=>{const k=keyFn(i)||'(sin dato)';const a=m[k]||(m[k]={Proveedor:0,Bauvek:0,'Sin asignar':0});a[i.destino]+=i[kSal]});
+    return Object.entries(m).map(([k,a])=>({key:k,total:a.Proveedor+a.Bauvek+a['Sin asignar'],
+      parts:['Proveedor','Bauvek','Sin asignar'].map(d=>({label:'A cuenta de '+d,value:a[d],color:COL_DESTINO[d]}))}));
+  };
+  const barObra=useMemo(()=>barras('obra',i=>i.obra),[sub,kSal]);
+  const barProv=useMemo(()=>barras('prov',i=>i.proveedor),[sub,kSal]);
+
+  /* Orden de tabla */
+  const sortKey=sortCol==='importe'?kImp:sortCol==='pagado'?kPag:sortCol==='saldo'||sortCol==='saldoPesos'?kSal:sortCol;
+  const sorted=useMemo(()=>{
+    const arr=[...filtered];
+    arr.sort((a,b)=>{
+      let va=a[sortKey],vb=b[sortKey];
+      if(typeof va==='string') va=va.toLowerCase();
+      if(typeof vb==='string') vb=vb.toLowerCase();
+      if(va==null) va=sortDir==='desc'?-Infinity:Infinity;
+      if(vb==null) vb=sortDir==='desc'?-Infinity:Infinity;
+      if(va<vb) return sortDir==='asc'?-1:1;
+      if(va>vb) return sortDir==='asc'?1:-1;
+      return 0;
+    });
+    return arr;
+  },[filtered,sortKey,sortDir]);
+  const doSort=col=>{if(sortCol===col)setSortDir(d=>d==='desc'?'asc':'desc');else{setSortCol(col);setSortDir('desc')}};
+  const arrow=col=>sortCol===col||(col==='saldo'&&sortCol==='saldoPesos')?(sortDir==='asc'?' ↑':' ↓'):'';
+
+  const estadosMat=useMemo(()=>data?[...new Set(data.invoices.map(i=>i.estadoMaterial))].sort():[],[data]);
+  /* Vencimientos del saldo pendiente (con todos los filtros salvo el de vencimiento) */
+  const vencData=useMemo(()=>{
+    const base=sub('venc').filter(i=>Math.abs(i[kSal])>=1);
+    const g={};for(const k of VENC_ORD)g[k]={n:0,v:0};
+    for(const i of base){g[i.venc].n++;g[i.venc].v+=i[kSal]}
+    const vencidas=base.filter(i=>i.venc==='venc');
+    const prom=vencidas.length?Math.round(vencidas.reduce((s,i)=>s+i.diasVenc,0)/vencidas.length):0;
+    const sinPlazo=[...new Set(base.filter(i=>i.fechaFC&&i.plazo===null).map(i=>i.condicion||'(vacía)'))];
+    return{g,prom,sinPlazo};
+  },[sub,kSal]);
+  /* Excel con lo que está filtrado, en el orden de la tabla */
+  const exportXls=useCallback(()=>{
+    const r=sorted.map(i=>({'Obra':i.obra,'Proveedor':i.proveedor,'Fecha FC':i.fechaFC||'','Condición':i.condicion,'Vence':i.vence||'','Días vencida':i.venc==='venc'?i.diasVenc:'','Descripción':i.descripcion,'Rubro':i.rubro,
+      ['Importe '+curr]:Math.round(i[kImp]*100)/100,['Pagado '+curr]:Math.round(i[kPag]*100)/100,['Saldo '+curr]:Math.round(i[kSal]*100)/100,'A cuenta de':i.destino,'Estado':i.estadoPago,'Material':i.estadoMaterial,'Observaciones':i.observaciones}));
+    const ws=XLSX.utils.json_to_sheet(r,{dateNF:'dd/mm/yyyy'});
+    ws['!cols']=[20,24,11,14,11,10,40,16,14,14,14,12,11,14,40].map(w=>({wch:w}));
+    if(ws['!ref'])ws['!autofilter']={ref:ws['!ref']};
+    const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Pagos');
+    XLSX.writeFile(wb,`Pagos_${new Date().toISOString().slice(0,10)}.xlsx`,{cellDates:true});
+  },[sorted,curr,kImp,kPag,kSal]);
+  const activos=Object.keys(NOMBRE_FILTRO).filter(k=>F[k]!=='all');
+
+  if(loading) return <div style={{height:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}><div className="ld"><div className="sp"/><span>Cargando Excel...</span></div></div>;
+
+  const KpiDest=({d,cls})=>{
+    const sel=F.destino===d;
+    return <div className={`kpi click ${cls}${sel?' sel':''}`} onClick={()=>toggle('destino',d)} title="Clic para filtrar">
+      <div className="kpi-v" style={{color:COL_DESTINO[d]}}>{fmtMoney(saldoDest(d),curr)}</div>
+      <div className="kpi-l">{d==="Sin asignar"?"Saldo sin asignar (Observ. vacía)":"Saldo a cuenta de "+d}</div>
+      <div className="kpi-s">{nDest(d)} ítems · {(()=>{const t=sum(pendSinDest,kSal);return t?(saldoDest(d)/t*100).toFixed(0):0})()}% del saldo</div>
+    </div>;
+  };
+
+  return <>
+    <div className="hdr">
+      <a href="index.html" className="logo" title="Volver a BkTableros"><span className="bv">BV</span><span className="bk-crumb">BkTableros</span></a>
+      <span style={{color:'var(--b0)',fontSize:16}}>/</span>
+      <span className="hdr-title">Programación de Pagos</span>
+
+      <div className="seg">
+        <button className={moneda==='pesos'?'on':''} onClick={()=>setMoneda('pesos')}>$ Pesos</button>
+        <button className={moneda==='usd'?'on':''} onClick={()=>setMoneda('usd')}>USD Dólares</button>
+      </div>
+
+      <div className="acts">
+        {origen==='publico'&&<span className="origen-badge warn" title="El Excel todavía se lee del repo público. Subilo con 'Actualizar Excel' para pasarlo al almacenamiento privado.">⚠ Excel público</span>}
+        {origen==='privado'&&<span className="origen-badge ok" title="El Excel se lee del almacenamiento privado (requiere sesión)">🔒 Privado</span>}
+        <label className="logout-btn" style={{cursor:subiendo?'wait':'pointer'}} title="Subí el Excel nuevo: reemplaza al anterior para todos">
+          {subiendo?'Subiendo…':'↑ Actualizar Excel'}
+          <input type="file" accept=".xlsx,.xls" style={{display:'none'}} disabled={subiendo} onChange={e=>{const f=e.target.files[0];e.target.value='';if(f)handleLocalFile(f)}}/>
+        </label>
+        <span style={{fontSize:11,color:'var(--c2)',fontFamily:'var(--fm)'}}>{filtered.length} ítems</span>
+        <button className="btn-i" onClick={togTheme}>{theme==='light'?'🌙':'☀️'}</button>
+        <span style={{fontSize:11,color:'var(--c2)',maxWidth:120,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}} title={user.email}>{user.email.split('@')[0]}</span>
+        <button className="logout-btn" onClick={onLogout}>Salir</button>
+      </div>
+    </div>
+
+    <button className="tgl ftog" onClick={()=>setFOpen(o=>!o)} aria-expanded={fOpen}>Filtros{fCount>0?` (${fCount})`:''} {fOpen?'▲':'▼'}</button>
+    <div className={`filters${fOpen?' open':''}`}>
+      <span className="fl">Obra</span>
+      <select className="fsel" value={F.obra} onChange={e=>setFil('obra',e.target.value)}>
+        <option value="all">Todas</option>
+        {data&&data.obras.map(o=><option key={o} value={o}>{o}</option>)}
+      </select>
+      <span className="fl">Proveedor</span>
+      <select className="fsel" value={F.prov} onChange={e=>setFil('prov',e.target.value)}>
+        <option value="all">Todos</option>
+        {data&&data.proveedores.map(p=><option key={p} value={p}>{p}</option>)}
+      </select>
+      <span className="fl">Saldo a cuenta de</span>
+      <select className="fsel" value={F.destino} onChange={e=>setFil('destino',e.target.value)}>
+        <option value="all">Todos</option>
+        <option value="Proveedor">Proveedor</option>
+        <option value="Bauvek">Bauvek</option>
+        <option value="Sin asignar">Sin asignar</option>
+      </select>
+      <span className="fl">Estado</span>
+      <select className="fsel" value={F.estado} onChange={e=>setFil('estado',e.target.value)}>
+        <option value="all">Todos</option>
+        <option value="Pagado">Pagado</option>
+        <option value="Parcial">Parcial</option>
+        <option value="No pagado">No pagado</option>
+      </select>
+      <span className="fl">Rubro</span>
+      <select className="fsel" value={F.rubro} onChange={e=>setFil('rubro',e.target.value)}>
+        <option value="all">Todos</option>
+        {data&&data.rubros.map(r=><option key={r} value={r}>{r}</option>)}
+      </select>
+      <span className="fl">Material</span>
+      <select className="fsel" value={F.material} onChange={e=>setFil('material',e.target.value)}>
+        <option value="all">Todos</option>
+        {estadosMat.map(m=><option key={m} value={m}>{m}</option>)}
+      </select>
+      <span className="fl">Fecha FC</span>
+      <input type="date" className="fin" value={F.desde} onChange={e=>setFil('desde',e.target.value)}/>
+      <span className="fl">a</span>
+      <input type="date" className="fin" value={F.hasta} onChange={e=>setFil('hasta',e.target.value)}/>
+      <button className={`tgl${F.pend?' on':''}`} onClick={()=>setFil('pend',!F.pend)} title="Mostrar solo lo que tiene saldo pendiente">Solo pendientes</button>
+      {fCount>0&&<><span className="fbadge">{fCount}</span><button className="fclr" onClick={resetFilters}>Limpiar</button></>}
+      {data&&<button className="tgl" style={{marginLeft:'auto'}} onClick={exportXls} title="Descarga en Excel lo que se ve en la tabla, con los filtros aplicados">↓ Excel ({filtered.length})</button>}
+    </div>
+
+    {aviso&&<div className="aviso" onClick={()=>setAviso(null)}>{aviso} <span style={{opacity:.6}}>(clic para cerrar)</span></div>}
+    <div className="content">
+      {!data&&!error&&<div className="drop" onClick={()=>document.getElementById('fi').click()}>
+        <div style={{fontSize:24,marginBottom:8}}>📊</div>
+        <div>Arrastrá el Excel de Programación de Gastos aquí, o hacé clic para seleccionar</div>
+        <input id="fi" type="file" accept=".xlsx,.xls" onChange={e=>{if(e.target.files[0])handleLocalFile(e.target.files[0])}}/>
+      </div>}
+
+      {error&&!data&&<div className="drop" onClick={()=>document.getElementById('fi2').click()} style={{borderColor:'var(--err)',color:'var(--err)'}}>
+        <div style={{marginBottom:8}}>No se pudo cargar el Excel ({error})</div>
+        <div style={{color:'var(--c1)'}}>Hacé clic para subir el Excel de Programación de Gastos: queda guardado en el almacenamiento privado</div>
+        <input id="fi2" type="file" accept=".xlsx,.xls" onChange={e=>{if(e.target.files[0])handleLocalFile(e.target.files[0])}}/>
+      </div>}
+
+      {data&&<>
+        {/* Vencimientos del saldo pendiente */}
+        <div className="venc-band">
+          {VENC_ORD.map(k=>{const x=vencData.g[k];const sel=F.venc===k;
+            return <button key={k} className={`venc-cell ${k}${sel?' sel':''}`} onClick={()=>toggle('venc',k)} title="Clic para filtrar">
+              <span className="venc-l">{VENC[k]}</span>
+              <b>{fmt(x.v,true)}</b>
+              <span className="venc-s">{x.n} ítem{x.n===1?'':'s'}{k==='venc'&&x.n?` · ${vencData.prom} d prom.`:''}</span>
+            </button>})}
+        </div>
+        {vencData.sinPlazo.length>0&&<div className="venc-note">Sin plazo reconocido en "Condición": {vencData.sinPlazo.slice(0,8).map(c=><code key={c}>{c}</code>)}{vencData.sinPlazo.length>8?` y ${vencData.sinPlazo.length-8} más`:''}. Escribí la condición como "30 días" o "Contado" para que entre en los vencimientos.</div>}
+
+        {/* KPIs */}
+        <div className="kpis">
+          <div className="kpi"><div className="kpi-v">{fmtMoney(total,curr)}</div><div className="kpi-l">Total facturado</div><div className="kpi-s">{filtered.length} ítems</div></div>
+          <div className={`kpi click ok${F.estado==='Pagado'?' sel':''}`} onClick={()=>toggle('estado','Pagado')} title="Clic para filtrar"><div className="kpi-v" style={{color:'var(--ok)'}}>{fmtMoney(pagado,curr)}</div><div className="kpi-l">Pagado</div><div className="kpi-s">{total?(pagado/total*100).toFixed(1):0}% del total</div></div>
+          <div className={`kpi click err${F.pend?' sel':''}`} onClick={()=>setFil('pend',!F.pend)} title="Clic para ver solo pendientes"><div className="kpi-v" style={{color:'var(--err)'}}>{fmtMoney(saldo,curr)}</div><div className="kpi-l">Saldo pendiente (todo lo no pagado)</div><div className="kpi-s">{pend.length} ítems</div></div>
+          <KpiDest d="Proveedor" cls="prov"/>
+          <KpiDest d="Bauvek" cls="bvk"/>
+          {Math.abs(saldoDest('Sin asignar'))>=1&&<KpiDest d="Sin asignar" cls="sin"/>}
+        </div>
+
+        <div className="chips">
+          <span>Clic en cualquier gráfico, barra o tarjeta para filtrar · clic de nuevo para soltar</span>
+          {activos.map(k=><span key={k} className="chip" onClick={()=>setFil(k,'all')} title="Quitar filtro">{NOMBRE_FILTRO[k]}: {F[k]} ✕</span>)}
+          {F.pend&&<span className="chip" onClick={()=>setFil('pend',false)}>Solo pendientes ✕</span>}
+        </div>
+
+        {/* Donuts */}
+        <div className="donuts">
+          <div className="donut-card">
+            <div className="donut-title">Saldo pendiente · a cuenta de</div>
+            <Donut segments={donutDestino} selected={F.destino} onSelect={k=>toggle('destino',k)} fmt={fmt} centerLabel="saldo"/>
+          </div>
+          <div className="donut-card">
+            <div className="donut-title">Estado de pago (importe)</div>
+            <Donut segments={donutEstado} selected={F.estado} onSelect={k=>toggle('estado',k)} fmt={fmt} centerLabel="facturado"/>
+          </div>
+          <div className="donut-card">
+            <div className="donut-title">Estado de material (importe)</div>
+            <Donut segments={donutMaterial} selected={F.material} onSelect={k=>toggle('material',k)} fmt={fmt} centerLabel="facturado"/>
+          </div>
+        </div>
+
+        {/* Barras */}
+        <div className="charts2">
+          <div className="donut-card">
+            <div className="donut-title" style={{display:'flex',justifyContent:'space-between',gap:8,flexWrap:'wrap'}}>
+              <span>Saldo pendiente por obra</span>
+              <span className="leg-inline">{['Proveedor','Bauvek','Sin asignar'].map(d=><span key={d}><i style={{background:COL_DESTINO[d]}}/>{d}</span>)}</span>
+            </div>
+            <HBars rows={barObra} selected={F.obra} onSelect={k=>toggle('obra',k)} fmt={fmt}/>
+          </div>
+          <div className="donut-card">
+            <div className="donut-title" style={{display:'flex',justifyContent:'space-between',gap:8,flexWrap:'wrap'}}>
+              <span>Saldo pendiente por proveedor</span>
+              <span className="leg-inline">{['Proveedor','Bauvek','Sin asignar'].map(d=><span key={d}><i style={{background:COL_DESTINO[d]}}/>{d}</span>)}</span>
+            </div>
+            <HBars rows={barProv} selected={F.prov} onSelect={k=>toggle('prov',k)} fmt={fmt}/>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div style={{overflowX:'auto'}}>
+          <table className="tbl">
+            <thead><tr>
+              <th onClick={()=>doSort('obra')}>Obra{arrow('obra')}</th>
+              <th onClick={()=>doSort('proveedor')}>Proveedor{arrow('proveedor')}</th>
+              <th onClick={()=>doSort('fechaFC')}>Fecha FC{arrow('fechaFC')}</th>
+              <th onClick={()=>doSort('condicion')}>Condición{arrow('condicion')}</th>
+              <th onClick={()=>doSort('vence')} title="Fecha FC + plazo de la condición">Vence{arrow('vence')}</th>
+              <th onClick={()=>doSort('descripcion')}>Descripción{arrow('descripcion')}</th>
+              <th onClick={()=>doSort('rubro')}>Rubro{arrow('rubro')}</th>
+              <th className="num" onClick={()=>doSort('importe')}>Importe{arrow('importe')}</th>
+              <th className="num" onClick={()=>doSort('pagado')}>Pagado{arrow('pagado')}</th>
+              <th className="num" onClick={()=>doSort('saldo')}>Saldo{arrow('saldo')}</th>
+              <th onClick={()=>doSort('destino')}>A cuenta de{arrow('destino')}</th>
+              <th onClick={()=>doSort('estadoPago')}>Estado{arrow('estadoPago')}</th>
+              <th>Observaciones</th>
+            </tr></thead>
+            <tbody>
+              {sorted.slice(0,nShow).map((inv,i)=>(
+                <tr key={i}>
+                  <td style={{fontWeight:500}} title={inv.sheetName}><span className="cell-link" onClick={()=>toggle('obra',inv.obra)}>{inv.obra}</span></td>
+                  <td><span className="cell-link" onClick={()=>toggle('prov',inv.proveedor)}>{inv.proveedor}</span></td>
+                  <td className="mono">{fmtDate(inv.fechaFC)}</td>
+                  <td className="mono" style={{fontSize:11}}>{inv.condicion}</td>
+                  <td>{Math.abs(inv[kSal])<1?<span className="mono" style={{color:'var(--c2)'}}>—</span>:<span className={'vchip '+inv.venc} title={inv.vence?(inv.venc==='venc'?`Vencida hace ${inv.diasVenc} días`:`Plazo leído: ${inv.plazo} días`):'Sin fecha de factura o sin plazo en la condición'}>{inv.vence?fmtDate(inv.vence):'Sin plazo'}{inv.venc==='venc'?` · ${inv.diasVenc} d`:''}</span>}</td>
+                  <td title={inv.descripcion}>{inv.descripcion}</td>
+                  <td style={{fontSize:11}}>{inv.rubro||'—'}</td>
+                  <td className="mono num">{fmtMoney(inv[kImp],curr)}</td>
+                  <td className="mono num" title={inv.formato==='nuevo'?`Pago proveedor: ${fmtMoney(inv.pagoProv,'ARS')}\nPago Bauvek: ${fmtMoney(inv.pagoBvk,'ARS')}`:'Hoja con formato viejo: se deduce del Estado Factura'}>{fmtMoney(inv[kPag],curr)}</td>
+                  <td className="mono num" style={{color:Math.abs(inv[kSal])<1?'var(--c2)':inv.venc==='venc'?'var(--err)':'var(--c0)',fontWeight:Math.abs(inv[kSal])>=1?600:400}}>{fmtMoney(inv[kSal],curr)}</td>
+                  <td><span className={`tag ${tagDestino(inv.destino)}`} style={{cursor:'pointer'}} onClick={()=>toggle('destino',inv.destino)}>{inv.destino}</span></td>
+                  <td><span className={`tag ${tagEstado(inv.estadoPago)}`} title={inv.formato==='nuevo'?`ESTADO en Excel: ${inv.estadoOrig||'—'}`:`Estado FC Cliente: ${inv.estadoCliente||'—'} · Estado FC Bauvek: ${inv.estadoBauvek||'—'}`}>{inv.estadoPago}</span></td>
+                  <td style={{fontSize:11,color:'var(--c2)'}} title={inv.observaciones}>{inv.observaciones}</td>
+                </tr>
+              ))}
+              <tr className="total-row">
+                <td colSpan="7" style={{textAlign:'right'}}>Total ({filtered.length} ítems)</td>
+                <td className="mono num">{fmtMoney(total,curr)}</td>
+                <td className="mono num">{fmtMoney(pagado,curr)}</td>
+                <td className="mono num" style={{color:'var(--err)'}}>{fmtMoney(saldo,curr)}</td>
+                <td colSpan="3" style={{fontSize:11,fontWeight:500,color:'var(--c1)'}}>Prov. {fmtShort(saldoDe('Proveedor'),curr)} · Bauvek {fmtShort(saldoDe('Bauvek'),curr)}{Math.abs(saldoDe('Sin asignar'))>=1?` · Sin asignar ${fmtShort(saldoDe('Sin asignar'),curr)}`:''}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        {sorted.length>nShow&&<div className="more"><span>Mostrando {nShow} de {sorted.length} ítems</span><button className="tgl" onClick={()=>setNShow(n=>n+PAGE)}>Mostrar {Math.min(PAGE,sorted.length-nShow)} más</button><button className="tgl" onClick={()=>setNShow(sorted.length)}>Mostrar todos</button></div>}
+        {usd&&<div style={{fontSize:11,color:'var(--c2)',marginTop:8}}>En dólares el Excel no registra pagos: el saldo USD se estima con la misma proporción pendiente que en pesos (o el importe completo si la fila está "No pagado").</div>}
+      </>}
+    </div>
+  </>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<AuthGate/>);
+</script>
+</body>
+</html>
