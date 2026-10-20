@@ -702,8 +702,7 @@ async function loadProjectMeta(){
     let buf=null;
     const b=await sbDownload('proyectos.xlsx');
     if(b)buf=await b.arrayBuffer();
-    else if(_empresa!==REPO_EMPRESA)return[];
-    else{const r=await fetch('data/Proyectos_Bauvek.xlsx?t='+Date.now());if(!r.ok)return[];buf=await r.arrayBuffer()}
+    else return[];
     const wb=XLSX.read(new Uint8Array(buf),{type:'array'});
     const ws=wb.Sheets[wb.SheetNames[0]];
     const rows=XLSX.utils.sheet_to_json(ws);
@@ -926,18 +925,11 @@ function ProjectInfo({meta}){
 /* ═══════ PARSER MSPDI ═══════ */
 /* XML de una obra: primero la copia liviana que arma el deploy (sin TimephasedData, ~4 veces más chica);
    si no está, el original. ?v=hash deja que el navegador reutilice lo ya descargado hasta que el XML cambie. */
-/* Cronogramas: primero el almacenamiento privado (bucket "cronogramas"), y solo mientras dure la migración el repo */
-let _dataOrigen='repo';
+/* Cronogramas: solo del almacenamiento privado (bucket "cronogramas", carpeta bauvek/) */
+let _dataOrigen='privado';
 async function fetchXml(proj){
-  if(_dataOrigen==='privado'){
-    for(const pre of['lite/','xml/']){const b=await sbDownload(pre+proj.file);if(b)return b.text()}
-    throw new Error('no se encontró '+proj.file+' en el almacenamiento privado');
-  }
-  const v=proj.ver?`?v=${proj.ver}`:`?t=${Date.now()}`;
-  try{const r=await fetch(`data/projects-lite/${proj.file}${v}`);if(r.ok)return r.text()}catch(e){}
-  const r=await fetch(`data/projects/${proj.file}${v}`);
-  if(!r.ok)throw new Error(`HTTP ${r.status}`);
-  return r.text();
+  for(const pre of['lite/','xml/']){const b=await sbDownload(pre+proj.file);if(b)return b.text()}
+  throw new Error('no se encontró '+proj.file+' en el almacenamiento privado');
 }
 function parseMSPDI(xmlText){
   /* MS Project deja caracteres de control en Notas (ej. \x0B) → XML inválido. Se reemplazan por espacio. */
@@ -3036,7 +3028,6 @@ function MaterialsView({data,computoData,visTasks,onLogin,lead=15}){
    - Tabla enlaces_publicos + función ver_enlace(): links de cliente y de contratista con token, con la marca de la empresa
    Ver supabase/2026-10-20_bktableros_datos_privados.sql */
 const CRONO_BUCKET='cronogramas';
-const REPO_EMPRESA='bauvek'; /* los XML que todavía están en el repo público son de Bauvek */
 let _empresa='bauvek';
 /* Marca fija del sitio para lo que ve gente de afuera (links de cliente y contratista) */
 const BAUVEK={id:'bauvek',nombre:'Bauvek Construcciones',logo:null,color:'#9E0101'};
@@ -3052,16 +3043,13 @@ async function sbUpload(path,body,type){
   const{error}=await sb.storage.from(CRONO_BUCKET).upload(_empresa+'/'+path,body,{upsert:true,contentType:type,cacheControl:'60'});
   if(error)throw new Error(error.message||String(error));
 }
-/* Índice de cronogramas de la empresa: privado si existe; para Bauvek, mientras dure la migración, el del repo */
+/* Índice de cronogramas (privado). Sin índice todavía: lista vacía */
 async function loadManifest(){
   const b=await sbDownload('manifest.json');
   if(b){try{return{m:JSON.parse(await b.text()),origen:'privado'}}catch(e){}}
-  if(_empresa!==REPO_EMPRESA)return{m:{projects:[]},origen:'privado'};
-  const r=await fetch('data/manifest.json?t='+Date.now());
-  if(!r.ok)throw new Error('No se pudo leer el índice de cronogramas ('+r.status+')');
-  return{m:await r.json(),origen:'repo'};
+  return{m:{projects:[]},origen:'privado'};
 }
-/* Mismos controles que scripts/generate-manifest.js */
+/* Controles de calidad de cada XML al subirlo (avisos visibles en la tarjeta y en Salud de datos) */
 function revisarXml(xml,file){
   const avisos=[];
   const ctrl=(xml.match(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g)||[]).length;
@@ -3099,22 +3087,6 @@ async function subirCronogramas(files,onStep){
   await sbUpload('manifest.json',new Blob([JSON.stringify(nm,null,2)],{type:'application/json'}),'application/json');
   return nm;
 }
-/* Copia de una sola vez lo que hoy está en el repo público al almacenamiento privado */
-async function migrarDesdeRepo(onStep){
-  if(_empresa!==REPO_EMPRESA)throw new Error('Los cronogramas del repo son de Bauvek');
-  const r=await fetch('data/manifest.json?t='+Date.now());if(!r.ok)throw new Error('No hay cronogramas en el repo');
-  const m=await r.json();const files=[];
-  for(const p of m.projects||[]){
-    onStep&&onStep(`Leyendo ${p.file} del repo…`);
-    const x=await fetch('data/projects/'+encodeURIComponent(p.file)+'?t='+Date.now());
-    if(x.ok)files.push(new File([await x.arrayBuffer()],p.file,{type:'application/xml'}));
-  }
-  const nm=await subirCronogramas(files,onStep);
-  const xl=await fetch('data/Proyectos_Bauvek.xlsx?t='+Date.now());
-  if(xl.ok){onStep&&onStep('Copiando el Excel de proyectos…');await sbUpload('proyectos.xlsx',await xl.blob(),'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')}
-  return nm;
-}
-
 /* ── Links públicos con token ── */
 async function verEnlace(token){
   const r=await fetch(COMPUTO_URL+'/rest/v1/rpc/ver_enlace',{method:'POST',headers:{apikey:COMPUTO_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_token:token})});
@@ -3282,7 +3254,6 @@ function DatosPanel({origen,manifest,onClose,onDone,empNombre}){
       <p className="datos-note">Reemplaza al cronograma con el mismo nombre de archivo. En MS Project: Archivo → Guardar como → XML.</p>
       <label className="btn datos-btn">↑ Subir Excel de proyectos (estado, comitente, ubicación, código)
         <input type="file" accept=".xlsx" hidden disabled={busy} onChange={e=>{const f=e.target.files[0];e.target.value='';if(f)run(()=>sbUpload('proyectos.xlsx',f,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))}}/></label>
-      {origen!=='privado'&&<button className="btn datos-btn" disabled={busy} onClick={()=>run(()=>migrarDesdeRepo(setMsg))}>⇄ Copiar todo desde el repo al almacenamiento privado</button>}
       {msg&&<div className="datos-msg">{msg}</div>}
       {err&&<div className="datos-err">{err}. Si dice "row-level security" o "not found", falta aplicar la configuración de Supabase o tu usuario no es de Bauvek.</div>}
     </div>
@@ -3858,7 +3829,7 @@ function App({onLogout,empInfo=BAUVEK}){
       <span style={{marginLeft:'auto',fontSize:11,color:'var(--c2)',fontFamily:'var(--fm)'}}>{visTasks.length} tareas</span>
     </div>}
 
-    {aErr&&<div className="err-b">No se pudo cargar el cronograma ({aErr}). Probá recargar la página; si sigue, revisá que el XML esté en data/projects.</div>}
+    {aErr&&<div className="err-b">No se pudo cargar el cronograma ({aErr}). Probá recargar la página; si sigue, volvé a subir el XML desde Datos.</div>}
     {aLoading&&<div className="ld"><div className="sp"/><span>Cargando...</span></div>}
 
     {!aLoading&&aData&&sub==='gantt'&&<div className="gw" style={{userSelect:splOn?'none':'auto'}}>

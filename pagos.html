@@ -207,10 +207,9 @@ async function bkToken(){
 function usarToken(t){sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON,{global:{headers:{Authorization:'Bearer '+t}},auth:{persistSession:false,autoRefreshToken:false}})}
 function bkLogout(){try{['sb_access_token','sb_refresh_token','sb_user'].forEach(k=>localStorage.removeItem(k))}catch(e){}}
 /* El Excel de pagos vive en un bucket PRIVADO de Supabase Storage: solo se descarga con sesión iniciada.
-   PAGOS_REPO_URL es el archivo viejo del repo público; se usa solo hasta completar la migración. */
+   No hay copia pública: sin sesión no se ve nada. */
 const PAGOS_BUCKET='pagos';
 const PAGOS_PATH='programacion-gastos.xlsx';
-const PAGOS_REPO_URL='data/Pagos/Programaci%C3%B2n%20gastos%20de%20obras.xlsx';
 
 /* ═══════ Login Screen ═══════ */
 function Login({onLogin}){
@@ -759,13 +758,7 @@ function App({user,onLogout}){
         const{data:blob,error:e}=await sb.storage.from(PAGOS_BUCKET).download(PAGOS_PATH);
         if(e||!blob)throw e||new Error('sin archivo');
         setData(parseExcel(new Uint8Array(await blob.arrayBuffer())));setOrigen('privado');
-      }catch(_){
-        try{
-          const r=await fetch(PAGOS_REPO_URL+'?t='+Date.now());
-          if(!r.ok)throw new Error(r.status===404?'tu usuario no tiene acceso al Excel de pagos, o todavía no se subió':`HTTP ${r.status}`);
-          setData(parseExcel(new Uint8Array(await r.arrayBuffer())));setOrigen('publico');
-        }catch(e2){setError(e2.message)}
-      }
+      }catch(_){setError('todavía no se subió el Excel de pagos, o tu usuario no tiene acceso')}
       setLoading(false);
     })();
   },[]);

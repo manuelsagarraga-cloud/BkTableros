@@ -31,9 +31,9 @@ Entrar a `pagos.html` → **↑ Actualizar Excel**.
 **Configuración de Supabase**
 `supabase/2026-10-20_bktableros_datos_privados.sql` crea el bucket `cronogramas`, la tabla `tendencia_obras` (foto semanal compartida), la tabla `enlaces_publicos` y la función `ver_enlace()`.
 
-## Migración (oct-2026)
+## Datos
 
-Mientras la carpeta `bauvek/` del bucket esté vacía, BuildPlan sigue leyendo `data/projects/` del repo y muestra **⚠ Datos** en el encabezado. Desde ahí, *Copiar todo desde el repo* sube los XML y el Excel de proyectos al bucket. Después de verificar, se borran `data/projects/*.xml` y `data/Proyectos_Bauvek.xlsx` del repo. Ojo: siguen en el historial de git hasta que se reescriba.
+No hay datos en este repo ni en el sitio publicado: cronogramas, Excel de proyectos y Excel de pagos están en Supabase, con acceso solo para usuarios de Bauvek (y admin). Los archivos que estuvieron en el repo hasta oct-2026 siguen en el historial de git.
 
 ## Reglas
 
@@ -41,7 +41,3 @@ Mientras la carpeta `bauvek/` del bucket esté vacía, BuildPlan sigue leyendo `
 - Nada con datos de clientes o importes en el repo: todo lo que está acá lo puede descargar cualquiera.
 - Cada herramienta es un único `.html` (React por CDN, sin build). Los cambios van directo en ese archivo.
 
-## Scripts
-
-- `scripts/generate-manifest.js` — índice de cronogramas con huella (`hash`) y avisos de calidad.
-- `scripts/build-lite.js` — copia de los XML sin `TimephasedData` (~4 veces más livianos) para BuildPlan. Los originales quedan intactos porque los usa Cómputo de Obras.
