@@ -192,7 +192,20 @@ const{useState,useEffect,useRef,useCallback,useMemo}=React;
    Entran los usuarios de la empresa bauvek y el admin; el resto de las empresas de Cómputo no ve este Excel (RLS de Storage). */
 const SUPABASE_URL='https://beuzmwrhqlmjoplsillf.supabase.co';
 const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldXptd3JocWxtam9wbHNpbGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc1NDcsImV4cCI6MjA5NTA2MzU0N30.Rw82cnyzp2S2Alc6lWiBCDxVL8u_8wAfCTConDGpYFE';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
+/* Sesión única de BkTableros: la misma que usan la portada, BuildPlan y Cómputo (sb_access_token en este dominio).
+   Se crea un cliente con el token del usuario; sin sesión válida no se muestra nada. */
+let sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON,{auth:{persistSession:false,autoRefreshToken:false}});
+function _jwt(t){try{return JSON.parse(decodeURIComponent(escape(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))))}catch(e){return{}}}
+function _guardarSesion(d){localStorage.setItem('sb_access_token',d.access_token);localStorage.setItem('sb_refresh_token',d.refresh_token||'');if(d.user)localStorage.setItem('sb_user',JSON.stringify(d.user))}
+async function bkToken(){
+  let at='',rt='';try{at=localStorage.getItem('sb_access_token')||'';rt=localStorage.getItem('sb_refresh_token')||''}catch(e){return null}
+  if(at&&(_jwt(at).exp||0)*1000>Date.now()+60000)return at;
+  if(!rt)return null;
+  try{const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_ANON},body:JSON.stringify({refresh_token:rt})});
+    if(!r.ok)return null;const d=await r.json();_guardarSesion(d);return d.access_token}catch(e){return null}
+}
+function usarToken(t){sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON,{global:{headers:{Authorization:'Bearer '+t}},auth:{persistSession:false,autoRefreshToken:false}})}
+function bkLogout(){try{['sb_access_token','sb_refresh_token','sb_user'].forEach(k=>localStorage.removeItem(k))}catch(e){}}
 /* El Excel de pagos vive en un bucket PRIVADO de Supabase Storage: solo se descarga con sesión iniciada.
    PAGOS_REPO_URL es el archivo viejo del repo público; se usa solo hasta completar la migración. */
 const PAGOS_BUCKET='pagos';
@@ -208,15 +221,18 @@ function Login({onLogin}){
 
   const handleSubmit=async()=>{
     setErr('');setLoading(true);
-    const{data,error}=await sb.auth.signInWithPassword({email,password:pass});
+    const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_ANON},body:JSON.stringify({email:email.trim(),password:pass})});
+    const d=await r.json().catch(()=>({}));
     setLoading(false);
-    if(error){
-      if(error.message.includes('Invalid login')) setErr('Email o contraseña incorrectos');
-      else if(error.message.includes('Email not confirmed')) setErr('Email no confirmado. Revisá tu bandeja de entrada.');
-      else setErr(error.message);
+    if(!r.ok){
+      const m=(d.error_description||d.msg||d.error||'').toLowerCase();
+      if(m.includes('invalid'))setErr('Email o contraseña incorrectos');
+      else if(m.includes('not confirmed'))setErr('Email no confirmado. Revisá tu bandeja de entrada.');
+      else setErr(d.error_description||d.msg||'No se pudo iniciar sesión');
       return;
     }
-    onLogin(data.session);
+    _guardarSesion(d);
+    onLogin(d.access_token);
   };
 
   const onKey=e=>{if(e.key==='Enter'&&email&&pass) handleSubmit()};
@@ -227,7 +243,7 @@ function Login({onLogin}){
         <span className="bv">BV</span>
         <span>BkTableros</span>
       </div>
-      <div className="login-sub">Programación de Pagos</div>
+      <div className="login-sub">Programación de Pagos · uso interno de Bauvek</div>
 
       {err&&<div className="login-err">{err}</div>}
 
@@ -246,26 +262,23 @@ function Login({onLogin}){
 
 /* ═══════ Auth Wrapper ═══════ */
 function AuthGate(){
-  const[session,setSession]=useState(undefined); /* undefined=loading, null=no session */
-
-  useEffect(()=>{
-    sb.auth.getSession().then(({data})=>setSession(data.session));
-    const{data:listener}=sb.auth.onAuthStateChange((_,s)=>setSession(s));
-    return()=>listener.subscription.unsubscribe();
-  },[]);
-
-  const handleLogout=async()=>{
-    await sb.auth.signOut();
-    setSession(null);
-  };
-
-  if(session===undefined) return <div style={{height:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>
+  const[tok,setTok]=useState(undefined); /* undefined=verificando, null=sin sesión */
+  useEffect(()=>{bkToken().then(t=>setTok(t||null))},[]);
+  const handleLogout=()=>{bkLogout();setTok(null)};
+  if(tok===undefined) return <div style={{height:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>
     <div className="ld"><div className="sp"/><span>Verificando sesión...</span></div>
   </div>;
-
-  if(!session) return <Login onLogin={setSession}/>;
-
-  return <App user={session.user} onLogout={handleLogout}/>;
+  if(!tok) return <Login onLogin={setTok}/>;
+  const c=_jwt(tok),am=c.app_metadata||{};
+  if(am.empresa!=='bauvek'&&am.role!=='admin') return <div className="login-bg"><div className="login-box">
+    <div className="login-logo"><span className="bv">BV</span><span>BkTableros</span></div>
+    <div className="login-sub">Sin acceso</div>
+    <p style={{fontSize:13,color:'var(--c1)',textAlign:'center',marginBottom:16}}>Programación de Pagos es de uso interno de Bauvek y tu usuario no pertenece a la empresa.</p>
+    <button className="login-btn" onClick={handleLogout}>Salir</button>
+  </div></div>;
+  usarToken(tok);
+  let user={email:c.email||''};try{const u=JSON.parse(localStorage.getItem('sb_user')||'null');if(u&&u.email)user=u}catch(e){}
+  return <App user={user} onLogout={handleLogout}/>;
 }
 
 /* ═══════ Normalización de Rubros ═══════ */

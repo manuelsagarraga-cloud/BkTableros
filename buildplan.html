@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>BuildPlan Viewer — Bauvek</title>
+<title>BuildPlan — BkTableros</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -596,6 +596,31 @@ button.logo{border:none;background:none;color:var(--c0);font-family:var(--ff);fo
 .ob{display:inline-block;font-family:var(--fm);font-size:11px;padding:1px 6px;border-radius:2px;white-space:nowrap}
 .ob.late{background:rgba(239,68,68,.1);color:var(--err);font-weight:700}.ob.soon{background:rgba(245,158,11,.12);color:var(--warn);font-weight:700}.ob.ok{color:var(--c1)}
 @media(max-width:768px){.abast-bar{padding:10px 12px}.abast-note{margin-left:0}}
+
+/* Login, panel de datos y links */
+.login-wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px 16px;background:var(--bg-0);flex:1}
+.login-card{width:100%;max-width:380px;background:var(--bg-el);border:1px solid var(--b0);border-top:3px solid #9E0101;border-radius:var(--r-s);padding:28px 24px;display:flex;flex-direction:column;gap:10px}
+.login-h{font-size:24px;font-weight:900;text-align:center;margin:0}
+.login-p{font-size:13px;color:var(--c1);text-align:center;margin:0 0 6px}
+.login-card .fin{min-height:40px;font-size:14px}
+.hdr-datos.warn{color:var(--warn);font-weight:700}
+.sm.datos{width:520px}
+.datos-h{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--b1);font-size:14px}
+.datos-b{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.datos-org{font-size:13px;padding:8px 10px;border-left:3px solid var(--ok);background:rgba(16,185,129,.08)}
+.datos-org.repo{border-left-color:var(--warn);background:rgba(245,158,11,.1)}
+.datos-row{display:flex;gap:10px;align-items:baseline;font-size:13px}
+.datos-btn{justify-content:flex-start;min-height:40px;cursor:pointer}
+.datos-note{font-size:12px;color:var(--c2);margin:-4px 0 0}
+.datos-msg{font-size:12px;color:var(--c1);font-family:var(--fm)}
+.datos-err{font-size:12px;color:var(--err)}
+.la-link{margin-left:6px;font-size:11px;padding:1px 4px}
+@media(max-width:768px){.hdr-datos{display:none}}
+
+.brand-logo{height:28px;max-width:140px;object-fit:contain}
+
+.empty-emp{border:1.5px dashed var(--b0);border-radius:var(--r-s);padding:24px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;max-width:640px;background:var(--bg-el)}
+.empty-emp b{font-size:16px}.empty-emp p{font-size:13px;color:var(--c1);margin:0}
 </style>
 </head>
 <body>
@@ -674,9 +699,11 @@ function normalizeForMatch(s){
 
 async function loadProjectMeta(){
   try{
-    const r=await fetch('data/Proyectos_Bauvek.xlsx?t='+Date.now());
-    if(!r.ok) return[];
-    const buf=await r.arrayBuffer();
+    let buf=null;
+    const b=await sbDownload('proyectos.xlsx');
+    if(b)buf=await b.arrayBuffer();
+    else if(_empresa!==REPO_EMPRESA)return[];
+    else{const r=await fetch('data/Proyectos_Bauvek.xlsx?t='+Date.now());if(!r.ok)return[];buf=await r.arrayBuffer()}
     const wb=XLSX.read(new Uint8Array(buf),{type:'array'});
     const ws=wb.Sheets[wb.SheetNames[0]];
     const rows=XLSX.utils.sheet_to_json(ws);
@@ -899,10 +926,18 @@ function ProjectInfo({meta}){
 /* ═══════ PARSER MSPDI ═══════ */
 /* XML de una obra: primero la copia liviana que arma el deploy (sin TimephasedData, ~4 veces más chica);
    si no está, el original. ?v=hash deja que el navegador reutilice lo ya descargado hasta que el XML cambie. */
+/* Cronogramas: primero el almacenamiento privado (bucket "cronogramas"), y solo mientras dure la migración el repo */
+let _dataOrigen='repo';
 async function fetchXml(proj){
+  if(_dataOrigen==='privado'){
+    for(const pre of['lite/','xml/']){const b=await sbDownload(pre+proj.file);if(b)return b.text()}
+    throw new Error('no se encontró '+proj.file+' en el almacenamiento privado');
+  }
   const v=proj.ver?`?v=${proj.ver}`:`?t=${Date.now()}`;
-  try{const r=await fetch(`data/projects-lite/${proj.file}${v}`);if(r.ok)return r}catch(e){}
-  return fetch(`data/projects/${proj.file}${v}`);
+  try{const r=await fetch(`data/projects-lite/${proj.file}${v}`);if(r.ok)return r.text()}catch(e){}
+  const r=await fetch(`data/projects/${proj.file}${v}`);
+  if(!r.ok)throw new Error(`HTTP ${r.status}`);
+  return r.text();
 }
 function parseMSPDI(xmlText){
   /* MS Project deja caracteres de control en Notas (ej. \x0B) → XML inválido. Se reemplazan por espacio. */
@@ -2134,7 +2169,7 @@ function DataHealthView({projList,projData,metaList,healthMap,onOpenObra}){
 const LA_WEEKS=3;
 function isCtrlTask(t){return /contratad[ao]/i.test(t.name)||/^[\s✔✓\-]*obra\b/i.test(t.name)||/stand[\s\-]?by/i.test(t.name)}
 function mondayOf(d){const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x}
-function LookaheadView({projList,projData,metaList,onOpenObra}){
+function LookaheadView({projList,projData,metaList,onOpenObra,onLinkCon}){
   const[onlyClash,setOnlyClash]=useState(false);
   const[q,setQ]=useState('');
   const weeks=useMemo(()=>{const m=mondayOf(new Date());return Array.from({length:LA_WEEKS},(_,i)=>{const a=new Date(m);a.setDate(a.getDate()+7*i);const b=new Date(a);b.setDate(b.getDate()+4);b.setHours(23,59,59,999);return{a,b}})},[]);
@@ -2182,7 +2217,7 @@ function LookaheadView({projList,projData,metaList,onOpenObra}){
       <table className="dt la-mx">
         <thead><tr><th>Contratista</th>{weeks.map((w,i)=><th key={i}>{i===0?'Esta semana':i===1?'Próxima':'En 2 semanas'}<div className="mono" style={{fontWeight:400}}>{wl(w)}</div></th>)}</tr></thead>
         <tbody>{list.map(C=><tr key={C.name}>
-          <td style={{fontWeight:700}}>{C.name}</td>
+          <td style={{fontWeight:700}}>{C.name}{C.name!=='Sin contratista'&&onLinkCon&&<button className="fclr la-link" onClick={()=>onLinkCon(C.name)} title={'Crear y copiar un link con la agenda de '+C.name+' (sin montos)'}>Link</button>}</td>
           {C.w.map((cell,i)=><td key={i} className={C.clash[i]&&C.name!=='Sin contratista'?'la-clash':''}>
             {Object.values(cell).map(({p,n})=><button key={p.key} className="la-chip" onClick={()=>onOpenObra&&onOpenObra(p)} title={`${p.name}: ${n} tarea${n>1?'s':''}`}>{p.cod?<b className="cod">{p.cod}</b>:null}{p.cod?n:p.name+' · '+n}</button>)}
           </td>)}
@@ -2206,7 +2241,7 @@ function LookaheadView({projList,projData,metaList,onOpenObra}){
   </div>;
 }
 
-function Portfolio({projList,projData,metaList,healthMap,onOpen,onOpenObra,initialMode}){
+function Portfolio({projList,projData,metaList,healthMap,onOpen,onOpenObra,initialMode,onLinkCon}){
   const[mode,setModeS]=useState(()=>initialMode||pgLoad('bp360_pf_mode','gantt'));
   const setMode=m=>{setModeS(m);pgSave('bp360_pf_mode',m)};
   return <Fragment>
@@ -2219,7 +2254,7 @@ function Portfolio({projList,projData,metaList,healthMap,onOpen,onOpenObra,initi
     </div>
     {mode==='gantt'?<PortfolioGantt projList={projList} projData={projData} metaList={metaList} healthMap={healthMap} onOpenObra={onOpenObra}/>
     :mode==='resp'?<ResponsablesView projList={projList} projData={projData} metaList={metaList} healthMap={healthMap} onOpen={onOpen}/>
-    :mode==='la'?<LookaheadView projList={projList} projData={projData} metaList={metaList} onOpenObra={onOpenObra}/>
+    :mode==='la'?<LookaheadView projList={projList} projData={projData} metaList={metaList} onOpenObra={onOpenObra} onLinkCon={onLinkCon}/>
     :mode==='datos'?<DataHealthView projList={projList} projData={projData} metaList={metaList} healthMap={healthMap} onOpenObra={onOpenObra}/>
     :<PortfolioObras projList={projList} projData={projData}/>}
   </Fragment>;
@@ -2526,81 +2561,6 @@ function Tour({onDone}){
   </div>;
 }
 
-/* ═══════ Client Share View ═══════ */
-function ClientView({projName,pList,pData,metaList}){
-  /* Find matching project */
-  const match=useMemo(()=>{
-    if(!pList)return null;
-    const norm=projName.toLowerCase();
-    return pList.find(p=>p.name.toLowerCase().includes(norm)||norm.includes(p.name.toLowerCase()));
-  },[projName,pList]);
-  const data=match?pData[match.key]:null;
-  const meta=match?matchMeta(match.name,metaList):null;
-  const health=data?calcHealth(data):null;
-
-  if(!match)return <div className="client-view"><div className="client-hdr"><h1>Proyecto no encontrado</h1><p>No se encontró un proyecto con el nombre "{projName}"</p></div></div>;
-  if(!data)return <div className="client-view"><div className="client-hdr"><h1>{match.name}</h1><p>Cargando datos del proyecto...</p><div style={{textAlign:'center',marginTop:20}}><div className="sp" style={{margin:'0 auto'}}/></div></div></div>;
-
-  const ts=data.tasks.filter(t=>!t.isSummary);
-  const now=new Date();
-  const milestones=ts.filter(t=>t.isMilestone).sort((a,b)=>(a.finish||0)-(b.finish||0));
-  const nextMs=milestones.find(m=>m.percentComplete<100&&m.finish&&m.finish>=now)||null;
-  const phases=data.tasks.filter(t=>t.isSummary&&t.depth===0).sort((a,b)=>(a.start||0)-(b.start||0));
-  /* Entrega estimada: fin de la tarea de obra que usa el semáforo; si no hay, el fin del cronograma */
-  const entrega=health&&health.finObra&&health.finObra.getTime()>0?health.finObra:data.maxDate;
-  const avg=health?.avg||0;
-  const fLarga=d=>d?d.toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'}):'—';
-
-  /* La vista cliente no muestra semáforo ni vencidas: esos indicadores son de uso interno */
-  return <div className="client-view">
-    <div className="client-hdr">
-      <div className="client-brand"><span className="bv">BV</span><span>Bauvek Construcciones</span></div>
-      <h1>{match.name}</h1>
-      {meta&&(meta.ciudad||meta.comitente)&&<p>{[meta.ciudad&&(meta.cityLabel||meta.ciudad),meta.comitente].filter(Boolean).join(' · ')}</p>}
-    </div>
-
-    <div className="client-progress">
-      <div className="client-big"><b>{avg}%</b><span>de la obra realizada</span></div>
-      <div className="client-bar"><div className="client-fill" style={{width:`${avg}%`,background:'#9E0101'}}/></div>
-      <div className="client-facts">
-        <div><span>Entrega estimada</span><b>{fLarga(entrega)}</b></div>
-        {nextMs&&<div><span>Próximo hito</span><b>{nextMs.name}</b><em>{fLarga(nextMs.finish)}</em></div>}
-      </div>
-    </div>
-
-    {phases.length>0&&<div className="client-milestones">
-      <h3>Etapas de la obra</h3>
-      {phases.slice(0,12).map(p=>{
-        const pct=p.percentComplete;const done=pct>=100;
-        return <div key={p.uid} className="client-ms">
-          <div className={`client-ms-icon ${done?'done':pct>0?'run':''}`}>{done?'✓':pct>0?'◐':'○'}</div>
-          <div className="client-ms-info">
-            <div className="client-ms-name">{p.name}</div>
-            <div className="client-ms-date">{fD(p.start)} → {fD(p.finish)}</div>
-          </div>
-          <div className="client-ms-pct">{pct}%</div>
-        </div>;
-      })}
-    </div>}
-
-    {milestones.length>0&&<div className="client-milestones" style={{marginTop:24}}>
-      <h3>Hitos del proyecto</h3>
-      {milestones.map(m=>{
-        const done=m.percentComplete>=100;
-        return <div key={m.uid} className="client-ms">
-          <div className={`client-ms-icon ${done?'done':''}`}>♦</div>
-          <div className="client-ms-info">
-            <div className="client-ms-name">{m.name}</div>
-            <div className="client-ms-date">{fD(m.finish)}{done?' · cumplido':''}</div>
-          </div>
-        </div>;
-      })}
-    </div>}
-
-    <div className="client-footer">Actualizado el {now.toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'})} · Bauvek Construcciones</div>
-  </div>;
-}
-
 /* ═══════ Procurement Forecast ═══════ */
 function ProcurementView({data,lead=15}){
   if(!data)return null;
@@ -2854,13 +2814,13 @@ function MatTooltipSection({computoData,nItem}){
 }
 
 /* ═══════ Materials View (full tab) ═══════ */
-function ComputoLogin({onOk}){
+function ComputoLogin({onOk,bare}){
   const[email,setEmail]=useState('');const[pass,setPass]=useState('');const[err,setErr]=useState('');const[busy,setBusy]=useState(false);
   const go=async e=>{e.preventDefault();if(!email||!pass){setErr('Ingresá email y contraseña.');return}
     setBusy(true);setErr('');try{await computoLogin(email.trim(),pass);onOk&&onOk()}catch(x){setErr(x.message||'Error de conexión')}finally{setBusy(false)}};
-  return <div className="mat-empty"><form onSubmit={go} style={{maxWidth:320,margin:'0 auto',display:'flex',flexDirection:'column',gap:8,textAlign:'left'}}>
-    <div style={{fontSize:15,fontWeight:700,color:'var(--c0)'}}>Ingresá con tu usuario de Cómputo</div>
-    <div style={{fontSize:12}}>Los cómputos están protegidos por empresa. Usá el mismo email y contraseña de la app Cómputo de Obras (si ya entraste ahí en este navegador, no hace falta).</div>
+  return <div className={bare?'':'mat-empty'}><form onSubmit={go} style={{maxWidth:320,margin:'0 auto',display:'flex',flexDirection:'column',gap:8,textAlign:'left'}}>
+    {!bare&&<div style={{fontSize:15,fontWeight:700,color:'var(--c0)'}}>Ingresá con tu usuario de Cómputo</div>}
+    {!bare&&<div style={{fontSize:12}}>Los cómputos están protegidos por empresa. Usá el mismo email y contraseña de la app Cómputo de Obras (si ya entraste ahí en este navegador, no hace falta).</div>}
     <input className="fin" style={{width:'100%'}} type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} autoComplete="username"/>
     <input className="fin" style={{width:'100%'}} type="password" placeholder="Contraseña" value={pass} onChange={e=>setPass(e.target.value)} autoComplete="current-password"/>
     {err&&<div style={{color:'var(--err)',fontSize:12}}>{err}</div>}
@@ -3068,11 +3028,272 @@ function MaterialsView({data,computoData,visTasks,onLogin,lead=15}){
   </div>;
 }
 
+/* ═══════ DATOS PRIVADOS (Supabase de Cómputo) ═══════
+   BkTableros es solo de Bauvek: entran usuarios de Cómputo con empresa "bauvek" o rol admin, y todo vive en la carpeta bauvek/.
+   (Cómputo es multiempresa y usa la misma estructura: <empresa>/ en el bucket; las políticas no dejan leer carpetas de otra empresa.)
+   - Bucket "cronogramas", carpeta bauvek/: xml/<archivo> (original), lite/<archivo> (sin TimephasedData), manifest.json, proyectos.xlsx
+   - Tabla tendencia_obras: una foto por empresa, obra y semana
+   - Tabla enlaces_publicos + función ver_enlace(): links de cliente y de contratista con token, con la marca de la empresa
+   Ver supabase/2026-10-20_bktableros_datos_privados.sql */
+const CRONO_BUCKET='cronogramas';
+const REPO_EMPRESA='bauvek'; /* los XML que todavía están en el repo público son de Bauvek */
+let _empresa='bauvek';
+/* Marca fija del sitio para lo que ve gente de afuera (links de cliente y contratista) */
+const BAUVEK={id:'bauvek',nombre:'Bauvek Construcciones',logo:null,color:'#9E0101'};
+function puedeEntrar(c){return!!c&&(c.empresa==='bauvek'||c.admin)}
+function jwtClaims(t){try{const p=JSON.parse(decodeURIComponent(escape(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))));const am=p.app_metadata||{};return{empresa:am.empresa||null,admin:am.role==='admin',email:p.email||''}}catch(e){return{empresa:null,admin:false,email:''}}}
+async function sbDownload(path){
+  if(!_empresa)return null;
+  try{const sb=await getComputoSb();if(!sb)return null;const{data,error}=await sb.storage.from(CRONO_BUCKET).download(_empresa+'/'+path);return error?null:data}catch(e){return null}
+}
+async function sbUpload(path,body,type){
+  const sb=await getComputoSb();if(!sb)throw new Error('Iniciá sesión para subir archivos');
+  if(!_empresa)throw new Error('No hay una empresa elegida');
+  const{error}=await sb.storage.from(CRONO_BUCKET).upload(_empresa+'/'+path,body,{upsert:true,contentType:type,cacheControl:'60'});
+  if(error)throw new Error(error.message||String(error));
+}
+/* Índice de cronogramas de la empresa: privado si existe; para Bauvek, mientras dure la migración, el del repo */
+async function loadManifest(){
+  const b=await sbDownload('manifest.json');
+  if(b){try{return{m:JSON.parse(await b.text()),origen:'privado'}}catch(e){}}
+  if(_empresa!==REPO_EMPRESA)return{m:{projects:[]},origen:'privado'};
+  const r=await fetch('data/manifest.json?t='+Date.now());
+  if(!r.ok)throw new Error('No se pudo leer el índice de cronogramas ('+r.status+')');
+  return{m:await r.json(),origen:'repo'};
+}
+/* Mismos controles que scripts/generate-manifest.js */
+function revisarXml(xml,file){
+  const avisos=[];
+  const ctrl=(xml.match(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g)||[]).length;
+  if(ctrl)avisos.push(`${ctrl} carácter(es) inválido(s) en el XML (se limpian al leer)`);
+  const tareas=xml.split('<Task>').slice(1).map(t=>t.split('</Task>')[0]);
+  const reales=tareas.filter(t=>!/<UID>0<\/UID>/.test(t));
+  const hojas=reales.filter(t=>!/<Summary>1<\/Summary>/.test(t));
+  const sinNombre=reales.filter(t=>!/<Name>[^<]*\S[^<]*<\/Name>/.test(t)).length;
+  if(sinNombre)avisos.push(`${sinNombre} tarea(s) sin nombre`);
+  if(hojas.length){const conLB=hojas.filter(t=>t.includes('<Baseline>')).length;
+    if(conLB===0)avisos.push('sin línea base');else if(conLB<hojas.length*.8)avisos.push(`línea base solo en ${Math.round(100*conLB/hojas.length)}% de las tareas`)}
+  if(/^VI[a-z]/.test(file))avisos.push('el nombre del archivo empieza con "VI" mayúscula');
+  const m=xml.slice(0,4096).match(/<(?:\w+:)?Name>(.*?)<\/(?:\w+:)?Name>/);
+  return{tareas:hojas.length,avisos,name:m?m[1].trim():file.replace(/\.xml$/i,'')};
+}
+async function sha1(buf){const h=await crypto.subtle.digest('SHA-1',buf);return[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,12)}
+/* Sube uno o varios XML (original + liviano) y actualiza el índice. onStep informa el avance. */
+async function subirCronogramas(files,onStep){
+  let man={projects:[]};
+  const b=await sbDownload('manifest.json');if(b){try{man=JSON.parse(await b.text())}catch(e){}}
+  const byFile={};for(const p of man.projects||[])byFile[p.file]=p;
+  let i=0;
+  for(const f of files){
+    i++;onStep&&onStep(`Subiendo ${f.name} (${i}/${files.length})…`);
+    const buf=await f.arrayBuffer();
+    const xml=new TextDecoder('utf-8').decode(buf);
+    const rev=revisarXml(xml,f.name);
+    const lite=xml.replace(/\s*<TimephasedData>[\s\S]*?<\/TimephasedData>/g,'').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,' ');
+    await sbUpload('xml/'+f.name,new Blob([buf],{type:'application/xml'}),'application/xml');
+    await sbUpload('lite/'+f.name,new Blob([lite],{type:'application/xml'}),'application/xml');
+    byFile[f.name]={file:f.name,name:rev.name,hash:await sha1(buf),sizeKB:Math.round(buf.byteLength/1024),tareas:rev.tareas,avisos:rev.avisos,subido:new Date().toISOString()};
+  }
+  const projects=Object.values(byFile).sort((a,b)=>a.file.localeCompare(b.file));
+  const nm={generated:new Date().toISOString(),count:projects.length,projects};
+  await sbUpload('manifest.json',new Blob([JSON.stringify(nm,null,2)],{type:'application/json'}),'application/json');
+  return nm;
+}
+/* Copia de una sola vez lo que hoy está en el repo público al almacenamiento privado */
+async function migrarDesdeRepo(onStep){
+  if(_empresa!==REPO_EMPRESA)throw new Error('Los cronogramas del repo son de Bauvek');
+  const r=await fetch('data/manifest.json?t='+Date.now());if(!r.ok)throw new Error('No hay cronogramas en el repo');
+  const m=await r.json();const files=[];
+  for(const p of m.projects||[]){
+    onStep&&onStep(`Leyendo ${p.file} del repo…`);
+    const x=await fetch('data/projects/'+encodeURIComponent(p.file)+'?t='+Date.now());
+    if(x.ok)files.push(new File([await x.arrayBuffer()],p.file,{type:'application/xml'}));
+  }
+  const nm=await subirCronogramas(files,onStep);
+  const xl=await fetch('data/Proyectos_Bauvek.xlsx?t='+Date.now());
+  if(xl.ok){onStep&&onStep('Copiando el Excel de proyectos…');await sbUpload('proyectos.xlsx',await xl.blob(),'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')}
+  return nm;
+}
+
+/* ── Links públicos con token ── */
+async function verEnlace(token){
+  const r=await fetch(COMPUTO_URL+'/rest/v1/rpc/ver_enlace',{method:'POST',headers:{apikey:COMPUTO_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_token:token})});
+  if(!r.ok)return null;
+  return r.json();
+}
+async function guardarEnlaces(rows){
+  const sb=await getComputoSb();if(!sb)throw new Error('Iniciá sesión para compartir');
+  const now=new Date().toISOString();
+  const{data,error}=await sb.from('enlaces_publicos').upsert(rows.map(r=>({...r,empresa:_empresa,actualizado:now})),{onConflict:'empresa,tipo,clave'}).select('token,tipo,clave');
+  if(error)throw new Error(error.message);
+  return data||[];
+}
+const isoD=d=>d&&!isNaN(d)?d.toISOString().slice(0,10):null;
+/* Foto para el cliente: sin semáforo, vencidas, recursos ni contratistas */
+function snapCliente(p,d,h,meta){
+  const ts=d.tasks.filter(t=>!t.isSummary);
+  const ms=ts.filter(t=>t.isMilestone).sort((a,b)=>(a.finish||0)-(b.finish||0));
+  const now=new Date();
+  const next=ms.find(m=>m.percentComplete<100&&m.finish&&m.finish>=now);
+  const entrega=h&&h.finObra&&h.finObra.getTime()>0?h.finObra:d.maxDate;
+  return{nombre:p.name,lugar:[meta&&(meta.cityLabel||meta.ciudad),meta&&meta.comitente].filter(Boolean).join(' · '),
+    avance:h?h.avg:wAvg(ts),entrega:isoD(entrega),proximo:next?{nombre:next.name,fecha:isoD(next.finish)}:null,
+    etapas:d.tasks.filter(t=>t.isSummary&&t.depth===0).sort((a,b)=>(a.start||0)-(b.start||0)).slice(0,12).map(t=>({nombre:t.name,desde:isoD(t.start),hasta:isoD(t.finish),avance:t.percentComplete})),
+    hitos:ms.map(m=>({nombre:m.name,fecha:isoD(m.finish),cumplido:m.percentComplete>=100}))};
+}
+/* Agenda del contratista: sus tareas pendientes de la semana pasada a 4 semanas adelante, en todas las obras activas */
+function snapContratista(nombre,projList,projData,metaList){
+  const from=mondayOf(new Date());from.setDate(from.getDate()-7);
+  const to=new Date(from);to.setDate(to.getDate()+7*5);
+  const items=[];
+  for(const p of projList||[]){
+    const d=projData[p.key];if(!d||p.local)continue;
+    const meta=matchMeta(p.name,metaList);
+    if(!pgIsActive(meta?.estado))continue;
+    for(const t of d.tasks){
+      if(t.isSummary||t.isMilestone||isCtrlTask(t)||t.percentComplete>=100||!t.start||!t.finish)continue;
+      if(normName(entV(t,'Contratista'))!==normName(nombre))continue;
+      if(t.start>to||t.finish<from)continue;
+      items.push({obra:p.name,cod:p.cod||'',lugar:meta?(meta.cityLabel||meta.ciudad||''):'',tarea:t.name,grupo:taskPath(t),desde:isoD(t.start),hasta:isoD(t.finish),avance:t.percentComplete});
+    }
+  }
+  items.sort((a,b)=>a.desde.localeCompare(b.desde)||a.obra.localeCompare(b.obra));
+  return{nombre,items};
+}
+
+/* ── Tendencia compartida ── */
+async function cargarTendencia(){
+  const sb=await getComputoSb();if(!sb)return null;
+  const desde=new Date();desde.setDate(desde.getDate()-7*12);
+  const{data,error}=await sb.from('tendencia_obras').select('semana,archivo,avance,vencidas').eq('empresa',_empresa).gte('semana',isoD(desde));
+  if(error)return null;
+  const t={};for(const r of data||[]){(t[r.semana]=t[r.semana]||{})['srv_'+r.archivo]={avg:r.avance,ov:r.vencidas}}
+  return t;
+}
+async function guardarTendencia(rows){
+  const sb=await getComputoSb();if(!sb||!rows.length)return false;
+  const{error}=await sb.from('tendencia_obras').upsert(rows.map(r=>({...r,empresa:_empresa})),{onConflict:'empresa,semana,archivo'});
+  return!error;
+}
+
+/* ═══════ Pantallas públicas por token (no piden login) ═══════ */
+/* Marca de la empresa en lo que ve gente de afuera: logo de Cómputo (empresas.logo_url), o iniciales con su color */
+function iniciales(n){const w=(n||'').replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ0-9& ]/g,'').split(/\s+/).filter(Boolean);if(!w.length)return'·';if(w.length===1)return w[0].slice(0,3).toUpperCase();return w.slice(0,2).map(x=>x[0]).join('').toUpperCase()}
+function Brand({emp}){
+  const e=emp||BAUVEK;
+  return <div className="client-brand"><span className="bv" style={{background:e.color}}>{e.id==='bauvek'?'BV':iniciales(e.nombre)}</span><span>{e.nombre||''}</span></div>;
+}
+function fLargaIso(s){if(!s)return'—';const d=new Date(s+'T12:00:00');return d.toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'})}
+function fCortaIso(s){if(!s)return'—';const d=new Date(s+'T12:00:00');return fD(d)}
+function PublicShell({children,actualizado,emp}){
+  return <div className="client-view">{children}
+    <div className="client-footer">{actualizado?'Actualizado el '+new Date(actualizado).toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'}):''}{actualizado&&emp?.nombre?' · ':''}{emp?.nombre||''}</div>
+  </div>;
+}
+function ClientSnapView({s,actualizado,emp}){
+  const col=emp?.color||'#9E0101';
+  return <PublicShell actualizado={actualizado} emp={emp}>
+    <div className="client-hdr">
+      <Brand emp={emp}/>
+      <h1>{s.nombre}</h1>
+      {s.lugar&&<p>{s.lugar}</p>}
+    </div>
+    <div className="client-progress">
+      <div className="client-big"><b>{s.avance}%</b><span>de la obra realizada</span></div>
+      <div className="client-bar"><div className="client-fill" style={{width:`${s.avance}%`,background:col}}/></div>
+      <div className="client-facts">
+        <div><span>Entrega estimada</span><b>{fLargaIso(s.entrega)}</b></div>
+        {s.proximo&&<div><span>Próximo hito</span><b>{s.proximo.nombre}</b><em>{fLargaIso(s.proximo.fecha)}</em></div>}
+      </div>
+    </div>
+    {s.etapas&&s.etapas.length>0&&<div className="client-milestones">
+      <h3>Etapas de la obra</h3>
+      {s.etapas.map((p,i)=>{const done=p.avance>=100;return <div key={i} className="client-ms">
+        <div className={`client-ms-icon ${done?'done':p.avance>0?'run':''}`}>{done?'✓':p.avance>0?'◐':'○'}</div>
+        <div className="client-ms-info"><div className="client-ms-name">{p.nombre}</div><div className="client-ms-date">{fCortaIso(p.desde)} → {fCortaIso(p.hasta)}</div></div>
+        <div className="client-ms-pct">{p.avance}%</div></div>})}
+    </div>}
+    {s.hitos&&s.hitos.length>0&&<div className="client-milestones" style={{marginTop:24}}>
+      <h3>Hitos del proyecto</h3>
+      {s.hitos.map((m,i)=><div key={i} className="client-ms">
+        <div className={`client-ms-icon ${m.cumplido?'done':''}`}>♦</div>
+        <div className="client-ms-info"><div className="client-ms-name">{m.nombre}</div><div className="client-ms-date">{fCortaIso(m.fecha)}{m.cumplido?' · cumplido':''}</div></div></div>)}
+    </div>}
+  </PublicShell>;
+}
+function ContratistaSnapView({s,actualizado,emp}){
+  const weeks=useMemo(()=>{const g={};for(const it of s.items||[]){const k=isoD(mondayOf(new Date(it.desde+'T12:00:00')));(g[k]=g[k]||[]).push(it)}
+    /* una tarea larga aparece en cada semana en que está activa */
+    const m0=mondayOf(new Date());m0.setDate(m0.getDate()-7);const out=[];
+    for(let i=0;i<5;i++){const a=new Date(m0);a.setDate(a.getDate()+7*i);const b=new Date(a);b.setDate(b.getDate()+6);
+      const its=(s.items||[]).filter(it=>new Date(it.desde+'T00:00:00')<=b&&new Date(it.hasta+'T23:59:59')>=a);
+      if(its.length)out.push({a,b,its,cur:i===1})}
+    return out},[s]);
+  return <PublicShell actualizado={actualizado} emp={emp}>
+    <div className="client-hdr">
+      <Brand emp={emp}/>
+      <h1>{s.nombre}</h1>
+      <p>Tus tareas programadas{emp?.nombre?' en obras de '+emp.nombre:''}</p>
+    </div>
+    <div className="client-milestones">
+      {weeks.length===0&&<p style={{color:'var(--c1)'}}>No tenés tareas programadas en las próximas semanas.</p>}
+      {weeks.map((w,i)=><div key={i} style={{marginBottom:22}}>
+        <h3>{w.cur?'Esta semana':i===0&&weeks[0].a<mondayOf(new Date())?'Semana pasada (pendiente)':'Semana del '+w.a.getDate()+'/'+(w.a.getMonth()+1)}</h3>
+        {w.its.map((it,k)=><div key={k} className="client-ms">
+          <div className="client-ms-icon run">{it.cod||'·'}</div>
+          <div className="client-ms-info"><div className="client-ms-name">{it.tarea}</div>
+            <div className="client-ms-date">{it.obra}{it.lugar?' · '+it.lugar:''} · {fCortaIso(it.desde)} → {fCortaIso(it.hasta)}</div></div>
+          <div className="client-ms-pct">{it.avance}%</div></div>)}
+      </div>)}
+    </div>
+  </PublicShell>;
+}
+function TokenView({token}){
+  const[st,setSt]=useState({loading:true});
+  useEffect(()=>{verEnlace(token).then(r=>setSt({r})).catch(()=>setSt({r:null}))},[token]);
+  if(st.loading)return <div className="ld"><div className="sp"/><span>Cargando…</span></div>;
+  const r=st.r;
+  if(!r||!r.datos)return <PublicShell><div className="client-hdr"><h1>Este link no está disponible</h1><p>Pedile a la constructora un link actualizado.</p></div></PublicShell>;
+  return r.tipo==='contratista'?<ContratistaSnapView s={r.datos} actualizado={r.actualizado} emp={BAUVEK}/>:<ClientSnapView s={r.datos} actualizado={r.actualizado} emp={BAUVEK}/>;
+}
+
+/* ═══════ Login y panel de datos ═══════ */
+function LoginScreen({onOk}){
+  return <div className="login-wrap">
+    <div className="login-card">
+      <div className="client-brand" style={{justifyContent:'center',display:'flex'}}><span className="bv">BV</span><span>BkTableros</span></div>
+      <h1 className="login-h">BuildPlan</h1>
+      <p className="login-p">Uso interno de Bauvek. Entrá con tu usuario de Cómputo de Obras.</p>
+      <ComputoLogin onOk={onOk} bare/>
+    </div>
+  </div>;
+}
+function DatosPanel({origen,manifest,onClose,onDone,empNombre}){
+  const[msg,setMsg]=useState('');const[busy,setBusy]=useState(false);const[err,setErr]=useState('');
+  const run=async fn=>{setBusy(true);setErr('');try{await fn();setMsg('Listo. Recargando…');setTimeout(onDone,600)}catch(e){setErr(e.message||String(e))}finally{setBusy(false)}};
+  const gen=manifest?.generated?new Date(manifest.generated):null;
+  return <div className="so" onClick={onClose}><div className="sm datos" onClick={e=>e.stopPropagation()} role="dialog" aria-label="Datos de BuildPlan">
+    <div className="datos-h"><b>Datos de BuildPlan</b><button className="fclr" onClick={onClose}>Cerrar</button></div>
+    <div className="datos-b">
+      <div className={'datos-org '+origen}>{origen==='privado'?(manifest?.projects?.length?'🔒 Los cronogramas se leen del almacenamiento privado.':'Todavía no hay cronogramas cargados. Subí los XML de MS Project.'):'⚠ Los cronogramas todavía se leen del repo público. Copialos al almacenamiento privado y después se pueden borrar del repo.'}</div>
+      <div className="datos-row"><span>Cronogramas</span><b className="mono">{manifest?.projects?.length||0}</b>{gen&&<span className="mono" style={{color:'var(--c2)'}}>índice del {fD(gen)}</span>}</div>
+      <label className="btn datos-btn">{busy?'Trabajando…':'↑ Subir cronogramas (.xml de MS Project)'}
+        <input type="file" accept=".xml" multiple hidden disabled={busy} onChange={e=>{const fs=[...e.target.files];e.target.value='';if(fs.length)run(()=>subirCronogramas(fs,setMsg))}}/></label>
+      <p className="datos-note">Reemplaza al cronograma con el mismo nombre de archivo. En MS Project: Archivo → Guardar como → XML.</p>
+      <label className="btn datos-btn">↑ Subir Excel de proyectos (estado, comitente, ubicación, código)
+        <input type="file" accept=".xlsx" hidden disabled={busy} onChange={e=>{const f=e.target.files[0];e.target.value='';if(f)run(()=>sbUpload('proyectos.xlsx',f,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))}}/></label>
+      {origen!=='privado'&&<button className="btn datos-btn" disabled={busy} onClick={()=>run(()=>migrarDesdeRepo(setMsg))}>⇄ Copiar todo desde el repo al almacenamiento privado</button>}
+      {msg&&<div className="datos-msg">{msg}</div>}
+      {err&&<div className="datos-err">{err}. Si dice "row-level security" o "not found", falta aplicar la configuración de Supabase o tu usuario no es de Bauvek.</div>}
+    </div>
+  </div></div>;
+}
+
 /* ═══════ MAIN APP ═══════ */
 /* Pestañas de una obra: abre en Resumen; el Gantt queda como detalle */
 const PROJ_TABS=[['dash','Resumen'],['semana','Semana'],['gantt','Gantt'],['abast','Abastecimiento'],['demoras','Curva S y demoras']];
 const PROJ_SUBS=PROJ_TABS.map(x=>x[0]);
-function App(){
+function App({onLogout,empInfo=BAUVEK}){
   const[th,togTh]=useTheme();
   const[pList,setPList]=useState(null);
   const[pData,setPData]=useState({});
@@ -3117,7 +3338,12 @@ function App(){
   const[trendData,setTrendData]=useState(()=>loadTrend());
   const[showTour,setShowTour]=useState(()=>{try{return!localStorage.getItem(TOUR_KEY)}catch(e){return false}});
   const[showFinished,setShowFinished]=useState(false);
-  const clientProj=useMemo(()=>{const p=new URLSearchParams(window.location.search);return p.get('proyecto')||p.get('project')||null},[]);
+  const[origen,setOrigen]=useState(null);       /* privado | repo */
+  const[manifest,setManifest]=useState(null);
+  const[showDatos,setShowDatos]=useState(false);
+  const[bgDone,setBgDone]=useState(false);       /* terminó la carga de todos los cronogramas */
+  const sharedTrend=useRef(false);
+  const syncDone=useRef(false);
 
   const[computoData,setComputoData]=useState({});
   const[computoAuth,setComputoAuth]=useState(0);
@@ -3161,11 +3387,13 @@ function App(){
 
   /* Load manifest + project metadata */
   useEffect(()=>{
-    fetch('data/manifest.json?t='+Date.now()).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
+    loadManifest().then(({m:d,origen:o})=>{
+      _dataOrigen=o;setOrigen(o);setManifest(d);
       const list=(d.projects||d||[]).map((p,i)=>{const rawName=p.name||(typeof p.file==='string'?p.file.replace('.xml',''):null)||`Proyecto ${i+1}`;const file=typeof p==='string'?p:p.file;const oc=obraCode(file||rawName);return{key:'srv_'+(p.file||p.name||i),name:rawName.replace(/\.xml$/i,''),file,size:p.size||(p.sizeKB?p.sizeKB*1024:null),modified:p.modified||p.lastModified||null,ver:p.hash||null,avisos:p.avisos||[],cod:oc?.cod||null,cliente:oc?.cliente||null,lote:oc?.lote||null}});
       setPList(list);
     }).catch(()=>setPList([]));
     loadProjectMeta().then(m=>setMetaList(m));
+    cargarTendencia().then(t=>{if(t){sharedTrend.current=true;setTrendData(t)}});
   },[]);
   /* Si el Excel de proyectos trae columna "Código", pisa al mapa OBRA_CODES */
   useEffect(()=>{
@@ -3194,9 +3422,7 @@ function App(){
         if(pData[k])continue; /* already loaded */
         setAutoLoading(p=>({...p,[k]:true}));
         try{
-          const r=await fetchXml(proj);
-          if(!r.ok)continue;
-          const txt=await r.text();
+          const txt=await fetchXml(proj);
           const d=parseMSPDI(txt);
           if(cancelled)break;
           setPData(p=>({...p,[k]:d}));
@@ -3208,7 +3434,7 @@ function App(){
         finally{setAutoLoading(p=>{const n={...p};delete n[k];return n})}
       }
     };
-    for(let i=0;i<4;i++)worker();
+    Promise.all([0,1,2,3].map(()=>worker())).then(()=>{if(!cancelled)setBgDone(true)});
     return()=>{cancelled=true};
   },[pListKeys]);
 
@@ -3219,11 +3445,47 @@ function App(){
       newH[k]=calcHealth(d);
     }
     setHealthMap(newH);
-    if(Object.keys(newH).length>0){
+    /* Sin la tabla compartida, la tendencia se sigue guardando en este navegador */
+    if(Object.keys(newH).length>0&&!sharedTrend.current){
       const updated=recordSnapshot(newH);
       setTrendData(updated);
     }
   },[pData]);
+
+  /* Una vez por sesión, con todo cargado: foto semanal compartida y actualización de los links públicos */
+  useEffect(()=>{
+    if(!bgDone||syncDone.current||!pList||origen===null)return;
+    syncDone.current=true;
+    const sp=pList.filter(p=>!p.local&&p.file&&pData[p.key]);
+    const semana=isoD(mondayOf(new Date()));
+    const rows=sp.filter(p=>pgIsActive(matchMeta(p.name,metaList)?.estado)&&healthMap[p.key]).map(p=>{const h=healthMap[p.key];
+      return{semana,archivo:p.file,avance:h.avg,vencidas:h.ovReal||0,sin_actualizar:h.ovStale||0,hechas:h.done,total:h.tot}});
+    guardarTendencia(rows).then(ok=>{if(ok)cargarTendencia().then(t=>{if(t){sharedTrend.current=true;setTrendData(t)}})});
+    (async()=>{try{
+      const sb=await getComputoSb();if(!sb)return;
+      const{data,error}=await sb.from('enlaces_publicos').select('tipo,clave').eq('empresa',_empresa).eq('activo',true);
+      if(error||!data||!data.length)return;
+      const upd=[];
+      for(const e of data){
+        if(e.tipo==='cliente'){const p=sp.find(x=>x.file===e.clave);if(p)upd.push({tipo:'cliente',clave:e.clave,datos:snapCliente(p,pData[p.key],healthMap[p.key],matchMeta(p.name,metaList))})}
+        else if(e.tipo==='contratista')upd.push({tipo:'contratista',clave:e.clave,datos:snapContratista(e.clave,pList,pData,metaList)});
+      }
+      if(upd.length)await guardarEnlaces(upd);
+    }catch(e){console.warn('No se pudieron actualizar los links públicos',e)}})();
+  },[bgDone,pList,pData,healthMap,metaList,origen]);
+
+  /* Link público con token: lo crea (o reutiliza) y lo copia */
+  const makeLink=useCallback(async(tipo,clave)=>{
+    try{
+      let datos;
+      if(tipo==='cliente'){const p=(pList||[]).find(x=>x.file===clave);const d=p&&pData[p.key];if(!d)throw new Error('La obra todavía no terminó de cargar');datos=snapCliente(p,d,healthMap[p.key],matchMeta(p.name,metaList))}
+      else datos=snapContratista(clave,pList,pData,metaList);
+      const[r]=await guardarEnlaces([{tipo,clave,datos}]);
+      const url=window.location.origin+window.location.pathname+'?v='+r.token;
+      const label=tipo==='cliente'?'Link de la vista cliente':'Link de la agenda de '+clave;
+      try{await navigator.clipboard.writeText(url);setToast({t:label+' copiado',u:url})}catch(e){setToast({t:label+': copialo desde acá',u:url})}
+    }catch(e){setToast({t:'No se pudo crear el link: '+(e.message||e)+(String(e.message||'').includes('enlaces_publicos')?' (falta la configuración de Supabase)':'')})}
+  },[pList,pData,healthMap,metaList]);
 
   const resetF=useCallback(()=>{setFSt('all');setFRes('all');setFCon('all');setFRub('all');setFTab('all');setFAlc('all');setFNiv('all');setFWbs(99);setFDf('');setFDt('')},[]);
 
@@ -3234,9 +3496,7 @@ function App(){
       setLoading(p=>({...p,[k]:true}));
       setErrors(p=>{const n={...p};delete n[k];return n});
       try{
-        const r=await fetchXml(proj);
-        if(!r.ok)throw new Error(`HTTP ${r.status}`);
-        const txt=await r.text();
+        const txt=await fetchXml(proj);
         const d=parseMSPDI(txt);
         setPData(p=>({...p,[k]:d}));
         const em={};d.tasks.forEach(t=>{if(t.isSummary)em[t.uid]=true});
@@ -3330,6 +3590,8 @@ function App(){
       if(m&&mKey&&used.has(mKey))continue;
       if(m&&mKey)used.add(mKey);
       const e=(m?.estado||'').trim();
+      /* Sin Excel de proyectos (empresa nueva) todas las obras se tratan como activas */
+      if(!metaList.length){result.activo.push(p);continue}
       if(e==='Activo')result.activo.push(p);
       else if(e==='En pausa')result.pausa.push(p);
       else if(e==='Finalizado')result.finalizado.push(p);
@@ -3358,12 +3620,7 @@ function App(){
   useEffect(()=>{if(!toast)return;const id=setTimeout(()=>setToast(null),4500);return()=>clearTimeout(id)},[toast]);
   const[fOpen,setFOpen]=useState(false);
 
-  const shareClient=useCallback(()=>{
-    const url=window.location.origin+window.location.pathname+'?proyecto='+encodeURIComponent(aProj?.name||'');
-    const ok=()=>setToast({t:'Link de la vista cliente copiado',u:url});
-    const fail=()=>setToast({t:'Copiá este link para compartir',u:url});
-    try{navigator.clipboard.writeText(url).then(ok,fail)}catch(e){fail()}
-  },[aProj]);
+  const shareClient=useCallback(()=>{if(aProj?.file)makeLink('cliente',aProj.file)},[aProj,makeLink]);
 
   const goObra=k=>{setActive(k);if(!PROJ_SUBS.includes(sub))setSub('dash')};
 
@@ -3382,17 +3639,16 @@ function App(){
       {homeSum.ovReal>0&&<button className="btn btn-g hdr-ov" onClick={()=>{setActive('__pf');setSub('portfolio-resp')}} title={`${homeSum.ovReal} vencidas con avance cargado y ${homeSum.ovStale} sin actualizar en obras activas`}>{homeSum.ovReal} vencidas →</button>}
       <button className="btn btn-g btn-i" onClick={()=>setShowSrch(true)} title="Buscar tareas (Ctrl+K)" aria-label="Buscar tareas">{I.srch()}</button>
       <button className="btn btn-g btn-i" onClick={togTh} title="Cambiar tema" aria-label="Cambiar tema">{th==='light'?I.moon():I.sun()}</button>
+      <button className={`btn btn-g hdr-datos ${origen==='repo'?'warn':''}`} onClick={()=>setShowDatos(true)} title={origen==='repo'?'Los cronogramas todavía están en el repo público':'Subir cronogramas y Excel de proyectos'}>{origen==='repo'?'⚠ Datos':'Datos'}</button>
+      <button className="btn btn-g hdr-salir" onClick={onLogout} title="Cerrar sesión (también en Cómputo)">Salir</button>
     </div>
   </div>;
 
+  const datosEl=showDatos&&<DatosPanel empNombre="Bauvek" origen={origen} manifest={manifest} onClose={()=>setShowDatos(false)} onDone={()=>window.location.reload()}/>;
   const toastEl=toast&&<div className="toast" role="status"><div>{toast.t}</div>{toast.u&&<input readOnly value={toast.u} onFocus={e=>e.target.select()}/>}<button className="fclr" onClick={()=>setToast(null)}>Cerrar</button></div>;
 
   if(!pList)return <div className="ld"><div className="sp"/><span>Cargando...</span></div>;
 
-  /* ═══ CLIENT SHARE VIEW ═══ */
-  if(clientProj){
-    return <ClientView projName={clientProj} pList={pList} pData={pData} metaList={metaList}/>;
-  }
 
   /* ═══ HOME ═══ */
   if(!active){
@@ -3474,6 +3730,11 @@ function App(){
             <div className="home-title">Obras activas</div>
             <div className="home-sub">{filteredActive.length} obras · ordenadas por gravedad{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{S.analizadas<S.n&&<span style={{marginLeft:8}}>· analizando {S.n-S.analizadas}…</span>}</div>
           </div>
+          {(pList||[]).length===0&&<div className="empty-emp">
+            <b>Todavía no hay cronogramas cargados</b>
+            <p>Exportá cada obra desde MS Project (Archivo → Guardar como → XML) y subila desde Datos. Para ver estado, comitente y ubicación de cada obra, subí también el Excel de proyectos.</p>
+            <button className="btn" onClick={()=>setShowDatos(true)}>Abrir Datos</button>
+          </div>}
           <div className="pgrid2">
             {filteredActive.map(renderCard)}
           </div>
@@ -3521,7 +3782,7 @@ function App(){
       </div>
       {showTour&&<Tour onDone={dismissTour}/>}
       {showSrch&&<SearchModal onClose={()=>setShowSrch(false)}/>}
-      {toastEl}
+      {toastEl}{datosEl}
       <div className="mob-nav">
         <button className="on" onClick={()=>setActive(null)}>{I.home(18)}<span>Inicio</span></button>
         <button onClick={()=>{setActive('__pf');setSub('portfolio')}}>{I.chart(18)}<span>Portfolio</span></button>
@@ -3535,7 +3796,8 @@ function App(){
   if(active==='__pf'){
     return <Fragment>
       {hdr('pf')}
-      <Portfolio key={sub} initialMode={sub==='portfolio-resp'?'resp':null} onOpenObra={p=>openProj(p)} projList={pList} projData={pData} metaList={metaList} healthMap={healthMap} onOpen={async(k,raw,role)=>{const p=(pList||[]).find(x=>x.key===k);if(!p)return;await openProj(p);setSub('gantt');setFSt('ov');if(role==='Contratista'){setFRes('all');setFCon(raw)}else{setFCon('all');setFRes(raw==='Sin asignar'?'none':raw)}}}/>
+      {datosEl}{toastEl}
+      <Portfolio key={sub} onLinkCon={n=>makeLink('contratista',n)} initialMode={sub==='portfolio-resp'?'resp':null} onOpenObra={p=>openProj(p)} projList={pList} projData={pData} metaList={metaList} healthMap={healthMap} onOpen={async(k,raw,role)=>{const p=(pList||[]).find(x=>x.key===k);if(!p)return;await openProj(p);setSub('gantt');setFSt('ov');if(role==='Contratista'){setFRes('all');setFCon(raw)}else{setFCon('all');setFRes(raw==='Sin asignar'?'none':raw)}}}/>
       {showSrch&&<SearchModal onClose={()=>setShowSrch(false)}/>}
       <div className="mob-nav">
         <button onClick={()=>setActive(null)}>{I.home(18)}<span>Inicio</span></button>
@@ -3548,7 +3810,7 @@ function App(){
 
   /* ═══ PROJECT VIEW ═══ */
   return <Fragment>
-    <div className="ph"><div className="ph-bv">BV</div><div><h1>{pLabel(aProj)}</h1><p>Bauvek Construcciones · Generado el {new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})}</p></div></div>
+    <div className="ph"><div className="ph-bv">BV</div><div><h1>{pLabel(aProj)}</h1><p>{empInfo?.nombre?empInfo.nombre+' · ':''}Generado el {new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})}</p></div></div>
     {hdr('obra')}
 
     <div className="stbar">
@@ -3638,8 +3900,8 @@ function App(){
 
     <Tooltip info={ttInfo} computoData={computoData[active]||null}/>
     {showSrch&&<SearchModal onClose={()=>setShowSrch(false)}/>}
-    {toastEl}
-    <div className="pf">BuildPlan · Bauvek Construcciones · {new Date().toLocaleDateString('es-AR')}</div>
+    {toastEl}{datosEl}
+    <div className="pf">BuildPlan{empInfo?.nombre?' · '+empInfo.nombre:''} · {new Date().toLocaleDateString('es-AR')}</div>
     <div className="mob-nav">
       <button onClick={()=>setActive(null)}>{I.home(18)}<span>Inicio</span></button>
       <button className={sub==='dash'?'on':''} onClick={()=>setSub('dash')}>{I.chart(18)}<span>Resumen</span></button>
@@ -3649,6 +3911,21 @@ function App(){
   </Fragment>;
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+/* Entrada: links públicos por token, o login de Bauvek antes de mostrar cualquier cronograma */
+function Root(){
+  const q=new URLSearchParams(window.location.search);
+  const tok=q.get('v');const viejo=q.get('proyecto')||q.get('project');
+  const[auth,setAuth]=useState(null);       /* null cargando · false sin sesión · claims del usuario */
+  useEffect(()=>{if(tok||viejo)return;computoToken().then(t=>setAuth(t?jwtClaims(t):false)).catch(()=>setAuth(false))},[]);
+  if(tok)return <TokenView token={tok}/>;
+  if(viejo)return <PublicShell emp={BAUVEK}><div className="client-hdr"><Brand emp={BAUVEK}/><h1>Este link ya no se usa</h1><p>Pedile a Bauvek el link nuevo de tu obra.</p></div></PublicShell>;
+  if(auth===null)return <div className="ld"><div className="sp"/><span>Cargando…</span></div>;
+  if(!auth)return <LoginScreen onOk={()=>computoToken().then(t=>setAuth(t?jwtClaims(t):false))}/>;
+  const logout=()=>{try{['sb_access_token','sb_refresh_token','sb_user'].forEach(k=>localStorage.removeItem(k))}catch(e){}setAuth(false)};
+  if(!puedeEntrar(auth))return <div className="login-wrap"><div className="login-card"><Brand emp={BAUVEK}/><h1 className="login-h">Sin acceso</h1><p className="login-p">BkTableros es de uso interno de Bauvek y tu usuario no pertenece a la empresa. Cómputo de Obras lo podés seguir usando con tu usuario.</p><a className="btn" href="https://manuelsagarraga-cloud.github.io/Computo-Obras/">Ir a Cómputo de Obras</a><button className="btn" onClick={logout}>Salir</button></div></div>;
+  _empresa='bauvek';
+  return <App onLogout={logout}/>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Root/>);
 </script>
 </body></html>

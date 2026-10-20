@@ -30,6 +30,20 @@ body{font-family:var(--ff);background:var(--dark);color:var(--white);min-height:
 .card .live{display:block;margin-top:10px;font-family:var(--fm);font-size:12px;color:var(--text)}
 .card:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 .card.disabled{opacity:.5;cursor:default;pointer-events:none}
+.gate{background:var(--gray-lt);flex:1;display:flex;align-items:flex-start;justify-content:center;padding:48px 16px}
+.gate[hidden],.gate-card[hidden],.grid-wrap[hidden]{display:none}
+.gate-card{width:100%;max-width:380px;background:var(--white);border:1px solid #ddd;border-top:3px solid var(--primary);border-radius:var(--r);padding:28px 24px;display:flex;flex-direction:column;gap:8px;color:var(--text)}
+.gate-card h2{font-size:18px;font-weight:700;color:var(--dark)}
+.gate-card p{font-size:14px;color:#5c5c5c;line-height:1.5;margin-bottom:6px}
+.gate-card label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#5c5c5c;margin-top:4px}
+.gate-card input{font:inherit;font-size:15px;padding:10px 12px;border:1px solid #ccc;border-radius:var(--r);min-height:44px}
+.gate-card input:focus{outline:2px solid var(--primary);outline-offset:0;border-color:var(--primary)}
+.gate-card button,.gate-link{margin-top:10px;min-height:44px;font:inherit;font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;border:none;border-radius:var(--r);background:var(--primary);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none}
+.gate-card button:hover,.gate-link:hover{background:var(--accent)}
+.gate-card .gate-sec{background:none;color:var(--text);border:1px solid #ccc}
+.gate-err{font-size:13px;color:var(--accent);min-height:1em}
+.gate-wait{font-size:13px;color:#5c5c5c}
+.foot-out{background:none;border:none;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;text-decoration:underline;cursor:pointer}
 .footer{background:var(--gray-dk);text-align:center;padding:16px;font-size:12px;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:2px}
 </style>
 </head>
@@ -44,7 +58,25 @@ body{font-family:var(--ff);background:var(--dark);color:var(--white);min-height:
   <p>Bauvek Construcciones</p>
 </div>
 
-<div class="grid-wrap">
+<div class="gate" id="gate">
+  <form class="gate-card" id="login" hidden>
+    <h2>Ingresá a BkTableros</h2>
+    <p>Uso interno de Bauvek. Entrá con tu usuario de Cómputo de Obras.</p>
+    <label for="em">Email</label><input id="em" type="email" autocomplete="username" required/>
+    <label for="pw">Contraseña</label><input id="pw" type="password" autocomplete="current-password" required/>
+    <div class="gate-err" id="err" role="alert"></div>
+    <button type="submit" id="btn">Ingresar</button>
+  </form>
+  <div class="gate-card" id="noacc" hidden>
+    <h2>Sin acceso</h2>
+    <p>BkTableros es de uso interno de Bauvek y tu usuario no pertenece a la empresa. Cómputo de Obras lo podés seguir usando con tu usuario.</p>
+    <a class="gate-link" href="https://manuelsagarraga-cloud.github.io/Computo-Obras/">Ir a Cómputo de Obras</a>
+    <button type="button" class="gate-sec" id="salir2">Salir</button>
+  </div>
+  <div class="gate-wait" id="wait">Verificando sesión…</div>
+</div>
+
+<div class="grid-wrap" id="contenido" hidden>
   <div class="grid">
     <a href="buildplan.html" class="card">
       <div class="card-bar red"></div>
@@ -72,16 +104,56 @@ body{font-family:var(--ff);background:var(--dark);color:var(--white);min-height:
 
 <div class="footer" id="foot">Bauvek Construcciones</div>
 <script>
-/* Fecha de la última publicación de cronogramas (la escribe el deploy en manifest.json) */
-fetch('data/manifest.json?t='+Date.now()).then(r=>r.ok?r.json():null).then(m=>{
-  if(!m)return;
-  const d=m.generated?new Date(m.generated):null;
-  const f=d?d.toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'}):null;
-  const n=(m.projects||[]).length;
-  const live=document.getElementById('bp-live');
-  if(live)live.textContent=n+' cronogramas'+(f?' · publicados el '+f:'');
-  if(f)document.getElementById('foot').textContent='Bauvek Construcciones · Cronogramas actualizados el '+f;
-}).catch(()=>{});
+/* Login del sitio: misma sesión que BuildPlan, Pagos y Cómputo (sb_access_token en este dominio).
+   Entran usuarios de Cómputo con empresa "bauvek" o rol admin. Las páginas internas vuelven a verificar
+   la sesión y los datos están en Supabase con permisos por usuario: saltear esta pantalla no da acceso a nada. */
+const SB_URL='https://beuzmwrhqlmjoplsillf.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldXptd3JocWxtam9wbHNpbGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc1NDcsImV4cCI6MjA5NTA2MzU0N30.Rw82cnyzp2S2Alc6lWiBCDxVL8u_8wAfCTConDGpYFE';
+const $=id=>document.getElementById(id);
+function claims(t){try{return JSON.parse(decodeURIComponent(escape(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))))}catch(e){return{}}}
+function guardar(d){localStorage.setItem('sb_access_token',d.access_token);localStorage.setItem('sb_refresh_token',d.refresh_token||'');if(d.user)localStorage.setItem('sb_user',JSON.stringify(d.user))}
+function salir(){['sb_access_token','sb_refresh_token','sb_user'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});mostrar(null)}
+async function token(){
+  let at='',rt='';try{at=localStorage.getItem('sb_access_token')||'';rt=localStorage.getItem('sb_refresh_token')||''}catch(e){return null}
+  if(at&&(claims(at).exp||0)*1000>Date.now()+60000)return at;
+  if(!rt)return null;
+  try{const r=await fetch(SB_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY},body:JSON.stringify({refresh_token:rt})});
+    if(!r.ok)return null;const d=await r.json();guardar(d);return d.access_token}catch(e){return null}
+}
+function mostrar(t){
+  $('wait').hidden=true;
+  const c=t?claims(t):null,am=(c&&c.app_metadata)||{};
+  const ok=!!t&&(am.empresa==='bauvek'||am.role==='admin');
+  $('login').hidden=!!t;$('noacc').hidden=!t||ok;$('gate').hidden=ok;$('contenido').hidden=!ok;
+  $('foot').textContent='Bauvek Construcciones';
+  if(ok){
+    $('foot').innerHTML='';
+    const u=document.createElement('span');u.textContent=(c.email||'')+' · ';
+    const b=document.createElement('button');b.className='foot-out';b.textContent='Salir';b.onclick=salir;
+    $('foot').append(u,b);
+    resumen(t);
+  }else if(!t){setTimeout(()=>$('em').focus(),0)}
+}
+/* Cuántos cronogramas hay y cuándo se actualizaron (índice privado) */
+async function resumen(t){
+  try{const r=await fetch(SB_URL+'/storage/v1/object/authenticated/cronogramas/bauvek/manifest.json',{headers:{apikey:SB_KEY,Authorization:'Bearer '+t},cache:'no-cache'});
+    if(!r.ok)return;const m=await r.json();
+    const d=m.generated?new Date(m.generated).toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'}):null;
+    $('bp-live').textContent=(m.projects||[]).length+' cronogramas'+(d?' · actualizados el '+d:'');
+  }catch(e){}
+}
+$('login').addEventListener('submit',async e=>{
+  e.preventDefault();$('err').textContent='';$('btn').disabled=true;$('btn').textContent='Ingresando…';
+  try{
+    const r=await fetch(SB_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY},body:JSON.stringify({email:$('em').value.trim(),password:$('pw').value})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok){const m=(d.error_description||d.msg||'').toLowerCase();$('err').textContent=m.includes('invalid')?'Email o contraseña incorrectos.':(d.error_description||d.msg||'No se pudo iniciar sesión.');return}
+    guardar(d);mostrar(d.access_token);
+  }catch(x){$('err').textContent='Sin conexión. Probá de nuevo.'}
+  finally{$('btn').disabled=false;$('btn').textContent='Ingresar'}
+});
+$('salir2').onclick=salir;
+token().then(mostrar);
 </script>
 </body>
 </html>
