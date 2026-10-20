@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>BuildPlan Viewer — Bauvek</title>
+<title>BuildPlan — BkTableros</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -616,6 +616,14 @@ button.logo{border:none;background:none;color:var(--c0);font-family:var(--ff);fo
 .datos-err{font-size:12px;color:var(--err)}
 .la-link{margin-left:6px;font-size:11px;padding:1px 4px}
 @media(max-width:768px){.hdr-datos{display:none}}
+
+.brand-logo{height:28px;max-width:140px;object-fit:contain}
+.emp-chip{font-size:12px;font-weight:700;color:var(--c1);padding:3px 8px;border:1px solid var(--b0);border-radius:var(--r-s);white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis}
+.emp-sel{max-width:180px;font-weight:700}
+@media(max-width:768px){.emp-chip,.emp-sel{max-width:110px}}
+
+.empty-emp{border:1.5px dashed var(--b0);border-radius:var(--r-s);padding:24px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;max-width:640px;background:var(--bg-el)}
+.empty-emp b{font-size:16px}.empty-emp p{font-size:13px;color:var(--c1);margin:0}
 </style>
 </head>
 <body>
@@ -695,8 +703,9 @@ function normalizeForMatch(s){
 async function loadProjectMeta(){
   try{
     let buf=null;
-    const b=await sbDownload('Proyectos_Bauvek.xlsx');
+    const b=await sbDownload('proyectos.xlsx');
     if(b)buf=await b.arrayBuffer();
+    else if(_empresa!==REPO_EMPRESA)return[];
     else{const r=await fetch('data/Proyectos_Bauvek.xlsx?t='+Date.now());if(!r.ok)return[];buf=await r.arrayBuffer()}
     const wb=XLSX.read(new Uint8Array(buf),{type:'array'});
     const ws=wb.Sheets[wb.SheetNames[0]];
@@ -2532,7 +2541,7 @@ function WeekView({data}){
 /* ═══════ Onboarding Tour ═══════ */
 const TOUR_KEY='bp360_tour_done_v3'; /* v3: Abastecimiento, Próximas 3 semanas y Salud de datos */
 const TOUR_STEPS=[
-  {title:'Bienvenido a BuildPlan',body:'Acá están todas las obras de Bauvek. Arriba tenés el resumen del día: obras críticas, en atención, vencidas e hitos de las próximas dos semanas. Las tarjetas están ordenadas de la más grave a la más tranquila.'},
+  {title:'Bienvenido a BuildPlan',body:'Acá están todas las obras de tu empresa. Arriba tenés el resumen del día: obras críticas, en atención, vencidas e hitos de las próximas dos semanas. Las tarjetas están ordenadas de la más grave a la más tranquila.'},
   {title:'Cómo se lee el semáforo',body:'Combina dos cosas: si el fin de obra cae después de la fecha contratada (descontando standby) y qué parte de las tareas está vencida. Gana la peor. "Revisar datos" aparece cuando el desvío es tan grande que seguramente hay una fecha mal cargada.'},
   {title:'Vencidas y sin actualizar',body:'"Sin actualizar" son tareas vencidas que probablemente no están atrasadas: el avance no se cargó en MS Project. Mantener al día la fecha de estado y el % completado limpia esos números.'},
   {title:'Dentro de una obra',body:'Cada obra abre en Resumen. "Semana" muestra qué contratista trabaja cada día, pensado para el celular. El Gantt arranca en la fecha de hoy.'},
@@ -3023,23 +3032,30 @@ function MaterialsView({data,computoData,visTasks,onLogin,lead=15}){
 }
 
 /* ═══════ DATOS PRIVADOS (Supabase de Cómputo) ═══════
-   - Bucket "cronogramas": xml/<archivo> (original), lite/<archivo> (sin TimephasedData), manifest.json, Proyectos_Bauvek.xlsx
-   - Tabla tendencia_obras: una foto por obra y semana, compartida por todos
-   - Tabla enlaces_publicos + función ver_enlace(): links de cliente y de contratista con token
-   Acceso: usuarios de Cómputo con empresa "bauvek" o rol admin. Ver supabase/2026-10-20_bktableros_datos_privados.sql */
+   Multiempresa, igual que Cómputo: cada usuario trabaja con su empresa (app_metadata.empresa del login) y el admin elige.
+   - Bucket "cronogramas", carpeta <empresa>/: xml/<archivo> (original), lite/<archivo> (sin TimephasedData), manifest.json, proyectos.xlsx
+   - Tabla tendencia_obras: una foto por empresa, obra y semana
+   - Tabla enlaces_publicos + función ver_enlace(): links de cliente y de contratista con token, con la marca de la empresa
+   Ver supabase/2026-10-20_bktableros_datos_privados.sql */
 const CRONO_BUCKET='cronogramas';
+const REPO_EMPRESA='bauvek'; /* los XML que todavía están en el repo público son de Bauvek */
+let _empresa=null;
+function jwtClaims(t){try{const p=JSON.parse(decodeURIComponent(escape(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))));const am=p.app_metadata||{};return{empresa:am.empresa||null,admin:am.role==='admin',email:p.email||''}}catch(e){return{empresa:null,admin:false,email:''}}}
 async function sbDownload(path){
-  try{const sb=await getComputoSb();if(!sb)return null;const{data,error}=await sb.storage.from(CRONO_BUCKET).download(path);return error?null:data}catch(e){return null}
+  if(!_empresa)return null;
+  try{const sb=await getComputoSb();if(!sb)return null;const{data,error}=await sb.storage.from(CRONO_BUCKET).download(_empresa+'/'+path);return error?null:data}catch(e){return null}
 }
 async function sbUpload(path,body,type){
   const sb=await getComputoSb();if(!sb)throw new Error('Iniciá sesión para subir archivos');
-  const{error}=await sb.storage.from(CRONO_BUCKET).upload(path,body,{upsert:true,contentType:type,cacheControl:'60'});
+  if(!_empresa)throw new Error('No hay una empresa elegida');
+  const{error}=await sb.storage.from(CRONO_BUCKET).upload(_empresa+'/'+path,body,{upsert:true,contentType:type,cacheControl:'60'});
   if(error)throw new Error(error.message||String(error));
 }
-/* Índice de cronogramas: privado si existe; si no, el del repo (transitorio) */
+/* Índice de cronogramas de la empresa: privado si existe; para Bauvek, mientras dure la migración, el del repo */
 async function loadManifest(){
   const b=await sbDownload('manifest.json');
   if(b){try{return{m:JSON.parse(await b.text()),origen:'privado'}}catch(e){}}
+  if(_empresa!==REPO_EMPRESA)return{m:{projects:[]},origen:'privado'};
   const r=await fetch('data/manifest.json?t='+Date.now());
   if(!r.ok)throw new Error('No se pudo leer el índice de cronogramas ('+r.status+')');
   return{m:await r.json(),origen:'repo'};
@@ -3084,6 +3100,7 @@ async function subirCronogramas(files,onStep){
 }
 /* Copia de una sola vez lo que hoy está en el repo público al almacenamiento privado */
 async function migrarDesdeRepo(onStep){
+  if(_empresa!==REPO_EMPRESA)throw new Error('Los cronogramas del repo son de Bauvek');
   const r=await fetch('data/manifest.json?t='+Date.now());if(!r.ok)throw new Error('No hay cronogramas en el repo');
   const m=await r.json();const files=[];
   for(const p of m.projects||[]){
@@ -3093,7 +3110,7 @@ async function migrarDesdeRepo(onStep){
   }
   const nm=await subirCronogramas(files,onStep);
   const xl=await fetch('data/Proyectos_Bauvek.xlsx?t='+Date.now());
-  if(xl.ok){onStep&&onStep('Copiando el Excel de proyectos…');await sbUpload('Proyectos_Bauvek.xlsx',await xl.blob(),'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')}
+  if(xl.ok){onStep&&onStep('Copiando el Excel de proyectos…');await sbUpload('proyectos.xlsx',await xl.blob(),'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')}
   return nm;
 }
 
@@ -3106,7 +3123,7 @@ async function verEnlace(token){
 async function guardarEnlaces(rows){
   const sb=await getComputoSb();if(!sb)throw new Error('Iniciá sesión para compartir');
   const now=new Date().toISOString();
-  const{data,error}=await sb.from('enlaces_publicos').upsert(rows.map(r=>({...r,actualizado:now})),{onConflict:'tipo,clave'}).select('token,tipo,clave');
+  const{data,error}=await sb.from('enlaces_publicos').upsert(rows.map(r=>({...r,empresa:_empresa,actualizado:now})),{onConflict:'empresa,tipo,clave'}).select('token,tipo,clave');
   if(error)throw new Error(error.message);
   return data||[];
 }
@@ -3147,35 +3164,42 @@ function snapContratista(nombre,projList,projData,metaList){
 async function cargarTendencia(){
   const sb=await getComputoSb();if(!sb)return null;
   const desde=new Date();desde.setDate(desde.getDate()-7*12);
-  const{data,error}=await sb.from('tendencia_obras').select('semana,archivo,avance,vencidas').gte('semana',isoD(desde));
+  const{data,error}=await sb.from('tendencia_obras').select('semana,archivo,avance,vencidas').eq('empresa',_empresa).gte('semana',isoD(desde));
   if(error)return null;
   const t={};for(const r of data||[]){(t[r.semana]=t[r.semana]||{})['srv_'+r.archivo]={avg:r.avance,ov:r.vencidas}}
   return t;
 }
 async function guardarTendencia(rows){
   const sb=await getComputoSb();if(!sb||!rows.length)return false;
-  const{error}=await sb.from('tendencia_obras').upsert(rows,{onConflict:'semana,archivo'});
+  const{error}=await sb.from('tendencia_obras').upsert(rows.map(r=>({...r,empresa:_empresa})),{onConflict:'empresa,semana,archivo'});
   return!error;
 }
 
 /* ═══════ Pantallas públicas por token (no piden login) ═══════ */
+/* Marca de la empresa en lo que ve gente de afuera: logo de Cómputo (empresas.logo_url), o iniciales con su color */
+function iniciales(n){const w=(n||'').replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ0-9& ]/g,'').split(/\s+/).filter(Boolean);if(!w.length)return'·';if(w.length===1)return w[0].slice(0,3).toUpperCase();return w.slice(0,2).map(x=>x[0]).join('').toUpperCase()}
+function Brand({emp}){
+  const e=emp||{};const col=e.color||'#141414';
+  return <div className="client-brand">{e.logo?<img className="brand-logo" src={e.logo} alt=""/>:<span className="bv" style={{background:col}}>{iniciales(e.nombre)}</span>}<span>{e.nombre||''}</span></div>;
+}
 function fLargaIso(s){if(!s)return'—';const d=new Date(s+'T12:00:00');return d.toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'})}
 function fCortaIso(s){if(!s)return'—';const d=new Date(s+'T12:00:00');return fD(d)}
-function PublicShell({children,actualizado}){
+function PublicShell({children,actualizado,emp}){
   return <div className="client-view">{children}
-    <div className="client-footer">{actualizado?'Actualizado el '+new Date(actualizado).toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'})+' · ':''}Bauvek Construcciones</div>
+    <div className="client-footer">{actualizado?'Actualizado el '+new Date(actualizado).toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'}):''}{actualizado&&emp?.nombre?' · ':''}{emp?.nombre||''}</div>
   </div>;
 }
-function ClientSnapView({s,actualizado}){
-  return <PublicShell actualizado={actualizado}>
+function ClientSnapView({s,actualizado,emp}){
+  const col=emp?.color||'#9E0101';
+  return <PublicShell actualizado={actualizado} emp={emp}>
     <div className="client-hdr">
-      <div className="client-brand"><span className="bv">BV</span><span>Bauvek Construcciones</span></div>
+      <Brand emp={emp}/>
       <h1>{s.nombre}</h1>
       {s.lugar&&<p>{s.lugar}</p>}
     </div>
     <div className="client-progress">
       <div className="client-big"><b>{s.avance}%</b><span>de la obra realizada</span></div>
-      <div className="client-bar"><div className="client-fill" style={{width:`${s.avance}%`,background:'#9E0101'}}/></div>
+      <div className="client-bar"><div className="client-fill" style={{width:`${s.avance}%`,background:col}}/></div>
       <div className="client-facts">
         <div><span>Entrega estimada</span><b>{fLargaIso(s.entrega)}</b></div>
         {s.proximo&&<div><span>Próximo hito</span><b>{s.proximo.nombre}</b><em>{fLargaIso(s.proximo.fecha)}</em></div>}
@@ -3196,7 +3220,7 @@ function ClientSnapView({s,actualizado}){
     </div>}
   </PublicShell>;
 }
-function ContratistaSnapView({s,actualizado}){
+function ContratistaSnapView({s,actualizado,emp}){
   const weeks=useMemo(()=>{const g={};for(const it of s.items||[]){const k=isoD(mondayOf(new Date(it.desde+'T12:00:00')));(g[k]=g[k]||[]).push(it)}
     /* una tarea larga aparece en cada semana en que está activa */
     const m0=mondayOf(new Date());m0.setDate(m0.getDate()-7);const out=[];
@@ -3204,11 +3228,11 @@ function ContratistaSnapView({s,actualizado}){
       const its=(s.items||[]).filter(it=>new Date(it.desde+'T00:00:00')<=b&&new Date(it.hasta+'T23:59:59')>=a);
       if(its.length)out.push({a,b,its,cur:i===1})}
     return out},[s]);
-  return <PublicShell actualizado={actualizado}>
+  return <PublicShell actualizado={actualizado} emp={emp}>
     <div className="client-hdr">
-      <div className="client-brand"><span className="bv">BV</span><span>Bauvek Construcciones</span></div>
+      <Brand emp={emp}/>
       <h1>{s.nombre}</h1>
-      <p>Tus tareas programadas en obras de Bauvek</p>
+      <p>Tus tareas programadas{emp?.nombre?' en obras de '+emp.nombre:''}</p>
     </div>
     <div className="client-milestones">
       {weeks.length===0&&<p style={{color:'var(--c1)'}}>No tenés tareas programadas en las próximas semanas.</p>}
@@ -3228,8 +3252,8 @@ function TokenView({token}){
   useEffect(()=>{verEnlace(token).then(r=>setSt({r})).catch(()=>setSt({r:null}))},[token]);
   if(st.loading)return <div className="ld"><div className="sp"/><span>Cargando…</span></div>;
   const r=st.r;
-  if(!r||!r.datos)return <PublicShell><div className="client-hdr"><div className="client-brand"><span className="bv">BV</span><span>Bauvek Construcciones</span></div><h1>Este link no está disponible</h1><p>Pedile a Bauvek un link actualizado.</p></div></PublicShell>;
-  return r.tipo==='contratista'?<ContratistaSnapView s={r.datos} actualizado={r.actualizado}/>:<ClientSnapView s={r.datos} actualizado={r.actualizado}/>;
+  if(!r||!r.datos)return <PublicShell><div className="client-hdr"><h1>Este link no está disponible</h1><p>Pedile a la constructora un link actualizado.</p></div></PublicShell>;
+  return r.tipo==='contratista'?<ContratistaSnapView s={r.datos} actualizado={r.actualizado} emp={r.empresa}/>:<ClientSnapView s={r.datos} actualizado={r.actualizado} emp={r.empresa}/>;
 }
 
 /* ═══════ Login y panel de datos ═══════ */
@@ -3243,23 +3267,23 @@ function LoginScreen({onOk}){
     </div>
   </div>;
 }
-function DatosPanel({origen,manifest,onClose,onDone}){
+function DatosPanel({origen,manifest,onClose,onDone,empNombre}){
   const[msg,setMsg]=useState('');const[busy,setBusy]=useState(false);const[err,setErr]=useState('');
   const run=async fn=>{setBusy(true);setErr('');try{await fn();setMsg('Listo. Recargando…');setTimeout(onDone,600)}catch(e){setErr(e.message||String(e))}finally{setBusy(false)}};
   const gen=manifest?.generated?new Date(manifest.generated):null;
   return <div className="so" onClick={onClose}><div className="sm datos" onClick={e=>e.stopPropagation()} role="dialog" aria-label="Datos de BuildPlan">
-    <div className="datos-h"><b>Datos de BuildPlan</b><button className="fclr" onClick={onClose}>Cerrar</button></div>
+    <div className="datos-h"><b>Datos de {empNombre||'la empresa'}</b><button className="fclr" onClick={onClose}>Cerrar</button></div>
     <div className="datos-b">
-      <div className={'datos-org '+origen}>{origen==='privado'?'🔒 Los cronogramas se leen del almacenamiento privado.':'⚠ Los cronogramas todavía se leen del repo público. Copialos al almacenamiento privado y después se pueden borrar del repo.'}</div>
+      <div className={'datos-org '+origen}>{origen==='privado'?(manifest?.projects?.length?'🔒 Los cronogramas se leen del almacenamiento privado de la empresa.':'Todavía no hay cronogramas cargados para esta empresa. Subí los XML de MS Project.'):'⚠ Los cronogramas todavía se leen del repo público. Copialos al almacenamiento privado y después se pueden borrar del repo.'}</div>
       <div className="datos-row"><span>Cronogramas</span><b className="mono">{manifest?.projects?.length||0}</b>{gen&&<span className="mono" style={{color:'var(--c2)'}}>índice del {fD(gen)}</span>}</div>
       <label className="btn datos-btn">{busy?'Trabajando…':'↑ Subir cronogramas (.xml de MS Project)'}
         <input type="file" accept=".xml" multiple hidden disabled={busy} onChange={e=>{const fs=[...e.target.files];e.target.value='';if(fs.length)run(()=>subirCronogramas(fs,setMsg))}}/></label>
       <p className="datos-note">Reemplaza al cronograma con el mismo nombre de archivo. En MS Project: Archivo → Guardar como → XML.</p>
-      <label className="btn datos-btn">↑ Subir Excel de proyectos (Proyectos_Bauvek.xlsx)
-        <input type="file" accept=".xlsx" hidden disabled={busy} onChange={e=>{const f=e.target.files[0];e.target.value='';if(f)run(()=>sbUpload('Proyectos_Bauvek.xlsx',f,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))}}/></label>
-      {origen!=='privado'&&<button className="btn datos-btn" disabled={busy} onClick={()=>run(()=>migrarDesdeRepo(setMsg))}>⇄ Copiar todo desde el repo al almacenamiento privado</button>}
+      <label className="btn datos-btn">↑ Subir Excel de proyectos (estado, comitente, ubicación, código)
+        <input type="file" accept=".xlsx" hidden disabled={busy} onChange={e=>{const f=e.target.files[0];e.target.value='';if(f)run(()=>sbUpload('proyectos.xlsx',f,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))}}/></label>
+      {origen!=='privado'&&_empresa===REPO_EMPRESA&&<button className="btn datos-btn" disabled={busy} onClick={()=>run(()=>migrarDesdeRepo(setMsg))}>⇄ Copiar todo desde el repo al almacenamiento privado</button>}
       {msg&&<div className="datos-msg">{msg}</div>}
-      {err&&<div className="datos-err">{err}. Si dice "row-level security" o "not found", falta aplicar la configuración de Supabase o tu usuario no es de Bauvek.</div>}
+      {err&&<div className="datos-err">{err}. Si dice "row-level security" o "not found", falta aplicar la configuración de Supabase o tu usuario no tiene acceso a esta empresa.</div>}
     </div>
   </div></div>;
 }
@@ -3268,7 +3292,7 @@ function DatosPanel({origen,manifest,onClose,onDone}){
 /* Pestañas de una obra: abre en Resumen; el Gantt queda como detalle */
 const PROJ_TABS=[['dash','Resumen'],['semana','Semana'],['gantt','Gantt'],['abast','Abastecimiento'],['demoras','Curva S y demoras']];
 const PROJ_SUBS=PROJ_TABS.map(x=>x[0]);
-function App({onLogout}){
+function App({onLogout,empInfo,empresas,onEmpresa}){
   const[th,togTh]=useTheme();
   const[pList,setPList]=useState(null);
   const[pData,setPData]=useState({});
@@ -3438,7 +3462,7 @@ function App({onLogout}){
     guardarTendencia(rows).then(ok=>{if(ok)cargarTendencia().then(t=>{if(t){sharedTrend.current=true;setTrendData(t)}})});
     (async()=>{try{
       const sb=await getComputoSb();if(!sb)return;
-      const{data,error}=await sb.from('enlaces_publicos').select('tipo,clave').eq('activo',true);
+      const{data,error}=await sb.from('enlaces_publicos').select('tipo,clave').eq('empresa',_empresa).eq('activo',true);
       if(error||!data||!data.length)return;
       const upd=[];
       for(const e of data){
@@ -3565,6 +3589,8 @@ function App({onLogout}){
       if(m&&mKey&&used.has(mKey))continue;
       if(m&&mKey)used.add(mKey);
       const e=(m?.estado||'').trim();
+      /* Sin Excel de proyectos (empresa nueva) todas las obras se tratan como activas */
+      if(!metaList.length){result.activo.push(p);continue}
       if(e==='Activo')result.activo.push(p);
       else if(e==='En pausa')result.pausa.push(p);
       else if(e==='Finalizado')result.finalizado.push(p);
@@ -3609,6 +3635,8 @@ function App({onLogout}){
         return <button key={k} className={`tab ${active===k?'on':''}`} onClick={()=>goObra(k)} title={p.name}><span className="dot" style={{background:h?SEMA_COL[h.color]:'var(--c2)'}}/>{p.cod&&<b className="cod">{p.cod}</b>}<span className="tab-n">{p.name}</span><span className="x" role="button" aria-label={'Cerrar '+p.name} onClick={e=>closeTab(k,e)}>×</span></button>})}
     </div>
     <div className="acts">
+      {empresas&&empresas.length>1?<select className="fsel emp-sel" value={empInfo?.id||''} onChange={e=>onEmpresa(e.target.value)} title="Empresa (administrador)" aria-label="Empresa">{empresas.map(x=><option key={x.id} value={x.id}>{x.nombre}</option>)}</select>
+        :empInfo&&<span className="emp-chip" title="Empresa de tu usuario">{empInfo.nombre}</span>}
       {homeSum.ovReal>0&&<button className="btn btn-g hdr-ov" onClick={()=>{setActive('__pf');setSub('portfolio-resp')}} title={`${homeSum.ovReal} vencidas con avance cargado y ${homeSum.ovStale} sin actualizar en obras activas`}>{homeSum.ovReal} vencidas →</button>}
       <button className="btn btn-g btn-i" onClick={()=>setShowSrch(true)} title="Buscar tareas (Ctrl+K)" aria-label="Buscar tareas">{I.srch()}</button>
       <button className="btn btn-g btn-i" onClick={togTh} title="Cambiar tema" aria-label="Cambiar tema">{th==='light'?I.moon():I.sun()}</button>
@@ -3617,7 +3645,7 @@ function App({onLogout}){
     </div>
   </div>;
 
-  const datosEl=showDatos&&<DatosPanel origen={origen} manifest={manifest} onClose={()=>setShowDatos(false)} onDone={()=>window.location.reload()}/>;
+  const datosEl=showDatos&&<DatosPanel empNombre={empInfo?.nombre} origen={origen} manifest={manifest} onClose={()=>setShowDatos(false)} onDone={()=>window.location.reload()}/>;
   const toastEl=toast&&<div className="toast" role="status"><div>{toast.t}</div>{toast.u&&<input readOnly value={toast.u} onFocus={e=>e.target.select()}/>}<button className="fclr" onClick={()=>setToast(null)}>Cerrar</button></div>;
 
   if(!pList)return <div className="ld"><div className="sp"/><span>Cargando...</span></div>;
@@ -3703,6 +3731,11 @@ function App({onLogout}){
             <div className="home-title">Obras activas</div>
             <div className="home-sub">{filteredActive.length} obras · ordenadas por gravedad{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{S.analizadas<S.n&&<span style={{marginLeft:8}}>· analizando {S.n-S.analizadas}…</span>}</div>
           </div>
+          {(pList||[]).length===0&&<div className="empty-emp">
+            <b>Todavía no hay cronogramas de {empInfo?.nombre||'esta empresa'}</b>
+            <p>Exportá cada obra desde MS Project (Archivo → Guardar como → XML) y subila desde Datos. Para ver estado, comitente y ubicación de cada obra, subí también el Excel de proyectos.</p>
+            <button className="btn" onClick={()=>setShowDatos(true)}>Abrir Datos</button>
+          </div>}
           <div className="pgrid2">
             {filteredActive.map(renderCard)}
           </div>
@@ -3778,7 +3811,7 @@ function App({onLogout}){
 
   /* ═══ PROJECT VIEW ═══ */
   return <Fragment>
-    <div className="ph"><div className="ph-bv">BV</div><div><h1>{pLabel(aProj)}</h1><p>Bauvek Construcciones · Generado el {new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})}</p></div></div>
+    <div className="ph"><div className="ph-bv">BV</div><div><h1>{pLabel(aProj)}</h1><p>{empInfo?.nombre?empInfo.nombre+' · ':''}Generado el {new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})}</p></div></div>
     {hdr('obra')}
 
     <div className="stbar">
@@ -3869,7 +3902,7 @@ function App({onLogout}){
     <Tooltip info={ttInfo} computoData={computoData[active]||null}/>
     {showSrch&&<SearchModal onClose={()=>setShowSrch(false)}/>}
     {toastEl}{datosEl}
-    <div className="pf">BuildPlan · Bauvek Construcciones · {new Date().toLocaleDateString('es-AR')}</div>
+    <div className="pf">BuildPlan{empInfo?.nombre?' · '+empInfo.nombre:''} · {new Date().toLocaleDateString('es-AR')}</div>
     <div className="mob-nav">
       <button onClick={()=>setActive(null)}>{I.home(18)}<span>Inicio</span></button>
       <button className={sub==='dash'?'on':''} onClick={()=>setSub('dash')}>{I.chart(18)}<span>Resumen</span></button>
@@ -3883,14 +3916,32 @@ function App({onLogout}){
 function Root(){
   const q=new URLSearchParams(window.location.search);
   const tok=q.get('v');const viejo=q.get('proyecto')||q.get('project');
-  const[auth,setAuth]=useState(null);
-  useEffect(()=>{if(tok||viejo)return;computoToken().then(t=>setAuth(!!t)).catch(()=>setAuth(false))},[]);
+  const[auth,setAuth]=useState(null);       /* null cargando · false sin sesión · {empresa,admin} */
+  const[empresas,setEmpresas]=useState([]);
+  const[emp,setEmp]=useState(null);
+  useEffect(()=>{if(tok||viejo)return;computoToken().then(t=>setAuth(t?jwtClaims(t):false)).catch(()=>setAuth(false))},[]);
+  useEffect(()=>{
+    if(!auth)return;
+    (async()=>{
+      let list=[];
+      try{const sb=await getComputoSb();const{data}=await sb.from('empresas').select('id,nombre,logo_url,color_primario').order('nombre');list=(data||[]).map(x=>({id:x.id,nombre:x.nombre||x.id,logo:x.logo_url,color:x.color_primario}))}catch(e){}
+      const own=auth.empresa;
+      let pick=own;
+      if(auth.admin){try{const sv=localStorage.getItem('bk_empresa_admin');if(sv&&list.some(x=>x.id===sv))pick=sv}catch(e){}}
+      if(!pick&&auth.admin&&list.length)pick=list[0].id;
+      setEmpresas(auth.admin?list:list.filter(x=>x.id===own));
+      setEmp(pick?{...(list.find(x=>x.id===pick)||{id:pick,nombre:pick})}:false);
+    })();
+  },[auth]);
   if(tok)return <TokenView token={tok}/>;
-  if(viejo)return <PublicShell><div className="client-hdr"><div className="client-brand"><span className="bv">BV</span><span>Bauvek Construcciones</span></div><h1>Este link ya no se usa</h1><p>Pedile a Bauvek el link nuevo de tu obra.</p></div></PublicShell>;
-  if(auth===null)return <div className="ld"><div className="sp"/><span>Cargando…</span></div>;
-  if(!auth)return <LoginScreen onOk={()=>setAuth(true)}/>;
-  const logout=()=>{try{['sb_access_token','sb_refresh_token','sb_user'].forEach(k=>localStorage.removeItem(k))}catch(e){}setAuth(false)};
-  return <App onLogout={logout}/>;
+  if(viejo)return <PublicShell><div className="client-hdr"><h1>Este link ya no se usa</h1><p>Pedile a la constructora el link nuevo de tu obra.</p></div></PublicShell>;
+  if(auth===null||(auth&&emp===null))return <div className="ld"><div className="sp"/><span>Cargando…</span></div>;
+  if(!auth)return <LoginScreen onOk={()=>computoToken().then(t=>setAuth(t?jwtClaims(t):false))}/>;
+  const logout=()=>{try{['sb_access_token','sb_refresh_token','sb_user'].forEach(k=>localStorage.removeItem(k))}catch(e){}setEmp(null);setAuth(false)};
+  if(!emp)return <div className="login-wrap"><div className="login-card"><h1 className="login-h">Sin empresa asignada</h1><p className="login-p">Tu usuario no tiene una empresa en Cómputo de Obras. Pedile al administrador que te la asigne.</p><button className="btn" onClick={logout}>Salir</button></div></div>;
+  _empresa=emp.id;
+  const cambiar=id=>{try{localStorage.setItem('bk_empresa_admin',id)}catch(e){}_empresa=id;setEmp({...(empresas.find(x=>x.id===id)||{id,nombre:id})})};
+  return <App key={emp.id} onLogout={logout} empInfo={emp} empresas={auth.admin?empresas:null} onEmpresa={cambiar}/>;
 }
 ReactDOM.createRoot(document.getElementById('root')).render(<Root/>);
 </script>
