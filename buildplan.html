@@ -82,7 +82,7 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:14px
 .dropz input{display:none}
 
 .stbar{display:flex;align-items:center;gap:12px;padding:0 16px;height:36px;background:var(--bg-el);border-bottom:1px solid var(--b1);flex-shrink:0}
-.st{font-size:12px;font-weight:500;color:var(--c2);border:none;background:none;padding:8px 0;cursor:pointer;position:relative;font-family:var(--ff)}.st:hover{color:var(--c0)}.st.on{color:var(--ac)}.st.on::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--ac);border-radius:1px 1px 0 0}
+.st{font-size:12px;font-weight:500;color:var(--c2);border:none;background:none;padding:8px 0;cursor:pointer;position:relative;font-family:var(--ff);white-space:nowrap;flex-shrink:0}.st:hover{color:var(--c0)}.st.on{color:var(--ac)}.st.on::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--ac);border-radius:1px 1px 0 0}
 .str{margin-left:auto;display:flex;align-items:center;gap:4px}
 
 .fbar{display:flex;align-items:center;gap:6px;padding:6px 16px;background:var(--bg-1);border-bottom:1px solid var(--b1);flex-shrink:0;flex-wrap:wrap}
@@ -547,6 +547,51 @@ button.logo{border:none;background:none;color:var(--c0);font-family:var(--ff);fo
   .mob-nav button{font-size:11px;min-height:52px}
   .kpi-l,.pcard2-meta,.pc-row,.pcard2-stats{font-size:13px}
 }
+
+/* Salud de datos */
+.dh-sum{display:flex;gap:20px;font-size:13px;color:var(--c1);margin-bottom:12px}
+.dh-sum b{font-family:var(--fm);font-size:18px;color:var(--c0)}
+.dh-list{display:flex;flex-direction:column;border:1px solid var(--b1);border-radius:var(--r-s);background:var(--bg-el)}
+.dh-row{padding:12px 14px;border-bottom:1px solid var(--b1)}.dh-row:last-child{border-bottom:none}
+.dh-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dh-name{border:none;background:none;font-family:var(--ff);font-size:14px;font-weight:700;color:var(--c0);cursor:pointer;padding:0}
+.dh-name:hover{color:var(--ac)}
+.dh-rules{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--c2);margin-left:auto}
+.dh-rules b{color:var(--c1);font-weight:500}
+.dh-ok{font-size:12px;color:var(--ok);margin-top:6px}
+.dh-issues{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.dh-issues li{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:13px}
+.dh-sev{font-size:11px;font-weight:700;padding:1px 6px;border-radius:2px;white-space:nowrap;flex-shrink:0}
+.dh-sev.a{background:rgba(239,68,68,.1);color:var(--err)}.dh-sev.m{background:var(--q-bg);color:var(--q)}.dh-sev.b{background:var(--bg-2);color:var(--c1)}
+.dh-txt{flex:1;min-width:240px;color:var(--c1)}.dh-txt b{color:var(--c0)}
+.dh-tasks{flex-basis:100%;margin:2px 0 4px 0;padding:8px 10px;background:var(--bg-1);border-radius:var(--r-s);font-size:12px;display:flex;flex-direction:column;gap:2px;max-height:240px;overflow:auto}
+/* Próximas 3 semanas */
+.la-alert{font-size:13px;padding:8px 12px;border-left:3px solid var(--warn);background:rgba(245,158,11,.08);margin-bottom:12px}
+.la-mx{margin:0;border:none}
+.la-mx td{vertical-align:top}
+.la-mx td.la-clash{background:rgba(245,158,11,.12)}
+.la-chip{display:inline-flex;align-items:center;gap:3px;margin:0 4px 4px 0;padding:2px 6px 2px 2px;border:1px solid var(--b0);border-radius:2px;background:var(--bg-el);font-family:var(--fm);font-size:11px;color:var(--c1);cursor:pointer}
+.la-chip .cod{margin-right:2px}
+.la-chip:hover{border-color:var(--ac)}
+.la-r{display:inline-block;font-size:11px;font-weight:600;padding:1px 6px;border-radius:2px;margin:0 4px 3px 0;cursor:default}
+.la-r.pred{background:rgba(245,158,11,.12);color:var(--warn)}.la-r.con{background:var(--q-bg);color:var(--q)}.la-r.late{background:rgba(239,68,68,.1);color:var(--err)}.la-r.ok{background:rgba(16,185,129,.1);color:var(--ok);font-weight:500}
+
+/* Curva S */
+.sc-wrap{background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-s);padding:14px 16px;margin-bottom:20px}
+.sc-head{display:flex;align-items:baseline;gap:8px 18px;flex-wrap:wrap;margin-bottom:8px}
+.sc-facts{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:12px;color:var(--c1)}
+.sc-facts b{font-family:var(--fm);color:var(--c0)}
+.sc-facts .neg{color:var(--err);font-weight:700}.sc-facts .pos{color:var(--ok);font-weight:700}
+.sc-k{display:inline-block;width:14px;height:0;border-top:2px solid;margin-right:5px;vertical-align:3px}
+.sc-k.bl{border-top:2px dashed var(--bar-bl)}.sc-k.cr{border-color:var(--c1)}.sc-k.real{width:9px;height:9px;border:none;border-radius:50%;background:var(--ac);vertical-align:0}
+.sc-note{font-size:11px;color:var(--c2);margin-top:4px}
+
+/* Abastecimiento */
+.abast-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 24px;border-bottom:1px solid var(--b1);background:var(--bg-el)}
+.abast-note{font-size:11px;color:var(--c2);margin-left:auto}
+.ob{display:inline-block;font-family:var(--fm);font-size:11px;padding:1px 6px;border-radius:2px;white-space:nowrap}
+.ob.late{background:rgba(239,68,68,.1);color:var(--err);font-weight:700}.ob.soon{background:rgba(245,158,11,.12);color:var(--warn);font-weight:700}.ob.ok{color:var(--c1)}
+@media(max-width:768px){.abast-bar{padding:10px 12px}.abast-note{margin-left:0}}
 </style>
 </head>
 <body>
@@ -1286,6 +1331,57 @@ function ProjDash({data,health,proj}){
   </div>;
 }
 
+/* ═══════ Curva S ═══════
+   Avance acumulado ponderado por duración: cada tarea suma su peso de forma lineal entre su inicio y su fin.
+   Línea base = cómo se planificó; Cronograma = cómo está programado hoy; el punto es el avance real cargado. */
+function SCurve({data}){
+  /* El gráfico se dibuja al ancho real del contenedor para que el texto no se agrande ni se achique */
+  const boxRef=useRef(null);const[bw,setBw]=useState(760);
+  useEffect(()=>{const el=boxRef.current;if(!el)return;const set=()=>setBw(Math.max(320,Math.round(el.clientWidth)));set();
+    if(typeof ResizeObserver==='undefined')return;const ro=new ResizeObserver(set);ro.observe(el);return()=>ro.disconnect()},[]);
+  const ts=useMemo(()=>data.tasks.filter(t=>!t.isSummary&&!t.isMilestone&&!isCtrlTask(t)&&t.start&&t.finish),[data.tasks]);
+  const m=useMemo(()=>{
+    const bl=ts.filter(t=>t.baselines[0]?.start&&t.baselines[0]?.finish);
+    let a=null,b=null;
+    for(const t of ts){if(!a||t.start<a)a=t.start;if(!b||t.finish>b)b=t.finish;const x=t.baselines[0];if(x?.start&&x.start<a)a=x.start;if(x?.finish&&x.finish>b)b=x.finish}
+    if(!a||!b||b<=a)return null;
+    const w=t=>Math.max(t.durDays||0,1);
+    const cum=(list,get,x)=>{let s=0,W=0;for(const t of list){const[s0,f0]=get(t);const wt=w(t);W+=wt;if(x>=f0)s+=wt;else if(x>s0)s+=wt*(x-s0)/Math.max(f0-s0,1)}return W?s*100/W:0};
+    const N=80,pts=[];
+    for(let i=0;i<=N;i++){const x=new Date(a.getTime()+(b-a)*i/N);pts.push({x,bl:bl.length?cum(bl,t=>[t.baselines[0].start,t.baselines[0].finish],x):null,cr:cum(ts,t=>[t.start,t.finish],x)})}
+    const now=new Date();
+    return{a,b,pts,hasBL:bl.length>0,real:wAvg(ts),blNow:bl.length?cum(bl,t=>[t.baselines[0].start,t.baselines[0].finish],now):null,crNow:cum(ts,t=>[t.start,t.finish],now),now};
+  },[ts]);
+  if(!m)return null;
+  const W=bw,H=240,L=40,R=12,T=14,B=28;
+  const X=d=>L+(d-m.a)/(m.b-m.a)*(W-L-R),Y=v=>T+(100-v)/100*(H-T-B);
+  const path=k=>m.pts.filter(p=>p[k]!==null).map((p,i)=>(i?'L':'M')+X(p.x).toFixed(1)+','+Y(p[k]).toFixed(1)).join('');
+  const months=[];{const d=new Date(m.a.getFullYear(),m.a.getMonth()+1,1);const span=(m.b-m.a)/86400000;const fit=Math.max(1,Math.floor((W-L-R)/48));const step=[1,2,3,6,12].find(k=>span/30.4/k<=fit)||12;while(d<=m.b){months.push(new Date(d));d.setMonth(d.getMonth()+step)}}
+  const inRange=m.now>=m.a&&m.now<=m.b;
+  const gap=m.blNow!==null?Math.round(m.real-m.blNow):null;
+  return <div className="sc-wrap">
+    <div className="sc-head">
+      <div className="dst" style={{margin:0}}>Curva S</div>
+      <div className="sc-facts">
+        <span><i className="sc-k real"/>Real hoy <b>{m.real}%</b></span>
+        {m.blNow!==null&&<span><i className="sc-k bl"/>Según línea base <b>{Math.round(m.blNow)}%</b></span>}
+        <span><i className="sc-k cr"/>Según cronograma actual <b>{Math.round(m.crNow)}%</b></span>
+        {gap!==null&&<span className={gap<-5?'neg':gap>5?'pos':''}>{gap<0?`${-gap} puntos detrás de lo planificado`:gap>0?`${gap} puntos adelante de lo planificado`:'En línea con lo planificado'}</span>}
+      </div>
+    </div>
+    <div ref={boxRef}><svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} style={{display:'block',maxWidth:'100%'}} role="img" aria-label="Curva S de avance acumulado">
+      {[0,25,50,75,100].map(v=><g key={v}><line x1={L} x2={W-R} y1={Y(v)} y2={Y(v)} stroke="var(--b1)"/><text x={L-6} y={Y(v)+4} fontSize="11" textAnchor="end" fill="var(--c2)" fontFamily="var(--fm)">{v}%</text></g>)}
+      {months.map((d,i)=><g key={i}><line x1={X(d)} x2={X(d)} y1={Y(0)} y2={Y(0)+4} stroke="var(--b0)"/><text x={X(d)} y={H-8} fontSize="11" textAnchor="middle" fill="var(--c2)" fontFamily="var(--ff)">{d.toLocaleDateString('es-AR',{month:'short'})}{d.getMonth()===0?' '+String(d.getFullYear()).slice(-2):''}</text></g>)}
+      {m.hasBL&&<path d={path('bl')} fill="none" stroke="var(--bar-bl)" strokeWidth="2" strokeDasharray="5,4"/>}
+      <path d={path('cr')} fill="none" stroke="var(--c1)" strokeWidth="2"/>
+      {inRange&&<g><line x1={X(m.now)} x2={X(m.now)} y1={T} y2={Y(0)} stroke="var(--today)" strokeDasharray="3,3"/>
+        <circle cx={X(m.now)} cy={Y(m.real)} r="5" fill="var(--ac)" stroke="var(--bg-el)" strokeWidth="2"/>
+        <text x={X(m.now)+(X(m.now)>W-120?-8:8)} y={Y(m.real)-8} fontSize="12" fontWeight="700" fill="var(--ac)" fontFamily="var(--fm)" textAnchor={X(m.now)>W-120?'end':'start'}>{m.real}% real</text></g>}
+    </svg></div>
+    <div className="sc-note">El real es un único punto: MS Project no guarda la historia del avance. La tendencia semanal se va a ver cuando el avance se guarde todas las semanas.</div>
+  </div>;
+}
+
 /* ═══════ Demoras sub-tab ═══════ */
 function DemorasView({data}){
   if(!data)return null;
@@ -1322,9 +1418,10 @@ function DemorasView({data}){
   const early=withDev.filter(r=>r.devFin<-2).length;
   const avgDev=withDev.length?Math.round(withDev.reduce((s,r)=>s+r.devFin,0)/withDev.length):0;
 
-  if(!rows.length)return <div className="dash"><div style={{textAlign:'center',color:'var(--c2)',padding:40}}>Este proyecto no tiene datos de línea base en el XML. Para ver demoras, se necesita guardar al menos una línea base en MS Project antes de exportar.</div></div>;
+  if(!rows.length)return <div className="dash"><SCurve data={data}/><div style={{textAlign:'center',color:'var(--c2)',padding:40}}>Este proyecto no tiene datos de línea base en el XML. Para ver demoras, se necesita guardar al menos una línea base en MS Project antes de exportar.</div></div>;
 
   return <div className="dash">
+    <SCurve data={data}/>
     <div className="dgrid">
       <div className="kpi"><div className="kpi-v">{rows.length}</div><div className="kpi-l">Con baseline</div></div>
       <div className="kpi ok"><div className="kpi-v" style={{color:'var(--ok)'}}>{onTime}</div><div className="kpi-l">En fecha (±2d)</div></div>
@@ -1408,6 +1505,7 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
   const[sel,setSel]=useState(null);
   const[withSoon,setWithSoon]=useState(false);
   const[maxAge,setMaxAge]=useState(0);          /* 0 = sin límite; si no, solo vencidas hace ≤ N días */
+  const[withStale,setWithStale]=useState(false); /* por defecto no cuenta las vencidas "sin actualizar" */
   const detailRef=useRef(null);
 
   const projsInScope=useMemo(()=>(projList||[]).filter(p=>{
@@ -1447,7 +1545,7 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
     };
     for(const p of projsInScope)for(const t of projData[p.key].tasks){
       if(t.isSummary)continue;
-      const st=isOv(t)?((maxAge&&daysLate(t,now)>maxAge)?null:'ov'):(t.finish&&t.percentComplete<100&&t.finish>=now&&t.finish<=soonLim)?'soon':null;
+      const st=isOv(t)?(((maxAge&&daysLate(t,now)>maxAge)||(!withStale&&isStale(t,projData[p.key].statusDate)))?null:'ov'):(t.finish&&t.percentComplete<100&&t.finish>=now&&t.finish<=soonLim)?'soon':null;
       const seen=new Set();
       for(const r of t.resources){const k=normName(canon[normName(r)]||r);if(seen.has(k))continue;seen.add(k);add(r,'Recurso',t,p,st)}
       const c=entV(t,'Contratista');
@@ -1456,7 +1554,7 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
     }
     const list=Object.values(people).sort((a,b)=>b.ov-a.ov||b.soon-a.soon||a.display.localeCompare(b.display));
     return{list,people};
-  },[projsInScope,projData,maxAge]);
+  },[projsInScope,projData,maxAge,withStale]);
 
   const shown=useMemo(()=>{
     const lq=normName(q);
@@ -1489,7 +1587,7 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
   const pick=k=>{setSel(k);setTimeout(()=>detailRef.current?.scrollIntoView({behavior:'smooth',block:'start'}),50)};
 
   const today=new Date().toISOString().slice(0,10);
-  const filtroTxt=()=>`Alcance: ${scope==='activas'?'obras activas':'todas las obras'} · Tipo: ${tipo==='all'?'todos':tipo} · Vencidas hace: ${maxAge?'≤ '+maxAge+' días':'cualquier fecha'}${withSoon?' · incluye las que vencen en 7 días':''} · Generado ${new Date().toLocaleDateString('es-AR')}`;
+  const filtroTxt=()=>`Alcance: ${scope==='activas'?'obras activas':'todas las obras'} · Tipo: ${tipo==='all'?'todos':tipo} · Vencidas hace: ${maxAge?'≤ '+maxAge+' días':'cualquier fecha'}${withSoon?' · incluye las que vencen en 7 días':''}${withStale?' · incluye vencidas sin actualizar':' · sin las vencidas sin actualizar'} · Generado ${new Date().toLocaleDateString('es-AR')}`;
   /* Reporte de UNA persona: resumen por obra + detalle */
   const exportXls=()=>{
     if(!selP)return;
@@ -1536,6 +1634,7 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
         <button className={tipo==='Recurso'?'on':''} onClick={()=>setTipo('Recurso')}>Equipo (recursos)</button>
         <button className={tipo==='Contratista'?'on':''} onClick={()=>setTipo('Contratista')}>Contratistas</button>
       </div>
+      <label className="pg-chk" title="Vencidas que probablemente no están atrasadas: el avance no se cargó en MS Project"><input type="checkbox" checked={withStale} onChange={e=>setWithStale(e.target.checked)}/> + sin actualizar</label>
       <span className="fl">Vencidas hace</span>
       <select className="fsel" value={maxAge} onChange={e=>setMaxAge(parseInt(e.target.value))}><option value="0">Cualquier fecha</option><option value="30">≤ 30 días</option><option value="90">≤ 90 días</option><option value="180">≤ 180 días</option></select>
       <input className="fin" style={{width:180}} placeholder="Buscar persona…" value={q} onChange={e=>setQ(e.target.value)}/>
@@ -1959,6 +2058,150 @@ function PortfolioGantt({projList,projData,metaList,healthMap,onOpenObra}){
   </div>;
 }
 
+/* ═══════ Salud de datos: qué encontró cada regla en cada cronograma ═══════
+   Todo lo que el tablero deduce por nombre (contratada, obra, standby) o por campos (contratista, N° Item)
+   queda a la vista, con la corrección concreta que hay que hacer en MS Project. */
+function dataChecks(p,d,h){
+  const ts=d.tasks.filter(t=>!t.isSummary&&!t.isMilestone);
+  const n=ts.length||1;
+  const sinNombre=d.tasks.filter(t=>t.name==='(sin nombre)');
+  const sinCon=ts.filter(t=>!entV(t,'Contratista')&&t.percentComplete<100);
+  const sinItem=ts.filter(t=>t.alc==='adic'&&!entV(t,'N° Item'));
+  const issues=[];
+  const add=(sev,txt,fix,tasks)=>issues.push({sev,txt,fix,tasks:tasks||[]});
+  const sdAgo=daysAgo(d.statusDate);
+  /* La falta de fecha de estado se informa una sola vez arriba; acá solo la que está vieja */
+  if(sdAgo!==null&&sdAgo>14)add('m',`Fecha de estado de hace ${sdAgo} días`,'Actualizar el % completado y la fecha de estado.');
+  if(!h?.contratadaName)add('a','Sin tarea "contratada"','Agregar una tarea cuyo nombre incluya "Contratada" con el fin del contrato. Sin ella no hay semáforo de plazo.');
+  if(h?.color==='q')add('a','Desvío fuera de rango',h.motivo+'. Revisar que la tarea contratada y la tarea de obra sean las correctas.');
+  if(h?.ovStale>0)add('m',`${h.ovStale} ${h.ovStale>1?'vencidas':'vencida'} sin actualizar`,'Cargar el % real de estas tareas o replanificarlas.',d.tasks.filter(t=>isStale(t,d.statusDate)));
+  if(!d.hasBL)add('m','Sin línea base','Proyecto → Establecer línea base. Sin ella no hay Demoras ni curva S.');
+  if(sinNombre.length)add('b',`${sinNombre.length} tarea${sinNombre.length>1?'s':''} sin nombre`,'Completar o borrar las filas vacías.',sinNombre);
+  if(sinCon.length/n>.3)add('b',`${Math.round(sinCon.length*100/n)} % de tareas pendientes sin contratista`,'Cargar el campo Contratista: lo usan Semana, Próximas 3 semanas y Vencidas por responsable.',sinCon);
+  if(d.hasAlcance&&sinItem.length/n>.3)add('b',`${sinItem.length} tareas de obra sin N° Item`,'Cargar Texto4: sin N° Item no se vinculan materiales y cuentan como adicionales.',sinItem);
+  for(const a of p.avisos||[]){if(/línea base|sin nombre/i.test(a))continue;add('b','Aviso del deploy: '+a,'Revisar el XML en MS Project.')}
+  return{issues,score:issues.reduce((s,i)=>s+(i.sev==='a'?3:i.sev==='m'?2:1),0)};
+}
+function DataHealthView({projList,projData,metaList,healthMap,onOpenObra}){
+  const[scope,setScope]=useState('activas');
+  const[openK,setOpenK]=useState(null);
+  const rows=useMemo(()=>(projList||[]).filter(p=>!p.local&&projData[p.key]&&(scope==='todas'||pgIsActive(matchMeta(p.name,metaList)?.estado)))
+    .map(p=>{const d=projData[p.key],h=healthMap[p.key];return{p,d,h,...dataChecks(p,d,h)}})
+    .sort((a,b)=>b.score-a.score||a.p.name.localeCompare(b.p.name)),[projList,projData,metaList,healthMap,scope]);
+  const ok=rows.filter(r=>!r.issues.length).length;
+  const noSd=rows.filter(r=>!r.d.statusDate).length;
+  const SEVL={a:'Bloquea el semáforo',m:'Distorsiona los números',b:'Para completar'};
+  return <div className="dash">
+    <div className="rv-ctrl">
+      <div className="dst" style={{margin:0}}>Salud de datos</div>
+      <span style={{fontSize:12,color:'var(--c1)'}}>Qué encontró el tablero en cada cronograma y qué corregir en MS Project</span>
+      <div className="seg" style={{marginLeft:'auto'}}><button className={scope==='activas'?'on':''} onClick={()=>setScope('activas')}>Obras activas</button><button className={scope==='todas'?'on':''} onClick={()=>setScope('todas')}>Todas</button></div>
+    </div>
+    <div className="dh-sum"><span><b>{rows.length-ok}</b> obras con algo para corregir</span><span><b>{ok}</b> sin observaciones</span></div>
+    {noSd>0&&<div className="la-alert" style={{borderLeftColor:'var(--q)',background:'var(--q-bg)'}}><b>{noSd} de {rows.length} obras no tienen fecha de estado.</b> Cargala en MS Project (Proyecto → Información del proyecto → Fecha de estado) cada vez que actualizás el avance. Sin ella, "sin actualizar" se estima solo con las tareas en 0 % vencidas hace más de {STALE_DAYS} días.</div>}
+    <div className="dh-list">
+      {rows.map(r=>{
+        return <div key={r.p.key} className="dh-row">
+          <div className="dh-head">
+            {r.p.cod?<span className="cod lg">{r.p.cod}</span>:<span className="cod lg off">—</span>}
+            <button className="dh-name" onClick={()=>onOpenObra&&onOpenObra(r.p)} title="Abrir la obra">{r.p.name}</button>
+            <Frescura sd={r.d.statusDate} short/>
+            <span className="dh-rules" title="Tareas que el semáforo tomó por nombre">
+              <span>Contratada: <b>{r.h?.contratadaName||'—'}</b></span>
+              <span>Obra: <b>{r.h?.obraName||'—'}</b></span>
+              {r.h?.standbyDays>0&&<span>Standby: <b>{r.h.standbyDays} d</b></span>}
+            </span>
+          </div>
+          {r.issues.length===0?<div className="dh-ok">✓ Sin observaciones</div>:
+          <ul className="dh-issues">{r.issues.map((i,k)=><li key={k} className={'sev-'+i.sev}>
+            <span className={'dh-sev '+i.sev} title={SEVL[i.sev]}>{SEVL[i.sev]}</span>
+            <span className="dh-txt"><b>{i.txt}.</b> {i.fix}</span>
+            {i.tasks.length>0&&<button className="fclr" onClick={()=>setOpenK(openK===r.p.key+k?null:r.p.key+k)}>{openK===r.p.key+k?'Ocultar':'Ver '+Math.min(i.tasks.length,30)+(i.tasks.length>30?' de '+i.tasks.length:'')}</button>}
+            {openK===r.p.key+k&&<div className="dh-tasks">{i.tasks.slice(0,30).map(t=><div key={t.uid}><span className="mono">{t.wbs}</span> {t.name} <span className="mono" style={{color:'var(--c2)'}}>{fD(t.finish)} · {t.percentComplete}%</span></div>)}</div>}
+          </li>)}</ul>}
+        </div>})}
+      {!rows.length&&<div className="week-empty">Cargando cronogramas…</div>}
+    </div>
+  </div>;
+}
+
+/* ═══════ Próximas 3 semanas (lookahead) ═══════
+   Agenda de contratistas cruzada entre obras y lo que tiene que estar resuelto para que cada tarea pueda arrancar. */
+const LA_WEEKS=3;
+function isCtrlTask(t){return /contratad[ao]/i.test(t.name)||/^[\s✔✓\-]*obra\b/i.test(t.name)||/stand[\s\-]?by/i.test(t.name)}
+function mondayOf(d){const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x}
+function LookaheadView({projList,projData,metaList,onOpenObra}){
+  const[onlyClash,setOnlyClash]=useState(false);
+  const[q,setQ]=useState('');
+  const weeks=useMemo(()=>{const m=mondayOf(new Date());return Array.from({length:LA_WEEKS},(_,i)=>{const a=new Date(m);a.setDate(a.getDate()+7*i);const b=new Date(a);b.setDate(b.getDate()+4);b.setHours(23,59,59,999);return{a,b}})},[]);
+  const model=useMemo(()=>{
+    const from=weeks[0].a,to=weeks[LA_WEEKS-1].b,now=new Date();
+    const cons={},starts=[];
+    for(const p of projList||[]){
+      const d=projData[p.key];if(!d||p.local)continue;
+      if(!pgIsActive(matchMeta(p.name,metaList)?.estado))continue;
+      for(const t of d.tasks){
+        if(t.isSummary||t.isMilestone||isCtrlTask(t)||t.percentComplete>=100||!t.start||!t.finish)continue;
+        if(t.start>to||t.finish<from)continue;
+        const c=entV(t,'Contratista')||'Sin contratista';
+        const C=cons[c]=cons[c]||{name:c,w:weeks.map(()=>({}))};
+        weeks.forEach((w,i)=>{if(t.start<=w.b&&t.finish>=w.a){(C.w[i][p.key]=C.w[i][p.key]||{p,n:0}).n++}});
+        if(t.start>=from&&t.start<=to&&t.percentComplete===0){
+          const r=[];
+          const preds=t.predecessors.map(x=>d.uidMap[x.taskUid]).filter(x=>x&&!x.isSummary);
+          const open=preds.filter(x=>x.percentComplete<100);
+          if(open.length)r.push({k:'pred',l:`${open.length} predecesora${open.length>1?'s':''} sin terminar`,tip:open.map(x=>`${x.name} (${x.percentComplete} %, fin ${fD(x.finish)})`).join('\n')});
+          if(c==='Sin contratista')r.push({k:'con',l:'Sin contratista'});
+          if(t.start<now)r.push({k:'late',l:'Debió arrancar'});
+          starts.push({p,t,c,r});
+        }
+      }
+    }
+    const list=Object.values(cons).map(C=>({...C,clash:C.w.map(x=>Object.keys(x).length>1)})).sort((a,b)=>a.name==='Sin contratista'?1:b.name==='Sin contratista'?-1:(b.clash.filter(Boolean).length-a.clash.filter(Boolean).length)||a.name.localeCompare(b.name));
+    starts.sort((a,b)=>a.t.start-b.t.start);
+    return{list,starts};
+  },[projList,projData,metaList,weeks]);
+  const nq=normName(q);
+  const list=model.list.filter(C=>(!onlyClash||C.clash.some(Boolean))&&(!nq||normName(C.name).includes(nq)));
+  const starts=model.starts.filter(x=>!nq||normName(x.c).includes(nq)||normName(x.p.name).includes(nq));
+  const nClash=model.list.filter(C=>C.name!=='Sin contratista'&&C.clash.some(Boolean)).length;
+  const wl=w=>`${w.a.getDate()}/${w.a.getMonth()+1} – ${w.b.getDate()}/${w.b.getMonth()+1}`;
+  return <div className="dash">
+    <div className="rv-ctrl">
+      <div className="dst" style={{margin:0}}>Próximas 3 semanas</div>
+      <span style={{fontSize:12,color:'var(--c1)'}}>Dónde está cada contratista y qué tiene que estar listo para arrancar</span>
+      <input className="fin" style={{width:200,marginLeft:'auto'}} placeholder="Buscar contratista u obra…" value={q} onChange={e=>setQ(e.target.value)}/>
+      <label className="pg-chk"><input type="checkbox" checked={onlyClash} onChange={e=>setOnlyClash(e.target.checked)}/> Solo en dos obras a la vez</label>
+    </div>
+    {nClash>0&&<div className="la-alert">{nClash} contratista{nClash>1?'s están':' está'} programado{nClash>1?'s':''} en más de una obra la misma semana.</div>}
+    <div className="rv-mx-wrap">
+      <table className="dt la-mx">
+        <thead><tr><th>Contratista</th>{weeks.map((w,i)=><th key={i}>{i===0?'Esta semana':i===1?'Próxima':'En 2 semanas'}<div className="mono" style={{fontWeight:400}}>{wl(w)}</div></th>)}</tr></thead>
+        <tbody>{list.map(C=><tr key={C.name}>
+          <td style={{fontWeight:700}}>{C.name}</td>
+          {C.w.map((cell,i)=><td key={i} className={C.clash[i]&&C.name!=='Sin contratista'?'la-clash':''}>
+            {Object.values(cell).map(({p,n})=><button key={p.key} className="la-chip" onClick={()=>onOpenObra&&onOpenObra(p)} title={`${p.name}: ${n} tarea${n>1?'s':''}`}>{p.cod?<b className="cod">{p.cod}</b>:null}{p.cod?n:p.name+' · '+n}</button>)}
+          </td>)}
+        </tr>)}
+        {!list.length&&<tr><td colSpan={LA_WEEKS+1} style={{color:'var(--c2)',textAlign:'center',padding:20}}>Nada programado en las próximas 3 semanas.</td></tr>}
+        </tbody>
+      </table>
+    </div>
+    <div className="dst" style={{marginTop:22}}>Tareas que arrancan · {starts.length}</div>
+    <div className="rv-mx-wrap"><table className="dt" style={{margin:0}}>
+      <thead><tr><th style={{width:80}}>Inicio</th><th style={{width:70}}>Obra</th><th>Tarea</th><th style={{width:170}}>Contratista</th><th style={{width:250}}>Para poder arrancar</th></tr></thead>
+      <tbody>{starts.map(({p,t,c,r})=><tr key={p.key+t.uid}>
+        <td className="mono">{fD(t.start)}</td>
+        <td>{p.cod?<span className="cod">{p.cod}</span>:<span style={{fontSize:11}}>{p.name}</span>}</td>
+        <td style={{fontWeight:500}}>{t.name}<div style={{fontSize:11,color:'var(--c2)'}}>{taskPath(t)}</div></td>
+        <td style={{fontSize:12}}>{c}</td>
+        <td>{r.length?r.map(x=><span key={x.k} className={'la-r '+x.k} title={x.tip||''}>{x.l}</span>):<span className="la-r ok">Sin restricciones en el cronograma</span>}</td>
+      </tr>)}</tbody>
+    </table></div>
+    <p style={{fontSize:12,color:'var(--c2)',marginTop:8}}>Se revisan predecesoras y contratista según MS Project. Material, planos y pagos todavía no están conectados a esta vista.</p>
+  </div>;
+}
+
 function Portfolio({projList,projData,metaList,healthMap,onOpen,onOpenObra,initialMode}){
   const[mode,setModeS]=useState(()=>initialMode||pgLoad('bp360_pf_mode','gantt'));
   const setMode=m=>{setModeS(m);pgSave('bp360_pf_mode',m)};
@@ -1966,10 +2209,15 @@ function Portfolio({projList,projData,metaList,healthMap,onOpen,onOpenObra,initi
     <div className="stbar">
       <button className={`st ${mode==='gantt'?'on':''}`} onClick={()=>setMode('gantt')}>Gantt de obras</button>
       <button className={`st ${mode==='resp'?'on':''}`} onClick={()=>setMode('resp')}>Vencidas por responsable</button>
+      <button className={`st ${mode==='la'?'on':''}`} onClick={()=>setMode('la')}>Próximas 3 semanas</button>
       <button className={`st ${mode==='obras'?'on':''}`} onClick={()=>setMode('obras')}>Obras y contratistas</button>
+      <button className={`st ${mode==='datos'?'on':''}`} onClick={()=>setMode('datos')}>Salud de datos</button>
     </div>
     {mode==='gantt'?<PortfolioGantt projList={projList} projData={projData} metaList={metaList} healthMap={healthMap} onOpenObra={onOpenObra}/>
-    :mode==='resp'?<ResponsablesView projList={projList} projData={projData} metaList={metaList} healthMap={healthMap} onOpen={onOpen}/>:<PortfolioObras projList={projList} projData={projData}/>}
+    :mode==='resp'?<ResponsablesView projList={projList} projData={projData} metaList={metaList} healthMap={healthMap} onOpen={onOpen}/>
+    :mode==='la'?<LookaheadView projList={projList} projData={projData} metaList={metaList} onOpenObra={onOpenObra}/>
+    :mode==='datos'?<DataHealthView projList={projList} projData={projData} metaList={metaList} healthMap={healthMap} onOpenObra={onOpenObra}/>
+    :<PortfolioObras projList={projList} projData={projData}/>}
   </Fragment>;
 }
 
@@ -2173,6 +2421,7 @@ function calcHealth(data){
   const nextMs=ts.filter(t=>t.isMilestone&&t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish)[0];
 
   return{color,label,motivo,rank:SEV[color],tot,done,ov,ovReal,ovStale,ip,avg,nextMs:nextMs||null,statusDate,
+    contratadaName:contratadaTask?.name||null,obraName:obraTask?.name||null,
     finContratado,finObra,desvioBruto,desvioNeto,
     standbyDays,standbyDetail,hasContratada:!!finContratado};
 }
@@ -2248,14 +2497,14 @@ function WeekView({data}){
 }
 
 /* ═══════ Onboarding Tour ═══════ */
-const TOUR_KEY='bp360_tour_done_v2'; /* v2: tour actualizado oct-2026, se vuelve a mostrar una vez */
+const TOUR_KEY='bp360_tour_done_v3'; /* v3: Abastecimiento, Próximas 3 semanas y Salud de datos */
 const TOUR_STEPS=[
   {title:'Bienvenido a BuildPlan',body:'Acá están todas las obras de Bauvek. Arriba tenés el resumen del día: obras críticas, en atención, vencidas e hitos de las próximas dos semanas. Las tarjetas están ordenadas de la más grave a la más tranquila.'},
   {title:'Cómo se lee el semáforo',body:'Combina dos cosas: si el fin de obra cae después de la fecha contratada (descontando standby) y qué parte de las tareas está vencida. Gana la peor. "Revisar datos" aparece cuando el desvío es tan grande que seguramente hay una fecha mal cargada.'},
   {title:'Vencidas y sin actualizar',body:'"Sin actualizar" son tareas vencidas que probablemente no están atrasadas: el avance no se cargó en MS Project. Mantener al día la fecha de estado y el % completado limpia esos números.'},
   {title:'Dentro de una obra',body:'Cada obra abre en Resumen. "Semana" muestra qué contratista trabaja cada día, pensado para el celular. El Gantt arranca en la fecha de hoy.'},
-  {title:'Abastecimiento',body:'"Compras" anticipa qué rubros arrancan en las próximas semanas. "Materiales" trae las cantidades de Cómputo, por defecto solo lo que falta ejecutar.'},
-  {title:'Portfolio',body:'Compara todas las obras: Gantt de obras, vencidas por responsable y cruce de contratistas.'},
+  {title:'Abastecimiento',body:'Trae los materiales del Cómputo con la fecha en que hay que pedirlos, según el plazo de pedido que elijas. Por defecto muestra solo lo que falta ejecutar. También podés ver qué rubros arrancan en las próximas semanas.'},
+  {title:'Portfolio',body:'Compara todas las obras: Gantt de obras, vencidas por responsable, la agenda de contratistas de las próximas 3 semanas y la salud de datos de cada cronograma.'},
 ];
 function Tour({onDone}){
   const[step,setStep]=useState(0);
@@ -2349,7 +2598,7 @@ function ClientView({projName,pList,pData,metaList}){
 }
 
 /* ═══════ Procurement Forecast ═══════ */
-function ProcurementView({data}){
+function ProcurementView({data,lead=15}){
   if(!data)return null;
   const[weeks,setWeeks]=useState(4);
   const now=new Date();
@@ -2386,7 +2635,7 @@ function ProcurementView({data}){
   return <div className="proc-view">
     <div style={{marginBottom:16}}>
       <div style={{fontSize:16,fontWeight:600,marginBottom:4}}>Próximas necesidades</div>
-      <div style={{fontSize:12,color:'var(--c1)'}}>Tareas que arrancan en las próximas semanas, agrupadas por rubro. Útil para anticipar compras y coordinar contratistas.</div>
+      <div style={{fontSize:12,color:'var(--c1)'}}>Tareas que arrancan en las próximas semanas, agrupadas por rubro. "Pedir antes de" resta el plazo de pedido elegido arriba.</div>
     </div>
     <div className="proc-controls">
       <span className="fl">Horizonte</span>
@@ -2408,16 +2657,42 @@ function ProcurementView({data}){
         <span className="proc-count">{tasks.length} tareas</span>
       </div>
       {tasks.sort((a,b)=>(a.start||0)-(b.start||0)).map(t=>{
-        const days=daysUntil(t);const urgent=days<=7;
-        return <div key={t.uid} className={`proc-task ${urgent?'urgent':''}`}>
+        const days=daysUntil(t);const ob=new Date(t.start.getTime()-lead*86400000);const urgent=ob<=new Date(now.getTime()+7*86400000);
+        return <div key={t.uid} className="proc-task">
           <span style={{flex:1,fontWeight:500}}>{t.name}</span>
-          <span className="wt-meta">{fD(t.start)}</span>
+          <span className="wt-meta">Arranca {fD(t.start)}</span>
           <span className="wt-meta" style={{width:50,textAlign:'right'}}>{days===0?'Hoy':`${days}d`}</span>
-          {urgent&&<span className="proc-alert">Urgente</span>}
+          <OrderBy d={ob}/>
           <span style={{fontSize:11,color:'var(--c1)',width:80,textAlign:'right',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{entV(t,'Contratista')||'—'}</span>
         </div>;
       })}
     </div>)}
+  </div>;
+}
+
+/* Fecha límite de pedido con estado: vencida, esta semana o con margen */
+function OrderBy({d}){
+  if(!d)return <span className="mono" style={{color:'var(--c2)'}}>—</span>;
+  const n=Math.floor((d-new Date())/86400000);
+  const cls=n<0?'late':n<=7?'soon':'ok';
+  return <span className={'ob '+cls} title={n<0?`La fecha de pedido pasó hace ${-n} días`:`Faltan ${n} días`}>{fD(d)}{n<0?' · pedir ya':n<=7?' · esta semana':''}</span>;
+}
+/* ═══════ Abastecimiento: lo que arranca por rubro + materiales del cómputo, con un único plazo de pedido ═══════ */
+const LEAD_KEY='bp360_lead_days';
+function AbastView({data,computoData,visTasks,onLogin,matKey}){
+  const[mode,setMode]=useState(()=>pgLoad('bp360_abast_mode','mat'));
+  const[lead,setLeadS]=useState(()=>pgLoad(LEAD_KEY,15));
+  const setLead=v=>{setLeadS(v);pgSave(LEAD_KEY,v)};
+  const setM=v=>{setMode(v);pgSave('bp360_abast_mode',v)};
+  return <div className="proc-view" style={{padding:0}}>
+    <div className="abast-bar">
+      <div className="seg"><button className={mode==='mat'?'on':''} onClick={()=>setM('mat')}>Materiales del cómputo</button><button className={mode==='rub'?'on':''} onClick={()=>setM('rub')}>Arranques por rubro</button></div>
+      <span className="fl" style={{marginLeft:12}} title="Días entre que se hace el pedido y que el material está en obra">Plazo de pedido</span>
+      <div className="seg">{[7,15,30,45].map(d=><button key={d} className={lead===d?'on':''} onClick={()=>setLead(d)}>{d} días</button>)}</div>
+      <span className="abast-note">El estado de cada pedido (pedido, entregado) todavía no se registra acá.</span>
+    </div>
+    {mode==='mat'?<MaterialsView key={matKey} data={data} computoData={computoData} visTasks={visTasks} onLogin={onLogin} lead={lead}/>
+      :<div style={{padding:'16px 24px'}}><ProcurementView data={data} lead={lead}/></div>}
   </div>;
 }
 
@@ -2589,7 +2864,7 @@ function ComputoLogin({onOk}){
   </form></div>;
 }
 
-function MaterialsView({data,computoData,visTasks,onLogin}){
+function MaterialsView({data,computoData,visTasks,onLogin,lead=15}){
   const[viewMode,setViewMode]=useState('list');/*list|period*/
   const[openMat,setOpenMat]=useState({});/* filas desplegadas: "lista|Material" o "2026-10|Material" */
   const togMat=k=>setOpenMat(o=>({...o,[k]:!o[k]}));
@@ -2636,8 +2911,14 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
         }
       }
     }
-    return{matMap,taskMats,list:Object.values(matMap).sort((a,b)=>b.totalNeeded-a.totalNeeded)};
-  },[visTasks,data.tasks,computoData,periodMode,qMode]);
+    /* Pedir antes de: inicio de la primera tarea pendiente que lo usa, menos el plazo de pedido */
+    for(const m of Object.values(matMap)){
+      const st=m.tasks.filter(x=>x.qty>0&&x.task.start&&x.task.percentComplete<100).map(x=>x.task.start).sort((a,b)=>a-b)[0]||null;
+      m.firstStart=st;m.orderBy=st?new Date(st.getTime()-lead*86400000):null;
+    }
+    const list=Object.values(matMap).sort((a,b)=>(a.orderBy?a.orderBy.getTime():Infinity)-(b.orderBy?b.orderBy.getTime():Infinity)||b.totalNeeded-a.totalNeeded);
+    return{matMap,taskMats,list};
+  },[visTasks,data.tasks,computoData,periodMode,qMode,lead]);
 
   /* Get unique rubros from coefs */
   const rubros=useMemo(()=>{
@@ -2670,8 +2951,8 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
 
   /* Export to Excel */
   const exportXls=useCallback(()=>{
-    const rows=filtered.map(m=>({'Material':m.matRef,[qMode==='pend'?'Cantidad pendiente':'Cantidad']:Math.round(m.totalNeeded*100)/100,'Unidad':m.un,'Unidad Comercial':m.unComercial,'Categoría':m.cat,'Precio unitario':m.precio,'Subtotal':Math.round(m.totalNeeded*m.precio),'Tareas vinculadas':m.tasks.length}));
-    const ws=XLSX.utils.json_to_sheet(rows);
+    const rows=filtered.map(m=>({'Material':m.matRef,'Pedir antes de':m.orderBy||'',[qMode==='pend'?'Cantidad pendiente':'Cantidad']:Math.round(m.totalNeeded*100)/100,'Unidad':m.un,'Unidad Comercial':m.unComercial,'Categoría':m.cat,'Precio unitario':m.precio,'Subtotal':Math.round(m.totalNeeded*m.precio),'Tareas vinculadas':m.tasks.length}));
+    const ws=XLSX.utils.json_to_sheet(rows,{dateNF:'dd/mm/yyyy'});
     const wb=XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb,ws,'Materiales');
     /* Para qué se necesita cada material: una fila por material × tarea */
@@ -2680,7 +2961,7 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
     const wd=XLSX.utils.json_to_sheet(det,{dateNF:'dd/mm/yyyy'});wd['!cols']=[{wch:38},{wch:8},{wch:46},{wch:36},{wch:11},{wch:11},{wch:10},{wch:8},{wch:9}];
     XLSX.utils.book_append_sheet(wb,wd,'Detalle por tarea');
     XLSX.writeFile(wb,`Materiales_${data.tasks[0]?.name||'obra'}_${new Date().toISOString().slice(0,10)}.xlsx`,{cellDates:true});
-  },[filtered,data,qMode]);
+  },[filtered,data,qMode,lead]);
 
   /* Format period label */
   const fPeriod=pk=>{
@@ -2738,9 +3019,10 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
     {viewMode==='list'&&<div className="mat-panel">
       <div className="mat-scroll">
         <table className="mat-table">
-          <thead><tr><th>Material</th><th>Para qué (tareas)</th><th>{qMode==='pend'?'Pendiente':'Cantidad'}</th><th>Unidad</th><th>U. Comercial</th><th>Categoría</th><th>Precio</th><th>Subtotal</th></tr></thead>
+          <thead><tr><th>Material</th><th title={'Inicio de la primera tarea pendiente que lo usa, menos '+lead+' días de plazo de pedido'}>Pedir antes de</th><th>Para qué (tareas)</th><th>{qMode==='pend'?'Pendiente':'Cantidad'}</th><th>Unidad</th><th>U. Comercial</th><th>Categoría</th><th>Precio</th><th>Subtotal</th></tr></thead>
           <tbody>{filtered.map(m=>{const k='lista|'+m.matRef;return <Fragment key={m.matRef}><tr onClick={()=>togMat(k)} style={{cursor:'pointer'}} title="Clic para ver en qué tareas se usa">
             <td style={{fontWeight:500,maxWidth:250,overflow:'hidden',textOverflow:'ellipsis'}}>{flecha(k)}{m.matRef}</td>
+            <td><OrderBy d={m.orderBy}/></td>
             <td style={{fontSize:11,color:'var(--c1)',maxWidth:280,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{paraQue(m.tasks)}</td>
             <td className="mono">{Math.round(m.totalNeeded*100)/100}</td>
             <td>{m.un}</td>
@@ -2748,7 +3030,7 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
             <td style={{fontSize:11,color:'var(--c1)'}}>{m.cat||'—'}</td>
             <td className="mono">{m.precio?`$${m.precio.toLocaleString('es-AR')}`:' —'}</td>
             <td className="mono" style={{fontWeight:600}}>{m.precio?`$${Math.round(m.totalNeeded*m.precio).toLocaleString('es-AR')}`:' —'}</td>
-          </tr>{openMat[k]&&detalle(m.tasks,m.un,8)}</Fragment>})}</tbody>
+          </tr>{openMat[k]&&detalle(m.tasks,m.un,9)}</Fragment>})}</tbody>
         </table>
       </div>
       {filtered.length===0&&<div className="mat-empty">No se encontraron materiales con los filtros actuales.</div>}
@@ -2784,7 +3066,7 @@ function MaterialsView({data,computoData,visTasks,onLogin}){
 
 /* ═══════ MAIN APP ═══════ */
 /* Pestañas de una obra: abre en Resumen; el Gantt queda como detalle */
-const PROJ_TABS=[['dash','Resumen'],['semana','Semana'],['gantt','Gantt'],['compras','Compras'],['materiales','Materiales'],['demoras','Demoras']];
+const PROJ_TABS=[['dash','Resumen'],['semana','Semana'],['gantt','Gantt'],['abast','Abastecimiento'],['demoras','Curva S y demoras']];
 const PROJ_SUBS=PROJ_TABS.map(x=>x[0]);
 function App(){
   const[th,togTh]=useTheme();
@@ -3346,8 +3628,7 @@ function App(){
     </div>}
 
     {!aLoading&&aData&&sub==='semana'&&<WeekView data={aData}/>}
-    {!aLoading&&aData&&sub==='compras'&&<ProcurementView data={aData}/>}
-    {!aLoading&&aData&&sub==='materiales'&&<MaterialsView key={active+(computoData[active]?.loaded?':ok':computoData[active]?.needLogin?':login':':x')} data={aData} computoData={computoData[active]||null} visTasks={visTasks} onLogin={()=>{setComputoData({});setComputoAuth(n=>n+1)}}/>}
+    {!aLoading&&aData&&sub==='abast'&&<AbastView matKey={active+(computoData[active]?.loaded?':ok':computoData[active]?.needLogin?':login':':x')} data={aData} computoData={computoData[active]||null} visTasks={visTasks} onLogin={()=>{setComputoData({});setComputoAuth(n=>n+1)}}/>}
     {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData} health={healthMap[active]} proj={aProj}/>}
     {!aLoading&&aData&&sub==='demoras'&&<DemorasView data={aData}/>}
 
