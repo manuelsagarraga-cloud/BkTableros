@@ -930,7 +930,7 @@ function ProjectInfo({meta}){
 let _dataOrigen='repo';
 async function fetchXml(proj){
   if(_dataOrigen==='privado'){
-    for(const pre of['lite/','xml/']){const b=await sbDownload(pre+proj.file);if(b)return b.text()}
+    for(const pre of['lite/','xml/']){const b=await sbDownload(pre+storageKey(proj.file));if(b)return b.text()}
     throw new Error('no se encontró '+proj.file+' en el almacenamiento privado');
   }
   const v=proj.ver?`?v=${proj.ver}`:`?t=${Date.now()}`;
@@ -3078,25 +3078,34 @@ function revisarXml(xml,file){
   return{tareas:hojas.length,avisos,name:m?m[1].trim():file.replace(/\.xml$/i,'')};
 }
 async function sha1(buf){const h=await crypto.subtle.digest('SHA-1',buf);return[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,12)}
-/* Sube uno o varios XML (original + liviano) y actualiza el índice. onStep informa el avance. */
+/* Supabase Storage no acepta tildes ni ñ en el nombre del archivo ("Invalid key"). Se guarda con un nombre
+   sin acentos ("Remodelación.xml" → "Remodelacion.xml"); el índice conserva el nombre original para mostrarlo.
+   Cómputo de Obras usa la misma regla. */
+function storageKey(file){return String(file).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9._\- ]/g,'_')}
+/* Sube uno o varios XML (original + liviano) y actualiza el índice. Si un archivo falla, sigue con el resto
+   y lo informa al final. onStep informa el avance. */
 async function subirCronogramas(files,onStep){
   let man={projects:[]};
   const b=await sbDownload('manifest.json');if(b){try{man=JSON.parse(await b.text())}catch(e){}}
   const byFile={};for(const p of man.projects||[])byFile[p.file]=p;
-  let i=0;
+  let i=0;const fallas=[];
   for(const f of files){
     i++;onStep&&onStep(`Subiendo ${f.name} (${i}/${files.length})…`);
-    const buf=await f.arrayBuffer();
-    const xml=new TextDecoder('utf-8').decode(buf);
-    const rev=revisarXml(xml,f.name);
-    const lite=xml.replace(/\s*<TimephasedData>[\s\S]*?<\/TimephasedData>/g,'').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,' ');
-    await sbUpload('xml/'+f.name,new Blob([buf],{type:'application/xml'}),'application/xml');
-    await sbUpload('lite/'+f.name,new Blob([lite],{type:'application/xml'}),'application/xml');
-    byFile[f.name]={file:f.name,name:rev.name,hash:await sha1(buf),sizeKB:Math.round(buf.byteLength/1024),tareas:rev.tareas,avisos:rev.avisos,subido:new Date().toISOString()};
+    try{
+      const buf=await f.arrayBuffer();
+      const xml=new TextDecoder('utf-8').decode(buf);
+      const rev=revisarXml(xml,f.name);
+      const lite=xml.replace(/\s*<TimephasedData>[\s\S]*?<\/TimephasedData>/g,'').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,' ');
+      const k=storageKey(f.name);
+      await sbUpload('xml/'+k,new Blob([buf],{type:'application/xml'}),'application/xml');
+      await sbUpload('lite/'+k,new Blob([lite],{type:'application/xml'}),'application/xml');
+      byFile[f.name]={file:f.name,key:k,name:rev.name,hash:await sha1(buf),sizeKB:Math.round(buf.byteLength/1024),tareas:rev.tareas,avisos:rev.avisos,subido:new Date().toISOString()};
+    }catch(e){fallas.push(f.name+': '+(e.message||e))}
   }
   const projects=Object.values(byFile).sort((a,b)=>a.file.localeCompare(b.file));
   const nm={generated:new Date().toISOString(),count:projects.length,projects};
   await sbUpload('manifest.json',new Blob([JSON.stringify(nm,null,2)],{type:'application/json'}),'application/json');
+  if(fallas.length)throw new Error(`Se subieron ${files.length-fallas.length} de ${files.length}. No se pudieron subir: ${fallas.join(' · ')}`);
   return nm;
 }
 /* Copia de una sola vez lo que hoy está en el repo público al almacenamiento privado */
