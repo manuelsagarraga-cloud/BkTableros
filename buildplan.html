@@ -933,10 +933,10 @@ function DeptMap({projects,metaList,selectedDept,onSelectDept}){
 }
 
 /* ═══════ Filtro por director de obra (Inicio, debajo del mapa) ═══════ */
-function DirFilter({directors,sel,onChange,sinDir}){
+function DirFilter({directors,sel,onChange,sinDir,pend}){
   if(!directors.length) return <div className="map-section dir-f">
     <div className="map-header"><span>Director de obra</span></div>
-    <div className="dir-empty">Agregá la columna "Director de obra" al Excel de proyectos y subilo desde Datos.</div>
+    <div className="dir-empty">{pend?'Leyendo cronogramas…':'Ninguna obra activa tiene a '+DIRECTORES_OBRA.map(n=>n[0].toUpperCase()+n.slice(1)).join(' ni a ')+' como recurso en MS Project.'}</div>
   </div>;
   const tog=n=>onChange(sel.includes(n)?sel.filter(x=>x!==n):[...sel,n]);
   return <div className="map-section dir-f">
@@ -945,10 +945,11 @@ function DirFilter({directors,sel,onChange,sinDir}){
       {sel.length>0&&<button className="clear-btn" onClick={()=>onChange([])}>Todos</button>}
     </div>
     <div className="dir-btns" role="group" aria-label="Filtrar por director de obra">
-      {directors.map(d=><button key={d.name} className={`dir-btn ${sel.includes(d.name)?'on':''}`} aria-pressed={sel.includes(d.name)} onClick={()=>tog(d.name)}>
+      {directors.map(d=><button key={d.key} className={`dir-btn ${sel.includes(d.key)?'on':''}`} aria-pressed={sel.includes(d.key)} onClick={()=>tog(d.key)}>
         <span className="dir-n">{d.name}</span><span className="dir-c">{d.count}</span></button>)}
     </div>
-    {sel.length>0&&sinDir>0&&<div className="dir-empty">{sinDir} obra{sinDir>1?'s':''} activa{sinDir>1?'s':''} sin director cargado quedan ocultas</div>}
+    {sel.length>0&&sinDir>0&&<div className="dir-empty">{sinDir} obra{sinDir>1?'s':''} activa{sinDir>1?'s':''} sin director entre los recursos quedan ocultas</div>}
+    {pend>0&&<div className="dir-empty">Leyendo {pend} cronograma{pend>1?'s':''}…</div>}
   </div>;
 }
 
@@ -1559,6 +1560,9 @@ const PERSON_ALIAS={
   'maximiliano euguaras':'Maximiliano Eguaras',
   'leo subias':'Leopoldo Subias',
 };
+/* Directores de obra: recurso del cronograma cuyo primer nombre es uno de estos (sin tildes, minúsculas) */
+const DIRECTORES_OBRA=['alex','mariana'];
+function dirKey(r){const w=normName(r).split(' ')[0];return DIRECTORES_OBRA.includes(w)?w:null}
 /* Recursos genéricos (áreas, no personas) — se muestran aparte */
 const NON_PERSON=new Set(['proyectos','posventa','obras','externo','a definir','geotecnia','enas','sin asignar']);
 function normName(s){return(s||'').trim().replace(/\s+/g,' ').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
@@ -3687,16 +3691,33 @@ function App({onLogout,empInfo=BAUVEK}){
   },[allSp,metaList]);
 
   /* Resumen de obras activas para la franja de dirección y el encabezado */
-  /* Directores de obra: lista sacada del Excel (obras activas y en pausa) y filtro */
+  /* Directores de obra: salen de los recursos del cronograma (Alex, Mariana). La columna "Director de obra"
+     del Excel de proyectos, si está cargada, tiene prioridad sobre los recursos. */
+  const obraDirs=useMemo(()=>{
+    const out={};
+    for(const p of allSp){
+      const ex=matchMeta(p.name,metaList)?.directores||[];
+      const d=pData[p.key];
+      if(!ex.length&&!d){out[p.key]=null;continue}   /* cronograma todavía no leído */
+      const pick=src=>{const m={};for(const r of src||[]){const k=dirKey(r);if(k)m[k]=PERSON_ALIAS[normName(r)]||String(r).trim()}return m};
+      /* Primero los recursos asignados a tareas; si ninguno es director, la hoja de recursos del XML */
+      let m=pick(ex);
+      if(!ex.length){m=pick(d.resources);if(!Object.keys(m).length)m=pick((d.rawRes||[]).map(r=>r.name))}
+      out[p.key]=m;
+    }
+    return out;
+  },[allSp,metaList,pData]);
   const dirInfo=useMemo(()=>{
     const act=[...classified.activo,...classified.pausa];
-    const cnt={};let sin=0;
-    for(const p of act){const ds=matchMeta(p.name,metaList)?.directores||[];if(!ds.length)sin++;for(const d of ds)cnt[d]=(cnt[d]||0)+1}
-    return{list:Object.entries(cnt).map(([name,count])=>({name,count})).sort((a,b)=>a.name.localeCompare(b.name)),sin};
-  },[classified,metaList]);
-  /* Ignora nombres guardados que ya no están en el Excel */
-  const dirAct=useMemo(()=>dirSel.filter(n=>dirInfo.list.some(d=>d.name===n)),[dirSel,dirInfo]);
-  const byDir=useCallback(p=>{if(!dirAct.length)return true;const ds=matchMeta(p.name,metaList)?.directores||[];return ds.some(d=>dirAct.includes(d))},[dirAct,metaList]);
+    const cnt={},disp={};let sin=0,pend=0;
+    for(const p of act){const m=obraDirs[p.key];if(!m){pend++;continue}
+      const ks=Object.keys(m);if(!ks.length)sin++;
+      for(const k of ks){cnt[k]=(cnt[k]||0)+1;if(!disp[k]||m[k].length>disp[k].length)disp[k]=m[k]}}
+    return{list:Object.keys(cnt).map(k=>({key:k,name:disp[k],count:cnt[k]})).sort((a,b)=>a.name.localeCompare(b.name)),sin,pend};
+  },[classified,obraDirs]);
+  /* Ignora selecciones guardadas que ya no corresponden a un director (mientras cargan los cronogramas se mantienen) */
+  const dirAct=useMemo(()=>dirInfo.pend?dirSel.filter(k=>DIRECTORES_OBRA.includes(k)):dirSel.filter(k=>dirInfo.list.some(d=>d.key===k)),[dirSel,dirInfo]);
+  const byDir=useCallback(p=>{if(!dirAct.length)return true;const m=obraDirs[p.key];return!!m&&Object.keys(m).some(k=>dirAct.includes(k))},[dirAct,obraDirs]);
 
   const sumOf=useCallback(act=>{
     const hs=act.map(p=>healthMap[p.key]).filter(Boolean);
@@ -3807,11 +3828,11 @@ function App({onLogout,empInfo=BAUVEK}){
       <div className="home">
         <div className="home-sidebar">
           <DeptMap projects={sp} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
-          <DirFilter directors={dirInfo.list} sel={dirAct} onChange={setDirSel} sinDir={dirInfo.sin}/>
+          <DirFilter directors={dirInfo.list} sel={dirAct} onChange={setDirSel} sinDir={dirInfo.sin} pend={dirInfo.pend}/>
         </div>
         <div className="home-main">
           {/* En celular el filtro de director va arriba (el mapa queda al final de la página) */}
-          <div className="dir-top"><DirFilter directors={dirInfo.list} sel={dirAct} onChange={setDirSel} sinDir={dirInfo.sin}/></div>
+          <div className="dir-top"><DirFilter directors={dirInfo.list} sel={dirAct} onChange={setDirSel} sinDir={dirInfo.sin} pend={dirInfo.pend}/></div>
           {/* Franja de dirección: lo que hay que mirar hoy */}
           <div className="exec" aria-label="Resumen de obras activas">
             <div className="exec-cell"><b>{S.n}</b><span>obras activas</span></div>
@@ -3829,7 +3850,7 @@ function App({onLogout,empInfo=BAUVEK}){
 
           <div className="home-h">
             <div className="home-title">Obras activas</div>
-            <div className="home-sub">{filteredActive.length} obras · ordenadas por gravedad{dirAct.length?` · ${dirAct.join(' + ')}`:''}{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{S.analizadas<S.n&&<span style={{marginLeft:8}}>· analizando {S.n-S.analizadas}…</span>}</div>
+            <div className="home-sub">{filteredActive.length} obras · ordenadas por gravedad{dirAct.length?` · ${dirAct.map(k=>dirInfo.list.find(d=>d.key===k)?.name||k).join(' + ')}`:''}{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{S.analizadas<S.n&&<span style={{marginLeft:8}}>· analizando {S.n-S.analizadas}…</span>}</div>
           </div>
           {(pList||[]).length===0&&<div className="empty-emp">
             <b>Todavía no hay cronogramas cargados</b>
