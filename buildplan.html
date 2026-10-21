@@ -337,6 +337,7 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:14px
 .dir-btns{display:flex;gap:6px;padding:10px 12px;flex-wrap:wrap}
 .dir-btn{flex:1 1 120px;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:36px;padding:6px 10px;border:1px solid var(--b0);border-radius:var(--r-s);background:var(--bg-el);color:var(--c0);font-family:var(--ff);font-size:12px;font-weight:500;cursor:pointer;text-align:left}
 .dir-btn:hover{border-color:var(--ac)}
+.dir-btn.sin:not(.on){border-style:dashed;color:var(--c1)}
 .dir-btn.on{background:var(--ac);border-color:var(--ac);color:var(--bg-0);font-weight:700}
 .dir-btn .dir-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dir-btn .dir-c{font-family:var(--fm);font-size:11px;opacity:.8}
@@ -937,6 +938,8 @@ function DeptMap({projects,metaList,selectedDept,onSelectDept}){
 }
 
 /* ═══════ Filtro por director de obra (Inicio, debajo del mapa) ═══════ */
+/* Clave del botón de obras sin Alexandra ni Mariana entre los recursos */
+const SIN_DIR='__sin';
 function DirFilter({directors,sel,onChange,sinDir,pend}){
   if(!directors.length) return <div className="map-section dir-f">
     <div className="map-header"><span>Director de obra</span></div>
@@ -949,10 +952,9 @@ function DirFilter({directors,sel,onChange,sinDir,pend}){
       {sel.length>0&&<button className="clear-btn" onClick={()=>onChange([])}>Todos</button>}
     </div>
     <div className="dir-btns" role="group" aria-label="Filtrar por director de obra">
-      {directors.map(d=><button key={d.key} className={`dir-btn ${sel.includes(d.key)?'on':''}`} aria-pressed={sel.includes(d.key)} onClick={()=>tog(d.key)}>
+      {directors.map(d=><button key={d.key} className={`dir-btn ${d.key===SIN_DIR?'sin':''} ${sel.includes(d.key)?'on':''}`} aria-pressed={sel.includes(d.key)} onClick={()=>tog(d.key)}>
         <span className="dir-n">{d.name}</span><span className="dir-c">{d.count}</span></button>)}
     </div>
-    {sel.length>0&&sinDir>0&&<div className="dir-empty">{sinDir} obra{sinDir>1?'s':''} activa{sinDir>1?'s':''} sin director entre los recursos quedan ocultas</div>}
     {pend>0&&<div className="dir-empty">Leyendo {pend} cronograma{pend>1?'s':''}…</div>}
   </div>;
 }
@@ -3726,11 +3728,13 @@ function App({onLogout,empInfo=BAUVEK}){
     for(const p of act){const m=obraDirs[p.key];if(!m){pend++;continue}
       const ks=Object.keys(m);if(!ks.length)sin++;
       for(const k of ks){cnt[k]=(cnt[k]||0)+1;if(!disp[k]||m[k].length>disp[k].length)disp[k]=m[k]}}
-    return{list:Object.keys(cnt).map(k=>({key:k,name:disp[k],count:cnt[k]})).sort((a,b)=>a.name.localeCompare(b.name)),sin,pend};
+    const list=Object.keys(cnt).map(k=>({key:k,name:disp[k],count:cnt[k]})).sort((a,b)=>a.name.localeCompare(b.name));
+    if(sin)list.push({key:SIN_DIR,name:'Sin director',count:sin});
+    return{list,sin,pend};
   },[classified,obraDirs]);
   /* Ignora selecciones guardadas que ya no corresponden a un director (mientras cargan los cronogramas se mantienen) */
-  const dirAct=useMemo(()=>dirInfo.pend?dirSel.filter(k=>DIRECTORES_OBRA.includes(k)):dirSel.filter(k=>dirInfo.list.some(d=>d.key===k)),[dirSel,dirInfo]);
-  const byDir=useCallback(p=>{if(!dirAct.length)return true;const m=obraDirs[p.key];return!!m&&Object.keys(m).some(k=>dirAct.includes(k))},[dirAct,obraDirs]);
+  const dirAct=useMemo(()=>dirInfo.pend?dirSel.filter(k=>k===SIN_DIR||DIRECTORES_OBRA.includes(k)):dirSel.filter(k=>dirInfo.list.some(d=>d.key===k)),[dirSel,dirInfo]);
+  const byDir=useCallback(p=>{if(!dirAct.length)return true;const m=obraDirs[p.key];if(!m)return false;const ks=Object.keys(m);return ks.length?ks.some(k=>dirAct.includes(k)):dirAct.includes(SIN_DIR)},[dirAct,obraDirs]);
 
   const sumOf=useCallback(act=>{
     const hs=act.map(p=>healthMap[p.key]).filter(Boolean);
