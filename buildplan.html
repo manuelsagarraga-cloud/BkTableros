@@ -1560,9 +1560,10 @@ const PERSON_ALIAS={
   'maximiliano euguaras':'Maximiliano Eguaras',
   'leo subias':'Leopoldo Subias',
 };
-/* Directores de obra: recurso del cronograma cuyo primer nombre es uno de estos (sin tildes, minúsculas) */
+/* Directores de obra: recurso cuyo primer nombre empieza con uno de estos (sin tildes, minúsculas):
+   "alex" toma Alex, Alexandra, Alexis; "mariana" toma Mariana V y Mariana Valdez */
 const DIRECTORES_OBRA=['alex','mariana'];
-function dirKey(r){const w=normName(r).split(' ')[0];return DIRECTORES_OBRA.includes(w)?w:null}
+function dirKey(r){const w=normName(r).split(' ')[0];return DIRECTORES_OBRA.find(k=>w.startsWith(k))||null}
 /* Recursos genéricos (áreas, no personas) — se muestran aparte */
 const NON_PERSON=new Set(['proyectos','posventa','obras','externo','a definir','geotecnia','enas','sin asignar']);
 function normName(s){return(s||'').trim().replace(/\s+/g,' ').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
@@ -3702,7 +3703,14 @@ function App({onLogout,empInfo=BAUVEK}){
       const pick=src=>{const m={};for(const r of src||[]){const k=dirKey(r);if(k)m[k]=PERSON_ALIAS[normName(r)]||String(r).trim()}return m};
       /* Primero los recursos asignados a tareas; si ninguno es director, la hoja de recursos del XML */
       let m=pick(ex);
-      if(!ex.length){m=pick(d.resources);if(!Object.keys(m).length)m=pick((d.rawRes||[]).map(r=>r.name))}
+      if(!ex.length){
+        /* El director es el que más tareas tiene asignadas (una tarea suelta no lo hace director de la obra) */
+        const n={},nm={};
+        for(const t of d.tasks||[])for(const r of t.resources||[]){const k=dirKey(r);if(k){n[k]=(n[k]||0)+1;nm[k]=PERSON_ALIAS[normName(r)]||String(r).trim()}}
+        const mx=Math.max(0,...Object.values(n));
+        m={};for(const k in n)if(n[k]===mx)m[k]=nm[k];
+        if(!mx)m=pick((d.rawRes||[]).map(r=>r.name));
+      }
       out[p.key]=m;
     }
     return out;
