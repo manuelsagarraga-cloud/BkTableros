@@ -41,6 +41,10 @@ body{font-family:var(--ff);background:var(--dark);color:var(--white);min-height:
 .gate-card button,.gate-link{margin-top:10px;min-height:44px;font:inherit;font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;border:none;border-radius:var(--r);background:var(--primary);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none}
 .gate-card button:hover,.gate-link:hover{background:var(--accent)}
 .gate-card .gate-sec{background:none;color:var(--text);border:1px solid #ccc}
+.pw-wrap{position:relative;display:flex}
+.pw-wrap input{flex:1;min-width:0;padding-right:84px}
+.gate-card .pw-eye{position:absolute;right:4px;top:4px;bottom:4px;margin:0;min-height:0;padding:0 12px;background:none;border:none;color:var(--primary);font-size:12px;letter-spacing:.3px;text-transform:none}
+.gate-card .pw-eye:hover{background:none;text-decoration:underline}
 .gate-err{font-size:13px;color:var(--accent);min-height:1em}
 .gate-wait{font-size:13px;color:#5c5c5c}
 .foot-out{background:none;border:none;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;text-decoration:underline;cursor:pointer}
@@ -63,7 +67,7 @@ body{font-family:var(--ff);background:var(--dark);color:var(--white);min-height:
     <h2>Ingresá a BkTableros</h2>
     <p>Uso interno de Bauvek. Entrá con tu usuario de Cómputo de Obras.</p>
     <label for="em">Email</label><input id="em" type="email" autocomplete="username" required/>
-    <label for="pw">Contraseña</label><input id="pw" type="password" autocomplete="current-password" required/>
+    <label for="pw">Contraseña</label><div class="pw-wrap"><input id="pw" type="password" autocomplete="current-password" required/><button type="button" class="pw-eye" id="pw-eye" aria-controls="pw" aria-pressed="false">Mostrar</button></div>
     <div class="gate-err" id="err" role="alert"></div>
     <button type="submit" id="btn">Ingresar</button>
   </form>
@@ -154,6 +158,8 @@ $('login').addEventListener('submit',async e=>{
 });
 $('salir2').onclick=salir;
 token().then(mostrar);
+/* Mostrar u ocultar la contraseña mientras se escribe */
+document.getElementById('pw-eye').addEventListener('click',()=>{const p=document.getElementById('pw'),b=document.getElementById('pw-eye'),v=p.type==='password';p.type=v?'text':'password';b.textContent=v?'Ocultar':'Mostrar';b.setAttribute('aria-pressed',String(v));p.focus()});
 </script>
 </body>
 </html>
