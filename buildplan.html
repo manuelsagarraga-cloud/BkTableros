@@ -648,6 +648,16 @@ button.logo{border:none;background:none;color:var(--c0);font-family:var(--ff);fo
 .datos-it .fin{flex:1;min-width:0;font-size:13px}
 .datos-it-n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn.danger{background:var(--err);border-color:var(--err);color:#fff}
+
+/* Vista Mes */
+.mes-sem{border:1px solid var(--b1);border-radius:var(--r-s);background:var(--bg-el);padding:10px 14px 4px;margin-bottom:14px}
+.mes-sem.hoy{border-color:var(--ac);box-shadow:inset 3px 0 0 var(--ac)}
+.mes-sem-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding-bottom:8px;border-bottom:1px solid var(--b1);margin-bottom:8px;font-size:14px}
+.mes-sem-h .mono{font-size:12px;color:var(--c1)}
+.mes-hoy{font-size:12px;color:var(--ac);font-weight:700}
+.mes-n{margin-left:auto;font-size:12px;color:var(--c2)}
+.week-task.sigue .wt-name{color:var(--c1)}
+.sigue-tag{font-size:11px;color:var(--c2);border:1px solid var(--b0);border-radius:2px;padding:0 4px;margin-left:6px;font-weight:400}
 </style>
 </head>
 <body>
@@ -1124,7 +1134,7 @@ function parseMSPDI(xmlText){
    Solo se clasifican tareas (no resumen) que cuelgan del resumen "Obra …" del cronograma.
    - Obra base: tiene N° Item (Texto4), propio o heredado del resumen padre, sin "*".
    - Adicional: sin N° Item, o con "*" en el N° Item o al final del nombre.
-   - Quedan sin clasificar (t.alc=null): todo lo que está fuera de la fase Obra, hitos y standby.
+   - Quedan sin clasificar (t.alc=null): todo lo que está fuera de la fase Obra, hitos, standby, demoras, lluvias y días no laborables.
    - Si la fase Obra no tiene NINGÚN N° Item cargado, no se clasifica (si no, todo saldría Adicional). */
 function countItems(t){let n=entV(t,'N° Item')?1:0;for(const c of t.children)n+=countItems(c);return n}
 function findObraRoot(tasks){
@@ -1153,6 +1163,8 @@ function classifyAlcance(tasks){
     if(t.isSummary){for(const c of t.children)visit(c,item);return}
     /* fuera: hitos, standby y las barras del semáforo ("… Contratada" / "Obra …") */
     if(t.isMilestone||/stand[\s\-]?by/i.test(t.name)||/contratad[ao]/i.test(t.name)||/^[\s✔✓\-]*obra\b/i.test(t.name))return;
+    /* Demoras, lluvias y días no laborables no son trabajo: no cuentan como base ni como adicional */
+    if(/lluvia|demora|no laborable|feriado|\bparo\b/i.test(t.name))return;
     const star=item.includes('*')||/\*\s*$/.test(t.name);
     t.alc=item&&!star?'base':'adic';
   };
@@ -2513,73 +2525,70 @@ function calcHealth(data){
     standbyDays,standbyDetail,hasContratada:!!finContratado};
 }
 
-/* ═══════ Weekly View ═══════ */
-function WeekView({data}){
+/* ═══════ Vista Mes: tareas del mes, separadas por semana (lunes a viernes) ═══════
+   Cada semana lista las tareas activas, agrupadas por contratista. Las que vienen de la semana anterior
+   se marcan "sigue" y van al final del grupo, para no repetir lo mismo arriba de todo. */
+function MonthView({data}){
   if(!data)return null;
   const[offset,setOffset]=useState(0);
   const now=new Date();
-  const weekStart=useMemo(()=>{
-    /* Lunes de la semana actual (el domingo cuenta como fin de la semana que termina, no como inicio de la próxima) */
-    const d=new Date(now);d.setDate(d.getDate()-((d.getDay()+6)%7)+offset*7);d.setHours(0,0,0,0);return d;
-  },[offset]);
-  const weekEnd=useMemo(()=>{
-    const d=new Date(weekStart);d.setDate(d.getDate()+4);d.setHours(23,59,59);return d;
-  },[weekStart]);
-
-  const weekLabel=useMemo(()=>{
-    const opts={day:'numeric',month:'short'};
-    return `${weekStart.toLocaleDateString('es-AR',opts)} — ${weekEnd.toLocaleDateString('es-AR',opts)}`;
-  },[weekStart,weekEnd]);
-
-  const tasks=useMemo(()=>{
-    return data.tasks.filter(t=>!t.isSummary&&t.start&&t.finish&&t.start<=weekEnd&&t.finish>=weekStart);
-  },[data.tasks,weekStart,weekEnd]);
-
+  const m0=useMemo(()=>new Date(now.getFullYear(),now.getMonth()+offset,1),[offset]);
+  const m1=useMemo(()=>{const d=new Date(m0.getFullYear(),m0.getMonth()+1,0);d.setHours(23,59,59,999);return d},[m0]);
+  const mesLbl=m0.toLocaleDateString('es-AR',{month:'long',year:'numeric'});
   const days=['Lunes','Martes','Miércoles','Jueves','Viernes'];
-  const dayDates=useMemo(()=>days.map((_,i)=>{const d=new Date(weekStart);d.setDate(d.getDate()+i);return d}),[weekStart]);
-  const todayIdx=dayDates.findIndex(d=>d.toDateString()===now.toDateString());
-  /* Quién está en obra esta semana: agrupado por contratista; cada tarea marca los días hábiles en que está activa.
-     Se excluyen las barras de control del semáforo (… Contratada, Obra …) y los standby. */
-  const groups=useMemo(()=>{
-    const m={};
-    for(const t of tasks){
-      if(/contratad[ao]/i.test(t.name)||/^[\s✔✓\-]*obra\b/i.test(t.name)||/stand[\s\-]?by/i.test(t.name))continue;
-      const c=entV(t,'Contratista')||'Sin contratista';
-      const on=dayDates.map(d0=>{const d1=new Date(d0);d1.setHours(23,59,59,999);return t.start<=d1&&t.finish>=d0});
-      (m[c]=m[c]||[]).push({t,on});
+  const fDM=d=>`${d.getDate()}/${d.getMonth()+1}`;
+  /* Semanas que tocan el mes: de lunes a viernes; la primera y la última se recortan a los días del mes */
+  const weeks=useMemo(()=>{
+    const out=[];const d=new Date(m0);d.setDate(d.getDate()-((d.getDay()+6)%7));d.setHours(0,0,0,0);
+    while(d<=m1){
+      const lun=new Date(d);const vie=new Date(d);vie.setDate(vie.getDate()+4);vie.setHours(23,59,59,999);
+      const a=lun<m0?new Date(m0):lun;const b=vie>m1?new Date(m1):vie;
+      if(a<=b)out.push({lun,a,b,dias:days.map((_,i)=>{const x=new Date(lun);x.setDate(x.getDate()+i);return x})});
+      d.setDate(d.getDate()+7);
     }
-    return Object.entries(m).sort((a,b)=>a[0]==='Sin contratista'?1:b[0]==='Sin contratista'?-1:a[0].localeCompare(b[0]))
-      .map(([c,rows])=>[c,rows.sort((a,b)=>(a.t.start-b.t.start)||(a.t.finish-b.t.finish))]);
-  },[tasks,dayDates]);
-  const nTasks=groups.reduce((s,[,r])=>s+r.length,0);
-  const nCon=groups.filter(([c])=>c!=='Sin contratista').length;
-
-  const isThisWeek=offset===0;
-
+    return out;
+  },[m0,m1]);
+  const tareas=useMemo(()=>data.tasks.filter(t=>!t.isSummary&&t.start&&t.finish&&t.start<=m1&&t.finish>=m0&&!isCtrlTask(t)),[data.tasks,m0,m1]);
+  const semanas=useMemo(()=>weeks.map((w,wi)=>{
+    const m={};
+    for(const t of tareas){
+      if(!(t.start<=w.b&&t.finish>=w.a))continue;
+      const sigue=wi>0&&t.start<w.a;
+      const on=w.dias.map(d0=>{const d1=new Date(d0);d1.setHours(23,59,59,999);return d0>=m0&&d0<=m1&&t.start<=d1&&t.finish>=d0});
+      const c=entV(t,'Contratista')||'Sin contratista';
+      (m[c]=m[c]||[]).push({t,on,sigue});
+    }
+    const grupos=Object.entries(m).sort((a,b)=>a[0]==='Sin contratista'?1:b[0]==='Sin contratista'?-1:a[0].localeCompare(b[0]))
+      .map(([c,rows])=>[c,rows.sort((a,b)=>(a.sigue-b.sigue)||(a.t.start-b.t.start)||(a.t.finish-b.t.finish))]);
+    const n=grupos.reduce((s,[,r])=>s+r.length,0),nuevas=grupos.reduce((s,[,r])=>s+r.filter(x=>!x.sigue).length,0);
+    const hoy=now>=w.lun&&now<=new Date(w.lun.getTime()+7*86400000);
+    return{...w,grupos,n,nuevas,hoy,todayIdx:w.dias.findIndex(d=>d.toDateString()===now.toDateString())};
+  }),[weeks,tareas,m0,m1]);
+  const nCon=new Set(tareas.map(t=>entV(t,'Contratista')).filter(Boolean)).size;
+  const vencidas=tareas.filter(t=>isOv(t)).length;
   return <div className="week-view">
     <div className="week-nav">
       <button onClick={()=>setOffset(o=>o-1)}>← Anterior</button>
-      <h3>{weekLabel}{isThisWeek&&<span style={{fontSize:12,color:'var(--ac)',marginLeft:8}}>esta semana</span>}</h3>
+      <h3 style={{textTransform:'capitalize'}}>{mesLbl}{offset===0&&<span style={{fontSize:12,color:'var(--ac)',marginLeft:8,textTransform:'none'}}>este mes</span>}</h3>
       <button onClick={()=>setOffset(o=>o+1)}>Siguiente →</button>
       {offset!==0&&<button onClick={()=>setOffset(0)} style={{color:'var(--ac)',borderColor:'var(--ac)'}}>Hoy</button>}
     </div>
-    <div style={{fontSize:13,color:'var(--c1)',marginBottom:16}}>{nTasks} tareas{nCon>0?` · ${nCon} contratista${nCon>1?'s':''} en obra`:' · ninguna tarea tiene contratista cargado'}</div>
-
-    {nTasks===0&&<div className="week-empty">No hay tareas programadas para esta semana.</div>}
-
-    {groups.map(([con,rows])=><div key={con} className="week-day">
-      <div className="week-day-hdr wk-hdr"><span className="wk-con">{con}</span><span className="wk-days" aria-hidden="true">{days.map((d,i)=><span key={i} className={i===todayIdx?'today':''}>{d[0]}</span>)}</span></div>
-      {rows.map(({t,on})=>{
-        const s=gSt(t);
-        return <div key={t.uid} className={`week-task ${s==='ov'?'ov':''}`}>
-          <span className="wt-dot" style={{background:stC(s)}} title={stL(s)}/>
-          <span className="wt-name" title={t.name}>{t.isMilestone&&<span style={{color:'var(--bar-ms)',marginRight:4}}>♦</span>}{t.name}</span>
-          <span className="wt-meta wt-dates">{fD(t.start)} → {fD(t.finish)}</span>
-          <span className="wk-days" aria-label={'Activa: '+days.filter((_,i)=>on[i]).join(', ')}>{on.map((x,i)=><i key={i} className={(x?'on':'')+(i===todayIdx?' today':'')}/>)}</span>
-          <span className="wt-meta" style={{width:38,textAlign:'right'}}>{t.percentComplete}%</span>
-        </div>;
-      })}
-    </div>)}
+    <div style={{fontSize:13,color:'var(--c1)',marginBottom:16}}>{tareas.length} tareas en el mes{nCon>0?` · ${nCon} contratista${nCon>1?'s':''}`:' · ninguna tarea tiene contratista cargado'}{vencidas>0?<span style={{color:'var(--err)'}}> · {vencidas} vencidas</span>:''}</div>
+    {tareas.length===0&&<div className="week-empty">No hay tareas programadas para este mes.</div>}
+    {semanas.map((w,wi)=><section key={wi} className={`mes-sem ${w.hoy?'hoy':''}`}>
+      <div className="mes-sem-h"><b>Semana {wi+1}</b><span className="mono">{fDM(w.a)} – {fDM(w.b)}</span>{w.hoy&&<span className="mes-hoy">esta semana</span>}<span className="mes-n">{w.n?`${w.n} tareas${w.n-w.nuevas?` · ${w.n-w.nuevas} siguen de antes`:''}`:'Sin tareas'}</span></div>
+      {w.grupos.map(([con,rows])=><div key={con} className="week-day">
+        <div className="week-day-hdr wk-hdr"><span className="wk-con">{con}</span><span className="wk-days" aria-hidden="true">{days.map((d,i)=><span key={i} className={i===w.todayIdx?'today':''}>{d[0]}</span>)}</span></div>
+        {rows.map(({t,on,sigue})=>{const st=gSt(t);
+          return <div key={t.uid} className={`week-task ${st==='ov'?'ov':''} ${sigue?'sigue':''}`}>
+            <span className="wt-dot" style={{background:stC(st)}} title={stL(st)}/>
+            <span className="wt-name" title={t.name}>{t.isMilestone&&<span style={{color:'var(--bar-ms)',marginRight:4}}>♦</span>}{t.name}{sigue&&<span className="sigue-tag">sigue</span>}</span>
+            <span className="wt-meta wt-dates">{fD(t.start)} → {fD(t.finish)}</span>
+            <span className="wk-days" aria-label={'Activa: '+days.filter((_,i)=>on[i]).join(', ')}>{on.map((x,i)=><i key={i} className={(x?'on':'')+(i===w.todayIdx?' today':'')}/>)}</span>
+            <span className="wt-meta" style={{width:38,textAlign:'right'}}>{t.percentComplete}%</span>
+          </div>})}
+      </div>)}
+    </section>)}
   </div>;
 }
 
@@ -2589,7 +2598,7 @@ const TOUR_STEPS=[
   {title:'Bienvenido a BuildPlan',body:'Acá están todas las obras de Bauvek. Arriba tenés el resumen del día: obras críticas, en atención, vencidas e hitos de las próximas dos semanas. Las tarjetas están ordenadas de la más grave a la más tranquila.'},
   {title:'Cómo se lee el semáforo',body:'Combina dos cosas: si el fin de obra cae después de la fecha contratada (descontando standby) y qué parte de las tareas está vencida. Gana la peor. "Revisar datos" aparece cuando el desvío es tan grande que seguramente hay una fecha mal cargada.'},
   {title:'Vencidas y sin actualizar',body:'"Sin actualizar" son tareas vencidas que probablemente no están atrasadas: el avance no se cargó en MS Project. Mantener al día la fecha de estado y el % completado limpia esos números.'},
-  {title:'Dentro de una obra',body:'Cada obra abre en Resumen. "Semana" muestra qué contratista trabaja cada día, pensado para el celular. El Gantt arranca en la fecha de hoy.'},
+  {title:'Dentro de una obra',body:'Cada obra abre en el Gantt, en vista trimestral y centrado en hoy. "Mes" muestra las tareas del mes separadas por semana y por contratista, pensado para el celular.'},
   {title:'Abastecimiento',body:'Trae los materiales del Cómputo con la fecha en que hay que pedirlos, según el plazo de pedido que elijas. Por defecto muestra solo lo que falta ejecutar. También podés ver qué rubros arrancan en las próximas semanas.'},
   {title:'Portfolio',body:'Compara todas las obras: Gantt de obras, vencidas por responsable, la agenda de contratistas de las próximas 3 semanas y la salud de datos de cada cronograma.'},
 ];
@@ -3385,9 +3394,9 @@ function DatosPanel({origen,manifest,onClose,onDone,empNombre}){
 
 /* ═══════ MAIN APP ═══════ */
 /* Pestañas de una obra: abre en Resumen; el Gantt queda como detalle */
-const PROJ_TABS=[['dash','Resumen'],['semana','Semana'],['gantt','Gantt'],['abast','Abastecimiento'],['demoras','Curva S y demoras']];
+const PROJ_TABS=[['gantt','Gantt'],['dash','Resumen'],['mes','Mes'],['abast','Abastecimiento'],['demoras','Curva S y demoras']];
 const PROJ_SUBS=PROJ_TABS.map(x=>x[0]);
-function App({onLogout,empInfo=BAUVEK}){
+function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
   const[th,togTh]=useTheme();
   const[pList,setPList]=useState(null);
   const[pData,setPData]=useState({});
@@ -3395,8 +3404,8 @@ function App({onLogout,empInfo=BAUVEK}){
   const[errors,setErrors]=useState({});
   const[openTabs,setOpen]=useState([]);
   const[active,setActive]=useState(null);
-  const[sub,setSub]=useState('dash');
-  const[zoom,setZoom]=useState('week');
+  const[sub,setSub]=useState('gantt');
+  const[zoom,setZoom]=useState('qtr');   /* la obra abre en el Gantt, vista trimestral */
   const[showSrch,setShowSrch]=useState(false);
   const[showArr,setShowArr]=useState(true);
   const[showBL,setShowBL]=useState(true);
@@ -3602,7 +3611,7 @@ function App({onLogout,empInfo=BAUVEK}){
       finally{setLoading(p=>{const n={...p};delete n[k];return n})}
     }
     setOpen(p=>p.includes(k)?p:[...p,k]);
-    setActive(k);setSub(s=>PROJ_SUBS.includes(s)?s:'dash');resetF();
+    setActive(k);setSub(s=>PROJ_SUBS.includes(s)?s:'gantt');resetF();
   },[openTabs,pData,loading,resetF]);
 
   const closeTab=useCallback((k,e)=>{e?.stopPropagation();setOpen(p=>{const n=p.filter(x=>x!==k);if(active===k)setActive(n.length?n[n.length-1]:null);return n})},[active]);
@@ -3615,7 +3624,7 @@ function App({onLogout,empInfo=BAUVEK}){
       const oc=obraCode(file.name);const proj={key:k,name:file.name.replace('.xml',''),file:file.name,size:file.size,local:true,cod:oc?.cod||null,cliente:oc?.cliente||null,lote:oc?.lote||null};
       setPList(p=>[...(p||[]),proj]);setPData(p=>({...p,[k]:d}));
       const em={};d.tasks.forEach(t=>{if(t.isSummary)em[t.uid]=true});setExpMap(p=>({...p,[k]:em}));
-      setOpen(p=>[...p,k]);setActive(k);setSub('dash');resetF();
+      setOpen(p=>[...p,k]);setActive(k);setSub('gantt');resetF();
     }catch(err){console.error(err)}};
     reader.readAsText(file);
   },[resetF]);
@@ -3758,7 +3767,7 @@ function App({onLogout,empInfo=BAUVEK}){
 
   const shareClient=useCallback(()=>{if(aProj?.file)makeLink('cliente',aProj.file)},[aProj,makeLink]);
 
-  const goObra=k=>{setActive(k);if(!PROJ_SUBS.includes(sub))setSub('dash')};
+  const goObra=k=>{setActive(k);if(!PROJ_SUBS.includes(sub))setSub('gantt')};
 
   /* Encabezado único para Inicio, Portfolio y obra */
   const hdr=cur=><div className="hdr">
@@ -3851,7 +3860,7 @@ function App({onLogout,empInfo=BAUVEK}){
           {/* En celular el filtro de director va arriba (el mapa queda al final de la página) */}
           <div className="dir-top"><DirFilter directors={dirInfo.list} sel={dirAct} onChange={setDirSel} sinDir={dirInfo.sin} pend={dirInfo.pend}/></div>
           {/* Franja de dirección: lo que hay que mirar hoy */}
-          <div className="exec" aria-label="Resumen de obras activas">
+          {isAdmin&&<div className="exec" aria-label="Resumen de obras activas">
             <div className="exec-cell"><b>{S.n}</b><span>obras activas</span></div>
             <div className="exec-cell r"><b>{S.r}</b><span>críticas</span></div>
             <div className="exec-cell y"><b>{S.y}</b><span>en atención</span></div>
@@ -3863,7 +3872,7 @@ function App({onLogout,empInfo=BAUVEK}){
               {S.hitos.slice(0,4).map(({p,t})=><button key={p.key+t.uid} className="exec-hito" onClick={()=>openProj(p)}><span className="mono">{fD(t.finish)}</span>{p.cod&&<b className="cod">{p.cod}</b>}<span className="eh-n">{t.name}</span></button>)}
               {S.hitos.length>4&&<div className="exec-none">+{S.hitos.length-4} más</div>}
             </div>
-          </div>
+          </div>}
 
           <div className="home-h">
             <div className="home-title">Obras activas</div>
@@ -3968,7 +3977,6 @@ function App({onLogout,empInfo=BAUVEK}){
           <span className="tool-sep"/>
         </Fragment>}
         <button className="btn btn-g" onClick={()=>window.print()} title="Imprimir o guardar como PDF">{I.prt()} PDF</button>
-        <a href="pagos.html" className="btn btn-g" style={{textDecoration:'none'}} title="Ver programación de pagos">$ Pagos</a>
         <button className="btn btn-g" onClick={shareClient} title="Copiar el link de la vista para el cliente">{I.lnk()} Compartir</button>
       </div>
     </div>
@@ -4032,7 +4040,7 @@ function App({onLogout,empInfo=BAUVEK}){
       <GanttSVG tasks={visTasks} minDate={aData.minDate} maxDate={aData.maxDate} zoom={zoom} showArr={showArr} showBL={showBL} scrollRef={scrollRef} onTT={setTTInfo}/>
     </div>}
 
-    {!aLoading&&aData&&sub==='semana'&&<WeekView data={aData}/>}
+    {!aLoading&&aData&&sub==='mes'&&<MonthView data={aData}/>}
     {!aLoading&&aData&&sub==='abast'&&<AbastView matKey={active+(computoData[active]?.loaded?':ok':computoData[active]?.needLogin?':login':':x')} data={aData} computoData={computoData[active]||null} visTasks={visTasks} onLogin={()=>{setComputoData({});setComputoAuth(n=>n+1)}}/>}
     {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData} health={healthMap[active]} proj={aProj}/>}
     {!aLoading&&aData&&sub==='demoras'&&<DemorasView data={aData}/>}
@@ -4043,9 +4051,9 @@ function App({onLogout,empInfo=BAUVEK}){
     <div className="pf">BuildPlan{empInfo?.nombre?' · '+empInfo.nombre:''} · {new Date().toLocaleDateString('es-AR')}</div>
     <div className="mob-nav">
       <button onClick={()=>setActive(null)}>{I.home(18)}<span>Inicio</span></button>
-      <button className={sub==='dash'?'on':''} onClick={()=>setSub('dash')}>{I.chart(18)}<span>Resumen</span></button>
-      <button className={sub==='semana'?'on':''} onClick={()=>setSub('semana')}>{I.cal(18)}<span>Semana</span></button>
       <button className={sub==='gantt'?'on':''} onClick={()=>setSub('gantt')}>{I.bld(18)}<span>Gantt</span></button>
+      <button className={sub==='dash'?'on':''} onClick={()=>setSub('dash')}>{I.chart(18)}<span>Resumen</span></button>
+      <button className={sub==='mes'?'on':''} onClick={()=>setSub('mes')}>{I.cal(18)}<span>Mes</span></button>
     </div>
   </Fragment>;
 }
@@ -4063,7 +4071,7 @@ function Root(){
   const logout=()=>{try{['sb_access_token','sb_refresh_token','sb_user'].forEach(k=>localStorage.removeItem(k))}catch(e){}setAuth(false)};
   if(!puedeEntrar(auth))return <div className="login-wrap"><div className="login-card"><Brand emp={BAUVEK}/><h1 className="login-h">Sin acceso</h1><p className="login-p">BkTableros es de uso interno de Bauvek y tu usuario no pertenece a la empresa. Cómputo de Obras lo podés seguir usando con tu usuario.</p><a className="btn" href="https://manuelsagarraga-cloud.github.io/Computo-Obras/">Ir a Cómputo de Obras</a><button className="btn" onClick={logout}>Salir</button></div></div>;
   _empresa='bauvek';
-  return <App onLogout={logout}/>;
+  return <App onLogout={logout} isAdmin={!!auth.admin}/>;
 }
 ReactDOM.createRoot(document.getElementById('root')).render(<Root/>);
 </script>
