@@ -374,6 +374,13 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:14px
 .con-sel{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
 .con-sel select{width:100%;min-height:36px;padding:6px 8px;border:1px solid var(--b0);border-radius:var(--r-s);background:var(--bg-el);color:var(--c0);font-family:var(--ff);font-size:12px}
 .con-sum{font-size:11px;color:var(--c1)}
+.pc-dl{border-top:1px dashed var(--b1);padding-top:6px;display:flex;flex-direction:column;gap:3px;font-size:11px}
+.pc-dl-h{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--c2);font-weight:600}
+.pc-dl-h span{text-transform:none;letter-spacing:0;font-weight:400}
+.pc-dl-t{display:flex;align-items:center;gap:6px;color:var(--c0)}
+.pc-dl-n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-dl-c{color:var(--c1);max-width:30%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-dl-d{color:var(--err);white-space:nowrap;font-weight:600}
 .pcard2-bottom{display:flex;justify-content:space-between;font-size:11px;color:var(--c2);font-family:var(--fm)}
 .pgrid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:8px}
 
@@ -1624,7 +1631,7 @@ function ResponsablesView({projList,projData,metaList,healthMap,onOpen}){
   const[sel,setSel]=useState(null);
   const[withSoon,setWithSoon]=useState(false);
   const[maxAge,setMaxAge]=useState(0);          /* 0 = sin límite; si no, solo vencidas hace ≤ N días */
-  const[withStale,setWithStale]=useState(false); /* por defecto no cuenta las vencidas "sin actualizar" */
+  const[withStale,setWithStale]=useState(true); /* por defecto no cuenta las vencidas "sin actualizar" */
   const detailRef=useRef(null);
 
   const projsInScope=useMemo(()=>(projList||[]).filter(p=>{
@@ -2452,15 +2459,27 @@ function PlanRow({h,td}){
   if(h.esp===null||h.avg>=100)return trend?<div className="pc-row"><span>Tendencia</span>{tr}</div>:null;
   const g=h.gapPts;
   const col=g>=-2?'var(--ok)':g>=-10?'var(--warn)':'var(--err)';
-  const ref=h.statusDate?'a la fecha de estado':'a hoy';
-  const dudoso=!h.statusDate&&h.ovStale>0&&g<-2;
-  const tip=`Según ${h.espSrc==='línea base'?'la línea base':'el cronograma vigente (no hay línea base)'}, ${ref} debería ir ${h.esp} % (ponderado por duración). Real: ${h.avg} %.`+(dudoso?'\nSin fecha de estado: parte de la diferencia puede ser avance no cargado en MS Project.':'');
+  const ref='a hoy';
+  const tip=`Según ${h.espSrc==='línea base'?'la línea base':'el cronograma vigente (no hay línea base)'}, a hoy debería ir ${h.esp} % (ponderado por duración). Real: ${h.avg} %.`;
   return <div className="pc-plan" title={tip}>
     <span className="pc-plan-l">Plan {ref}</span>
     <span className="mono pc-plan-v">{h.esp}%</span>
-    <span className="pc-gap mono" style={{color:dudoso?'var(--q)':col}}>{g===0?'en plan':`${g>0?'+':''}${g} pts`}{dudoso?' ?':''}</span>
+    <span className="pc-gap mono" style={{color:col}}>{g===0?'en plan':`${g>0?'+':''}${g} pts`}</span>
     <span className="pc-plan-src">{h.espSrc}</span>
     {tr}
+  </div>;
+}
+
+/* Mayores demoras de la obra: las 3 tareas vencidas más atrasadas, con contratista y días */
+function DelayList({h}){
+  if(!h.delays||!h.delays.length)return null;
+  return <div className="pc-dl">
+    <div className="pc-dl-h">Demoras{h.nLate>h.delays.length&&<span> · {h.delays.length} de {h.nLate}</span>}</div>
+    {h.delays.map(x=><div key={x.uid} className="pc-dl-t">
+      <span className="pc-dl-n" title={x.name+(x.con?' — '+x.con:'')}>{x.name}</span>
+      {x.con&&<span className="pc-dl-c">{x.con}</span>}
+      <span className="mono pc-dl-d">{x.pc}% · {x.late} d</span>
+    </div>)}
   </div>;
 }
 
@@ -2566,7 +2585,7 @@ function calcHealth(data){
   /* Semáforo de dos ejes: plazo (fin de obra vs contratado, neto de standby) y vencidas reales.
      Gana el peor de los dos. Un desvío mayor a ±180 días casi siempre es una fecha mal cargada. */
   let desvioBruto=null,desvioNeto=null,color='x',label='Sin fecha contratada',motivo='No hay una tarea "contratada" en el cronograma';
-  const ovPct=tot?Math.round(ovReal*100/tot):0;
+  const ovPct=tot?Math.round(ov*100/tot):0; /* el avance se toma como actualizado: cuentan todas las vencidas */
   const vColor=ovPct>=25?'r':ovPct>=10?'y':'g';
   if(finContratado){
     desvioBruto=Math.round((finObra-finContratado)/86400000);
@@ -2580,14 +2599,14 @@ function calcHealth(data){
       color=SEV[pColor]<=SEV[vColor]?pColor:vColor;
       label=SEMA_LBL[color];
       const mp=d>0?`fin ${d} días después de lo contratado${standbyDays>0?' (neto de standby)':''}`:'fin dentro del plazo contratado';
-      const mv=ovReal?`${ovPct} % de las tareas vencidas`:'sin tareas vencidas';
+      const mv=ov?`${ovPct} % de las tareas vencidas`:'sin tareas vencidas';
       motivo=color===vColor&&vColor!==pColor?`${mv}; ${mp}`:`${mp}; ${mv}`;
     }
   }
 
   /* Avance esperado a la fecha de estado (o a hoy si el XML no la tiene): lo que el plan dice que debería estar hecho.
      Misma cuenta que la Curva S. Usa la línea base si la tiene la mayoría de las tareas; si no, el cronograma vigente. */
-  const refD=statusDate||now;
+  const refD=now;
   const pt=ts.filter(t=>!t.isMilestone&&!isCtrlTask(t)&&t.start&&t.finish);
   const blOk=pt.filter(t=>t.baselines&&t.baselines[0]?.start&&t.baselines[0]?.finish);
   const useBL=pt.length>0&&blOk.length>=pt.length*0.6;
@@ -2597,6 +2616,9 @@ function calcHealth(data){
     eW+=w;if(refD>=f0)eS+=w;else if(refD>s0)eS+=w*(refD-s0)/Math.max(f0-s0,1)}
   const esp=eW?Math.round(eS*100/eW):null;
   const gapPts=esp===null?null:wAvg(espSet)-esp;
+  /* Mayores demoras: vencidas sin terminar, de la más atrasada a la menos */
+  const late=ts.filter(t=>isOv(t)&&!t.isMilestone&&!isCtrlTask(t)).map(t=>({uid:t.uid,name:t.name,late:Math.max(1,Math.floor((now-t.finish)/86400000)),pc:t.percentComplete,con:entV(t,'Contratista')})).sort((a,b)=>b.late-a.late);
+  const delays=late.slice(0,3);
   const soonLim=new Date(now.getTime()+7*86400000);
   const soon=ts.filter(t=>!t.isMilestone&&t.finish&&t.percentComplete<100&&t.finish>=now&&t.finish<=soonLim).length;
 
@@ -2604,7 +2626,7 @@ function calcHealth(data){
   const nextMs=ts.filter(t=>t.isMilestone&&t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish)[0];
 
   return{color,label,motivo,rank:SEV[color],tot,done,ov,ovReal,ovStale,ip,avg,nextMs:nextMs||null,statusDate,
-    esp,espSrc:useBL?'línea base':'cronograma',gapPts,soon,
+    esp,espSrc:useBL?'línea base':'cronograma',gapPts,soon,delays,nLate:late.length,
     contratadaName:contratadaTask?.name||null,obraName:obraTask?.name||null,
     finContratado,finObra,desvioBruto,desvioNeto,
     standbyDays,standbyDetail,hasContratada:!!finContratado};
@@ -3842,7 +3864,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
         const o=c.obras[p.key]=c.obras[p.key]||{tot:0,done:0,ov:0,now:[],next:null};
         o.tot++;
         if(t.percentComplete>=100){o.done++;continue}
-        if(isOv(t)&&!isStale(t,d.statusDate))o.ov++;
+        if(isOv(t))o.ov++;
         if(t.start&&t.finish&&t.start<=now&&t.finish>=now)o.now.push(t);
         else if(t.start&&t.start>now&&(!o.next||t.start<o.next.start))o.next=t;
       }}
@@ -3863,7 +3885,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
       for(const t of d.tasks)if(t.isMilestone&&t.finish&&t.finish>=now&&t.finish<=lim&&t.percentComplete<100)hitos.push({p,t});}
     hitos.sort((a,b)=>a.t.finish-b.t.finish);
     return{n:act.length,analizadas:hs.length,r:cnt('r'),y:cnt('y'),q:cnt('q'),x:cnt('x'),g:cnt('g'),
-      ovReal:hs.reduce((s,h)=>s+(h.ovReal||0),0),ovStale:hs.reduce((s,h)=>s+(h.ovStale||0),0),hitos};
+      ov:hs.reduce((s,h)=>s+(h.ov||0),0),ovReal:hs.reduce((s,h)=>s+(h.ovReal||0),0),ovStale:hs.reduce((s,h)=>s+(h.ovStale||0),0),hitos};
   },[healthMap,pData]);
   /* homeSum: todas las obras (encabezado, lleva a Portfolio). homeSumDir: franja de Inicio con el filtro de director */
   const homeSum=useMemo(()=>sumOf([...classified.activo,...classified.pausa]),[classified,sumOf]);
@@ -3890,7 +3912,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
         return <button key={k} className={`tab ${active===k?'on':''}`} onClick={()=>goObra(k)} title={p.name}><span className="dot" style={{background:h?SEMA_COL[h.color]:'var(--c2)'}}/>{p.cod&&<b className="cod">{p.cod}</b>}<span className="tab-n">{p.name}</span><span className="x" role="button" aria-label={'Cerrar '+p.name} onClick={e=>closeTab(k,e)}>×</span></button>})}
     </div>
     <div className="acts">
-      {homeSum.ovReal>0&&<button className="btn btn-g hdr-ov" onClick={()=>{setActive('__pf');setSub('portfolio-resp')}} title={`${homeSum.ovReal} vencidas con avance cargado y ${homeSum.ovStale} sin actualizar en obras activas`}>{homeSum.ovReal} vencidas →</button>}
+      {homeSum.ov>0&&<button className="btn btn-g hdr-ov" onClick={()=>{setActive('__pf');setSub('portfolio-resp')}} title={`${homeSum.ov} tareas vencidas en obras activas`}>{homeSum.ov} vencidas →</button>}
       <button className="btn btn-g btn-i" onClick={()=>setShowSrch(true)} title="Buscar tareas (Ctrl+K)" aria-label="Buscar tareas">{I.srch()}</button>
       <button className="btn btn-g btn-i" onClick={togTh} title="Cambiar tema" aria-label="Cambiar tema">{th==='light'?I.moon():I.sun()}</button>
       <button className={`btn btn-g hdr-datos ${origen==='repo'?'warn':''}`} onClick={()=>setShowDatos(true)} title={origen==='repo'?'Los cronogramas todavía están en el repo público':'Subir cronogramas y Excel de proyectos'}>{origen==='repo'?'⚠ Datos':'Datos'}</button>
@@ -3912,7 +3934,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
     const sinEstado=classified.sin.filter(byDir);
     /* Obras activas y en pausa, ordenadas por gravedad: crítico, atención, revisar datos, sin fecha, en tiempo */
     const bySev=(a,b)=>{const ha=healthMap[a.key],hb=healthMap[b.key];
-      return(ha?ha.rank:9)-(hb?hb.rank:9)||((hb?.ovReal||0)-(ha?.ovReal||0))||a.name.localeCompare(b.name)};
+      return(ha?ha.rank:9)-(hb?hb.rank:9)||((hb?.ov||0)-(ha?.ov||0))||a.name.localeCompare(b.name)};
     const byCon=(a,b)=>{const oa=conAct.obras[a.key],ob=conAct.obras[b.key];
       return(ob.now.length>0)-(oa.now.length>0)||((oa.next?.start||9e15)-(ob.next?.start||9e15))||bySev(a,b)};
     const activeProjs=[...classified.activo,...classified.pausa].filter(byDir).sort(conAct?byCon:bySev);
@@ -3948,13 +3970,12 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
           <div className="pcard2-stats">
             <span className="pc-avg">{h.avg}%</span>
             <span>{h.done}/{h.tot} hechas</span>
-            {h.ovReal>0&&<span style={{color:'var(--err)'}}>{h.ovReal} vencidas</span>}
-            {h.ovStale>0&&<span style={{color:'var(--q)'}} title="Vencidas que probablemente no se actualizaron en MS Project">{h.ovStale} sin actualizar</span>}
+            {h.ov>0&&<span style={{color:'var(--err)'}}>{h.ov} vencidas</span>}
             {h.soon>0&&<span style={{color:'var(--warn)'}} title="Tareas sin terminar que vencen en los próximos 7 días">{h.soon} vencen en 7 d</span>}
           </div>
           <PlanRow h={h} td={getTrendForProject(trendData,p.key)}/>
-          {conAct&&conAct.obras[p.key]&&<ConCardBlock o={conAct.obras[p.key]} name={conAct.name}/>}
-          {d&&<div className="pc-row"><Frescura sd={d.statusDate} short/>{h.standbyDays>0&&<span>⏸ {h.standbyDays}d standby</span>}</div>}
+          {conAct&&conAct.obras[p.key]?<ConCardBlock o={conAct.obras[p.key]} name={conAct.name}/>:<DelayList h={h}/>}
+          {h.standbyDays>0&&<div className="pc-row"><span>⏸ {h.standbyDays}d standby</span></div>}
           {h.nextMs&&<div className="pc-row">Próximo hito: {h.nextMs.name} <span className="mono">{fD(h.nextMs.finish)}</span></div>}
         </Fragment>}
         {!h&&isLoading&&<div className="pcard2-loading"><div className="mini-sp"/>Analizando…</div>}
@@ -3979,7 +4000,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
             <div className="exec-cell r"><b>{S.r}</b><span>críticas</span></div>
             <div className="exec-cell y"><b>{S.y}</b><span>en atención</span></div>
             <div className="exec-cell q" title="Desvío de más de 180 días: casi siempre es una fecha contratada mal cargada"><b>{S.q}</b><span>revisar datos</span></div>
-            <button className="exec-cell link" onClick={()=>{setActive('__pf');setSub('portfolio-resp')}}><b>{S.ovReal}</b><span>vencidas{S.ovStale>0?` · +${S.ovStale} sin actualizar`:''}</span></button>
+            <button className="exec-cell link" onClick={()=>{setActive('__pf');setSub('portfolio-resp')}}><b>{S.ov}</b><span>vencidas</span></button>
             <div className="exec-hitos">
               <div className="exec-h">Hitos de los próximos 14 días</div>
               {S.hitos.length===0&&<div className="exec-none">Ninguno</div>}
