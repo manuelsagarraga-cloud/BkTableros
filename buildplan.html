@@ -354,6 +354,26 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:14px
 .pcard2-meta span{display:flex;align-items:center;gap:3px}
 .pcard2-bar{height:4px;border-radius:2px;background:var(--bg-2);overflow:hidden;margin-top:2px}
 .pcard2-fill{height:100%;border-radius:2px;transition:width .3s}
+.pcard2-bar{position:relative;height:6px}
+.pcard2-plan{position:absolute;top:0;bottom:0;width:2px;background:var(--c0);opacity:.75}
+.pc-plan{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--c1)}
+.pc-plan-v{font-weight:700;color:var(--c0)}
+.pc-gap{font-weight:700}
+.pc-plan-src{font-size:10px;color:var(--c2);text-transform:uppercase;letter-spacing:.4px}
+.pc-tr{margin-left:auto;display:inline-flex}
+.pc-con{border-top:1px dashed var(--b1);padding-top:6px;display:flex;flex-direction:column;gap:3px;font-size:11px}
+.pc-con-h{display:flex;gap:8px;align-items:baseline;color:var(--c1)}
+.pc-con-h b{color:var(--c0);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}
+.pc-con-t{display:flex;align-items:center;gap:6px;color:var(--c0)}
+.pc-con-n{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-con-t .mono{color:var(--c1);white-space:nowrap}
+.pc-con-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--c2);flex-shrink:0}
+.pc-con-dot.on{background:var(--ok);border-color:var(--ok)}
+.pc-con-none{color:var(--c2)}
+.pc-con-more{color:var(--c2);padding-left:13px}
+.con-sel{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.con-sel select{width:100%;min-height:36px;padding:6px 8px;border:1px solid var(--b0);border-radius:var(--r-s);background:var(--bg-el);color:var(--c0);font-family:var(--ff);font-size:12px}
+.con-sum{font-size:11px;color:var(--c1)}
 .pcard2-bottom{display:flex;justify-content:space-between;font-size:11px;color:var(--c2);font-family:var(--fm)}
 .pgrid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:8px}
 
@@ -2423,6 +2443,55 @@ function Sparkline({data,field='avg',w=60,h=16,color='var(--ac)'}){
   </span>;
 }
 
+/* ═══════ Tarjeta de obra: avance real contra el plan ═══════
+   Reemplaza a las sparklines solas: con 2 semanas de historia eran una raya sin información.
+   La tendencia se suma solo cuando hay 3+ semanas y el avance cambió. */
+function PlanRow({h,td}){
+  const trend=td&&td.length>=3&&new Set(td.map(d=>d.avg)).size>1;
+  const tr=trend&&<span className="pc-tr" title="Avance de las últimas semanas"><Sparkline data={td} field="avg" color="var(--c1)" w={48}/></span>;
+  if(h.esp===null||h.avg>=100)return trend?<div className="pc-row"><span>Tendencia</span>{tr}</div>:null;
+  const g=h.gapPts;
+  const col=g>=-2?'var(--ok)':g>=-10?'var(--warn)':'var(--err)';
+  const ref=h.statusDate?'a la fecha de estado':'a hoy';
+  const dudoso=!h.statusDate&&h.ovStale>0&&g<-2;
+  const tip=`Según ${h.espSrc==='línea base'?'la línea base':'el cronograma vigente (no hay línea base)'}, ${ref} debería ir ${h.esp} % (ponderado por duración). Real: ${h.avg} %.`+(dudoso?'\nSin fecha de estado: parte de la diferencia puede ser avance no cargado en MS Project.':'');
+  return <div className="pc-plan" title={tip}>
+    <span className="pc-plan-l">Plan {ref}</span>
+    <span className="mono pc-plan-v">{h.esp}%</span>
+    <span className="pc-gap mono" style={{color:dudoso?'var(--q)':col}}>{g===0?'en plan':`${g>0?'+':''}${g} pts`}{dudoso?' ?':''}</span>
+    <span className="pc-plan-src">{h.espSrc}</span>
+    {tr}
+  </div>;
+}
+
+/* Bloque de la tarjeta cuando hay un contratista elegido: qué está haciendo en esta obra */
+function ConCardBlock({o,name}){
+  const cur=o.now.slice().sort((a,b)=>a.finish-b.finish);
+  return <div className="pc-con">
+    <div className="pc-con-h"><b title={name}>{name}</b><span className="mono">{o.done}/{o.tot} hechas</span>{o.ov>0&&<span className="mono" style={{color:'var(--err)'}}>{o.ov} vencida{o.ov>1?'s':''}</span>}</div>
+    {cur.slice(0,2).map(t=><div key={t.uid} className="pc-con-t"><span className="pc-con-dot on"/><span className="pc-con-n" title={t.name}>{t.name}</span><span className="mono">{t.percentComplete}% · a {fD(t.finish)}</span></div>)}
+    {cur.length>2&&<div className="pc-con-more">+{cur.length-2} más en curso</div>}
+    {!cur.length&&(o.next?<div className="pc-con-t"><span className="pc-con-dot"/><span className="pc-con-n" title={o.next.name}>Próxima: {o.next.name}</span><span className="mono">desde {fD(o.next.start)}</span></div>
+      :<div className="pc-con-t pc-con-none">Sin tareas en curso ni próximas</div>)}
+  </div>;
+}
+
+/* ═══════ Filtro por contratista (Inicio): en qué obras está y qué hace en cada una ═══════ */
+function ConFilter({info,sel,onChange}){
+  const c=info.list.find(x=>x.key===sel);
+  return <div className="map-section dir-f con-f">
+    <div className="map-header"><span>Contratista</span>{c&&<button className="clear-btn" onClick={()=>onChange('')}>Todos</button>}</div>
+    {info.list.length===0?<div className="dir-empty">{info.pend?'Leyendo cronogramas…':'Ninguna tarea de obras activas tiene cargado el campo Contratista.'}</div>
+    :<div className="con-sel">
+      <select value={c?sel:''} onChange={e=>onChange(e.target.value)} aria-label="Filtrar obras por contratista">
+        <option value="">Todos los contratistas</option>
+        {info.list.map(x=><option key={x.key} value={x.key}>{x.name} · {x.n} obra{x.n>1?'s':''}{x.nNow?` · ${x.nNow} hoy`:''}</option>)}
+      </select>
+      {c&&<div className="con-sum"><b>{c.nNow}</b> de {c.n} obra{c.n>1?'s':''} con tareas en curso hoy{c.ov>0&&<span style={{color:'var(--err)'}}> · {c.ov} vencidas</span>}</div>}
+    </div>}
+  </div>;
+}
+
 /* ═══════ Health calculation ═══════ */
 /* Estados del semáforo: una sola palabra por estado en todas las pantallas */
 const SEMA_LBL={r:'Crítico',y:'Atención',q:'Revisar datos',x:'Sin fecha contratada',g:'En tiempo'};
@@ -2516,10 +2585,26 @@ function calcHealth(data){
     }
   }
 
+  /* Avance esperado a la fecha de estado (o a hoy si el XML no la tiene): lo que el plan dice que debería estar hecho.
+     Misma cuenta que la Curva S. Usa la línea base si la tiene la mayoría de las tareas; si no, el cronograma vigente. */
+  const refD=statusDate||now;
+  const pt=ts.filter(t=>!t.isMilestone&&!isCtrlTask(t)&&t.start&&t.finish);
+  const blOk=pt.filter(t=>t.baselines&&t.baselines[0]?.start&&t.baselines[0]?.finish);
+  const useBL=pt.length>0&&blOk.length>=pt.length*0.6;
+  const espSet=useBL?blOk:pt;
+  let eS=0,eW=0;
+  for(const t of espSet){const s0=useBL?t.baselines[0].start:t.start,f0=useBL?t.baselines[0].finish:t.finish,w=Math.max(t.durDays||0,1);
+    eW+=w;if(refD>=f0)eS+=w;else if(refD>s0)eS+=w*(refD-s0)/Math.max(f0-s0,1)}
+  const esp=eW?Math.round(eS*100/eW):null;
+  const gapPts=esp===null?null:wAvg(espSet)-esp;
+  const soonLim=new Date(now.getTime()+7*86400000);
+  const soon=ts.filter(t=>!t.isMilestone&&t.finish&&t.percentComplete<100&&t.finish>=now&&t.finish<=soonLim).length;
+
   /* Next milestone */
   const nextMs=ts.filter(t=>t.isMilestone&&t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish)[0];
 
   return{color,label,motivo,rank:SEV[color],tot,done,ov,ovReal,ovStale,ip,avg,nextMs:nextMs||null,statusDate,
+    esp,espSrc:useBL?'línea base':'cronograma',gapPts,soon,
     contratadaName:contratadaTask?.name||null,obraName:obraTask?.name||null,
     finContratado,finObra,desvioBruto,desvioNeto,
     standbyDays,standbyDetail,hasContratada:!!finContratado};
@@ -3439,6 +3524,9 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
   /* Directores elegidos en Inicio (vacío = todos). Se recuerda por navegador. */
   const[dirSel,setDirSelRaw]=useState(()=>{try{const v=JSON.parse(localStorage.getItem('bp_dir_sel')||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}});
   const setDirSel=useCallback(v=>{setDirSelRaw(v);try{localStorage.setItem('bp_dir_sel',JSON.stringify(v))}catch(e){}},[]);
+  /* Contratista elegido en Inicio ('' = todos). Se recuerda por navegador. */
+  const[conSel,setConSelRaw]=useState(()=>{try{return localStorage.getItem('bp_con_sel')||''}catch(e){return''}});
+  const setConSel=useCallback(v=>{setConSelRaw(v);try{localStorage.setItem('bp_con_sel',v)}catch(e){}},[]);
   const[healthMap,setHealthMap]=useState({});
   const[autoLoading,setAutoLoading]=useState({});
   const[trendData,setTrendData]=useState(()=>loadTrend());
@@ -3743,7 +3831,28 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
   },[classified,obraDirs]);
   /* Ignora selecciones guardadas que ya no corresponden a un director (mientras cargan los cronogramas se mantienen) */
   const dirAct=useMemo(()=>dirInfo.pend?dirSel.filter(k=>k===SIN_DIR||DIRECTORES_OBRA.includes(k)):dirSel.filter(k=>dirInfo.list.some(d=>d.key===k)),[dirSel,dirInfo]);
-  const byDir=useCallback(p=>{if(!dirAct.length)return true;const m=obraDirs[p.key];if(!m)return false;const ks=Object.keys(m);return ks.length?ks.some(k=>dirAct.includes(k)):dirAct.includes(SIN_DIR)},[dirAct,obraDirs]);
+  /* Contratistas de obras activas: nombres agrupados sin tildes ni mayúsculas; por obra, qué tiene en curso hoy y qué sigue */
+  const conInfo=useMemo(()=>{
+    const act=[...classified.activo,...classified.pausa];
+    const now=new Date();const by={};let pend=0;
+    for(const p of act){const d=pData[p.key];if(!d){pend++;continue}
+      for(const t of d.tasks){if(t.isSummary||t.isMilestone)continue;
+        const raw=entV(t,'Contratista');const k=normName(raw);if(!k)continue;
+        const c=by[k]=by[k]||{key:k,names:{},obras:{}};c.names[raw.trim()]=(c.names[raw.trim()]||0)+1;
+        const o=c.obras[p.key]=c.obras[p.key]||{tot:0,done:0,ov:0,now:[],next:null};
+        o.tot++;
+        if(t.percentComplete>=100){o.done++;continue}
+        if(isOv(t)&&!isStale(t,d.statusDate))o.ov++;
+        if(t.start&&t.finish&&t.start<=now&&t.finish>=now)o.now.push(t);
+        else if(t.start&&t.start>now&&(!o.next||t.start<o.next.start))o.next=t;
+      }}
+    const list=Object.values(by).map(c=>{const ob=Object.values(c.obras);
+      return{key:c.key,name:Object.entries(c.names).sort((a,b)=>b[1]-a[1])[0][0],obras:c.obras,n:ob.length,nNow:ob.filter(o=>o.now.length).length,ov:ob.reduce((s,o)=>s+o.ov,0)}})
+      .sort((a,b)=>b.nNow-a.nNow||b.n-a.n||a.name.localeCompare(b.name));
+    return{list,pend};
+  },[classified,pData]);
+  const conAct=useMemo(()=>conInfo.list.find(c=>c.key===conSel)||null,[conInfo,conSel]);
+  const byDir=useCallback(p=>{if(conAct&&!conAct.obras[p.key])return false;if(!dirAct.length)return true;const m=obraDirs[p.key];if(!m)return false;const ks=Object.keys(m);return ks.length?ks.some(k=>dirAct.includes(k)):dirAct.includes(SIN_DIR)},[dirAct,obraDirs,conAct]);
 
   const sumOf=useCallback(act=>{
     const hs=act.map(p=>healthMap[p.key]).filter(Boolean);
@@ -3758,7 +3867,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
   },[healthMap,pData]);
   /* homeSum: todas las obras (encabezado, lleva a Portfolio). homeSumDir: franja de Inicio con el filtro de director */
   const homeSum=useMemo(()=>sumOf([...classified.activo,...classified.pausa]),[classified,sumOf]);
-  const homeSumDir=useMemo(()=>dirAct.length?sumOf([...classified.activo,...classified.pausa].filter(byDir)):homeSum,[dirAct,classified,byDir,sumOf,homeSum]);
+  const homeSumDir=useMemo(()=>dirAct.length||conAct?sumOf([...classified.activo,...classified.pausa].filter(byDir)):homeSum,[dirAct,conAct,classified,byDir,sumOf,homeSum]);
 
   /* Aviso breve (reemplaza alert) */
   const[toast,setToast]=useState(null);
@@ -3804,7 +3913,9 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
     /* Obras activas y en pausa, ordenadas por gravedad: crítico, atención, revisar datos, sin fecha, en tiempo */
     const bySev=(a,b)=>{const ha=healthMap[a.key],hb=healthMap[b.key];
       return(ha?ha.rank:9)-(hb?hb.rank:9)||((hb?.ovReal||0)-(ha?.ovReal||0))||a.name.localeCompare(b.name)};
-    const activeProjs=[...classified.activo,...classified.pausa].filter(byDir).sort(bySev);
+    const byCon=(a,b)=>{const oa=conAct.obras[a.key],ob=conAct.obras[b.key];
+      return(ob.now.length>0)-(oa.now.length>0)||((oa.next?.start||9e15)-(ob.next?.start||9e15))||bySev(a,b)};
+    const activeProjs=[...classified.activo,...classified.pausa].filter(byDir).sort(conAct?byCon:bySev);
     const filteredActive=mapCity?activeProjs.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.dept===mapCity}):activeProjs;
 
     const renderCard=(p)=>{
@@ -3833,16 +3944,18 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
           {p.avisos&&p.avisos.length>0&&<span title={'Revisar en MS Project:\n• '+p.avisos.join('\n• ')} style={{color:'var(--q)',cursor:'help'}}>{p.avisos.length} aviso{p.avisos.length>1?'s':''} de datos</span>}
         </div>
         {h&&<Fragment>
-          <div className="pcard2-bar"><div className="pcard2-fill" style={{width:`${h.avg}%`,background:dotColor}}/></div>
+          <div className="pcard2-bar"><div className="pcard2-fill" style={{width:`${h.avg}%`,background:dotColor}}/>{h.esp!==null&&h.avg<100&&<span className="pcard2-plan" style={{left:`calc(${Math.min(h.esp,100)}% - 1px)`}} title={`Plan: ${h.esp} %`}/>}</div>
           <div className="pcard2-stats">
             <span className="pc-avg">{h.avg}%</span>
             <span>{h.done}/{h.tot} hechas</span>
             {h.ovReal>0&&<span style={{color:'var(--err)'}}>{h.ovReal} vencidas</span>}
             {h.ovStale>0&&<span style={{color:'var(--q)'}} title="Vencidas que probablemente no se actualizaron en MS Project">{h.ovStale} sin actualizar</span>}
+            {h.soon>0&&<span style={{color:'var(--warn)'}} title="Tareas sin terminar que vencen en los próximos 7 días">{h.soon} vencen en 7 d</span>}
           </div>
+          <PlanRow h={h} td={getTrendForProject(trendData,p.key)}/>
+          {conAct&&conAct.obras[p.key]&&<ConCardBlock o={conAct.obras[p.key]} name={conAct.name}/>}
           {d&&<div className="pc-row"><Frescura sd={d.statusDate} short/>{h.standbyDays>0&&<span>⏸ {h.standbyDays}d standby</span>}</div>}
           {h.nextMs&&<div className="pc-row">Próximo hito: {h.nextMs.name} <span className="mono">{fD(h.nextMs.finish)}</span></div>}
-          {(()=>{const td=getTrendForProject(trendData,p.key);return td.length>=2?<div className="pc-row"><span>Avance</span><Sparkline data={td} field="avg" color="var(--ac)"/><span style={{marginLeft:4}}>Vencidas</span><Sparkline data={td} field="ov" color="var(--err)" w={40}/></div>:null})()}
         </Fragment>}
         {!h&&isLoading&&<div className="pcard2-loading"><div className="mini-sp"/>Analizando…</div>}
       </div>;
@@ -3855,10 +3968,11 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
         <div className="home-sidebar">
           <DeptMap projects={sp} metaList={metaList} selectedDept={mapCity} onSelectDept={setMapCity}/>
           <DirFilter directors={dirInfo.list} sel={dirAct} onChange={setDirSel} sinDir={dirInfo.sin} pend={dirInfo.pend}/>
+          <ConFilter info={conInfo} sel={conSel} onChange={setConSel}/>
         </div>
         <div className="home-main">
           {/* En celular el filtro de director va arriba (el mapa queda al final de la página) */}
-          <div className="dir-top"><DirFilter directors={dirInfo.list} sel={dirAct} onChange={setDirSel} sinDir={dirInfo.sin} pend={dirInfo.pend}/></div>
+          <div className="dir-top"><DirFilter directors={dirInfo.list} sel={dirAct} onChange={setDirSel} sinDir={dirInfo.sin} pend={dirInfo.pend}/><ConFilter info={conInfo} sel={conSel} onChange={setConSel}/></div>
           {/* Franja de dirección: lo que hay que mirar hoy */}
           {isAdmin&&<div className="exec" aria-label="Resumen de obras activas">
             <div className="exec-cell"><b>{S.n}</b><span>obras activas</span></div>
@@ -3876,7 +3990,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
 
           <div className="home-h">
             <div className="home-title">Obras activas</div>
-            <div className="home-sub">{filteredActive.length} obras · ordenadas por gravedad{dirAct.length?` · ${dirAct.map(k=>dirInfo.list.find(d=>d.key===k)?.name||k).join(' + ')}`:''}{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{S.analizadas<S.n&&<span style={{marginLeft:8}}>· analizando {S.n-S.analizadas}…</span>}</div>
+            <div className="home-sub">{filteredActive.length} obras · {conAct?<Fragment>con <b>{conAct.name}</b> · primero donde trabaja hoy <button className="fclr" onClick={()=>setConSel('')} style={{marginLeft:4}}>Quitar</button></Fragment>:'ordenadas por gravedad'}{dirAct.length?` · ${dirAct.map(k=>dirInfo.list.find(d=>d.key===k)?.name||k).join(' + ')}`:''}{mapCity?` · Depto. ${mapCity}`:''}{mapCity&&<button className="fclr" onClick={()=>setMapCity(null)} style={{marginLeft:8}}>Mostrar todas</button>}{S.analizadas<S.n&&<span style={{marginLeft:8}}>· analizando {S.n-S.analizadas}…</span>}</div>
           </div>
           {(pList||[]).length===0&&<div className="empty-emp">
             <b>Todavía no hay cronogramas cargados</b>
