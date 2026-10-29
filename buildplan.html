@@ -1609,7 +1609,7 @@ const PERSON_ALIAS={
    Un recurso de MS Project es director si coincide con el nombre o una variante (sin tildes ni mayúsculas).
    Una variante de una sola palabra toma todo primer nombre que empiece así: "alex" → Alex, Alexandra, Alexis.
    Mientras carga, o si la tabla no responde, se usa esta lista de respaldo. */
-let DIRECTORES=[{key:'alex',nombre:'Alex',v:['alex']},{key:'mariana valdez',nombre:'Mariana Valdez',v:['mariana']}];
+let DIRECTORES=[{key:'alexandra arevalo',nombre:'Alexandra Arevalo',v:['alex']},{key:'mariana valdez',nombre:'Mariana Valdez',v:['mariana']}];
 function setDirectores(rows){
   const l=(rows||[]).filter(r=>r.activo!==false&&r.nombre).map(r=>({key:normName(r.nombre),nombre:r.nombre.trim(),v:[r.nombre,...(r.variantes||[])].map(normName).filter(Boolean)}));
   if(l.length)DIRECTORES=l;return l.length>0;

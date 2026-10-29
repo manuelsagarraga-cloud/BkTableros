@@ -25,5 +25,5 @@ create policy directores_por_empresa on public.directores_obra for all to authen
   with check (empresa = public.bk_empresa() or public.bk_es_admin());
 
 insert into public.directores_obra (empresa, nombre, variantes) values
-  ('bauvek', 'Alex',           array['alex']),
+  ('bauvek', 'Alexandra Arevalo', array['alex']),
   ('bauvek', 'Mariana Valdez', array['mariana']);
