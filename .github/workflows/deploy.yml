@@ -23,6 +23,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Antes de publicar: el JSX compila y el lector/semáforo dan lo esperado con un cronograma de prueba.
+      # Si falla, no se publica y el sitio queda con la versión anterior.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Pruebas
+        run: |
+          npm i --no-save --no-package-lock @babel/standalone@7.23.9 @xmldom/xmldom@0.8.10
+          node tests/run.mjs
+
       - name: Prepare site
         run: |
           mkdir -p _site
