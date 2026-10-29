@@ -3842,7 +3842,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
     return out;
   },[allSp,metaList,pData]);
   const dirInfo=useMemo(()=>{
-    const act=[...classified.activo,...classified.pausa];
+    const act=classified.activo; /* las obras en pausa van aparte, plegadas */
     const cnt={},disp={};let sin=0,pend=0;
     for(const p of act){const m=obraDirs[p.key];if(!m){pend++;continue}
       const ks=Object.keys(m);if(!ks.length)sin++;
@@ -3855,7 +3855,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
   const dirAct=useMemo(()=>dirInfo.pend?dirSel.filter(k=>k===SIN_DIR||DIRECTORES_OBRA.includes(k)):dirSel.filter(k=>dirInfo.list.some(d=>d.key===k)),[dirSel,dirInfo]);
   /* Contratistas de obras activas: nombres agrupados sin tildes ni mayúsculas; por obra, qué tiene en curso hoy y qué sigue */
   const conInfo=useMemo(()=>{
-    const act=[...classified.activo,...classified.pausa];
+    const act=classified.activo; /* las obras en pausa van aparte, plegadas */
     const now=new Date();const by={};let pend=0;
     for(const p of act){const d=pData[p.key];if(!d){pend++;continue}
       for(const t of d.tasks){if(t.isSummary||t.isMilestone)continue;
@@ -3888,8 +3888,8 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
       ov:hs.reduce((s,h)=>s+(h.ov||0),0),ovReal:hs.reduce((s,h)=>s+(h.ovReal||0),0),ovStale:hs.reduce((s,h)=>s+(h.ovStale||0),0),hitos};
   },[healthMap,pData]);
   /* homeSum: todas las obras (encabezado, lleva a Portfolio). homeSumDir: franja de Inicio con el filtro de director */
-  const homeSum=useMemo(()=>sumOf([...classified.activo,...classified.pausa]),[classified,sumOf]);
-  const homeSumDir=useMemo(()=>dirAct.length||conAct?sumOf([...classified.activo,...classified.pausa].filter(byDir)):homeSum,[dirAct,conAct,classified,byDir,sumOf,homeSum]);
+  const homeSum=useMemo(()=>sumOf(classified.activo),[classified,sumOf]);
+  const homeSumDir=useMemo(()=>dirAct.length||conAct?sumOf(classified.activo.filter(byDir)):homeSum,[dirAct,conAct,classified,byDir,sumOf,homeSum]);
 
   /* Aviso breve (reemplaza alert) */
   const[toast,setToast]=useState(null);
@@ -3932,12 +3932,14 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
     const finalizadoProjs=classified.finalizado.filter(byDir);
     const canceladaProjs=classified.cancelada.filter(byDir);
     const sinEstado=classified.sin.filter(byDir);
-    /* Obras activas y en pausa, ordenadas por gravedad: crítico, atención, revisar datos, sin fecha, en tiempo */
+    /* Obras activas, ordenadas por gravedad: crítico, atención, revisar datos, sin fecha, en tiempo.
+       Las obras en pausa no van acá: tienen su sección plegada, como finalizadas y canceladas. */
+    const pausaProjs=classified.pausa.filter(byDir);
     const bySev=(a,b)=>{const ha=healthMap[a.key],hb=healthMap[b.key];
       return(ha?ha.rank:9)-(hb?hb.rank:9)||((hb?.ov||0)-(ha?.ov||0))||a.name.localeCompare(b.name)};
     const byCon=(a,b)=>{const oa=conAct.obras[a.key],ob=conAct.obras[b.key];
       return(ob.now.length>0)-(oa.now.length>0)||((oa.next?.start||9e15)-(ob.next?.start||9e15))||bySev(a,b)};
-    const activeProjs=[...classified.activo,...classified.pausa].filter(byDir).sort(conAct?byCon:bySev);
+    const activeProjs=classified.activo.filter(byDir).sort(conAct?byCon:bySev);
     const filteredActive=mapCity?activeProjs.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.dept===mapCity}):activeProjs;
 
     const renderCard=(p)=>{
@@ -4022,8 +4024,21 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
             {filteredActive.map(renderCard)}
           </div>
 
+          {/* EN PAUSA — collapsible */}
+          {pausaProjs.length>0&&<div style={{marginTop:32}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'12px 0',borderTop:'1px solid var(--b1)'}} onClick={()=>setShowFinished(f=>f==='pau'?false:'pau')}>
+              <span style={{width:10,height:10,borderRadius:2,background:'var(--warn)',opacity:.5,flexShrink:0}}/>
+              <span style={{fontSize:14,fontWeight:600,color:'var(--c1)'}}>Obras en pausa</span>
+              <span style={{fontSize:11,fontFamily:'var(--fm)',background:'rgba(245,158,11,.1)',color:'var(--warn)',padding:'2px 8px',borderRadius:10,fontWeight:600}}>{pausaProjs.length}</span>
+              <span style={{fontSize:11,color:'var(--c2)',marginLeft:'auto'}}>{showFinished==='pau'?'▲ Ocultar':'▼ Mostrar'}</span>
+            </div>
+            {showFinished==='pau'&&<div className="pgrid2" style={{opacity:.6}}>
+              {pausaProjs.map(renderCard)}
+            </div>}
+          </div>}
+
           {/* FINALIZADAS — collapsible */}
-          {finalizadoProjs.length>0&&<div style={{marginTop:32}}>
+          {finalizadoProjs.length>0&&<div style={{marginTop:pausaProjs.length?16:32}}>
             <div style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'12px 0',borderTop:'1px solid var(--b1)'}} onClick={()=>setShowFinished(f=>f==='fin'?false:'fin')}>
               <span style={{width:10,height:10,borderRadius:2,background:'var(--ok)',opacity:.5,flexShrink:0}}/>
               <span style={{fontSize:14,fontWeight:600,color:'var(--c1)'}}>Obras finalizadas</span>
