@@ -101,7 +101,7 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:14px
 .gcc{flex:1;overflow:auto;background:var(--bg-0)}
 .spl{width:5px;cursor:col-resize;background:var(--b1);flex-shrink:0;z-index:10}.spl:hover,.spl.on{background:var(--ac)}
 
-.gt{border-collapse:collapse;table-layout:fixed}
+.gt{border-collapse:separate;border-spacing:0;table-layout:fixed}
 .gt th{position:sticky}
 .col-rs{position:absolute;right:-3px;top:0;bottom:0;width:7px;cursor:col-resize;z-index:6}
 .col-rs:hover,.col-rs.on{background:var(--ac);opacity:.5}
@@ -110,7 +110,7 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:14px
 .gt tr:hover td{background:var(--bg-hover)}
 .gt tr:nth-child(even) td{background:var(--bg-alt)}.gt tr:nth-child(even):hover td{background:var(--bg-hover)}
 .gt tr.sum td{background:var(--bg-sum);font-weight:600}.gt tr.sum:hover td{background:var(--bg-hover)}
-.tnc{display:flex;align-items:center;gap:3px;height:var(--row)}
+.tnc{display:flex;align-items:center;gap:3px;height:calc(var(--row) - 1px)}
 .ttog{width:16px;height:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:2px;flex-shrink:0;color:var(--c2);border:none;background:none;padding:0}.ttog:hover{color:var(--c0);background:var(--bg-2)}
 .pm{display:flex;align-items:center;gap:3px}
 .pmb{width:30px;height:4px;border-radius:2px;background:var(--bg-2);overflow:hidden;flex-shrink:0}
