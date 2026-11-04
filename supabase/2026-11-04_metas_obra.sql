@@ -2,9 +2,8 @@
 -- Proyecto Supabase: beuzmwrhqlmjoplsillf (Cómputo de Obras). Mismo criterio multiempresa que el resto de BkTableros.
 -- Solo crea la tabla: no toca datos existentes.
 --
--- Una meta = "estos rubros tienen que estar listos en tal fecha". BuildPlan calcula el resto desde el cronograma:
---   · rubros     → valores del campo Rubro de MS Project (como aparecen en el XML)
---   · alcance    → 'todo' | 'base' | 'adic' (obra base / adicionales, misma regla del N° Item)
+-- Una meta = "estas tareas tienen que estar listas en tal fecha". BuildPlan calcula el resto desde el cronograma.
+-- (Primera versión por rubros; abajo se cambia a tareas del cronograma.)
 --   · fecha      → fecha comprometida; null = sin fecha (por ejemplo, rubros frenados por el cliente)
 --   · suspendida → true la muestra en gris y no cuenta como atrasada
 -- No cambia el semáforo contractual ni se muestra en los links de cliente o contratista.
@@ -34,3 +33,10 @@ create policy metas_editar on public.metas_obra for update to authenticated
   using (public.bk_es_admin()) with check (public.bk_es_admin());
 create policy metas_borrar on public.metas_obra for delete to authenticated
   using (public.bk_es_admin());
+
+-- ───────── 2026-11-04 (tarde): las metas se arman con tareas del cronograma, no con rubros ─────────
+-- tareas = [{uid, nombre, wbs}] de MS Project (macrotareas o tareas). El UID se conserva entre guardados
+-- del .xml; si no aparece, BuildPlan la busca por nombre. La tabla estaba vacía.
+alter table public.metas_obra add column tareas jsonb not null default '[]'::jsonb;
+alter table public.metas_obra drop column rubros;
+alter table public.metas_obra drop column alcance;
