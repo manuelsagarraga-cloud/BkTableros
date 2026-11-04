@@ -28,6 +28,9 @@ BuildPlan → **Datos** → *Subir Excel de proyectos* (se guarda como `bauvek/p
 **Excel de pagos**
 Entrar a `pagos.html` → **↑ Actualizar Excel**.
 
+**Metas internas de una obra**
+Obra → **Resumen** → *+ Meta* (solo admin). Una meta es "estos rubros tienen que estar listos en tal fecha": se eligen los rubros del cronograma (campo Rubro de MS Project), el alcance (todo, solo obra base o solo adicionales) y la fecha. BuildPlan calcula el fin proyectado y el estado (en fecha, atención hasta +15 d, en riesgo, vencida, suspendida). No cambian el semáforo contractual ni se ven en los links de cliente o contratista. Tabla `metas_obra` (`supabase/2026-11-04_metas_obra.sql`).
+
 **Configuración de Supabase**
 `supabase/2026-10-20_bktableros_datos_privados.sql` crea el bucket `cronogramas`, la tabla `tendencia_obras` (foto semanal compartida), la tabla `enlaces_publicos` y la función `ver_enlace()`.
 
