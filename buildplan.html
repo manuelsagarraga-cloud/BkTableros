@@ -615,6 +615,11 @@ button.logo{border:none;background:none;color:var(--c0);font-family:var(--ff);fo
 .la-mx{margin:0;border:none}
 .la-mx td{vertical-align:top}
 .la-mx td.la-clash{background:rgba(245,158,11,.12)}
+.metas-p{padding:12px 16px;border-bottom:1px solid var(--b1);background:var(--bg-el);max-height:45vh;overflow:auto;flex-shrink:0}
+.meta-chk{margin:0 4px 0 0;flex-shrink:0;accent-color:var(--ac);cursor:pointer}
+.meta-mk{color:var(--ac);font-size:11px;flex-shrink:0;margin-right:3px}
+.gt tr.meta-sel td{background:rgba(158,1,1,.09)}
+.gt tr.meta-hi td{box-shadow:inset 3px 0 0 var(--ac)}
 .la-chip{display:inline-flex;align-items:center;gap:3px;margin:0 4px 4px 0;padding:2px 6px 2px 2px;border:1px solid var(--b0);border-radius:2px;background:var(--bg-el);font-family:var(--fm);font-size:11px;color:var(--c1);cursor:pointer}
 .la-chip .cod{margin-right:2px}
 .la-chip:hover{border-color:var(--ac)}
@@ -1199,36 +1204,57 @@ function classifyAlcance(tasks){
   return{ok:true,root};
 }
 
-/* ═══════ Metas internas: "estos rubros tienen que estar listos en tal fecha" ═══════
-   Se cargan en BuildPlan (tabla metas_obra). Todo lo demás sale del cronograma:
-   tareas con esos rubros (y el alcance elegido) → fin proyectado = la que termina más tarde.
+/* ═══════ Metas internas: "estas tareas tienen que estar listas en tal fecha" ═══════
+   Se cargan en el Gantt de BuildPlan (tabla metas_obra), eligiendo macrotareas o tareas del cronograma.
+   Cada tarea se guarda con su UID de MS Project (se conserva entre guardados del .xml); si el UID ya no está
+   o cambió de nombre, se busca por nombre. Fin proyectado = la elegida que termina más tarde.
    No cambia el semáforo contractual ni se muestra en los links de cliente o contratista. */
-const META_ALC={todo:'Todo',base:'Solo obra base',adic:'Solo adicionales'};
 const META_TOL=15; /* hasta 15 días de atraso proyectado = atención; más = en riesgo */
-function metaTasks(meta,tasks){
-  const rs=new Set((meta.rubros||[]).map(normName));
-  return tasks.filter(t=>!t.isSummary&&!t.isMilestone&&!isCtrlTask(t)&&!/lluvia|demora|no laborable|feriado|\bparo\b/i.test(t.name)
-    &&rs.has(normName(entV(t,'Rubro')))&&(meta.alcance==='base'?t.alc==='base':meta.alcance==='adic'?t.alc==='adic':true));
+const metaRef=t=>({uid:String(t.uid),nombre:t.name,wbs:t.wbs||''});
+function metaResolve(meta,data){
+  const out=[],faltan=[];
+  for(const r of meta.tareas||[]){
+    let t=data.uidMap&&data.uidMap[r.uid];
+    if(!t||normName(t.name)!==normName(r.nombre)){
+      const byName=data.tasks.filter(x=>normName(x.name)===normName(r.nombre));
+      t=byName.length===1?byName[0]:byName.find(x=>x.wbs===r.wbs)||(t&&!byName.length?t:null);
+    }
+    if(t&&!out.includes(t))out.push(t);else if(!t)faltan.push(r.nombre);
+  }
+  return{sel:out,faltan};
+}
+function metaLeaves(sel){
+  const seen=new Set(),out=[];
+  const walk=t=>{if(seen.has(t))return;seen.add(t);
+    if(t.isSummary){for(const c of t.children)walk(c);return}
+    if(!t.isMilestone&&!/stand[\s\-]?by/i.test(t.name)&&!/lluvia|demora|no laborable|feriado|\bparo\b/i.test(t.name))out.push(t)};
+  sel.forEach(walk);return out;
 }
 function calcMeta(meta,data,now=new Date()){
-  const ts=metaTasks(meta,data.tasks);
+  const{sel,faltan}=metaResolve(meta,data);
+  const ts=metaLeaves(sel);
   const fecha=meta.fecha?new Date(meta.fecha+'T23:59:59'):null;
-  const fin=ts.reduce((m,t)=>t.finish&&(!m||t.finish>m)?t.finish:m,null);
+  const fin=sel.reduce((m,t)=>t.finish&&(!m||t.finish>m)?t.finish:m,null);
   const pend=ts.filter(t=>t.percentComplete<100);
-  const done=ts.length>0&&!pend.length;
+  const done=sel.length>0&&(ts.length?!pend.length:sel.every(t=>t.percentComplete>=100));
   const desvio=fecha&&fin?dB(fecha,fin):null; /* >0 = termina después de la fecha */
   /* qué empuja la fecha: las pendientes que terminan más tarde */
   const empujan=pend.filter(t=>t.finish).sort((a,b)=>b.finish-a.finish).slice(0,3);
   let st,label;
   if(meta.suspendida){st='susp';label='Suspendida'}
-  else if(!ts.length){st='vacia';label='Sin tareas con esos rubros'}
+  else if(!sel.length){st='vacia';label='No encuentro las tareas'}
   else if(!fecha){st='sinf';label=done?'Lista':'Sin fecha'}
   else if(done){st=desvio>0?'tarde':'ok';label=desvio>0?`Lista con ${desvio}d de atraso`:'Cumplida'}
   else if(fecha<now){st='venc';label=`Vencida hace ${dB(fecha,now)}d`}
   else if(desvio>META_TOL){st='riesgo';label=`En riesgo: +${desvio}d`}
   else if(desvio>0){st='atn';label=`Atención: +${desvio}d`}
   else{st='ok';label=desvio===0?'En fecha':`En fecha (${-desvio}d de margen)`}
-  return{st,label,n:ts.length,pend:pend.length,avg:wAvg(ts),fin,desvio,empujan,ov:pend.filter(t=>isOv(t)).length};
+  return{st,label,sel,faltan,n:ts.length,pend:pend.length,avg:ts.length?wAvg(ts):Math.round(sel.reduce((a,t)=>a+t.percentComplete,0)/(sel.length||1)),fin,fecha,desvio,empujan,ov:pend.filter(t=>isOv(t)).length,done};
+}
+/* Próxima meta pendiente con fecha (para tarjetas de Inicio y hitos de 14 días) */
+function nextMeta(metas,data,now=new Date()){
+  return(metas||[]).filter(m=>!m.suspendida&&m.fecha).map(m=>({m,r:calcMeta(m,data,now)}))
+    .filter(x=>!x.r.done&&x.r.st!=='vacia').sort((a,b)=>a.r.fecha-b.r.fecha)[0]||null;
 }
 const META_COL={ok:'var(--ok)',atn:'var(--warn)',riesgo:'var(--err)',venc:'var(--err)',tarde:'var(--warn)',susp:'var(--c2)',sinf:'var(--c2)',vacia:'var(--q)'};
 const META_MAL=new Set(['riesgo','venc']);
@@ -1318,7 +1344,7 @@ function Tooltip({info,computoData}){
   </div>;
 }
 /* ═══════ GANTT SVG ═══════ */
-function GanttSVG({tasks,minDate,maxDate,zoom,showArr,showBL,scrollRef,onTT}){
+function GanttSVG({tasks,minDate,maxDate,zoom,showArr,showBL,scrollRef,onTT,metaLines=[]}){
   const cRef=useRef(null);
   const scrolling=useRef(false);
   const rowH=28,hdrH=44;
@@ -1371,6 +1397,9 @@ function GanttSVG({tasks,minDate,maxDate,zoom,showArr,showBL,scrollRef,onTT}){
         {zoom==='day'&&grid.ln.filter(l=>l.we).map((l,i)=><rect key={i} x={l.x} y={hdrH} width={dW} height={totH} fill="var(--c2)" opacity=".04"/>)}
         {tasks.map((_,i)=><line key={i} x1="0" y1={hdrH+(i+1)*rowH} x2={totW} y2={hdrH+(i+1)*rowH} stroke="var(--b1)" strokeWidth=".5"/>)}
         {arrs.map((a,i)=><g key={i}><path d={a.pa} fill="none" stroke="var(--arr)" strokeWidth="1" transform={`translate(0,${hdrH})`}/><polygon points={`${a.tx},${a.ty+hdrH} ${a.tx-4},${a.ty-3+hdrH} ${a.tx-4},${a.ty+3+hdrH}`} fill="var(--arr-h)" opacity=".5"/></g>)}
+        {metaLines.filter(l=>l.d>=cStart&&l.d<=cEnd).map((l,i)=>{const x=d2x(l.d);return <g key={'m'+i}><title>{'Meta: '+l.label+' · '+fD(l.d)}</title>
+          <line x1={x} y1={hdrH} x2={x} y2={totH+hdrH} stroke={l.col} strokeWidth="1.5" strokeDasharray="6,3"/>
+          <text x={x+4} y={hdrH+11+(i%3)*11} fontSize="9" fontWeight="700" fill={l.col} fontFamily="var(--ff)">◎ {l.label.length>22?l.label.slice(0,21)+'…':l.label}</text></g>})}
         {showNow&&<g><line x1={nowX} y1={hdrH} x2={nowX} y2={totH+hdrH} stroke="var(--today)" strokeWidth="1.5" strokeDasharray="4,3"/><rect x={nowX-16} y={hdrH-14} width="32" height="13" rx="2" fill="var(--today)"/><text x={nowX} y={hdrH-5} textAnchor="middle" fontSize="9" fontWeight="600" fill="white" fontFamily="var(--ff)">HOY</text></g>}
         {tasks.map((t,i)=>{
           const y=hdrH+i*rowH,cy=y+rowH/2;
@@ -1395,7 +1424,7 @@ function Frescura({sd,short}){
   return <span className={'fresh '+cls} title={'Fecha de estado del XML: '+fD(sd)}>{short?`Avance al ${fD(sd)}`:`Avance cargado al ${fD(sd)}`} · hace {n} d</span>;
 }
 /* ═══════ Dashboard por proyecto ═══════ */
-function ProjDash({data,health,proj,metasSlot}){
+function ProjDash({data,health,proj}){
   if(!data)return null;
   const ts=data.tasks.filter(t=>!t.isSummary);
   const tot=ts.length,done=ts.filter(t=>t.percentComplete>=100).length;
@@ -1450,7 +1479,6 @@ function ProjDash({data,health,proj,metasSlot}){
       </div>}
       {!h.hasContratada&&<div style={{fontSize:12,color:'var(--c2)',marginTop:4}}>Para calcular el semáforo, agregá en MS Project una tarea cuyo nombre incluya "contratada" con la fecha de fin del contrato.</div>}
     </div>}
-    {metasSlot}
     <div className="dgrid">
       <div className="kpi"><div className="kpi-v">{avg}%</div><div className="kpi-l">Avance</div><div className="kpi-s">ponderado por duración</div></div>
       <div className="kpi err"><div className="kpi-v" style={{color:ovReal?'var(--err)':'var(--c2)'}}>{ovReal}</div><div className="kpi-l">Vencidas</div><div className="kpi-s">con avance cargado</div></div>
@@ -3418,14 +3446,14 @@ async function guardarTendencia(rows){
 /* Metas internas (tabla metas_obra): leen todos los de la empresa, escriben solo los admin (RLS) */
 async function cargarMetas(){
   const sb=await getComputoSb();if(!sb)return null;
-  const{data,error}=await sb.from('metas_obra').select('id,archivo,nombre,rubros,alcance,fecha,suspendida,nota').eq('empresa',_empresa).order('fecha',{ascending:true,nullsFirst:false});
+  const{data,error}=await sb.from('metas_obra').select('id,archivo,nombre,tareas,fecha,suspendida,nota').eq('empresa',_empresa).order('fecha',{ascending:true,nullsFirst:false});
   return error?null:data;
 }
 async function guardarMeta(m){
   const sb=await getComputoSb();if(!sb)throw new Error('Iniciá sesión');
-  const row={archivo:m.archivo,nombre:m.nombre.trim(),rubros:m.rubros,alcance:m.alcance||'todo',fecha:m.fecha||null,suspendida:!!m.suspendida,nota:(m.nota||'').trim()||null,actualizado:new Date().toISOString()};
+  const row={archivo:m.archivo,nombre:m.nombre.trim(),tareas:m.tareas,fecha:m.fecha||null,suspendida:!!m.suspendida,nota:(m.nota||'').trim()||null,actualizado:new Date().toISOString()};
   const q=m.id?sb.from('metas_obra').update(row).eq('id',m.id):sb.from('metas_obra').insert({...row,empresa:_empresa});
-  const{data,error}=await q.select('id,archivo,nombre,rubros,alcance,fecha,suspendida,nota').single();
+  const{data,error}=await q.select('id,archivo,nombre,tareas,fecha,suspendida,nota').single();
   if(error)throw new Error(/row-level|permission/i.test(error.message)?'Solo un admin puede cambiar metas':error.message);
   return data;
 }
@@ -3435,73 +3463,66 @@ async function borrarMeta(id){
   if(error)throw new Error(error.message);
 }
 
-/* Panel de metas en el Resumen de la obra */
-function MetasPanel({data,file,metas,isAdmin,onChange}){
-  const[ed,setEd]=useState(null);   /* meta en edición (nueva = sin id) */
+/* Panel de metas arriba del Gantt. Mientras se edita una meta, las filas del Gantt muestran una casilla para elegir tareas. */
+function MetasPanel({data,file,metas,isAdmin,onChange,ed,setEd,onGo}){
   const[err,setErr]=useState('');
   const[busy,setBusy]=useState(false);
   const[openId,setOpenId]=useState(null);
-  const rows=useMemo(()=>(metas||[]).map(m=>({m,r:calcMeta(m,data)})),[metas,data]);
-  /* rubros del cronograma con cantidad de tareas, para elegir */
-  const rubCount=useMemo(()=>{const c={};let sin=0;
-    for(const t of data.tasks){if(t.isSummary||t.isMilestone||isCtrlTask(t))continue;const r=entV(t,'Rubro');if(r)c[r]=(c[r]||0)+1;else sin++}
-    return{c,sin};},[data]);
-  const rubList=Object.keys(rubCount.c).sort((a,b)=>a.localeCompare(b));
-  if(!isAdmin&&!rows.length)return null;
+  const rows=useMemo(()=>(metas||[]).map(m=>({m,r:calcMeta(m,data)})).sort((a,b)=>(a.r.fecha||8.64e15)-(b.r.fecha||8.64e15)),[metas,data]);
   const save=async()=>{
     if(!ed.nombre.trim()){setErr('Poné un nombre a la meta');return}
-    if(!ed.rubros.length){setErr('Elegí al menos un rubro');return}
+    if(!ed.tareas.length){setErr('Elegí al menos una tarea en el Gantt (casilla a la izquierda del nombre)');return}
     setBusy(true);setErr('');
-    try{const s=await guardarMeta({...ed,archivo:file});onChange(l=>ed.id?l.map(x=>x.id===s.id?s:x):[...l,s]);setEd(null)}
+    try{const sv=await guardarMeta({...ed,archivo:file});onChange(l=>ed.id?l.map(x=>x.id===sv.id?sv:x):[...l,sv]);setEd(null)}
     catch(e){setErr(e.message)}finally{setBusy(false)}
   };
   const del=async m=>{
     if(!confirm(`¿Borrar la meta "${m.nombre}"?`))return;
     try{await borrarMeta(m.id);onChange(l=>l.filter(x=>x.id!==m.id))}catch(e){alert(e.message)}
   };
-  const togRub=r=>setEd(e=>({...e,rubros:e.rubros.includes(r)?e.rubros.filter(x=>x!==r):[...e.rubros,r]}));
-  return <div style={{marginBottom:20}}>
-    <div style={{display:'flex',alignItems:'center',gap:10}}>
-      <div className="dst" style={{margin:0}} title="Metas internas: no cambian el semáforo contractual ni se muestran al cliente">Metas internas</div>
-      <span style={{fontSize:11,color:'var(--c2)'}}>Rubros que tienen que estar listos en una fecha · no cambian el semáforo ni las ve el cliente</span>
-      {isAdmin&&!ed&&<button className="btn btn-g" style={{marginLeft:'auto'}} onClick={()=>{setErr('');setEd({nombre:'',rubros:[],alcance:'todo',fecha:'',suspendida:false,nota:''})}}>+ Meta</button>}
+  const quitar=uid=>setEd(e=>({...e,tareas:e.tareas.filter(x=>x.uid!==uid)}));
+  return <div className="metas-p">
+    <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
+      <div className="dst" style={{margin:0}}>Metas internas</div>
+      <span style={{fontSize:11,color:'var(--c2)'}}>Tareas o macrotareas que tienen que estar listas en una fecha · no cambian el semáforo ni las ve el cliente</span>
+      {isAdmin&&!ed&&<button className="btn btn-g" style={{marginLeft:'auto'}} onClick={()=>{setErr('');setEd({nombre:'',tareas:[],fecha:'',suspendida:false,nota:''})}}>+ Meta</button>}
     </div>
     {rows.length>0&&<table className="dt" style={{marginTop:8}}>
-      <thead><tr><th>Meta</th><th>Rubros</th><th style={{width:80}}>Fecha</th><th style={{width:85}}>Fin proyect.</th><th style={{width:55}}>Avance</th><th style={{width:170}}>Estado</th>{isAdmin&&<th style={{width:90}}></th>}</tr></thead>
+      <thead><tr><th>Meta</th><th>Tareas</th><th style={{width:80}}>Fecha</th><th style={{width:85}}>Fin proyect.</th><th style={{width:55}}>Avance</th><th style={{width:180}}>Estado</th>{isAdmin&&<th style={{width:90}}></th>}</tr></thead>
       <tbody>{rows.map(({m,r})=><Fragment key={m.id}>
-        <tr style={{opacity:m.suspendida?.6:1,cursor:r.empujan.length?'pointer':'default'}} onClick={()=>r.empujan.length&&setOpenId(openId===m.id?null:m.id)}>
-          <td style={{fontWeight:600}}>{m.nombre}{m.alcance!=='todo'&&<span style={{fontSize:10,color:'var(--c2)',marginLeft:6}}>{META_ALC[m.alcance]}</span>}{m.nota&&<div style={{fontSize:11,fontWeight:400,color:'var(--c2)'}}>{m.nota}</div>}</td>
-          <td style={{fontSize:11,color:'var(--c1)'}}>{m.rubros.join(', ')}<span className="mono" style={{color:'var(--c2)'}}> · {r.n} tareas</span></td>
+        <tr style={{opacity:m.suspendida?.6:1,cursor:'pointer',background:ed&&ed.id===m.id?'rgba(158,1,1,.09)':undefined}} onClick={()=>setOpenId(openId===m.id?null:m.id)}>
+          <td style={{fontWeight:600}}>{m.nombre}{m.nota&&<div style={{fontSize:11,fontWeight:400,color:'var(--c2)'}}>{m.nota}</div>}</td>
+          <td style={{fontSize:11,color:'var(--c1)'}}>{r.sel.map(t=>t.name).join(', ')}{r.faltan.length>0&&<div style={{color:'var(--q)'}}>No encuentro: {r.faltan.join(', ')}</div>}</td>
           <td className="mono">{m.fecha?fD(new Date(m.fecha+'T12:00:00')):'—'}</td>
           <td className="mono">{fD(r.fin)}</td>
-          <td className="mono">{r.n?r.avg+'%':'—'}</td>
+          <td className="mono">{r.sel.length?r.avg+'%':'—'}</td>
           <td><span style={{display:'inline-flex',alignItems:'center',gap:6,fontWeight:600,color:META_COL[r.st]}}><span style={{width:9,height:9,borderRadius:'50%',background:META_COL[r.st],flexShrink:0}}/>{r.label}</span>{r.ov>0&&!m.suspendida&&<div style={{fontSize:11,color:'var(--err)'}}>{r.ov} vencida{r.ov>1?'s':''}</div>}</td>
-          {isAdmin&&<td onClick={e=>e.stopPropagation()} style={{whiteSpace:'nowrap'}}><button className="fclr" onClick={()=>{setErr('');setEd({...m,fecha:m.fecha||'',nota:m.nota||''})}}>Editar</button> <button className="fclr" onClick={()=>del(m)}>Borrar</button></td>}
+          {isAdmin&&<td onClick={e=>e.stopPropagation()} style={{whiteSpace:'nowrap'}}>{!ed&&<Fragment><button className="fclr" onClick={()=>{setErr('');setEd({...m,tareas:[...(m.tareas||[])],fecha:m.fecha||'',nota:m.nota||''})}}>Editar</button> <button className="fclr" onClick={()=>del(m)}>Borrar</button></Fragment>}</td>}
         </tr>
         {openId===m.id&&<tr><td colSpan={isAdmin?7:6} style={{background:'var(--bg-1)',fontSize:11}}>
-          <b>Lo que define el fin:</b> {r.empujan.map(t=><span key={t.uid} style={{marginRight:14}}>{t.name} <span className="mono" style={{color:'var(--c2)'}}>{fD(t.finish)} · {t.percentComplete}%{entV(t,'Contratista')?' · '+entV(t,'Contratista'):''}</span></span>)}
+          {r.empujan.length?<Fragment><b>Lo que define el fin:</b> {r.empujan.map(t=><span key={t.uid} style={{marginRight:14}}>{t.name} <span className="mono" style={{color:'var(--c2)'}}>{fD(t.finish)} · {t.percentComplete}%{entV(t,'Contratista')?' · '+entV(t,'Contratista'):''}</span></span>)}</Fragment>:<span style={{color:'var(--c2)'}}>Sin tareas pendientes.</span>}
+          {r.sel.length>0&&<button className="fclr" style={{marginLeft:8}} onClick={()=>onGo(r.sel)}>Ver en el Gantt</button>}
         </td></tr>}
       </Fragment>)}</tbody>
     </table>}
-    {!rows.length&&!ed&&<div style={{fontSize:12,color:'var(--c2)',marginTop:6}}>Sin metas. Por ejemplo: "Obra gris" = Estructura, Mampostería y Cubierta listas al 15/12.</div>}
-    {ed&&<div style={{marginTop:10,padding:12,border:'1px solid var(--b0)',borderRadius:'var(--r-m)',background:'var(--bg-el)'}}>
+    {!rows.length&&!ed&&<div style={{fontSize:12,color:'var(--c2)',marginTop:6}}>Sin metas. Por ejemplo: "Obra gris" = las macrotareas Estructura y Mampostería listas al 15/12.{isAdmin?'':' Las carga un admin.'}</div>}
+    {ed&&<div style={{marginTop:10,padding:12,border:'1px solid var(--ac)',borderRadius:'var(--r-m)',background:'var(--bg-el)'}}>
+      <div style={{fontSize:12,fontWeight:700,marginBottom:8}}>{ed.id?'Editar meta':'Nueva meta'} <span style={{fontWeight:400,color:'var(--c1)'}}>· marcá las tareas en el Gantt con la casilla a la izquierda del nombre</span></div>
       <div style={{display:'flex',gap:10,flexWrap:'wrap',alignItems:'center'}}>
         <input className="fin" style={{width:220}} placeholder="Nombre (ej. Obra gris)" value={ed.nombre} onChange={e=>setEd({...ed,nombre:e.target.value})}/>
         <span className="fl">Fecha</span><input type="date" className="fin" value={ed.fecha} disabled={ed.suspendida} onChange={e=>setEd({...ed,fecha:e.target.value})}/>
-        <span className="fl">Alcance</span><select className="fsel" value={ed.alcance} onChange={e=>setEd({...ed,alcance:e.target.value})}>{Object.entries(META_ALC).map(([k,l])=><option key={k} value={k}>{l}</option>)}</select>
-        <label className="pg-chk" title="Rubros frenados por el cliente: se ve en gris y no cuenta como atrasada"><input type="checkbox" checked={ed.suspendida} onChange={e=>setEd({...ed,suspendida:e.target.checked})}/> Suspendida</label>
+        <label className="pg-chk" title="Frenada por el cliente: se ve en gris y no cuenta como atrasada"><input type="checkbox" checked={ed.suspendida} onChange={e=>setEd({...ed,suspendida:e.target.checked})}/> Suspendida</label>
+        <input className="fin" style={{flex:1,minWidth:160}} placeholder="Nota (opcional)" value={ed.nota} onChange={e=>setEd({...ed,nota:e.target.value})}/>
       </div>
-      <div style={{fontSize:11,color:'var(--c2)',margin:'10px 0 4px'}}>Rubros del cronograma{rubCount.sin>0&&<span style={{color:'var(--warn)'}}> · {rubCount.sin} tareas sin rubro no entran en ninguna meta</span>}</div>
-      <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
-        {rubList.map(r=><button key={r} type="button" className={'la-chip'} style={ed.rubros.includes(r)?{background:'var(--ac)',color:'#fff',borderColor:'var(--ac)'}:null} onClick={()=>togRub(r)}>{r} <span className="mono" style={{opacity:.7}}>{rubCount.c[r]}</span></button>)}
-        {ed.rubros.filter(r=>!rubCount.c[r]).map(r=><button key={r} type="button" className="la-chip" style={{textDecoration:'line-through'}} title="Este rubro ya no está en el cronograma" onClick={()=>togRub(r)}>{r}</button>)}
-        {!rubList.length&&<span style={{fontSize:12,color:'var(--warn)'}}>Este cronograma no tiene el campo Rubro cargado.</span>}
+      <div style={{display:'flex',flexWrap:'wrap',gap:6,marginTop:10,alignItems:'center'}}>
+        <span className="fl">Tareas ({ed.tareas.length})</span>
+        {ed.tareas.map(x=><span key={x.uid} className="la-chip" style={{background:'rgba(158,1,1,.09)'}}>{x.wbs&&<span className="mono" style={{color:'var(--c2)'}}>{x.wbs}</span>} {x.nombre} <button className="fclr" style={{padding:0}} title="Quitar" onClick={()=>quitar(x.uid)}>✕</button></span>)}
+        {!ed.tareas.length&&<span style={{fontSize:12,color:'var(--c2)'}}>Ninguna todavía.</span>}
       </div>
-      <input className="fin" style={{width:'100%',marginTop:10}} placeholder="Nota (opcional)" value={ed.nota} onChange={e=>setEd({...ed,nota:e.target.value})}/>
       {err&&<div style={{color:'var(--err)',fontSize:12,marginTop:6}}>{err}</div>}
       <div style={{display:'flex',gap:8,marginTop:10}}>
         <button className="btn" style={{background:'var(--ac)',color:'#fff',borderColor:'var(--ac)'}} disabled={busy} onClick={save}>{busy?'Guardando…':'Guardar'}</button>
-        <button className="btn btn-g" onClick={()=>setEd(null)}>Cancelar</button>
+        <button className="btn btn-g" onClick={()=>{setEd(null);setErr('')}}>Cancelar</button>
       </div>
     </div>}
   </div>;
@@ -3697,6 +3718,9 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
   const[dirVer,setDirVer]=useState(0);
   useEffect(()=>{cargarDirectores().then(ok=>{if(ok)setDirVer(v=>v+1)})},[]);
   const[metas,setMetas]=useState([]);
+  const[metaEd,setMetaEd]=useState(null);     /* meta en edición: las filas del Gantt muestran casilla */
+  const[metasOpen,setMetasOpen]=useState(false);
+  const[metaHi,setMetaHi]=useState(null);     /* uids resaltados con "Ver en el Gantt" */
   useEffect(()=>{cargarMetas().then(l=>{if(l)setMetas(l)})},[pList]); /* también tras renombrar o subir cronogramas */
   const[healthMap,setHealthMap]=useState({});
   const[autoLoading,setAutoLoading]=useState({});
@@ -3899,6 +3923,20 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
   const aLoading=active?!!loading[active]:false;
   const aErr=active?errors[active]:null;
 
+  /* Metas de la obra abierta: líneas en el Gantt y marca en las tareas elegidas */
+  const aMetas=useMemo(()=>aProj&&!aProj.local?metas.filter(m=>m.archivo===aProj.file):[],[metas,aProj]);
+  useEffect(()=>{setMetaEd(null);setMetaHi(null)},[active]);
+  const metaView=useMemo(()=>{
+    const byUid={},lines=[];if(!aData)return{byUid,lines};
+    for(const m of aMetas){const r=calcMeta(m,aData);
+      for(const t of r.sel)(byUid[t.uid]=byUid[t.uid]||[]).push(m.nombre);
+      if(r.fecha&&!m.suspendida)lines.push({d:r.fecha,label:m.nombre,col:META_COL[r.st]})}
+    return{byUid,lines};
+  },[aMetas,aData]);
+  const metaSelUids=useMemo(()=>new Set((metaEd?.tareas||[]).map(x=>x.uid)),[metaEd]);
+  const togMetaTask=t=>setMetaEd(e=>{if(!e)return e;const u=String(t.uid);return{...e,tareas:e.tareas.some(x=>x.uid===u)?e.tareas.filter(x=>x.uid!==u):[...e.tareas,metaRef(t)]}});
+  const goMeta=sel=>{setExpMap(p=>{const m={...(p[active]||{})};for(const t of sel)for(let x=t.parent;x;x=x.parent)m[x.uid]=true;return{...p,[active]:m}});setMetaHi(new Set(sel.map(t=>t.uid)))};
+
   /* Visible tasks with filters */
   const visTasks=useMemo(()=>{
     if(!aData)return[];
@@ -4031,11 +4069,13 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
     const now=new Date(),lim=new Date(now.getTime()+14*86400000);
     const hitos=[];
     for(const p of act){const d=pData[p.key];if(!d)continue;
-      for(const t of d.tasks)if(t.isMilestone&&t.finish&&t.finish>=now&&t.finish<=lim&&t.percentComplete<100)hitos.push({p,t});}
+      for(const t of d.tasks)if(t.isMilestone&&t.finish&&t.finish>=now&&t.finish<=lim&&t.percentComplete<100)hitos.push({p,t});
+      /* metas internas con fecha en la ventana */
+      for(const m of metas)if(m.archivo===p.file&&!m.suspendida&&m.fecha){const r=calcMeta(m,d,now);if(!r.done&&r.fecha>=now&&r.fecha<=lim)hitos.push({p,t:{uid:'meta-'+m.id,name:'◎ '+m.nombre,finish:r.fecha}})}}
     hitos.sort((a,b)=>a.t.finish-b.t.finish);
     return{n:act.length,analizadas:hs.length,r:cnt('r'),y:cnt('y'),q:cnt('q'),x:cnt('x'),g:cnt('g'),
       ov:hs.reduce((s,h)=>s+(h.ov||0),0),ovReal:hs.reduce((s,h)=>s+(h.ovReal||0),0),ovStale:hs.reduce((s,h)=>s+(h.ovStale||0),0),hitos};
-  },[healthMap,pData]);
+  },[healthMap,pData,metas]);
   /* homeSum: todas las obras (encabezado, lleva a Portfolio). homeSumDir: franja de Inicio con el filtro de director */
   const homeSum=useMemo(()=>sumOf(classified.activo),[classified,sumOf]);
   const homeSumDir=useMemo(()=>dirAct.length||conAct?sumOf(classified.activo.filter(byDir)):homeSum,[dirAct,conAct,classified,byDir,sumOf,homeSum]);
@@ -4130,7 +4170,9 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
           {(()=>{const d=pData[p.key];const ms=d?metas.filter(m=>m.archivo===p.file).map(m=>calcMeta(m,d)):[];if(!ms.length)return null;
             const mal=ms.filter(r=>META_MAL.has(r.st)).length,atn=ms.filter(r=>r.st==='atn').length;
             return <div className="pc-row" title="Metas internas por rubro"><span style={{color:mal?'var(--err)':atn?'var(--warn)':'var(--c2)'}}>◎ {mal?`${mal} meta${mal>1?'s':''} en riesgo`:atn?`${atn} meta${atn>1?'s':''} con atención`:`${ms.length} meta${ms.length>1?'s':''} en fecha`}</span></div>})()}
-          {h.nextMs&&<div className="pc-row">Próximo hito: {h.nextMs.name} <span className="mono">{fD(h.nextMs.finish)}</span></div>}
+          {(()=>{const d=pData[p.key];const nm=d?nextMeta(metas.filter(m=>m.archivo===p.file),d):null;
+            if(nm)return <div className="pc-row" title="Próxima meta interna">Próxima meta: {nm.m.nombre} <span className="mono">{fD(nm.r.fecha)}</span> <span style={{color:META_COL[nm.r.st]}}>{nm.r.label}</span></div>;
+            return h.nextMs?<div className="pc-row" title="Próxima tarea marcada como hito en MS Project">Próximo hito (MS Project): {h.nextMs.name} <span className="mono">{fD(h.nextMs.finish)}</span></div>:null})()}
         </Fragment>}
         {!h&&isLoading&&<div className="pcard2-loading"><div className="mini-sp"/>Analizando…</div>}
       </div>;
@@ -4276,6 +4318,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
         <button className="btn btn-g btn-i" onClick={()=>setShowArr(a=>!a)} title="Flechas" style={{color:showArr?'var(--ac)':'var(--c2)'}}>{I.lnk()}</button>
         {aData.hasBL&&<button className="btn btn-g btn-i" onClick={()=>setShowBL(b=>!b)} title="Línea base" style={{color:showBL?'var(--ac)':'var(--c2)'}}>{I.bl()}</button>}
           </span>
+          {aProj&&!aProj.local&&<button className="btn btn-g" onClick={()=>setMetasOpen(o=>!o)} aria-expanded={metasOpen||!!metaEd} title="Metas internas: tareas que tienen que estar listas en una fecha" style={{color:metasOpen||metaEd?'var(--ac)':undefined}}>◎ Metas{aMetas.length?` (${aMetas.length})`:''}</button>}
           <span className="tool-sep"/>
         </Fragment>}
         <button className="btn btn-g" onClick={()=>window.print()} title="Imprimir o guardar como PDF">{I.prt()} PDF</button>
@@ -4310,6 +4353,8 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
     {aErr&&<div className="err-b">No se pudo cargar el cronograma ({aErr}). Probá recargar la página; si sigue, volvé a subir el XML desde Datos.</div>}
     {aLoading&&<div className="ld"><div className="sp"/><span>Cargando...</span></div>}
 
+    {!aLoading&&aData&&sub==='gantt'&&(metasOpen||metaEd)&&aProj&&!aProj.local&&<MetasPanel data={aData} file={aProj.file} metas={aMetas} isAdmin={isAdmin} ed={metaEd} setEd={setMetaEd} onGo={goMeta}
+      onChange={fn=>setMetas(l=>{const mine=l.filter(m=>m.archivo===aProj.file);return[...l.filter(m=>m.archivo!==aProj.file),...fn(mine)]})}/>}
     {!aLoading&&aData&&sub==='gantt'&&<div className="gw" style={{userSelect:splOn?'none':'auto'}}>
       <div className="gtc" ref={tblRef} style={{width:tblW}} onScroll={onTblScroll}>
         <table className="gt" style={{width:colW.reduce((a,b)=>a+b,0)}}>
@@ -4317,11 +4362,14 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
           <thead><tr>{['WBS','Tarea','Inicio','Fin','Dur.','%','Recurso','Contratista','Rubro','Nivel','Fase','N° Item'].map((h,i)=><th key={h} title="Arrastrá el borde derecho para ajustar · doble clic restablece">{h}<span className="col-rs" onMouseDown={e=>startColDrag(i,e)} onDoubleClick={()=>resetCol(i)}/></th>)}</tr></thead>
           <tbody>{visTasks.map(t=>{
             const em=expMap[active]||{};const ov=isOv(t);const ind=t.depth*14;
-            return <tr key={t.uid} className={t.isSummary?'sum':''}>
+            const mk=metaView.byUid[t.uid];
+            return <tr key={t.uid} className={(t.isSummary?'sum':'')+(metaHi&&metaHi.has(t.uid)?' meta-hi':'')+(metaEd&&metaSelUids.has(String(t.uid))?' meta-sel':'')}>
               <td className="mono" style={{fontSize:11}}>{t.wbs}</td>
               <td><div className="tnc" style={{paddingLeft:ind}}>
                 {t.isSummary?<button className="ttog" onClick={()=>togTask(active,t.uid)}>{em[t.uid]?I.chD():I.chR()}</button>:<span style={{width:16,flexShrink:0}}/>}
+                {metaEd&&<input type="checkbox" className="meta-chk" checked={metaSelUids.has(String(t.uid))} onChange={()=>togMetaTask(t)} title="Incluir en la meta" aria-label={'Incluir '+t.name+' en la meta'}/>}
                 {t.isMilestone&&<span style={{color:'var(--bar-ms)',fontSize:11,flexShrink:0}}>♦</span>}
+                {mk&&<span className="meta-mk" title={'Meta: '+mk.join(', ')}>◎</span>}
                 <span style={{overflow:'hidden',textOverflow:'ellipsis',fontWeight:t.isSummary?600:400,color:ov?'var(--err)':t.critical?'var(--ac)':'var(--c0)'}} title={t.name}>{t.name}</span>
               </div></td>
               <td className="mono">{fD(t.start)}</td>
@@ -4339,12 +4387,12 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
         </table>
       </div>
       <div className={`spl ${splOn?'on':''}`} onMouseDown={()=>setSplOn(true)}/>
-      <GanttSVG tasks={visTasks} minDate={aData.minDate} maxDate={aData.maxDate} zoom={zoom} showArr={showArr} showBL={showBL} scrollRef={scrollRef} onTT={setTTInfo}/>
+      <GanttSVG tasks={visTasks} minDate={aData.minDate} maxDate={aData.maxDate} zoom={zoom} showArr={showArr} showBL={showBL} scrollRef={scrollRef} onTT={setTTInfo} metaLines={metaView.lines}/>
     </div>}
 
     {!aLoading&&aData&&sub==='mes'&&<MonthView data={aData}/>}
     {!aLoading&&aData&&sub==='abast'&&<AbastView matKey={active+(computoData[active]?.loaded?':ok':computoData[active]?.needLogin?':login':':x')} data={aData} computoData={computoData[active]||null} visTasks={visTasks} onLogin={()=>{setComputoData({});setComputoAuth(n=>n+1)}}/>}
-    {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData} health={healthMap[active]} proj={aProj} metasSlot={aProj&&!aProj.local&&<MetasPanel data={aData} file={aProj.file} metas={metas.filter(m=>m.archivo===aProj.file)} isAdmin={isAdmin} onChange={fn=>setMetas(l=>{const mine=l.filter(m=>m.archivo===aProj.file);return[...l.filter(m=>m.archivo!==aProj.file),...fn(mine)]})}/>}/>}
+    {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData} health={healthMap[active]} proj={aProj}/>}
     {!aLoading&&aData&&sub==='demoras'&&<DemorasView data={aData}/>}
 
     <Tooltip info={ttInfo} computoData={computoData[active]||null}/>

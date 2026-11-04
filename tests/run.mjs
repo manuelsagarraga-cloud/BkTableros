@@ -57,7 +57,7 @@ function pieza(nombre) {
 }
 const nombres = ['FID_TEXTO4', 'ENT', 'entV', 'countItems', 'findObraRoot', 'classifyAlcance', 'parseMSPDI',
   'isOv', 'STALE_DAYS', 'isStale', 'wAvg', 'isCtrlTask', 'SEMA_LBL', 'SEV', 'DESVIO_MAX', 'calcHealth',
-  'normName', 'DIRECTORES', 'setDirectores', 'dirKey', 'dirNombre', 'dB', 'META_TOL', 'metaTasks', 'calcMeta'];
+  'normName', 'DIRECTORES', 'setDirectores', 'dirKey', 'dirNombre', 'dB', 'META_TOL', 'metaRef', 'metaResolve', 'metaLeaves', 'calcMeta', 'nextMeta'];
 const piezas = nombres.map(pieza); if (process.env.DEBUG) piezas.forEach((p, k) => console.log(nombres[k], p.length, JSON.stringify(p.slice(-40))));
 const fuente = piezas.join(';\n');
 
@@ -65,7 +65,7 @@ const fuente = piezas.join(';\n');
 const RealDate = Date, HOY = new RealDate('2026-10-29T12:00:00').getTime();
 class FakeDate extends RealDate { constructor(...a) { a.length ? super(...a) : super(HOY); } static now() { return HOY; } }
 const api = new Function('Date', 'DOMParser', 'console',
-  fuente + ';\nreturn {parseMSPDI,calcHealth,dirKey,setDirectores,dirNombre,calcMeta};')(FakeDate, DOMParser, { warn() {}, log() {} });
+  fuente + ';\nreturn {parseMSPDI,calcHealth,dirKey,setDirectores,dirNombre,calcMeta,nextMeta,metaRef};')(FakeDate, DOMParser, { warn() {}, log() {} });
 
 // ── 2. Lector de MS Project y semáforo ──
 console.log('Lector MS Project');
@@ -103,40 +103,46 @@ ok(api.dirKey('Mariana V') === 'mariana valdez', 'Mariana V → Mariana Valdez')
 ok(api.dirKey('Juan Pérez') === null, 'Juan Pérez no es director');
 ok(api.dirNombre('mariana valdez') === 'Mariana Valdez', 'nombre para mostrar');
 
-// ── 4. Metas internas por rubro ──
+// ── 4. Metas internas por tareas del cronograma ──
 console.log('Metas internas');
 {
   const F = s => new Date(s + 'T17:00:00');
-  const T = (name, rubro, fin, pc, alc = 'base', extra = {}) => ({ uid: name, name, isSummary: false, isMilestone: false, ent: rubro ? { Rubro: { value: rubro } } : {}, finish: F(fin), percentComplete: pc, durDays: 10, alc, ...extra });
-  const data = { tasks: [
-    T('Columnas PB', 'Estructura', '2026-11-10', 100),
-    T('Losa', 'Estructura', '2026-12-20', 30),
-    T('Muros', 'Mampostería', '2026-12-05', 0),
-    T('Muros quincho', 'Mamposteria', '2027-01-15', 0, 'adic'),
-    T('Revoque', 'Revoques', '2026-10-20', 50),
-    T('Sin rubro', '', '2027-03-01', 0),
-    T('Hito losa', 'Estructura', '2027-06-01', 0, 'base', { isMilestone: true }),
-    T('Standby losa', 'Estructura', '2027-06-01', 0, 'base'),
-  ] };
-  const M = (rubros, fecha, extra = {}) => api.calcMeta({ nombre: 'x', rubros, alcance: 'todo', fecha, suspendida: false, ...extra }, data);
-  let r = M(['Estructura', 'Mampostería'], '2026-12-31', { alcance: 'base' });
-  ok(r.n === 3 && r.st === 'ok' && r.desvio === -11, 'obra base en fecha: 3 tareas, 11 d de margen (ignora hito, standby y adicional)', [r.n, r.st, r.desvio]);
-  r = M(['Mampostería'], '2026-12-20');
-  ok(r.n === 2 && r.st === 'riesgo' && r.desvio === 26, 'rubro escrito sin tilde igual entra; el adicional lo pone en riesgo (+26 d)', [r.n, r.st, r.desvio]);
-  ok(r.empujan[0]?.name === 'Muros quincho', 'muestra la tarea que define el fin', r.empujan.map(t => t.name));
-  r = M(['Mampostería'], '2026-12-31', { alcance: 'adic' });
-  ok(r.n === 1 && r.desvio === 15 && r.st === 'atn', 'solo adicionales: +15 d = atención', [r.n, r.desvio, r.st]);
-  r = M(['Revoques'], '2026-10-25');
+  let uid = 1; const all = [];
+  const T = (name, fin, pc, parent = null, extra = {}) => { const t = { uid: String(uid++), name, wbs: '', isSummary: false, isMilestone: false, ent: {}, finish: F(fin), percentComplete: pc, durDays: 10, children: [], parent, ...extra }; if (parent) parent.children.push(t); all.push(t); return t; };
+  const S = (name, parent = null) => T(name, '2000-01-01', 0, parent, { isSummary: true });
+  const obra = S('Obra'), est = S('Estructura', obra), mam = S('Mampostería', obra), term = S('Terminaciones', obra);
+  T('Columnas PB', '2026-11-10', 100, est); T('Losa', '2026-12-20', 30, est); T('Hito losa', '2027-06-01', 0, est, { isMilestone: true });
+  T('Muros PB', '2026-12-05', 0, mam); T('Muros PA', '2027-01-15', 0, mam);
+  T('Piso', '2028-03-01', 0, term);
+  const hojas = x => x.isSummary ? x.children.flatMap(hojas) : [x];
+  for (const s of [est, mam, term, obra]) s.finish = new Date(Math.max(...hojas(s).filter(x => !x.isMilestone).map(x => x.finish)));
+  const data = { tasks: all, uidMap: Object.fromEntries(all.map(t => [t.uid, t])) };
+  const M = (ts, fecha, extra = {}) => api.calcMeta({ nombre: 'x', tareas: ts.map(api.metaRef), fecha, suspendida: false, ...extra }, data);
+  let r = M([est], '2026-12-31');
+  ok(r.sel.length === 1 && r.n === 2 && r.st === 'ok' && r.desvio === -11, 'macrotarea Estructura en fecha, 11 d de margen (el hito no cuenta)', [r.n, r.st, r.desvio]);
+  r = M([est, mam], '2026-12-31');
+  ok(r.st === 'atn' && r.desvio === 15 && r.empujan[0].name === 'Muros PA', 'dos macrotareas: Mampostería empuja +15 d = atención', [r.st, r.desvio, r.empujan.map(t => t.name)]);
+  r = M([mam], '2026-12-20');
+  ok(r.st === 'riesgo' && r.desvio === 26, '+26 d = en riesgo', [r.st, r.desvio]);
+  r = M([est], '2026-10-25');
   ok(r.st === 'venc', 'fecha pasada y sin terminar = vencida', r.st);
-  r = M(['Revoques'], '2026-10-25', { suspendida: true });
+  r = M([est], '2026-10-25', { suspendida: true });
   ok(r.st === 'susp', 'suspendida no cuenta como atrasada', r.st);
-  r = M(['Estructura'], null);
+  r = M([est], null);
   ok(r.st === 'sinf', 'sin fecha', r.st);
-  r = M(['Pintura'], '2026-12-31');
-  ok(r.st === 'vacia' && r.n === 0, 'rubro que no está en el cronograma', [r.st, r.n]);
-  const d2 = { tasks: [T('Columnas', 'Estructura', '2026-11-10', 100), T('Vigas', 'Estructura', '2026-11-20', 100)] };
-  r = api.calcMeta({ rubros: ['Estructura'], alcance: 'todo', fecha: '2026-11-15' }, d2);
-  ok(r.st === 'tarde' && r.desvio === 5, 'terminada después de la fecha: lista con atraso', [r.st, r.desvio]);
+  r = api.calcMeta({ tareas: [{ uid: '999', nombre: 'Mampostería', wbs: '' }], fecha: '2027-02-01' }, data);
+  ok(r.sel[0] === mam && r.st === 'ok', 'si el UID no está, la encuentra por nombre', [r.sel.map(t => t.name), r.st]);
+  r = api.calcMeta({ tareas: [{ uid: mam.uid, nombre: 'Mamposteria vieja', wbs: '' }], fecha: '2027-02-01' }, data);
+  ok(r.sel[0] === mam, 'si la renombraron en MS Project, la mantiene por UID', r.sel.map(t => t.name));
+  r = api.calcMeta({ tareas: [{ uid: '999', nombre: 'Pintura', wbs: '' }], fecha: '2027-02-01' }, data);
+  ok(r.st === 'vacia' && r.faltan[0] === 'Pintura', 'tarea que ya no está en el cronograma', [r.st, r.faltan]);
+  { const sm = { uid: '1', name: 'E', isSummary: true, isMilestone: false, children: [], percentComplete: 100, finish: F('2026-11-20') };
+    const a1 = { uid: '2', name: 'a', isSummary: false, isMilestone: false, children: [], percentComplete: 100, finish: F('2026-11-20'), durDays: 3, parent: sm }; sm.children.push(a1);
+    r = api.calcMeta({ tareas: [{ uid: '1', nombre: 'E' }], fecha: '2026-11-15' }, { tasks: [sm, a1], uidMap: { 1: sm, 2: a1 } });
+    ok(r.st === 'tarde' && r.desvio === 5, 'terminada después de la fecha: lista con atraso', [r.st, r.desvio]); }
+  const metas = [{ nombre: 'Piso', tareas: [api.metaRef(term)], fecha: '2028-03-15' }, { nombre: 'Obra gris', tareas: [api.metaRef(est), api.metaRef(mam)], fecha: '2026-12-31' }, { nombre: 'Frenada', tareas: [api.metaRef(mam)], fecha: '2026-11-05', suspendida: true }];
+  const nm = api.nextMeta(metas, data);
+  ok(nm && nm.m.nombre === 'Obra gris', 'próxima meta = la más cercana pendiente (salta suspendidas y la de 2028)', nm && nm.m.nombre);
 }
 
 console.log(fallas ? `\n${fallas} prueba(s) fallaron — no se publica` : '\nTodo OK');

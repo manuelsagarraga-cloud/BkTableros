@@ -7,7 +7,7 @@ Qué prueban:
 - El lector de MS Project con `fixtures/obra-prueba.xml`: tareas, jerarquía, N° Item, línea base, recursos, contratistas, fecha de estado.
 - El semáforo: tarea "contratada", tarea de obra, standby, desvío bruto y neto, vencidas, avance contra plan, demoras.
 - El reconocimiento de directores de obra.
-- Las metas internas por rubro: alcance, estados (en fecha, atención, riesgo, vencida, suspendida, sin fecha) y la tarea que define el fin.
+- Las metas internas: macrotareas elegidas, estados (en fecha, atención, riesgo, vencida, suspendida, sin fecha), búsqueda por UID o nombre y próxima meta.
 
 El cronograma de prueba es inventado: no tiene datos de clientes. Si se cambia una regla a propósito
 (por ejemplo, cómo se cuentan las vencidas), hay que actualizar el resultado esperado en `run.mjs`.
