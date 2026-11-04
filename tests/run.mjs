@@ -57,7 +57,7 @@ function pieza(nombre) {
 }
 const nombres = ['FID_TEXTO4', 'ENT', 'entV', 'countItems', 'findObraRoot', 'classifyAlcance', 'parseMSPDI',
   'isOv', 'STALE_DAYS', 'isStale', 'wAvg', 'isCtrlTask', 'SEMA_LBL', 'SEV', 'DESVIO_MAX', 'calcHealth',
-  'normName', 'DIRECTORES', 'setDirectores', 'dirKey', 'dirNombre'];
+  'normName', 'DIRECTORES', 'setDirectores', 'dirKey', 'dirNombre', 'dB', 'META_TOL', 'metaTasks', 'calcMeta'];
 const piezas = nombres.map(pieza); if (process.env.DEBUG) piezas.forEach((p, k) => console.log(nombres[k], p.length, JSON.stringify(p.slice(-40))));
 const fuente = piezas.join(';\n');
 
@@ -65,7 +65,7 @@ const fuente = piezas.join(';\n');
 const RealDate = Date, HOY = new RealDate('2026-10-29T12:00:00').getTime();
 class FakeDate extends RealDate { constructor(...a) { a.length ? super(...a) : super(HOY); } static now() { return HOY; } }
 const api = new Function('Date', 'DOMParser', 'console',
-  fuente + ';\nreturn {parseMSPDI,calcHealth,dirKey,setDirectores,dirNombre};')(FakeDate, DOMParser, { warn() {}, log() {} });
+  fuente + ';\nreturn {parseMSPDI,calcHealth,dirKey,setDirectores,dirNombre,calcMeta};')(FakeDate, DOMParser, { warn() {}, log() {} });
 
 // ── 2. Lector de MS Project y semáforo ──
 console.log('Lector MS Project');
@@ -102,6 +102,42 @@ ok(api.dirKey('ALEXANDRA') === 'alexandra arevalo', 'variante "alex" toma Alexan
 ok(api.dirKey('Mariana V') === 'mariana valdez', 'Mariana V → Mariana Valdez');
 ok(api.dirKey('Juan Pérez') === null, 'Juan Pérez no es director');
 ok(api.dirNombre('mariana valdez') === 'Mariana Valdez', 'nombre para mostrar');
+
+// ── 4. Metas internas por rubro ──
+console.log('Metas internas');
+{
+  const F = s => new Date(s + 'T17:00:00');
+  const T = (name, rubro, fin, pc, alc = 'base', extra = {}) => ({ uid: name, name, isSummary: false, isMilestone: false, ent: rubro ? { Rubro: { value: rubro } } : {}, finish: F(fin), percentComplete: pc, durDays: 10, alc, ...extra });
+  const data = { tasks: [
+    T('Columnas PB', 'Estructura', '2026-11-10', 100),
+    T('Losa', 'Estructura', '2026-12-20', 30),
+    T('Muros', 'Mampostería', '2026-12-05', 0),
+    T('Muros quincho', 'Mamposteria', '2027-01-15', 0, 'adic'),
+    T('Revoque', 'Revoques', '2026-10-20', 50),
+    T('Sin rubro', '', '2027-03-01', 0),
+    T('Hito losa', 'Estructura', '2027-06-01', 0, 'base', { isMilestone: true }),
+    T('Standby losa', 'Estructura', '2027-06-01', 0, 'base'),
+  ] };
+  const M = (rubros, fecha, extra = {}) => api.calcMeta({ nombre: 'x', rubros, alcance: 'todo', fecha, suspendida: false, ...extra }, data);
+  let r = M(['Estructura', 'Mampostería'], '2026-12-31', { alcance: 'base' });
+  ok(r.n === 3 && r.st === 'ok' && r.desvio === -11, 'obra base en fecha: 3 tareas, 11 d de margen (ignora hito, standby y adicional)', [r.n, r.st, r.desvio]);
+  r = M(['Mampostería'], '2026-12-20');
+  ok(r.n === 2 && r.st === 'riesgo' && r.desvio === 26, 'rubro escrito sin tilde igual entra; el adicional lo pone en riesgo (+26 d)', [r.n, r.st, r.desvio]);
+  ok(r.empujan[0]?.name === 'Muros quincho', 'muestra la tarea que define el fin', r.empujan.map(t => t.name));
+  r = M(['Mampostería'], '2026-12-31', { alcance: 'adic' });
+  ok(r.n === 1 && r.desvio === 15 && r.st === 'atn', 'solo adicionales: +15 d = atención', [r.n, r.desvio, r.st]);
+  r = M(['Revoques'], '2026-10-25');
+  ok(r.st === 'venc', 'fecha pasada y sin terminar = vencida', r.st);
+  r = M(['Revoques'], '2026-10-25', { suspendida: true });
+  ok(r.st === 'susp', 'suspendida no cuenta como atrasada', r.st);
+  r = M(['Estructura'], null);
+  ok(r.st === 'sinf', 'sin fecha', r.st);
+  r = M(['Pintura'], '2026-12-31');
+  ok(r.st === 'vacia' && r.n === 0, 'rubro que no está en el cronograma', [r.st, r.n]);
+  const d2 = { tasks: [T('Columnas', 'Estructura', '2026-11-10', 100), T('Vigas', 'Estructura', '2026-11-20', 100)] };
+  r = api.calcMeta({ rubros: ['Estructura'], alcance: 'todo', fecha: '2026-11-15' }, d2);
+  ok(r.st === 'tarde' && r.desvio === 5, 'terminada después de la fecha: lista con atraso', [r.st, r.desvio]);
+}
 
 console.log(fallas ? `\n${fallas} prueba(s) fallaron — no se publica` : '\nTodo OK');
 process.exit(fallas ? 1 : 0);
