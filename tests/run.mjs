@@ -57,7 +57,7 @@ function pieza(nombre) {
 }
 const nombres = ['FID_TEXTO4', 'ENT', 'entV', 'countItems', 'findObraRoot', 'classifyAlcance', 'parseMSPDI',
   'isOv', 'STALE_DAYS', 'isStale', 'wAvg', 'isCtrlTask', 'SEMA_LBL', 'SEV', 'DESVIO_MAX', 'calcHealth',
-  'normName', 'DIRECTORES', 'setDirectores', 'dirKey', 'dirNombre', 'dB', 'META_TOL', 'metaRef', 'metaResolve', 'metaLeaves', 'calcMeta', 'nextMeta'];
+  'normName', 'DIRECTORES', 'setDirectores', 'dirKey', 'dirNombre', 'dB', 'META_TOL', 'metaRef', 'metaResolve', 'metaLeaves', 'calcMeta', 'nextMeta', 'enProyecto'];
 const piezas = nombres.map(pieza); if (process.env.DEBUG) piezas.forEach((p, k) => console.log(nombres[k], p.length, JSON.stringify(p.slice(-40))));
 const fuente = piezas.join(';\n');
 
@@ -65,7 +65,7 @@ const fuente = piezas.join(';\n');
 const RealDate = Date, HOY = new RealDate('2026-10-29T12:00:00').getTime();
 class FakeDate extends RealDate { constructor(...a) { a.length ? super(...a) : super(HOY); } static now() { return HOY; } }
 const api = new Function('Date', 'DOMParser', 'console',
-  fuente + ';\nreturn {parseMSPDI,calcHealth,dirKey,setDirectores,dirNombre,calcMeta,nextMeta,metaRef};')(FakeDate, DOMParser, { warn() {}, log() {} });
+  fuente + ';\nreturn {parseMSPDI,calcHealth,dirKey,setDirectores,dirNombre,calcMeta,nextMeta,metaRef,enProyecto};')(FakeDate, DOMParser, { warn() {}, log() {} });
 
 // ── 2. Lector de MS Project y semáforo ──
 console.log('Lector MS Project');
@@ -144,6 +144,12 @@ console.log('Metas internas');
   const nm = api.nextMeta(metas, data);
   ok(nm && nm.m.nombre === 'Obra gris', 'próxima meta = la más cercana pendiente (salta suspendidas y la de 2028)', nm && nm.m.nombre);
 }
+
+// ── 5. Etapa: proyecto u obra (columna Ciclo de Vida) ──
+console.log('Proyecto u obra');
+for (const [cv, esp] of [['Proyecto', true], ['2-En Proyecto', true], ['en proyecto', true], ['Obra', false], ['', false], ['Proyecto y obra', false]])
+  ok(api.enProyecto({ cicloVida: cv }) === esp, `Ciclo de Vida "${cv}" → ${esp ? 'En proyecto' : 'Obra'}`);
+ok(api.enProyecto(null) === false, 'sin fila en el Excel → obra');
 
 console.log(fallas ? `\n${fallas} prueba(s) fallaron — no se publica` : '\nTodo OK');
 process.exit(fallas ? 1 : 0);
