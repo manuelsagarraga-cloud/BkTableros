@@ -807,6 +807,9 @@ async function loadProjectMeta(){
   }catch(e){console.warn('No se pudo cargar metadata:',e);return[]}
 }
 
+/* Ciclo de vida "Proyecto" / "En proyecto" / "2-En Proyecto" = todavía no es obra */
+function enProyecto(m){return !!m&&/proyecto/i.test(String(m.cicloVida||''))&&!/\bobra\b/i.test(String(m.cicloVida||''))}
+
 function matchMeta(projectName,metaList){
   if(!metaList||!metaList.length) return null;
   const norm=normalizeForMatch(projectName);
@@ -3986,7 +3989,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
   const allSp=useMemo(()=>(pList||[]).filter(p=>!p.local),[pList]);
   const classified=useMemo(()=>{
     const used=new Set();
-    const result={activo:[],pausa:[],finalizado:[],cancelada:[],sin:[]};
+    const result={activo:[],proyecto:[],pausa:[],finalizado:[],cancelada:[],sin:[]};
     for(const p of allSp){
       const m=matchMeta(p.name,metaList);
       const mKey=m?.proyecto||null;
@@ -3995,7 +3998,10 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
       const e=(m?.estado||'').trim();
       /* Sin Excel de proyectos (empresa nueva) todas las obras se tratan como activas */
       if(!metaList.length){result.activo.push(p);continue}
-      if(e==='Activo')result.activo.push(p);
+      /* Activa pero todavía en proyecto (columna "Ciclo de Vida" del Excel): va a su propia sección,
+         sin semáforo de obra, hasta que el Ciclo de Vida pase a "Obra" */
+      if(e==='Activo'&&enProyecto(m))result.proyecto.push(p);
+      else if(e==='Activo')result.activo.push(p);
       else if(e==='En pausa')result.pausa.push(p);
       else if(e==='Finalizado')result.finalizado.push(p);
       else if(e==='Cancelada'||e==='Cancelado')result.cancelada.push(p);
@@ -4029,7 +4035,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
     return out;
   },[allSp,metaList,pData,dirVer]);
   const dirInfo=useMemo(()=>{
-    const act=classified.activo; /* las obras en pausa van aparte, plegadas */
+    const act=[...classified.activo,...classified.proyecto]; /* las obras en pausa van aparte, plegadas */
     const cnt={},disp={};let sin=0,pend=0;
     for(const p of act){const m=obraDirs[p.key];if(!m){pend++;continue}
       const ks=Object.keys(m);if(!ks.length)sin++;
@@ -4042,7 +4048,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
   const dirAct=useMemo(()=>dirInfo.pend?dirSel.filter(k=>k===SIN_DIR||DIRECTORES.some(d=>d.key===k)):dirSel.filter(k=>dirInfo.list.some(d=>d.key===k)),[dirSel,dirInfo,dirVer]);
   /* Contratistas de obras activas: nombres agrupados sin tildes ni mayúsculas; por obra, qué tiene en curso hoy y qué sigue */
   const conInfo=useMemo(()=>{
-    const act=classified.activo; /* las obras en pausa van aparte, plegadas */
+    const act=[...classified.activo,...classified.proyecto]; /* las obras en pausa van aparte, plegadas */
     const now=new Date();const by={};let pend=0;
     for(const p of act){const d=pData[p.key];if(!d){pend++;continue}
       for(const t of d.tasks){if(t.isSummary||t.isMilestone)continue;
@@ -4131,14 +4137,16 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
     const activeProjs=classified.activo.filter(byDir).sort(conAct?byCon:bySev);
     const filteredActive=mapCity?activeProjs.filter(p=>{const m=matchMeta(p.name,metaList);return m&&m.dept===mapCity}):activeProjs;
 
+    const proyectoProjs=classified.proyecto.filter(byDir).sort((a,b)=>a.name.localeCompare(b.name));
     const renderCard=(p)=>{
       const m=matchMeta(p.name,metaList);
+      const esProy=enProyecto(m)&&(m?.estado||'').trim()==='Activo';
       const estado=m?.estado||'';
       const h=healthMap[p.key];
       const d=pData[p.key];
       const isLoading=!!autoLoading[p.key];
-      const hClass=h?`health-${h.color}`:'';
-      const dotColor=h?SEMA_COL[h.color]:(estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':estado==='Cancelada'?'var(--err)':'var(--c2)');
+      const hClass=h&&!esProy?`health-${h.color}`:'';
+      const dotColor=esProy?'var(--c1)':h?SEMA_COL[h.color]:(estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':estado==='Cancelada'?'var(--err)':'var(--c2)');
       const stBg=estado==='Activo'?'rgba(16,185,129,.1)':estado==='En pausa'?'rgba(245,158,11,.1)':estado==='Cancelada'?'rgba(239,68,68,.08)':estado==='Finalizado'?'rgba(139,146,165,.08)':'rgba(139,146,165,.1)';
       const stColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':estado==='Cancelada'?'var(--err)':'var(--c2)';
       const m2t=(m?.m2Cubierta||0)+(m?.m2Semi||0);
@@ -4146,8 +4154,9 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
       return <div key={p.key} className={`pcard2 ${hClass}`} onClick={()=>openProj(p)} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')openProj(p)}}>
         <div className="pcard2-top">
           {p.cod&&<span className="cod lg">{p.cod}</span>}<span className="pcard2-name" title={p.name}>{p.name}</span>
-          {h&&<span className={`health-badge ${h.color}`} title={h.motivo}>{SEMA_ICO[h.color]} {h.label}{h.color!=='q'&&dv!==null&&dv!==0&&<span className="hb-d">{dv>0?`+${dv}d`:`${dv}d`}</span>}</span>}
-          {!h&&estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
+          {esProy&&<span className="pcard2-status" style={{background:'var(--bg-2)',color:'var(--c1)'}} title={'Ciclo de vida: '+m.cicloVida+'. Pasa a Obras activas cuando en el Excel de proyectos el Ciclo de Vida diga "Obra".'}>En proyecto</span>}
+          {h&&!esProy&&<span className={`health-badge ${h.color}`} title={h.motivo}>{SEMA_ICO[h.color]} {h.label}{h.color!=='q'&&dv!==null&&dv!==0&&<span className="hb-d">{dv>0?`+${dv}d`:`${dv}d`}</span>}</span>}
+          {!h&&!esProy&&estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
         </div>
         <div className="pcard2-meta">
           {m?.ciudad&&<span>{m.cityLabel||m.ciudad}</span>}
@@ -4218,6 +4227,16 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
             {filteredActive.map(renderCard)}
           </div>
 
+          {/* EN PROYECTO: activas pero sin obra contratada todavía. Sin semáforo de obra; no cuentan en la franja de dirección */}
+          {proyectoProjs.length>0&&<div style={{marginTop:32}}>
+            <div style={{display:'flex',alignItems:'baseline',gap:10,padding:'12px 0 10px',borderTop:'1px solid var(--b1)'}}>
+              <span style={{fontSize:14,fontWeight:700,color:'var(--c0)'}}>En proyecto</span>
+              <span style={{fontSize:11,fontFamily:'var(--fm)',background:'var(--bg-2)',color:'var(--c1)',padding:'2px 8px',borderRadius:10,fontWeight:600}}>{proyectoProjs.length}</span>
+              <span style={{fontSize:11,color:'var(--c2)'}}>Pasan a Obras activas cuando en el Excel de proyectos el Ciclo de Vida dice "Obra"</span>
+            </div>
+            <div className="pgrid2">{proyectoProjs.map(renderCard)}</div>
+          </div>}
+
           {/* EN PAUSA — collapsible */}
           {pausaProjs.length>0&&<div style={{marginTop:32}}>
             <div style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'12px 0',borderTop:'1px solid var(--b1)'}} onClick={()=>setShowFinished(f=>f==='pau'?false:'pau')}>
@@ -4232,7 +4251,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
           </div>}
 
           {/* FINALIZADAS — collapsible */}
-          {finalizadoProjs.length>0&&<div style={{marginTop:pausaProjs.length?16:32}}>
+          {finalizadoProjs.length>0&&<div style={{marginTop:pausaProjs.length||proyectoProjs.length?16:32}}>
             <div style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'12px 0',borderTop:'1px solid var(--b1)'}} onClick={()=>setShowFinished(f=>f==='fin'?false:'fin')}>
               <span style={{width:10,height:10,borderRadius:2,background:'var(--ok)',opacity:.5,flexShrink:0}}/>
               <span style={{fontSize:14,fontWeight:600,color:'var(--c1)'}}>Obras finalizadas</span>

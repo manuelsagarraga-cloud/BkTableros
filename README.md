@@ -28,6 +28,9 @@ BuildPlan → **Datos** → *Subir Excel de proyectos* (se guarda como `bauvek/p
 **Excel de pagos**
 Entrar a `pagos.html` → **↑ Actualizar Excel**.
 
+**Obras en proyecto**
+Una obra con Estado "Activo" y Ciclo de Vida "Proyecto" (o "En proyecto", "2-En Proyecto") en el Excel de proyectos va a la sección **En proyecto** del Inicio: sin semáforo de obra y sin contar en la franja de dirección. Pasa a Obras activas cuando el Ciclo de Vida dice "Obra" y se vuelve a subir el Excel.
+
 **Metas internas de una obra**
 Obra → **Gantt** → **◎ Metas** → *+ Meta* (solo admin). Una meta es "estas tareas tienen que estar listas en tal fecha": se marcan macrotareas o tareas en el Gantt con la casilla junto al nombre, se pone nombre y fecha. BuildPlan calcula el fin proyectado (la elegida que termina más tarde) y el estado: en fecha, atención (hasta +15 d), en riesgo, vencida, suspendida. Se ven como línea punteada en el Gantt, como "Próxima meta" en las tarjetas de Inicio y en los hitos de 14 días. No cambian el semáforo contractual ni se ven en los links de cliente o contratista. Tabla `metas_obra` (`supabase/2026-11-04_metas_obra.sql`).
 
