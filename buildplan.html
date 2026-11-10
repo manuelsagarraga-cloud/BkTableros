@@ -2535,10 +2535,8 @@ function Sparkline({data,field='avg',w=60,h=16,color='var(--ac)'}){
 /* ═══════ Tarjeta de obra: avance real contra el plan ═══════
    Reemplaza a las sparklines solas: con 2 semanas de historia eran una raya sin información.
    La tendencia se suma solo cuando hay 3+ semanas y el avance cambió. */
-function PlanRow({h,td}){
-  const trend=td&&td.length>=3&&new Set(td.map(d=>d.avg)).size>1;
-  const tr=trend&&<span className="pc-tr" title="Avance de las últimas semanas"><Sparkline data={td} field="avg" color="var(--c1)" w={48}/></span>;
-  if(h.esp===null||h.avg>=100)return trend?<div className="pc-row"><span>Tendencia</span>{tr}</div>:null;
+function PlanRow({h}){
+  if(h.esp===null||h.avg>=100)return null;
   const g=h.gapPts;
   const col=g>=-2?'var(--ok)':g>=-10?'var(--warn)':'var(--err)';
   const ref='a hoy';
@@ -2548,7 +2546,6 @@ function PlanRow({h,td}){
     <span className="mono pc-plan-v">{h.esp}%</span>
     <span className="pc-gap mono" style={{color:col}}>{g===0?'en plan':`${g>0?'+':''}${g} pts`}</span>
     <span className="pc-plan-src">{h.espSrc}</span>
-    {tr}
   </div>;
 }
 
@@ -4000,7 +3997,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
       if(!metaList.length){result.activo.push(p);continue}
       /* Activa pero todavía en proyecto (columna "Ciclo de Vida" del Excel): va a su propia sección,
          sin semáforo de obra, hasta que el Ciclo de Vida pase a "Obra" */
-      if(e==='Activo'&&enProyecto(m))result.proyecto.push(p);
+      if(e==='Activo'&&enProyecto(m)&&!healthMap[p.key]?.hasContratada)result.proyecto.push(p);
       else if(e==='Activo')result.activo.push(p);
       else if(e==='En pausa')result.pausa.push(p);
       else if(e==='Finalizado')result.finalizado.push(p);
@@ -4008,7 +4005,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
       else result.sin.push(p);
     }
     return result;
-  },[allSp,metaList]);
+  },[allSp,metaList,healthMap]);
 
   /* Resumen de obras activas para la franja de dirección y el encabezado */
   /* Directores de obra: salen de los recursos del cronograma (Alex, Mariana). La columna "Director de obra"
@@ -4140,9 +4137,9 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
     const proyectoProjs=classified.proyecto.filter(byDir).sort((a,b)=>a.name.localeCompare(b.name));
     const renderCard=(p)=>{
       const m=matchMeta(p.name,metaList);
-      const esProy=enProyecto(m)&&(m?.estado||'').trim()==='Activo';
       const estado=m?.estado||'';
       const h=healthMap[p.key];
+      const esProy=enProyecto(m)&&(m?.estado||'').trim()==='Activo'&&!h?.hasContratada;
       const d=pData[p.key];
       const isLoading=!!autoLoading[p.key];
       const hClass=h&&!esProy?`health-${h.color}`:'';
@@ -4154,7 +4151,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
       return <div key={p.key} className={`pcard2 ${hClass}`} onClick={()=>openProj(p)} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')openProj(p)}}>
         <div className="pcard2-top">
           {p.cod&&<span className="cod lg">{p.cod}</span>}<span className="pcard2-name" title={p.name}>{p.name}</span>
-          {esProy&&<span className="pcard2-status" style={{background:'var(--bg-2)',color:'var(--c1)'}} title={'Ciclo de vida: '+m.cicloVida+'. Pasa a Obras activas cuando en el Excel de proyectos el Ciclo de Vida diga "Obra".'}>En proyecto</span>}
+          {esProy&&<span className="pcard2-status" style={{background:'var(--bg-2)',color:'var(--c1)'}} title={'Ciclo de vida: '+m.cicloVida+'. Pasa sola a Obras activas cuando el cronograma de MS Project tenga la tarea "contratada".'}>En proyecto</span>}
           {h&&!esProy&&<span className={`health-badge ${h.color}`} title={h.motivo}>{SEMA_ICO[h.color]} {h.label}{h.color!=='q'&&dv!==null&&dv!==0&&<span className="hb-d">{dv>0?`+${dv}d`:`${dv}d`}</span>}</span>}
           {!h&&!esProy&&estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
         </div>
@@ -4173,7 +4170,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
             {h.ov>0&&<span style={{color:'var(--err)'}}>{h.ov} vencidas</span>}
             {h.soon>0&&<span style={{color:'var(--warn)'}} title="Tareas sin terminar que vencen en los próximos 7 días">{h.soon} vencen en 7 d</span>}
           </div>
-          <PlanRow h={h} td={getTrendForProject(trendData,p.key)}/>
+          <PlanRow h={h}/>
           {conAct&&conAct.obras[p.key]?<ConCardBlock o={conAct.obras[p.key]} name={conAct.name}/>:<DelayList h={h}/>}
           {h.standbyDays>0&&<div className="pc-row"><span>⏸ {h.standbyDays}d standby</span></div>}
           {(()=>{const d=pData[p.key];const ms=d?metas.filter(m=>m.archivo===p.file).map(m=>calcMeta(m,d)):[];if(!ms.length)return null;
@@ -4232,7 +4229,7 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
             <div style={{display:'flex',alignItems:'baseline',gap:10,padding:'12px 0 10px',borderTop:'1px solid var(--b1)'}}>
               <span style={{fontSize:14,fontWeight:700,color:'var(--c0)'}}>En proyecto</span>
               <span style={{fontSize:11,fontFamily:'var(--fm)',background:'var(--bg-2)',color:'var(--c1)',padding:'2px 8px',borderRadius:10,fontWeight:600}}>{proyectoProjs.length}</span>
-              <span style={{fontSize:11,color:'var(--c2)'}}>Pasan a Obras activas cuando en el Excel de proyectos el Ciclo de Vida dice "Obra"</span>
+              <span style={{fontSize:11,color:'var(--c2)'}}>Pasan solas a Obras activas cuando el cronograma de MS Project tiene la tarea "contratada"</span>
             </div>
             <div className="pgrid2">{proyectoProjs.map(renderCard)}</div>
           </div>}
