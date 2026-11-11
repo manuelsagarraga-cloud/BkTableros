@@ -4124,12 +4124,11 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
       const stBg=estado==='Activo'?'rgba(16,185,129,.1)':estado==='En pausa'?'rgba(245,158,11,.1)':estado==='Cancelada'?'rgba(239,68,68,.08)':estado==='Finalizado'?'rgba(139,146,165,.08)':'rgba(139,146,165,.1)';
       const stColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':estado==='Cancelada'?'var(--err)':'var(--c2)';
       const m2t=(m?.m2Cubierta||0)+(m?.m2Semi||0);
-      const dv=h?h.ext:null;
       return <div key={p.key} className={`pcard2 ${hClass}`} onClick={()=>openProj(p)} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')openProj(p)}}>
         <div className="pcard2-top">
           {p.cod&&<span className="cod lg">{p.cod}</span>}<span className="pcard2-name" title={p.name}>{p.name}</span>
           {esProy&&<span className="pcard2-status" style={{background:'var(--bg-2)',color:'var(--c1)'}} title={'Ciclo de vida: '+m.cicloVida+'. Pasa sola a Obras activas cuando el cronograma de MS Project tenga la tarea "contratada".'}>En proyecto</span>}
-          {h&&!esProy&&<span className={`health-badge ${h.color}`} title={h.motivo}>{SEMA_ICO[h.color]} {h.label}{h.color!=='q'&&dv!==null&&dv>0&&<span className="hb-d">+{fmtPlazo(dv)}</span>}</span>}
+          {h&&!esProy&&<span className={`health-badge ${h.color}`} title={h.motivo}>{SEMA_ICO[h.color]} {h.label}</span>}
           {!h&&!esProy&&estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
         </div>
         <div className="pcard2-meta">
