@@ -6,7 +6,7 @@ https://manuelsagarraga-cloud.github.io/BkTableros/
 | Página | Qué muestra | De dónde lee |
 |---|---|---|
 | `index.html` | Login del sitio y acceso a las herramientas | Supabase de Cómputo (login; índice privado de cronogramas) |
-| `buildplan.html` | Cronogramas: Inicio por gravedad, obra (Resumen, Semana, Gantt, Abastecimiento, Curva S y demoras), Portfolio | Supabase de Cómputo, bucket privado `cronogramas`, carpeta `bauvek/` |
+| `buildplan.html` | Cronogramas: Inicio por gravedad, obra (Gantt, Resumen, Mes, Abastecimiento, Por qué se extendió), Portfolio | Supabase de Cómputo, bucket privado `cronogramas`, carpeta `bauvek/` |
 | `pagos.html` | Programación de pagos a proveedores de Bauvek | Supabase de Cómputo, bucket privado `pagos` (empresa bauvek o admin) |
 
 Links públicos sin login: `buildplan.html?v=<token>` muestra la vista de cliente de una obra o la agenda de un contratista. Se crean desde **Compartir** (obra) o **Link** (Portfolio → Próximas 3 semanas), muestran el nombre, logo y color de la empresa cargados en Cómputo, y guardan una foto sin vencidas ni montos que se actualiza cada vez que alguien de Bauvek abre BuildPlan.
@@ -30,6 +30,9 @@ Entrar a `pagos.html` → **↑ Actualizar Excel**.
 
 **Obras en proyecto**
 Una obra con Estado "Activo" y Ciclo de Vida "Proyecto" (o "En proyecto", "2-En Proyecto") en el Excel de proyectos va a la sección **En proyecto** del Inicio: sin semáforo de obra y sin contar en la franja de dirección. Pasa sola a Obras activas cuando el cronograma de MS Project tiene la tarea "contratada" (o cuando el Ciclo de Vida dice "Obra").
+
+**Extensión de una obra y por qué**
+La extensión es el fin de obra (hito "Fin Obra" o, si no hay, el fin de la fase Obra) contra el fin de la tarea "Contratada": es la fecha que sigue el cliente. Se muestra en palabras ("Se extendió 2,8 meses"). Las causas salen de lo que ya está en MS Project: tareas de demora ("Demora…", "Lluvias", "Standby"), notas de las tareas, adicionales que terminan después del contrato, tareas anuladas (nombre que empieza con "X ") y las últimas tareas, que definen el final. La pestaña **Por qué se extendió** suma las tareas que más cambiaron su duración contra la primera línea base. Las tareas anuladas no cuentan como vencidas.
 
 **Metas internas de una obra**
 Obra → **Gantt** → **◎ Metas** → *+ Meta* (solo admin). Una meta es "estas tareas tienen que estar listas en tal fecha": se marcan macrotareas o tareas en el Gantt con la casilla junto al nombre, se pone nombre y fecha. BuildPlan calcula el fin proyectado (la elegida que termina más tarde) y el estado: en fecha, atención (hasta +15 d), en riesgo, vencida, suspendida. Se ven como línea punteada en el Gantt, como "Próxima meta" en las tarjetas de Inicio y en los hitos de 14 días. No cambian el semáforo contractual ni se ven en los links de cliente o contratista. Tabla `metas_obra` (`supabase/2026-11-04_metas_obra.sql`).

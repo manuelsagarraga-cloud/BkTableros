@@ -57,6 +57,7 @@ function pieza(nombre) {
 }
 const nombres = ['FID_TEXTO4', 'ENT', 'entV', 'countItems', 'findObraRoot', 'classifyAlcance', 'parseMSPDI',
   'isOv', 'STALE_DAYS', 'isStale', 'wAvg', 'isCtrlTask', 'SEMA_LBL', 'SEV', 'DESVIO_MAX', 'calcHealth',
+  'isAnulada', 'FIN_OBRA_RE', 'DEMORA_RE', 'CAUSA_RE', 'POSVENTA_RE', 'isDemoraTask', 'cleanName', 'calcPorque', 'fmtPlazo', 'extTxt',
   'normName', 'DIRECTORES', 'setDirectores', 'dirKey', 'dirNombre', 'dB', 'META_TOL', 'metaRef', 'metaResolve', 'metaLeaves', 'calcMeta', 'nextMeta', 'enProyecto'];
 const piezas = nombres.map(pieza); if (process.env.DEBUG) piezas.forEach((p, k) => console.log(nombres[k], p.length, JSON.stringify(p.slice(-40))));
 const fuente = piezas.join(';\n');
@@ -65,7 +66,7 @@ const fuente = piezas.join(';\n');
 const RealDate = Date, HOY = new RealDate('2026-10-29T12:00:00').getTime();
 class FakeDate extends RealDate { constructor(...a) { a.length ? super(...a) : super(HOY); } static now() { return HOY; } }
 const api = new Function('Date', 'DOMParser', 'console',
-  fuente + ';\nreturn {parseMSPDI,calcHealth,dirKey,setDirectores,dirNombre,calcMeta,nextMeta,metaRef,enProyecto};')(FakeDate, DOMParser, { warn() {}, log() {} });
+  fuente + ';\nreturn {parseMSPDI,calcHealth,isOv,fmtPlazo,extTxt,dirKey,setDirectores,dirNombre,calcMeta,nextMeta,metaRef,enProyecto};')(FakeDate, DOMParser, { warn() {}, log() {} });
 
 // ── 2. Lector de MS Project y semáforo ──
 console.log('Lector MS Project');
@@ -93,6 +94,20 @@ ok(h.espSrc === 'línea base', 'plan contra línea base', h.espSrc);
 ok(typeof h.esp === 'number' && h.esp > h.avg, 'plan a hoy mayor que el real', [h.esp, h.avg]);
 ok(h.delays.length === 1 && h.delays[0].name === 'Mampostería' && h.delays[0].late === 28 && h.delays[0].con === 'Constructora Uno',
   'demoras: Mampostería, 28 d, Constructora Uno', h.delays);
+
+console.log('Extensión y por qué');
+ok(h.ext === 10 && /Fin de obra/.test(h.finSrc), 'extensión +10 d contra el hito "Fin de obra"', [h.ext, h.finSrc]);
+ok(api.extTxt(10) === 'Se extendió 10 días' && api.extTxt(84) === 'Se extendió 2,8 meses' && api.extTxt(-43) === '43 días antes de lo contratado' && api.extTxt(0) === 'En la fecha contratada',
+  'extensión en palabras', [api.extTxt(10), api.extTxt(84), api.extTxt(-43), api.extTxt(0)]);
+const pq = h.porque;
+ok(pq.demoras.length === 1 && pq.demoras[0].name === 'Stand by lluvias' && pq.demoras[0].days === 7, 'demora cargada: Stand by lluvias, 7 d hábiles', pq.demoras);
+ok(pq.notas.length === 1 && pq.notas[0].name === 'Mampostería' && /materiales/.test(pq.notas[0].note), 'nota de MS Project que explica una causa', pq.notas);
+ok(pq.estirones.length === 2 && pq.estirones[0].name === 'Mampostería' && pq.estirones[0].orig === 55 && pq.estirones[0].act === 65 && pq.estirones[1].name === 'Instalaciones' && pq.estirones[1].delta === 4,
+  'lo que más se estiró: Mampostería 55→65, Instalaciones +4', pq.estirones.map(x => [x.name, x.orig, x.act]));
+ok(pq.finales[0]?.name === 'Pintura', 'define el final: Pintura', pq.finales[0]);
+{ const past = new Date('2026-09-01'), base = { finish: past, percentComplete: 0, isSummary: false };
+  ok(!api.isOv({ ...base, name: 'X C2- Cielorraso aplicado' }) && !api.isOv({ ...base, name: '✔X Revoque' }) && api.isOv({ ...base, name: 'Xilografía' }) && api.isOv({ ...base, name: 'Revoque' }),
+    'tareas anuladas (X …) no cuentan como vencidas'); }
 
 // ── 3. Directores ──
 console.log('Directores de obra');

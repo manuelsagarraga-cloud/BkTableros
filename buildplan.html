@@ -374,6 +374,30 @@ body{font-family:var(--ff);background:var(--bg-0);color:var(--c0);font-size:14px
 .con-sel{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
 .con-sel select{width:100%;min-height:36px;padding:6px 8px;border:1px solid var(--b0);border-radius:var(--r-s);background:var(--bg-el);color:var(--c0);font-family:var(--ff);font-size:12px}
 .con-sum{font-size:11px;color:var(--c1)}
+.pc-why{display:flex;flex-direction:column;gap:6px}
+.pc-ext{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:13px}
+.pc-ext.late b{color:var(--err)}.pc-ext.ok b{color:var(--ok)}
+.pc-ext .mono{font-size:11px;color:var(--c1)}
+.pc-why-d{color:var(--c1);white-space:nowrap;font-weight:600}
+.ext-head{background:var(--bg-el);border:1px solid var(--b1);border-left:4px solid var(--c2);border-radius:var(--r-m);padding:16px 18px;margin-bottom:16px}
+.ext-head.late{border-left-color:var(--err)}.ext-head.ok{border-left-color:var(--ok)}
+.ext-big{font-size:22px;font-weight:900;line-height:1.2}
+.ext-head.late .ext-big{color:var(--err)}.ext-head.ok .ext-big{color:var(--ok)}
+.ext-dates{display:flex;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--c1);margin-top:6px}
+.ext-dates b{color:var(--c0)}.ext-d{color:var(--err);font-weight:700}
+.ext-src{font-size:11px;color:var(--c2);margin-top:6px;font-weight:400}
+.ext-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-bottom:18px}
+.ext-card{background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);padding:12px 14px}
+.ext-card .dst{margin-top:0}.ext-card .dst span{font-weight:400;color:var(--c2)}
+.ext-li{padding:6px 0;border-top:1px solid var(--b1);font-size:12px}.ext-li:first-of-type{border-top:none}
+.ext-li-t{display:flex;gap:8px;align-items:baseline}.ext-li-t span:first-child{flex:1;font-weight:600}
+.ext-li-c{color:var(--c1);font-size:11px}.ext-li-s{color:var(--c2);font-size:11px}
+.ext-li-n{color:var(--c1);font-size:12px;margin-top:2px}
+.ext-empty{font-size:12px;color:var(--c2);padding:4px 0}
+.ext-note{font-size:11px;color:var(--c2);margin:-4px 0 10px}
+.ext-rub{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.ext-rub-i{background:var(--bg-el);border:1px solid var(--b1);border-radius:var(--r-m);padding:8px 10px;display:flex;flex-direction:column;gap:2px;font-size:12px;min-width:160px}
+.ext-tag{margin-left:6px;font-size:10px;padding:1px 5px;border-radius:2px;background:var(--bg-2);color:var(--c1);font-weight:400}
 .pc-dl{border-top:1px dashed var(--b1);padding-top:6px;display:flex;flex-direction:column;gap:3px;font-size:11px}
 .pc-dl-h{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--c2);font-weight:600}
 .pc-dl-h span{text-transform:none;letter-spacing:0;font-weight:400}
@@ -1036,6 +1060,9 @@ function parseMSPDI(xmlText){
   const ns=doc.documentElement.namespaceURI;
   const g=(el,tag)=>{const e=ns?el.getElementsByTagNameNS(ns,tag)[0]:el.getElementsByTagName(tag)[0];return e?e.textContent.trim():''};
   const ga=(el,tag)=>ns?el.getElementsByTagNameNS(ns,tag):el.getElementsByTagName(tag);
+  /* Horas por día del calendario del proyecto (MinutesPerDay); por defecto 8 */
+  const hpd=(parseInt(g(doc.documentElement,'MinutesPerDay')||'480',10)||480)/60;
+  const hrsToDays=d=>{const m=(d||'').match(/PT(\d+)H(\d+)M/);return m?Math.round((+m[1]+ +m[2]/60)/hpd):null};
 
   /* ExtendedAttribute definitions */
   const eaDefs={};
@@ -1067,8 +1094,8 @@ function parseMSPDI(xmlText){
     const wbs=g(t,'WBS'),crit=g(t,'Critical')==='1';
 
     /* Duration → days */
-    let durDays=0;
-    if(dur){const m=dur.match(/PT(\d+)H/);if(m)durDays=Math.round(parseInt(m[1])/8)}
+    const durDays=hrsToDays(dur)||0;
+    const notes=g(t,'Notes').replace(/\s+/g,' ').trim();
 
     /* Predecessors */
     const preds=[];
@@ -1084,7 +1111,7 @@ function parseMSPDI(xmlText){
     const bls=[];
     for(const b of ga(t,'Baseline')){
       const bn=g(b,'Number'),bs=g(b,'Start'),bf=g(b,'Finish');
-      if(bs||bf)bls.push({number:parseInt(bn||'0',10),start:bs?new Date(bs):null,finish:bf?new Date(bf):null});
+      if(bs||bf)bls.push({number:parseInt(bn||'0',10),start:bs?new Date(bs):null,finish:bf?new Date(bf):null,durDays:hrsToDays(g(b,'Duration'))});
     }
 
     /* Enterprise custom fields */
@@ -1114,7 +1141,7 @@ function parseMSPDI(xmlText){
 
     tasks.push({
       uid,name:nm,start:st?new Date(st):null,finish:fn?new Date(fn):null,
-      duration:dur,durDays,percentComplete:pct,outlineLevel:ol,
+      duration:dur,durDays,notes,percentComplete:pct,outlineLevel:ol,
       isSummary:isSm,isMilestone:isMs,wbs,critical:crit,
       resources:trMap[uid]||[],predecessors:preds,baselines:bls,ent,
       children:[],depth:0
@@ -1265,7 +1292,9 @@ const META_MAL=new Set(['riesgo','venc']);
 /* ═══════ Utilities ═══════ */
 function fD(d){if(!d)return'—';return `${d.getDate()}/${d.getMonth()+1}/${String(d.getFullYear()).slice(-2)}`}
 function dB(a,b){if(!a||!b)return 0;return Math.round((b-a)/86400000)}
-function isOv(t){return!!(t.finish&&t.percentComplete<100&&!t.isSummary&&t.finish<new Date())}
+/* Tareas anuladas en MS Project: el nombre empieza con "X " o "X-" (ej. "X C2- Cielorraso…"). No cuentan como vencidas ni demoras. */
+function isAnulada(t){return /^[\s✔✓]*X[\s\-]/.test(t.name||'')}
+function isOv(t){return!!(t.finish&&t.percentComplete<100&&!t.isSummary&&!isAnulada(t)&&t.finish<new Date())}
 /* Vencida "sin actualizar": el avance no se reportó, no necesariamente está atrasada.
    - termina después de la fecha de estado del XML (el avance se cargó hasta antes de esa fecha), o
    - está en 0 % y venció hace más de STALE_DAYS días. */
@@ -1427,7 +1456,7 @@ function Frescura({sd,short}){
   return <span className={'fresh '+cls} title={'Fecha de estado del XML: '+fD(sd)}>{short?`Avance al ${fD(sd)}`:`Avance cargado al ${fD(sd)}`} · hace {n} d</span>;
 }
 /* ═══════ Dashboard por proyecto ═══════ */
-function ProjDash({data,health,proj}){
+function ProjDash({data,health,proj,onPorque}){
   if(!data)return null;
   const ts=data.tasks.filter(t=>!t.isSummary);
   const tot=ts.length,done=ts.filter(t=>t.percentComplete>=100).length;
@@ -1456,36 +1485,22 @@ function ProjDash({data,health,proj}){
       <span style={{fontWeight:700}}>{proj.name}</span>
       {proj.cliente&&<span>👤 {proj.cliente}</span>}
       {proj.lote&&<span>📌 {proj.lote}</span>}
-      <Frescura sd={data.statusDate}/>
     </div>}
-    {/* Semáforo banner */}
-    {h&&<div style={{marginBottom:20,background:'var(--bg-el)',border:`2px solid ${semaColor}`,borderRadius:'var(--r-m)',padding:16}}>
-      <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:h.hasContratada?10:0}}>
-        <span style={{width:16,height:16,borderRadius:'50%',background:semaColor,flexShrink:0}}/>
-        <span style={{fontSize:16,fontWeight:700,color:semaColor}}>{SEMA_ICO[h.color]} {h.label}</span>
-        <span style={{fontSize:13,color:'var(--c1)'}}>{h.motivo}</span>
+    {/* Semáforo: extensión contra lo contratado y las causas principales; el detalle está en "Por qué se extendió" */}
+    {h&&<div className={'ext-head '+(h.hasContratada&&h.color!=='q'?(h.ext>0?'late':'ok'):'')}>
+      <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
+        <span className={`health-badge ${h.color}`}>{SEMA_ICO[h.color]} {h.label}</span>
+        {h.hasContratada&&<span className="ext-big" style={{fontSize:18}}>{extTxt(h.ext)}</span>}
       </div>
-      {h.hasContratada&&<div style={{display:'flex',gap:24,flexWrap:'wrap',fontSize:12}}>
-        <div><span style={{color:'var(--c2)'}}>Fin contratado: </span><span style={{fontFamily:'var(--fm)',fontWeight:600}}>{fD(h.finContratado)}</span></div>
-        <div><span style={{color:'var(--c2)'}}>Fin obra: </span><span style={{fontFamily:'var(--fm)',fontWeight:600}}>{fD(h.finObra)}</span></div>
-        {h.desvioBruto!==null&&<div><span style={{color:'var(--c2)'}}>Desvío bruto: </span><span style={{fontFamily:'var(--fm)',fontWeight:600}}>{h.desvioBruto>0?'+':''}{h.desvioBruto}d</span></div>}
-        {h.standbyDays>0&&<div><span style={{color:'var(--c2)'}}>Standby: </span><span style={{fontFamily:'var(--fm)',fontWeight:600}}>{h.standbyDays}d</span></div>}
-        {h.standbyDays>0&&h.desvioNeto!==null&&<div><span style={{color:'var(--c2)'}}>Desvío neto: </span><span style={{fontFamily:'var(--fm)',fontWeight:600,color:h.desvioNeto<=0?'var(--ok)':h.desvioNeto<=15?'var(--warn)':'var(--err)'}}>{h.desvioNeto>0?'+':''}{h.desvioNeto}d</span></div>}
-      </div>}
-      {h.standbyDetail&&h.standbyDetail.length>0&&<div style={{marginTop:10,borderTop:'1px solid var(--b1)',paddingTop:8}}>
-        <div style={{fontSize:11,fontWeight:600,color:'var(--c2)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:4}}>Detalle standby ({h.standbyDetail.length} período{h.standbyDetail.length>1?'s':''})</div>
-        {h.standbyDetail.map((sb,i)=><div key={i} style={{fontSize:11,display:'flex',gap:12,padding:'2px 0'}}>
-          <span style={{flex:1,color:'var(--c1)'}}>{sb.name}</span>
-          <span style={{fontFamily:'var(--fm)',color:'var(--c2)',whiteSpace:'nowrap'}}>{fD(sb.start)} → {fD(sb.finish)}</span>
-          <span style={{fontFamily:'var(--fm)',fontWeight:600,whiteSpace:'nowrap'}}>{sb.days}d</span>
-        </div>)}
-      </div>}
-      {!h.hasContratada&&<div style={{fontSize:12,color:'var(--c2)',marginTop:4}}>Para calcular el semáforo, agregá en MS Project una tarea cuyo nombre incluya "contratada" con la fecha de fin del contrato.</div>}
+      {h.hasContratada?<div className="ext-dates"><span>Fin contratado <b className="mono">{fD(h.finContratado)}</b></span><span>→</span><span>Entrega <b className="mono">{fD(h.finObra)}</b></span></div>
+        :<div className="ext-src">Para medir el plazo, agregá en MS Project una tarea cuyo nombre incluya "Contratada" con el fin del contrato.</div>}
+      {h.hasContratada&&h.ext>0&&(()=>{const c=porqueLineas(h).slice(0,4);return c.length?<div className="pc-dl" style={{marginTop:10}}><div className="pc-dl-h">Por qué</div>
+        {c.map((x,i)=><div key={i} className="pc-dl-t" style={{fontSize:12}}><span className="pc-dl-n" title={x.tip||x.txt}>{x.txt}</span>{x.d&&<span className="mono pc-why-d">{x.d}</span>}</div>)}
+        {onPorque&&<button className="btn btn-g" style={{alignSelf:'flex-start',marginTop:4}} onClick={onPorque}>Ver detalle →</button>}</div>:null})()}
     </div>}
     <div className="dgrid">
       <div className="kpi"><div className="kpi-v">{avg}%</div><div className="kpi-l">Avance</div><div className="kpi-s">ponderado por duración</div></div>
-      <div className="kpi err"><div className="kpi-v" style={{color:ovReal?'var(--err)':'var(--c2)'}}>{ovReal}</div><div className="kpi-l">Vencidas</div><div className="kpi-s">con avance cargado</div></div>
-      <div className="kpi q" title={'Vencidas que probablemente no están atrasadas sino sin actualizar: terminan después de la fecha de estado del XML, o están en 0 % y vencieron hace más de '+STALE_DAYS+' días'}><div className="kpi-v" style={{color:ovStale?'var(--q)':'var(--c2)'}}>{ovStale}</div><div className="kpi-l">Sin actualizar</div><div className="kpi-s">revisar % en MS Project</div></div>
+      <div className="kpi err"><div className="kpi-v" style={{color:ov?'var(--err)':'var(--c2)'}}>{ov}</div><div className="kpi-l">Vencidas</div></div>
       <div className="kpi warn"><div className="kpi-v" style={{color:'var(--warn)'}}>{ip}</div><div className="kpi-l">En curso</div></div>
       <div className="kpi ok"><div className="kpi-v" style={{color:'var(--ok)'}}>{done}<span style={{fontSize:13,color:'var(--c2)'}}>/{tot}</span></div><div className="kpi-l">Completadas</div></div>
     </div>
@@ -1519,148 +1534,80 @@ function ProjDash({data,health,proj}){
   </div>;
 }
 
-/* ═══════ Curva S ═══════
-   Avance acumulado ponderado por duración: cada tarea suma su peso de forma lineal entre su inicio y su fin.
-   Línea base = cómo se planificó; Cronograma = cómo está programado hoy; el punto es el avance real cargado. */
-function SCurve({data}){
-  /* El gráfico se dibuja al ancho real del contenedor para que el texto no se agrande ni se achique */
-  const boxRef=useRef(null);const[bw,setBw]=useState(760);
-  useEffect(()=>{const el=boxRef.current;if(!el)return;const set=()=>setBw(Math.max(320,Math.round(el.clientWidth)));set();
-    if(typeof ResizeObserver==='undefined')return;const ro=new ResizeObserver(set);ro.observe(el);return()=>ro.disconnect()},[]);
-  const ts=useMemo(()=>data.tasks.filter(t=>!t.isSummary&&!t.isMilestone&&!isCtrlTask(t)&&t.start&&t.finish),[data.tasks]);
-  const m=useMemo(()=>{
-    const bl=ts.filter(t=>t.baselines[0]?.start&&t.baselines[0]?.finish);
-    let a=null,b=null;
-    for(const t of ts){if(!a||t.start<a)a=t.start;if(!b||t.finish>b)b=t.finish;const x=t.baselines[0];if(x?.start&&x.start<a)a=x.start;if(x?.finish&&x.finish>b)b=x.finish}
-    if(!a||!b||b<=a)return null;
-    const w=t=>Math.max(t.durDays||0,1);
-    const cum=(list,get,x)=>{let s=0,W=0;for(const t of list){const[s0,f0]=get(t);const wt=w(t);W+=wt;if(x>=f0)s+=wt;else if(x>s0)s+=wt*(x-s0)/Math.max(f0-s0,1)}return W?s*100/W:0};
-    const N=80,pts=[];
-    for(let i=0;i<=N;i++){const x=new Date(a.getTime()+(b-a)*i/N);pts.push({x,bl:bl.length?cum(bl,t=>[t.baselines[0].start,t.baselines[0].finish],x):null,cr:cum(ts,t=>[t.start,t.finish],x)})}
-    const now=new Date();
-    return{a,b,pts,hasBL:bl.length>0,real:wAvg(ts),blNow:bl.length?cum(bl,t=>[t.baselines[0].start,t.baselines[0].finish],now):null,crNow:cum(ts,t=>[t.start,t.finish],now),now};
-  },[ts]);
-  if(!m)return null;
-  const W=bw,H=240,L=40,R=12,T=14,B=28;
-  const X=d=>L+(d-m.a)/(m.b-m.a)*(W-L-R),Y=v=>T+(100-v)/100*(H-T-B);
-  const path=k=>m.pts.filter(p=>p[k]!==null).map((p,i)=>(i?'L':'M')+X(p.x).toFixed(1)+','+Y(p[k]).toFixed(1)).join('');
-  const months=[];{const d=new Date(m.a.getFullYear(),m.a.getMonth()+1,1);const span=(m.b-m.a)/86400000;const fit=Math.max(1,Math.floor((W-L-R)/48));const step=[1,2,3,6,12].find(k=>span/30.4/k<=fit)||12;while(d<=m.b){months.push(new Date(d));d.setMonth(d.getMonth()+step)}}
-  const inRange=m.now>=m.a&&m.now<=m.b;
-  const gap=m.blNow!==null?Math.round(m.real-m.blNow):null;
-  return <div className="sc-wrap">
-    <div className="sc-head">
-      <div className="dst" style={{margin:0}}>Curva S</div>
-      <div className="sc-facts">
-        <span><i className="sc-k real"/>Real hoy <b>{m.real}%</b></span>
-        {m.blNow!==null&&<span><i className="sc-k bl"/>Según línea base <b>{Math.round(m.blNow)}%</b></span>}
-        <span><i className="sc-k cr"/>Según cronograma actual <b>{Math.round(m.crNow)}%</b></span>
-        {gap!==null&&<span className={gap<-5?'neg':gap>5?'pos':''}>{gap<0?`${-gap} puntos detrás de lo planificado`:gap>0?`${gap} puntos adelante de lo planificado`:'En línea con lo planificado'}</span>}
-      </div>
-    </div>
-    <div ref={boxRef}><svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} style={{display:'block',maxWidth:'100%'}} role="img" aria-label="Curva S de avance acumulado">
-      {[0,25,50,75,100].map(v=><g key={v}><line x1={L} x2={W-R} y1={Y(v)} y2={Y(v)} stroke="var(--b1)"/><text x={L-6} y={Y(v)+4} fontSize="11" textAnchor="end" fill="var(--c2)" fontFamily="var(--fm)">{v}%</text></g>)}
-      {months.map((d,i)=><g key={i}><line x1={X(d)} x2={X(d)} y1={Y(0)} y2={Y(0)+4} stroke="var(--b0)"/><text x={X(d)} y={H-8} fontSize="11" textAnchor="middle" fill="var(--c2)" fontFamily="var(--ff)">{d.toLocaleDateString('es-AR',{month:'short'})}{d.getMonth()===0?' '+String(d.getFullYear()).slice(-2):''}</text></g>)}
-      {m.hasBL&&<path d={path('bl')} fill="none" stroke="var(--bar-bl)" strokeWidth="2" strokeDasharray="5,4"/>}
-      <path d={path('cr')} fill="none" stroke="var(--c1)" strokeWidth="2"/>
-      {inRange&&<g><line x1={X(m.now)} x2={X(m.now)} y1={T} y2={Y(0)} stroke="var(--today)" strokeDasharray="3,3"/>
-        <circle cx={X(m.now)} cy={Y(m.real)} r="5" fill="var(--ac)" stroke="var(--bg-el)" strokeWidth="2"/>
-        <text x={X(m.now)+(X(m.now)>W-120?-8:8)} y={Y(m.real)-8} fontSize="12" fontWeight="700" fill="var(--ac)" fontFamily="var(--fm)" textAnchor={X(m.now)>W-120?'end':'start'}>{m.real}% real</text></g>}
-    </svg></div>
-    <div className="sc-note">El real es un único punto: MS Project no guarda la historia del avance. La tendencia semanal se va a ver cuando el avance se guarde todas las semanas.</div>
+/* ═══════ Por qué se extendió ═══════
+   Extensión = fin de obra (hito "Fin Obra" o fase Obra) contra el fin contratado; es lo que sigue el cliente.
+   Las causas salen de calcPorque: demoras cargadas, notas, adicionales, anuladas y lo que define el final. */
+function porqueLineas(h){
+  const p=h.porque;if(!p)return[];const out=[];
+  for(const d of p.demoras.slice().sort((a,b)=>b.days-a.days))out.push({k:'dem',txt:d.name,d:d.days?d.days+' d':'',tip:d.note||''});
+  if(p.adicDias>0&&p.adicTarde.length)out.push({k:'adic',txt:`Adicionales: ${p.adicTarde.length} tarea${p.adicTarde.length>1?'s':''} después del contrato`,d:p.adicDias+' d',tip:p.adicTarde.map(x=>x.name).join('\n')});
+  for(const n of p.notas.filter(x=>!x.anulada))out.push({k:'nota',txt:`${n.name}: ${n.note}`,d:'',tip:n.note});
+  if(p.anuladas)out.push({k:'anul',txt:`${p.anuladas} tarea${p.anuladas>1?'s':''} anulada${p.anuladas>1?'s':''} (cambios de alcance)`,d:'',tip:p.notas.filter(x=>x.anulada).map(x=>x.name+': '+x.note).join('\n')});
+  return out;
+}
+/* Tarjeta del Inicio: extensión en palabras, contrato → entrega, hasta 3 causas y qué define el final */
+function CardPorque({h}){
+  const p=h.porque;if(!p)return null;
+  const ext=h.hasContratada&&h.color!=='q'?h.ext:null;
+  const causas=porqueLineas(h).slice(0,3);
+  const top=p.estRubro[0];
+  return <div className="pc-why">
+    {ext!=null&&<div className={'pc-ext '+(ext>0?'late':'ok')}><b>{extTxt(ext)}</b><span className="mono">{fD(h.finContratado)} → {fD(h.finObra)}</span></div>}
+    {ext>0&&causas.length>0&&<div className="pc-dl"><div className="pc-dl-h">Por qué</div>
+      {causas.map((c,i)=><div key={i} className="pc-dl-t"><span className="pc-dl-n" title={c.tip||c.txt}>{c.txt}</span>{c.d&&<span className="mono pc-why-d">{c.d}</span>}</div>)}</div>}
+    {ext>0&&p.finales[0]&&<div className="pc-row" title={p.finales.map(f=>f.name+' · '+fD(f.finish)).join('\n')}>Define el final: <b>{p.finales[0].rubro||p.finales[0].name}</b>{p.finales[0].con?' · '+p.finales[0].con:''}</div>}
+    {top&&<div className="pc-row" title="Suma de días de las tareas de ese rubro que se alargaron contra la primera línea base. No es atraso de la obra: pueden ir en paralelo.">Más se estiró: <b>{top.rubro}</b> <span className="mono">{top.orig}→{top.act} d</span>{top.cons.length?' · '+top.cons.join(', '):''}</div>}
   </div>;
 }
-
-/* ═══════ Demoras sub-tab ═══════ */
-function DemorasView({data}){
-  if(!data)return null;
-  const[view,setView]=useState('table');
-  const[sortCol,setSortCol]=useState('devFin');
-  const[sortDir,setSortDir]=useState('desc');
-
-  const rows=useMemo(()=>{
-    return data.tasks.filter(t=>!t.isSummary&&t.baselines.length>0).map(t=>{
-      const bl=t.baselines[0];
-      const devStart=t.start&&bl.start?dB(bl.start,t.start):null;
-      const devFin=t.finish&&bl.finish?dB(bl.finish,t.finish):null;
-      return{...t,blStart:bl.start,blFinish:bl.finish,blNum:bl.number,devStart,devFin};
-    });
-  },[data.tasks]);
-
-  const sorted=useMemo(()=>{
-    const r=[...rows];
-    r.sort((a,b)=>{
-      let va=a[sortCol],vb=b[sortCol];
-      if(va===null)va=sortDir==='desc'?-Infinity:Infinity;
-      if(vb===null)vb=sortDir==='desc'?-Infinity:Infinity;
-      return sortDir==='desc'?vb-va:va-vb;
-    });
-    return r;
-  },[rows,sortCol,sortDir]);
-
-  const doSort=col=>{if(sortCol===col)setSortDir(d=>d==='desc'?'asc':'desc');else{setSortCol(col);setSortDir('desc')}};
-
-  /* KPIs */
-  const withDev=rows.filter(r=>r.devFin!==null);
-  const onTime=withDev.filter(r=>Math.abs(r.devFin)<=2).length;
-  const late=withDev.filter(r=>r.devFin>2).length;
-  const early=withDev.filter(r=>r.devFin<-2).length;
-  const avgDev=withDev.length?Math.round(withDev.reduce((s,r)=>s+r.devFin,0)/withDev.length):0;
-
-  if(!rows.length)return <div className="dash"><SCurve data={data}/><div style={{textAlign:'center',color:'var(--c2)',padding:40}}>Este proyecto no tiene datos de línea base en el XML. Para ver demoras, se necesita guardar al menos una línea base en MS Project antes de exportar.</div></div>;
-
-  return <div className="dash">
-    <SCurve data={data}/>
-    <div className="dgrid">
-      <div className="kpi"><div className="kpi-v">{rows.length}</div><div className="kpi-l">Con baseline</div></div>
-      <div className="kpi ok"><div className="kpi-v" style={{color:'var(--ok)'}}>{onTime}</div><div className="kpi-l">En fecha (±2d)</div></div>
-      <div className="kpi err"><div className="kpi-v" style={{color:'var(--err)'}}>{late}</div><div className="kpi-l">Atrasadas</div></div>
-      <div className="kpi" style={{borderLeftColor:early?'var(--ok)':'var(--c2)'}}><div className="kpi-v" style={{color:'var(--ok)'}}>{early}</div><div className="kpi-l">Adelantadas</div></div>
-      <div className="kpi" style={{borderLeftColor:avgDev>0?'var(--err)':avgDev<0?'var(--ok)':'var(--c2)'}}><div className="kpi-v" style={{color:avgDev>0?'var(--err)':avgDev<0?'var(--ok)':'var(--c0)'}}>{avgDev>0?'+':''}{avgDev}d</div><div className="kpi-l">Desvío promedio</div></div>
+/* Pestaña de la obra: la extensión completa con todas las causas y las tareas que más cambiaron su duración */
+function ExtensionView({data,health:h}){
+  if(!data||!h)return null;
+  const p=h.porque;
+  const ext=h.hasContratada?h.ext:null;
+  const[verTodo,setVerTodo]=useState(false);
+  const est=verTodo?p.estirones:p.estirones.slice(0,15);
+  return <div className="dash ext-v">
+    <div className={'ext-head '+(ext>0?'late':ext!=null?'ok':'')}>
+      {ext!=null?<Fragment>
+        <div className="ext-big">{extTxt(ext)}</div>
+        <div className="ext-dates"><span>Fin contratado <b className="mono">{fD(h.finContratado)}</b></span><span>→</span><span>Entrega según MS Project <b className="mono">{fD(h.finObra)}</b></span>{ext>0&&<span className="mono ext-d">+{ext} días</span>}</div>
+        <div className="ext-src">Fin de obra tomado del {h.finSrc}. Contratado: "{h.contratadaName}".</div>
+      </Fragment>:<div className="ext-big">Sin fecha contratada<div className="ext-src">Para medir la extensión, el cronograma necesita una tarea cuyo nombre incluya "Contratada" con el fin del contrato.</div></div>}
     </div>
-
-    <div style={{marginBottom:12,display:'flex',alignItems:'center',gap:8}}>
-      <div className="dst" style={{margin:0}}>Detalle de desvíos — Línea base {rows[0]?.blNum}{rows[0]?.blStart?` (${fD(rows[0].blStart)})`:''}</div>
+    <div className="ext-grid">
+      <div className="ext-card">
+        <div className="dst">Demoras cargadas en el cronograma{p.demDays>0&&<span> · {p.demDays} d</span>}</div>
+        {p.demoras.length?p.demoras.map(d=><div key={d.uid} className="ext-li"><div className="ext-li-t"><span>{d.name}</span><b className="mono">{d.days} d</b></div>
+          <div className="ext-li-s mono">{fD(d.start)} → {fD(d.finish)}</div>{d.note&&<div className="ext-li-n">{d.note}</div>}</div>)
+          :<div className="ext-empty">No hay tareas de demora (Demora…, Lluvias, Standby) en el cronograma.</div>}
+      </div>
+      <div className="ext-card">
+        <div className="dst">Notas de MS Project</div>
+        {p.notas.filter(n=>!n.anulada).length?p.notas.filter(n=>!n.anulada).map(n=><div key={n.uid} className="ext-li"><div className="ext-li-t"><span>{n.name}</span>{n.con&&<span className="ext-li-c">{n.con}</span>}</div><div className="ext-li-n">{n.note}</div></div>)
+          :<div className="ext-empty">Ninguna nota explica una demora o un cambio.</div>}
+      </div>
+      <div className="ext-card">
+        <div className="dst">Cambios de alcance</div>
+        {p.adicTarde.length>0?<div className="ext-li"><div className="ext-li-t"><span>{p.adicTarde.length} adicional{p.adicTarde.length>1?'es':''} termina{p.adicTarde.length>1?'n':''} después del fin contratado</span>{p.adicDias>0&&<b className="mono">{p.adicDias} d</b>}</div>
+          <div className="ext-li-n">{p.adicDias>0?`La obra base termina el ${fD(p.finBase)}: ${p.adicDias} días de la entrega se explican solo por adicionales.`:'La obra base termina igual o después: los adicionales no mueven la entrega.'}</div>
+          <div className="ext-li-s">{p.adicTarde.slice(0,6).map(x=>x.name).join(' · ')}{p.adicTarde.length>6?` · +${p.adicTarde.length-6}`:''}</div></div>
+          :<div className="ext-empty">Ningún adicional termina después del fin contratado.</div>}
+        {p.anuladas>0&&<div className="ext-li"><div className="ext-li-t"><span>{p.anuladas} tarea{p.anuladas>1?'s':''} anulada{p.anuladas>1?'s':''} (X)</span></div>
+          {p.notas.filter(n=>n.anulada).slice(0,4).map(n=><div key={n.uid} className="ext-li-n">{n.name}: {n.note}</div>)}</div>}
+      </div>
+      <div className="ext-card">
+        <div className="dst">Hoy define el final</div>
+        {p.finales.map(f=><div key={f.uid} className="ext-li"><div className="ext-li-t"><span>{f.name}</span><b className="mono">{fD(f.finish)}</b></div><div className="ext-li-s">{f.rubro}{f.con?' · '+f.con:''} · {f.pc}%</div></div>)}
+      </div>
     </div>
-
-    <table className="dt">
-      <thead><tr>
-        <th style={{cursor:'pointer'}} onClick={()=>doSort('name')}>Tarea</th>
-        <th style={{width:80,cursor:'pointer'}} onClick={()=>doSort('blStart')}>Inicio LB</th>
-        <th style={{width:80}}>Inicio real</th>
-        <th style={{width:80,cursor:'pointer'}} onClick={()=>doSort('blFinish')}>Fin LB</th>
-        <th style={{width:80}}>Fin real</th>
-        <th style={{width:65,cursor:'pointer'}} onClick={()=>doSort('devStart')}>Δ Inicio</th>
-        <th style={{width:65,cursor:'pointer'}} onClick={()=>doSort('devFin')}>Δ Fin {sortCol==='devFin'?(sortDir==='desc'?'↓':'↑'):''}</th>
-        <th style={{width:45}}>%</th>
-        <th style={{width:90}}>Contratista</th>
-      </tr></thead>
-      <tbody>{sorted.map(r=>(
-        <tr key={r.uid}>
-          <td style={{fontWeight:500}}>{r.name}</td>
-          <td className="mono">{fD(r.blStart)}</td>
-          <td className="mono">{fD(r.start)}</td>
-          <td className="mono">{fD(r.blFinish)}</td>
-          <td className="mono">{fD(r.finish)}</td>
-          <td className="mono">{r.devStart!==null?<span className={r.devStart>2?'dev-pos':r.devStart<-2?'dev-neg':'dev-zero'}>{r.devStart>0?'+':''}{r.devStart}d</span>:'—'}</td>
-          <td className="mono">{r.devFin!==null?<span className={r.devFin>2?'dev-pos':r.devFin<-2?'dev-neg':'dev-zero'}>{r.devFin>0?'+':''}{r.devFin}d</span>:'—'}</td>
-          <td className="mono">{r.percentComplete}%</td>
-          <td style={{fontSize:11,color:'var(--c1)'}}>{entV(r,'Contratista')||'—'}</td>
-        </tr>
-      ))}</tbody>
-    </table>
-
-    {/* Breakdown por contratista */}
-    {(()=>{
-      const cm={};
-      rows.forEach(r=>{const c=entV(r,'Contratista')||'Sin contratista';if(!cm[c])cm[c]={tot:0,late:0,early:0,sumDev:0};cm[c].tot++;if(r.devFin>2)cm[c].late++;if(r.devFin<-2)cm[c].early++;cm[c].sumDev+=(r.devFin||0)});
-      const entries=Object.entries(cm).sort((a,b)=>b[1].tot-a[1].tot);
-      if(entries.length<2)return null;
-      return <div style={{marginTop:20}}>
-        <div className="dst">Desvío por contratista</div>
-        <table className="dt"><thead><tr><th>Contratista</th><th style={{width:50}}>Tareas</th><th style={{width:70}}>Atrasadas</th><th style={{width:75}}>Adelantadas</th><th style={{width:75}}>Desvío prom.</th></tr></thead>
-        <tbody>{entries.map(([n,d])=>{const avg2=d.tot?Math.round(d.sumDev/d.tot):0;return <tr key={n}><td style={{fontWeight:500}}>{n}</td><td className="mono">{d.tot}</td><td className="mono" style={{color:d.late?'var(--err)':'var(--c2)'}}>{d.late}</td><td className="mono" style={{color:d.early?'var(--ok)':'var(--c2)'}}>{d.early}</td><td className="mono"><span className={avg2>2?'dev-pos':avg2<-2?'dev-neg':'dev-zero'}>{avg2>0?'+':''}{avg2}d</span></td></tr>})}</tbody></table>
-      </div>;
-    })()}
+    <div className="dst" style={{marginTop:8}}>Tareas que más cambiaron su duración</div>
+    <div className="ext-note">Duración actual contra la primera línea base guardada (días hábiles). Explica dónde se fue el tiempo; no se suma como atraso porque muchas tareas van en paralelo.</div>
+    {p.estirones.length?<Fragment>
+      {p.estRubro.length>1&&<div className="ext-rub">{p.estRubro.slice(0,5).map(r=><div key={r.rubro} className="ext-rub-i"><b>{r.rubro}</b><span className="mono">{r.orig}→{r.act} d</span><span className="ext-li-s">{r.n} tarea{r.n>1?'s':''}{r.cons.length?' · '+r.cons.join(', '):''}</span></div>)}</div>}
+      <table className="dt"><thead><tr><th>Tarea</th><th>Rubro</th><th>Contratista</th><th style={{width:90}}>Original</th><th style={{width:80}}>Actual</th><th style={{width:70}}>Diferencia</th><th style={{width:45}}>%</th></tr></thead>
+      <tbody>{est.map(x=><tr key={x.uid} title={x.note||''}><td style={{fontWeight:500}}>{x.name}{x.alc==='adic'&&<span className="ext-tag">adicional</span>}</td><td style={{fontSize:11,color:'var(--c1)'}}>{x.rubro}</td><td style={{fontSize:11,color:'var(--c1)'}}>{x.con||'—'}</td><td className="mono">{x.orig} d</td><td className="mono">{x.act} d</td><td className="mono" style={{fontWeight:700}}>+{x.delta} d</td><td className="mono">{x.pc}%</td></tr>)}</tbody></table>
+      {p.estirones.length>15&&<button className="btn btn-g" style={{marginTop:8}} onClick={()=>setVerTodo(v=>!v)}>{verTodo?'Ver menos':`Ver las ${p.estirones.length}`}</button>}
+    </Fragment>:<div className="ext-empty">Ninguna tarea se alargó contra la línea base{data.hasBL?'':' (el cronograma no tiene línea base guardada)'}.</div>}
   </div>;
 }
 
@@ -2532,36 +2479,6 @@ function Sparkline({data,field='avg',w=60,h=16,color='var(--ac)'}){
   </span>;
 }
 
-/* ═══════ Tarjeta de obra: avance real contra el plan ═══════
-   Reemplaza a las sparklines solas: con 2 semanas de historia eran una raya sin información.
-   La tendencia se suma solo cuando hay 3+ semanas y el avance cambió. */
-function PlanRow({h}){
-  if(h.esp===null||h.avg>=100)return null;
-  const g=h.gapPts;
-  const col=g>=-2?'var(--ok)':g>=-10?'var(--warn)':'var(--err)';
-  const ref='a hoy';
-  const tip=`Según ${h.espSrc==='línea base'?'la línea base':'el cronograma vigente (no hay línea base)'}, a hoy debería ir ${h.esp} % (ponderado por duración). Real: ${h.avg} %.`;
-  return <div className="pc-plan" title={tip}>
-    <span className="pc-plan-l">Plan {ref}</span>
-    <span className="mono pc-plan-v">{h.esp}%</span>
-    <span className="pc-gap mono" style={{color:col}}>{g===0?'en plan':`${g>0?'+':''}${g} pts`}</span>
-    <span className="pc-plan-src">{h.espSrc}</span>
-  </div>;
-}
-
-/* Mayores demoras de la obra: las 3 tareas vencidas más atrasadas, con contratista y días */
-function DelayList({h}){
-  if(!h.delays||!h.delays.length)return null;
-  return <div className="pc-dl">
-    <div className="pc-dl-h">Demoras{h.nLate>h.delays.length&&<span> · {h.delays.length} de {h.nLate}</span>}</div>
-    {h.delays.map(x=><div key={x.uid} className="pc-dl-t">
-      <span className="pc-dl-n" title={x.name+(x.con?' — '+x.con:'')}>{x.name}</span>
-      {x.con&&<span className="pc-dl-c">{x.con}</span>}
-      <span className="mono pc-dl-d">{x.pc}% · {x.late} d</span>
-    </div>)}
-  </div>;
-}
-
 /* Bloque de la tarjeta cuando hay un contratista elegido: qué está haciendo en esta obra */
 function ConCardBlock({o,name}){
   const cur=o.now.slice().sort((a,b)=>a.finish-b.finish);
@@ -2646,7 +2563,14 @@ function calcHealth(data){
       obraTask=siblings.sort((a,b)=>b.finish-a.finish)[0];
     }
   }
-  const finObra=obraTask?.finish||ts.reduce((mx,t)=>t.finish&&t.finish>mx?t.finish:mx,new Date(0));
+  /* Fin de obra: el hito "Fin Obra" / "Fin de obra" de MS Project; si no hay, el fin de la fase Obra (findObraRoot);
+     las estrategias A-B-C quedan de respaldo. Antes se tomaba el resumen con más tareas al lado de la contratada,
+     que en obras con rubros sueltos era un rubro (ej. "Columnas H°A°") y daba desvíos falsos. */
+  const finHito=allTasks.find(t=>t.isMilestone&&!isAnulada(t)&&FIN_OBRA_RE.test(t.name)&&t.finish);
+  const obraRoot=findObraRoot(allTasks);
+  if(obraRoot&&!POSVENTA_RE.test(obraRoot.name))obraTask=obraRoot;
+  const finObra=finHito?.finish||obraTask?.finish||ts.reduce((mx,t)=>t.finish&&t.finish>mx?t.finish:mx,new Date(0));
+  const finSrc=finHito?'hito "'+finHito.name.replace(/^[\s✔✓]+/,'')+'"':obraTask?'fase "'+obraTask.name+'"':'última tarea';
 
   /* 3. Standby detection — tasks with "standby" / "stand by" / "stand-by" */
   const standbyTasks=allTasks.filter(t=>/stand[\s\-]?by/i.test(t.name)&&!t.isSummary);
@@ -2696,7 +2620,7 @@ function calcHealth(data){
   const esp=eW?Math.round(eS*100/eW):null;
   const gapPts=esp===null?null:wAvg(espSet)-esp;
   /* Mayores demoras: vencidas sin terminar, de la más atrasada a la menos */
-  const late=ts.filter(t=>isOv(t)&&!t.isMilestone&&!isCtrlTask(t)).map(t=>({uid:t.uid,name:t.name,late:Math.max(1,Math.floor((now-t.finish)/86400000)),pc:t.percentComplete,con:entV(t,'Contratista')})).sort((a,b)=>b.late-a.late);
+  const late=ts.filter(t=>isOv(t)&&!t.isMilestone&&!isCtrlTask(t)&&!isDemoraTask(t)).map(t=>({uid:t.uid,name:t.name,late:Math.max(1,Math.floor((now-t.finish)/86400000)),pc:t.percentComplete,con:entV(t,'Contratista')})).sort((a,b)=>b.late-a.late);
   const delays=late.slice(0,3);
   const soonLim=new Date(now.getTime()+7*86400000);
   const soon=ts.filter(t=>!t.isMilestone&&t.finish&&t.percentComplete<100&&t.finish>=now&&t.finish<=soonLim).length;
@@ -2704,12 +2628,65 @@ function calcHealth(data){
   /* Next milestone */
   const nextMs=ts.filter(t=>t.isMilestone&&t.finish&&t.finish>=now&&t.percentComplete<100).sort((a,b)=>a.finish-b.finish)[0];
 
+  const porque=calcPorque(data,{finContratado,finObra,obraTask});
   return{color,label,motivo,rank:SEV[color],tot,done,ov,ovReal,ovStale,ip,avg,nextMs:nextMs||null,statusDate,
     esp,espSrc:useBL?'línea base':'cronograma',gapPts,soon,delays,nLate:late.length,
     contratadaName:contratadaTask?.name||null,obraName:obraTask?.name||null,
-    finContratado,finObra,desvioBruto,desvioNeto,
+    finContratado,finObra,finSrc,desvioBruto,desvioNeto,ext:desvioBruto,porque,
     standbyDays,standbyDetail,hasContratada:!!finContratado};
 }
+
+/* ═══════ Por qué se extendió una obra ═══════
+   Todo sale de lo que el jefe de obra ya carga en MS Project, sin pedirle nada nuevo:
+   - Demoras: tareas con nombre "Demora…", "Lluvias", "Clima", "Standby", "Paralización", "No laborable".
+   - Notas de MS Project que explican una causa (demora, definición pendiente, cliente, materiales, lluvia, anulado…).
+   - Cambios: tareas anuladas (X …) y adicionales (sin N° Item o con *) que terminan después del fin contratado.
+   - Qué define el final: las últimas tareas de la obra.
+   - Lo que más se estiró: duración actual contra la primera línea base guardada de cada tarea (días hábiles).
+     Las duraciones no se suman como atraso: tareas en paralelo pueden estirarse sin mover la entrega. */
+const FIN_OBRA_RE=new RegExp(String.raw`^[\s✔✓\-]*fin\s+(de\s+)?obra\b`,'i');
+const DEMORA_RE=new RegExp(String.raw`\b(demora|demorad|lluvia|clima|stand[\s\-]?by|paraliz|no laborable)`,'i');
+const CAUSA_RE=new RegExp(String.raw`(demor|retras|atras|lluvi|clima|defini|depende|falta|espera|cliente|cambi|anulad|cancelad|sin contratar|material|proveedor|entrega|pago|aprobaci|permiso|mano de obra|turno|disponib|conflicto|acopi)`,'i');
+const POSVENTA_RE=new RegExp(String.raw`pos(t)?\s*(venta|obra)|recepci[oó]n\s+definitiva`,'i');
+function isDemoraTask(t){return!t.isSummary&&!isAnulada(t)&&DEMORA_RE.test(t.name||'')}
+const cleanName=n=>(n||'').replace(/^[\s✔✓]+/,'').trim();
+function calcPorque(data,{finContratado,finObra,obraTask}){
+  const all=data.tasks.filter(t=>!t.isSummary);
+  const util=t=>!t.isMilestone&&!isCtrlTask(t)&&!isAnulada(t)&&!isDemoraTask(t)&&!POSVENTA_RE.test(t.name);
+  /* Demoras cargadas como tareas */
+  const demoras=all.filter(isDemoraTask).map(t=>({uid:t.uid,name:cleanName(t.name),days:t.durDays||0,note:t.notes||'',start:t.start,finish:t.finish,done:t.percentComplete>=100}))
+    .sort((a,b)=>(a.start||0)-(b.start||0));
+  const demDays=demoras.reduce((s,x)=>s+x.days,0);
+  /* Notas que explican algo (se descartan las técnicas, ej. "Sobre losa de SS") */
+  const seen=new Set();
+  const notas=all.filter(t=>t.notes&&!isDemoraTask(t)&&CAUSA_RE.test(t.notes)).map(t=>({uid:t.uid,name:cleanName(t.name),note:t.notes,anulada:isAnulada(t),finish:t.finish,con:entV(t,'Contratista')}))
+    .filter(x=>{const k=x.note.toLowerCase()+'|'+x.name.toLowerCase();if(seen.has(k))return false;seen.add(k);return true});
+  /* Cambios de alcance */
+  const anuladas=all.filter(isAnulada).length;
+  const leaves=[];if(obraTask)(function v(t){if(t.isSummary)(t.children||[]).forEach(v);else leaves.push(t)})(obraTask);
+  const obraLeaves=(leaves.length?leaves:all).filter(util);
+  const adicTarde=finContratado?obraLeaves.filter(t=>t.alc==='adic'&&t.finish&&t.finish>finContratado).sort((a,b)=>b.finish-a.finish):[];
+  const base=obraLeaves.filter(t=>t.alc==='base'&&t.finish);
+  const finBase=base.length?new Date(Math.max(...base.map(t=>+t.finish))):null;
+  /* Días de la extensión que se explican solo por adicionales: el fin total menos el fin de la obra base (si la base ya terminaba antes) */
+  const adicDias=finBase&&finObra&&finObra>finBase?Math.round((finObra-Math.max(finBase,finContratado||0))/86400000):0;
+  /* Qué define hoy el final */
+  const finales=obraLeaves.filter(t=>t.finish).sort((a,b)=>b.finish-a.finish).slice(0,3)
+    .map(t=>({uid:t.uid,name:cleanName(t.name),rubro:t.parent?cleanName(t.parent.name):'',con:entV(t,'Contratista'),finish:t.finish,pc:t.percentComplete}));
+  /* Lo que más se estiró: contra la primera línea base que tenga duración */
+  const est=[];
+  for(const t of all){if(!util(t))continue;
+    const bl=(t.baselines||[]).filter(b=>b.durDays!=null).sort((a,b)=>a.number-b.number)[0];
+    if(!bl||!(t.durDays>bl.durDays))continue;
+    est.push({uid:t.uid,name:cleanName(t.name),rubro:t.parent?cleanName(t.parent.name):'',con:entV(t,'Contratista'),orig:bl.durDays,act:t.durDays,delta:t.durDays-bl.durDays,pc:t.percentComplete,alc:t.alc||null,note:t.notes||''})}
+  est.sort((a,b)=>b.delta-a.delta);
+  const rmap={};for(const x of est){const k=x.rubro||'—';const r=rmap[k]||(rmap[k]={rubro:k,n:0,orig:0,act:0,cons:new Set()});r.n++;r.orig+=x.orig;r.act+=x.act;if(x.con)r.cons.add(x.con)}
+  const estRubro=Object.values(rmap).map(r=>({rubro:r.rubro,n:r.n,orig:r.orig,act:r.act,delta:r.act-r.orig,cons:[...r.cons]})).sort((a,b)=>b.delta-a.delta);
+  return{demoras,demDays,notas,anuladas,adicTarde:adicTarde.map(t=>({uid:t.uid,name:cleanName(t.name),finish:t.finish})),adicDias,finBase,finales,estirones:est,estRubro};
+}
+/* Extensión en palabras: "2,8 meses", "12 días"; nunca un número con signo para leer al revés */
+function fmtPlazo(d){const a=Math.abs(d);if(a<45)return a+(a===1?' día':' días');const m=a/30.44;return(m<10?m.toFixed(1).replace('.',',').replace(/,0$/,''):Math.round(m))+' meses'}
+function extTxt(d){if(d==null)return null;if(d>0)return'Se extendió '+fmtPlazo(d);if(d<0)return fmtPlazo(d)+' antes de lo contratado';return'En la fecha contratada'}
 
 /* ═══════ Vista Mes: tareas del mes, separadas por semana (lunes a viernes) ═══════
    Cada semana lista las tareas activas, agrupadas por contratista. Las que vienen de la semana anterior
@@ -3666,7 +3643,7 @@ function DatosPanel({origen,manifest,onClose,onDone,empNombre}){
 
 /* ═══════ MAIN APP ═══════ */
 /* Pestañas de una obra: abre en Resumen; el Gantt queda como detalle */
-const PROJ_TABS=[['gantt','Gantt'],['dash','Resumen'],['mes','Mes'],['abast','Abastecimiento'],['demoras','Curva S y demoras']];
+const PROJ_TABS=[['gantt','Gantt'],['dash','Resumen'],['mes','Mes'],['abast','Abastecimiento'],['porque','Por qué se extendió']];
 const PROJ_SUBS=PROJ_TABS.map(x=>x[0]);
 function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
   const[th,togTh]=useTheme();
@@ -4147,12 +4124,12 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
       const stBg=estado==='Activo'?'rgba(16,185,129,.1)':estado==='En pausa'?'rgba(245,158,11,.1)':estado==='Cancelada'?'rgba(239,68,68,.08)':estado==='Finalizado'?'rgba(139,146,165,.08)':'rgba(139,146,165,.1)';
       const stColor=estado==='Activo'?'var(--ok)':estado==='En pausa'?'var(--warn)':estado==='Cancelada'?'var(--err)':'var(--c2)';
       const m2t=(m?.m2Cubierta||0)+(m?.m2Semi||0);
-      const dv=h?(h.standbyDays>0&&h.desvioNeto!==null?h.desvioNeto:h.desvioBruto):null;
+      const dv=h?h.ext:null;
       return <div key={p.key} className={`pcard2 ${hClass}`} onClick={()=>openProj(p)} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')openProj(p)}}>
         <div className="pcard2-top">
           {p.cod&&<span className="cod lg">{p.cod}</span>}<span className="pcard2-name" title={p.name}>{p.name}</span>
           {esProy&&<span className="pcard2-status" style={{background:'var(--bg-2)',color:'var(--c1)'}} title={'Ciclo de vida: '+m.cicloVida+'. Pasa sola a Obras activas cuando el cronograma de MS Project tenga la tarea "contratada".'}>En proyecto</span>}
-          {h&&!esProy&&<span className={`health-badge ${h.color}`} title={h.motivo}>{SEMA_ICO[h.color]} {h.label}{h.color!=='q'&&dv!==null&&dv!==0&&<span className="hb-d">{dv>0?`+${dv}d`:`${dv}d`}</span>}</span>}
+          {h&&!esProy&&<span className={`health-badge ${h.color}`} title={h.motivo}>{SEMA_ICO[h.color]} {h.label}{h.color!=='q'&&dv!==null&&dv>0&&<span className="hb-d">+{fmtPlazo(dv)}</span>}</span>}
           {!h&&!esProy&&estado&&<span className="pcard2-status" style={{background:stBg,color:stColor}}>{estado}</span>}
         </div>
         <div className="pcard2-meta">
@@ -4163,16 +4140,14 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
           {p.avisos&&p.avisos.length>0&&<span title={'Revisar en MS Project:\n• '+p.avisos.join('\n• ')} style={{color:'var(--q)',cursor:'help'}}>{p.avisos.length} aviso{p.avisos.length>1?'s':''} de datos</span>}
         </div>
         {h&&<Fragment>
-          <div className="pcard2-bar"><div className="pcard2-fill" style={{width:`${h.avg}%`,background:dotColor}}/>{h.esp!==null&&h.avg<100&&<span className="pcard2-plan" style={{left:`calc(${Math.min(h.esp,100)}% - 1px)`}} title={`Plan: ${h.esp} %`}/>}</div>
+          <div className="pcard2-bar"><div className="pcard2-fill" style={{width:`${h.avg}%`,background:dotColor}}/></div>
           <div className="pcard2-stats">
             <span className="pc-avg">{h.avg}%</span>
             <span>{h.done}/{h.tot} hechas</span>
             {h.ov>0&&<span style={{color:'var(--err)'}}>{h.ov} vencidas</span>}
             {h.soon>0&&<span style={{color:'var(--warn)'}} title="Tareas sin terminar que vencen en los próximos 7 días">{h.soon} vencen en 7 d</span>}
           </div>
-          <PlanRow h={h}/>
-          {conAct&&conAct.obras[p.key]?<ConCardBlock o={conAct.obras[p.key]} name={conAct.name}/>:<DelayList h={h}/>}
-          {h.standbyDays>0&&<div className="pc-row"><span>⏸ {h.standbyDays}d standby</span></div>}
+          {conAct&&conAct.obras[p.key]?<ConCardBlock o={conAct.obras[p.key]} name={conAct.name}/>:<CardPorque h={h}/>}
           {(()=>{const d=pData[p.key];const ms=d?metas.filter(m=>m.archivo===p.file).map(m=>calcMeta(m,d)):[];if(!ms.length)return null;
             const mal=ms.filter(r=>META_MAL.has(r.st)).length,atn=ms.filter(r=>r.st==='atn').length;
             return <div className="pc-row" title="Metas internas por rubro"><span style={{color:mal?'var(--err)':atn?'var(--warn)':'var(--c2)'}}>◎ {mal?`${mal} meta${mal>1?'s':''} en riesgo`:atn?`${atn} meta${atn>1?'s':''} con atención`:`${ms.length} meta${ms.length>1?'s':''} en fecha`}</span></div>})()}
@@ -4408,8 +4383,8 @@ function App({onLogout,empInfo=BAUVEK,isAdmin=false}){
 
     {!aLoading&&aData&&sub==='mes'&&<MonthView data={aData}/>}
     {!aLoading&&aData&&sub==='abast'&&<AbastView matKey={active+(computoData[active]?.loaded?':ok':computoData[active]?.needLogin?':login':':x')} data={aData} computoData={computoData[active]||null} visTasks={visTasks} onLogin={()=>{setComputoData({});setComputoAuth(n=>n+1)}}/>}
-    {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData} health={healthMap[active]} proj={aProj}/>}
-    {!aLoading&&aData&&sub==='demoras'&&<DemorasView data={aData}/>}
+    {!aLoading&&aData&&sub==='dash'&&<ProjDash data={aData} health={healthMap[active]} proj={aProj} onPorque={()=>setSub('porque')}/>}
+    {!aLoading&&aData&&(sub==='porque'||sub==='demoras')&&<ExtensionView data={aData} health={healthMap[active]}/>}
 
     <Tooltip info={ttInfo} computoData={computoData[active]||null}/>
     {showSrch&&<SearchModal onClose={()=>setShowSrch(false)}/>}
