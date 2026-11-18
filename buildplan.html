@@ -2617,33 +2617,35 @@ function calcHealth(data){
   const contratadaTask=allTasks.find(t=>/contratad[ao]/i.test(t.name));
   const finContratado=contratadaTask?.finish||null;
 
-  /* 2. Find main obra task — the real construction schedule to compare against */
+  /* 2. Find main obra task — the real construction schedule to compare against.
+     Uses actual parent-child relationships (not outlineLevel matching) so that
+     nested contratadas (Julieta Santiago, Rossi, Lew-Subías) find the right obra. */
   let obraTask=null;
   if(contratadaTask){
-    const cLevel=contratadaTask.outlineLevel;
-    /* Strategy A: siblings at the same outline level (excluding contratada and milestones with 0 children) */
-    const siblings=allTasks.filter(t=>
-      t.outlineLevel===cLevel&&t.finish&&t!==contratadaTask&&
-      !/contratad[ao]/i.test(t.name));
-    /* Prefer summaries (have children) sorted by most children */
-    const sibSummaries=siblings.filter(t=>t.isSummary&&t.children&&t.children.length>0);
+    const parent=contratadaTask.parent;
+    const actualSiblings=(parent?.children||[]).filter(t=>
+      t.finish&&t!==contratadaTask&&!/contratad[ao]/i.test(t.name));
+
+    /* Strategy A: among actual siblings, prefer summaries sorted by most children */
+    const sibSummaries=actualSiblings.filter(t=>t.isSummary&&t.children&&t.children.length>0);
     if(sibSummaries.length){
       sibSummaries.sort((a,b)=>(b.children?b.children.length:0)-(a.children?a.children.length:0));
       obraTask=sibSummaries[0];
     }
-    /* Strategy B: if no sibling summary, use parent of contratada (the root that contains everything) */
-    if(!obraTask&&contratadaTask.parent){
-      /* Parent's children that are summaries, excluding contratada */
-      const parentKids=(contratadaTask.parent.children||[]).filter(t=>
-        t.isSummary&&t.children&&t.children.length>0&&t!==contratadaTask&&!/contratad[ao]/i.test(t.name));
-      if(parentKids.length){
-        parentKids.sort((a,b)=>(b.children?b.children.length:0)-(a.children?a.children.length:0));
-        obraTask=parentKids[0];
+    /* Strategy B: if contratada is nested inside another summary (e.g. inside "Obra ..."),
+       look one level up at grandparent's children to find the real construction scope */
+    if(!obraTask&&parent&&parent.isSummary&&parent.parent){
+      const gpKids=(parent.parent.children||[]).filter(t=>
+        t.isSummary&&t.children&&t.children.length>0&&
+        t!==parent&&t!==contratadaTask&&!/contratad[ao]/i.test(t.name));
+      if(gpKids.length){
+        gpKids.sort((a,b)=>(b.children?b.children.length:0)-(a.children?a.children.length:0));
+        obraTask=gpKids[0];
       }
     }
-    /* Strategy C: if still nothing, pick the sibling with the latest finish */
-    if(!obraTask&&siblings.length){
-      obraTask=siblings.sort((a,b)=>b.finish-a.finish)[0];
+    /* Strategy C: if still nothing, pick the actual sibling with the latest finish */
+    if(!obraTask&&actualSiblings.length){
+      obraTask=actualSiblings.sort((a,b)=>b.finish-a.finish)[0];
     }
   }
   const finObra=obraTask?.finish||ts.reduce((mx,t)=>t.finish&&t.finish>mx?t.finish:mx,new Date(0));
