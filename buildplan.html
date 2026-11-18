@@ -2623,7 +2623,9 @@ function calcHealth(data){
   let obraTask=null;
   if(contratadaTask){
     const parent=contratadaTask.parent;
-    const actualSiblings=(parent?.children||[]).filter(t=>
+    /* If no parent (top-level task), use roots as sibling list */
+    const siblingSource=parent?.children||data.roots||[];
+    const actualSiblings=siblingSource.filter(t=>
       t.finish&&t!==contratadaTask&&!/contratad[ao]/i.test(t.name));
 
     /* Strategy A: among actual siblings, prefer summaries sorted by most children */
